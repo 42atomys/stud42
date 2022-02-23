@@ -1,3 +1,4 @@
+name: Issues - Triage 🚦
 on:
   issues:
     types:
