@@ -1,4 +1,4 @@
-name: Backend Tests 💻
+name: Tests - Backend 💻
 on: 
   pull_request:
     paths-ignore:
