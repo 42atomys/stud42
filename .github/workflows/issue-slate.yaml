@@ -1,4 +1,4 @@
-name: Close inactive issues
+name: Issues - Stolen 🦴
 on:
   schedule:
   - cron: "42 8,23 * * *"
