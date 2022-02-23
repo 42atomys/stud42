@@ -1,0 +1,16 @@
+on:
+  issues:
+    types:
+      - reopened
+      - opened
+jobs:
+  put-issue-to-triage:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Send issues to triage
+        uses: andymckay/labeler@1.0
+        with:
+          add-labels: "state/triage 🚦"
+          repo-token: ${{ github.token }}
