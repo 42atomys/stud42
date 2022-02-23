@@ -1,0 +1,46 @@
+name: Frontend Tests 🕹
+on:
+  push:
+    paths:
+    - 'web/ui/**'
+  pull_request:
+    paths:
+    - 'web/ui/**'
+
+jobs:
+  linters:
+    name: Frontend Linters 🕹
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout project
+      uses: actions/checkout@v2
+
+    - name: Import GPG key
+      uses: crazy-max/ghaction-import-gpg@v4
+      with:
+        gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+        passphrase: ${{ secrets.PASSPHRASE }}
+        git_user_signingkey: true
+        git_commit_gpgsign: true
+
+    - name: Setup node
+      uses: actions/setup-node@v2.1.2
+      with:
+        node-version: 16
+
+    - name: Cache node_modules
+      uses: actions/cache@v2
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
+    - name: Install dependencies
+      run: yarn install --frozen-lockfile
+
+    - name: ESLint
+      run: yarn style:lint
+
+    - name: Prettier
+      run: yarn style:prettier
