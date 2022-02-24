@@ -59,7 +59,7 @@ type DuoCampus {
 }
 
 type Query {
-  helloWorld(): String!
+  helloWorld: String!
 }
 
 input Hello {
