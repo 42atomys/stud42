@@ -37,7 +37,7 @@ var apiCmd = &cobra.Command{
 
 		if *playgroudActive {
 			http.Handle("/", playground.Handler("GraphQL playground", "/query"))
-			log.Info().Msgf("connect to http://localhost:%s/ for GraphQL playground", apiPortFlag)
+			log.Info().Msgf("connect to http://localhost:%s/ for GraphQL playground", *apiPortFlag)
 		}
 
 		http.Handle("/query", srv)
