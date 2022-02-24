@@ -13,5 +13,5 @@ jobs:
       - name: Send issues to triage
         uses: andymckay/labeler@1.0
         with:
-          add-labels: "state/triage 🚦"
-          repo-token: ${{ github.token }}
+          labels: "state/triage 🚦"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
