@@ -9,6 +9,10 @@
 .env.test.local
 .env.production.local
 
+# Configuration Files
+config/*
+!config/*example.yaml
+
 # =================================================
 # Backend ignores 💻
 # =================================================
