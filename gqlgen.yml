@@ -14,7 +14,7 @@ exec:
 
 # Where should any generated models go?
 model:
-  filename: internal/models/models_generated.go
+  filename: internal/models/structs_generated.go
   package: models
 
 # Where should the resolver implementations go?
