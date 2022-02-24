@@ -1,9 +1,11 @@
 name: Tests - Frontend 🕹
 on:
-  push:
+  pull_request:
     paths:
     - 'web/ui/**'
-  pull_request:
+  push:
+    branches:
+    - main
     paths:
     - 'web/ui/**'
 
