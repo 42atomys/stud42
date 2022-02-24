@@ -5,6 +5,8 @@ on:
      - 'web/ui/**'
      - 'docs/**'
   push:
+    branches:
+      - main
     paths-ignore:
      - 'web/ui/**'
      - 'docs/**'
