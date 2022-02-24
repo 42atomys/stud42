@@ -1,0 +1,71 @@
+scalar UUID
+
+type User {
+  id: UUID!
+  email: String!
+  duoLogin: String!
+  duoID: Int!
+  firstName: String!
+  usualFirstName: String
+  lastName: String!
+  Phone: String
+  PoolYear: Int
+  PoolMonth: Int
+  Nickname: String
+  AvatarURL: String
+  CoverURL: String
+}
+
+type OmniauthAccount {
+  id: UUID!
+  user: User!
+  userID: UUID!
+  provider: String!
+  uid: String!
+  username: String
+  email: String
+}
+
+type Friendship {
+  id: UUID!
+  userID: UUID!
+  user: User!
+  friendID: UUID!
+  friend: User!
+}
+
+type Group {
+  id: UUID!
+  user: User!
+  userID: UUID!
+  name: String!
+  color: String
+}
+
+type Location {
+  id: UUID!
+}
+
+type Cluster {
+  id: UUID!
+}
+
+type Workspace {
+  id: UUID!
+}
+
+type DuoCampus {
+  id: UUID!
+}
+
+type Query {
+  helloWorld(): String!
+}
+
+input Hello {
+  name: String!
+}
+
+type Mutation {
+  helloWorld(input: Hello!): String!
+}
