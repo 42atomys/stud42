@@ -30,25 +30,25 @@ web/ui/*.pnp.js
 web/ui/*/coverage
 
 # next.js
-web/ui/*/.next/
-web/ui/*/out/
+web/ui/.next/
+web/ui/out/
 
 # production
-web/ui/*/build
+web/ui/build
 
 # misc
 .DS_Store
 *.pem
 
 # debug
-web/ui/*npm-debug.log*
-web/ui/*yarn-debug.log*
-web/ui/*yarn-error.log*
+web/ui/npm-debug.log*
+web/ui/yarn-debug.log*
+web/ui/yarn-error.log*
 
 
 
 # vercel
-web/ui/*.vercel
+web/ui/.vercel
 
 # typescript
 web/ui/**.tsbuildinfo
