@@ -1,0 +1,18 @@
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: gateway-stud42-staging
+  namespace: staging
+spec:
+  selector:
+    istio: ingressgateway # use istio default controller
+  servers:
+    - port:
+        number: 443
+        name: https
+        protocol: HTTPS
+      tls:
+        mode: SIMPLE
+        credentialName: "stud42-staging-cert"
+      hosts:
+        - "staging.stud42.atomys.app"
