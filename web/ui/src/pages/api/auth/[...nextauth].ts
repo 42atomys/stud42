@@ -8,13 +8,14 @@ export default NextAuth({
   // https://next-auth.js.org/configuration/providers
   providers: [
     FortyTwoProvider({
-      clientId: process.env.FORTY_TWO_CLIENT_ID,
-      clientSecret: process.env.FORTY_TWO_CLIENT_SECRET
+      clientId: process.env.FORTY_TWO_CLIENT_ID as string,
+      clientSecret: process.env.FORTY_TWO_CLIENT_SECRET as string
     }),
     GithubProvider({
       clientId: process.env.GITHUB_ID,
       clientSecret: process.env.GITHUB_SECRET,
       // https://docs.github.com/en/developers/apps/building-oauth-apps/scopes-for-oauth-apps
+      // @ts-ignore
       scope: "read:user,user:email,user:follow",
     }),
   ],
