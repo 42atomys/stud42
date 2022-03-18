@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-dev
+  namespace: dev
+spec:
+  accessModes:
+    - ReadWriteOnce
+  # Available storage class on OVH
+  # SSD: cinder-hish-speed csi-cinder-high-speed
+  # HDD: cinder-classic csi-cinder-classic
+  storageClassName: csi-cinder-classic
+  resources:
+    requests:
+      storage: 10Gi
