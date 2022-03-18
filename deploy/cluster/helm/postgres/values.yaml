@@ -1,0 +1,10 @@
+# Allowed env: dev, staging, prod
+env: dev
+
+
+secret:
+  # Encode your secret in base64
+  # Do not put your secret here if is not encode in base64
+  dbName: 
+  dbUser: 
+  dbPassword: 
