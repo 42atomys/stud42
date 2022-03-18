@@ -14,7 +14,7 @@ export function AuthGuard({ children } : {children: JSX.Element & Partial<Compon
   useEffect(() => {
     if (status === "loading") return // Do nothing while loading
     if (required && !isUser) unauthorized() // If not authenticated, force log in
-  }, [isUser, status === "loading"])
+  }, [isUser, required, status, unauthorized])
 
   if (!required || isUser) {
     return children
