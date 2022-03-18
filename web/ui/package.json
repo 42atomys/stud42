@@ -11,9 +11,25 @@
     "make-pretty": "prettier --write '**/*.{js,jsx,ts,tsx}'"
   },
   "dependencies": {
+    "@apollo/client": "^3.5.10",
+    "@apollo/react-hooks": "^4.0.0",
+    "apollo-cache-inmemory": "^1.6.6",
+    "apollo-client": "^2.6.10",
+    "apollo-link-http": "^1.5.17",
+    "apollo-link-ws": "^1.0.20",
+    "axios": "^0.24.0",
+    "classnames": "^2.3.1",
+    "graphql": "^16.1.0",
+    "graphql-tag": "^2.12.6",
+    "isomorphic-unfetch": "^3.1.0",
+    "js-cookie": "^3.0.1",
     "next": "12.1.0",
+    "next-auth": "^4.0.5",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-burger-menu": "^3.0.6",
+    "react-dom": "17.0.2",
+    "sass": "^1.45.0",
+    "subscriptions-transport-ws": "^0.11.0"
   },
   "devDependencies": {
     "@types/node": "17.0.17",
