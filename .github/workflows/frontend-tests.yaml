@@ -42,3 +42,28 @@ jobs:
 
     - name: Prettier
       run: yarn style:prettier
+  tests:
+    name: Frontend Tests 🕹
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout project
+      uses: actions/checkout@v2
+
+    - name: Setup node
+      uses: actions/setup-node@v2.1.2
+      with:
+        node-version: 16
+
+    - name: Cache node_modules
+      uses: actions/cache@v2
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
+    - name: Install dependencies
+      run: yarn install --frozen-lockfile
+
+    - name: Jest
+      run: yarn test
