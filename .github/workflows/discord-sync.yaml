@@ -5,30 +5,61 @@ on:
   workflow_dispatch:
 
 jobs:
-  update_discord_stars:
-    name: ⭐ Stars
-    runs-on: ubuntu-latest
-    steps:
-    - name: Install JQ
-      run: apt-get update && apt-get install jq -y
-    - uses: octokit/graphql-action@v2.x
-      id: get_stars
-      with:
-        query: |
-          query release($owner:String!,$repo:String!) {
-            repository(owner:$owner,name:$repo) {
-              stargazerCount
+  update_discord_stats:
+    strategy:
+      matrix:
+        stat: ['stars', 'issues', 'pull_requests']
+        include:
+        - stat: 'start'
+          NAME: "⭐ Stars"
+          CHANNEL: '954517855498547282'
+          JQ: '.data.repository.stargazerCount'
+          REQUEST: | 
+            query release($owner:String!,$repo:String!) {
+              repository(owner:$owner,name:$repo) {
+                stargazerCount
+              }
             }
-          }
-        owner: ${{ github.event.repository.owner.name }}
-        repo: ${{ github.event.repository.name }}
+        - stat: 'issues'
+          NAME: "🔧 Issues"
+          CHANNEL: '954497399903117323'
+          JQ: '.data.repository.issues.totalCount'
+          REQUEST: |
+            query release($owner:String!,$repo:String!) {
+              repository(owner:$owner,name:$repo) {
+                issues{
+                  totalCount
+                }
+              }
+            }
+        - stat: 'pull_requests'
+          NAME: "➕ Pull Requests"
+          CHANNEL: '954497747527028796'
+          JQ: '.data.repository.pullRequests.totalCount'
+          REQUEST: |
+            query release($owner:String!,$repo:String!) {
+              repository(owner:$owner,name:$repo) {
+                pullRequests{
+                  totalCount
+                }
+              }
+            }
+    runs-on: ubuntu-latest
+    name: "${{ matrix.NAME }}"
+    steps:
+    - name: Extract repository name
+      run: |
+        echo "repository_name=$(echo '${{ github.repository }}' | awk -F / '{print $2}')" >> $GITHUB_ENV
+        echo "repository_owner=$(echo '${{ github.repository }}' | awk -F / '{print $1}')" >> $GITHUB_ENV
+    - name: Retrieve data from GitHub API
+      run: |
+        echo "metric=$(gh api graphql -F owner=${{ env.repository_owner }} -F repo=${{ env.repository_name }} -f query='${{ matrix.REQUEST }}' --jq '${{ matrix.JQ }}')" >> $GITHUB_ENV
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - run: |
+    - name: Update Discord channel
+      run: |
         curl --request PATCH \
-          --url https://discord.com/api/v9/channels/954517855498547282 \
+          --url https://discord.com/api/v9/channels/${{ matrix.CHANNEL }} \
           --header 'Authorization: Bot ${{ secrets.DISCORD_BOT_TOKEN }}' \
           --header 'Content-Type: application/json' \
-          --data '{
-          "name": "⭐ Stars: $(echo \"${{ steps.get_stars.outputs.data }}\" | jq -r '.repository.stargazerCount')"
-        }'
+          --data '{"name": "${{ matrix.NAME }}: ${{ env.metric }}"}'
