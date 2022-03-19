@@ -1,6 +1,6 @@
-import NextAuth from "next-auth"
-import FortyTwoProvider from "next-auth/providers/42-school";
-import GithubProvider from "next-auth/providers/github"
+import NextAuth from 'next-auth';
+import FortyTwoProvider from 'next-auth/providers/42-school';
+import GithubProvider from 'next-auth/providers/github';
 
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
@@ -9,14 +9,14 @@ export default NextAuth({
   providers: [
     FortyTwoProvider({
       clientId: process.env.FORTY_TWO_CLIENT_ID as string,
-      clientSecret: process.env.FORTY_TWO_CLIENT_SECRET as string
+      clientSecret: process.env.FORTY_TWO_CLIENT_SECRET as string,
     }),
     GithubProvider({
       clientId: process.env.GITHUB_ID,
       clientSecret: process.env.GITHUB_SECRET,
       // https://docs.github.com/en/developers/apps/building-oauth-apps/scopes-for-oauth-apps
       // @ts-ignore
-      scope: "read:user,user:email,user:follow",
+      scope: 'read:user,user:email,user:follow',
     }),
   ],
   // The secret should be set to a reasonably long random string.
@@ -28,7 +28,7 @@ export default NextAuth({
     // Use JSON Web Tokens for session instead of database sessions.
     // This option can be used with or without a database for users/accounts.
     // Note: `strategy` should be set to 'jwt' if no database is used.
-    strategy: "jwt",
+    strategy: 'jwt',
 
     // Seconds - How long until an idle session expires and is no longer valid.
     // maxAge: 30 * 24 * 60 * 60, // 30 days
@@ -79,9 +79,9 @@ export default NextAuth({
   // You can set the theme to 'light', 'dark' or use 'auto' to default to the
   // whatever prefers-color-scheme is set to in the browser. Default is 'auto'
   theme: {
-    colorScheme: "light",
+    colorScheme: 'light',
   },
 
   // Enable debug messages in the console if you are having problems
   debug: false,
-})
+});

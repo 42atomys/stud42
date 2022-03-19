@@ -4,16 +4,38 @@ export default function Document() {
   return (
     <Html>
       <Head>
-        <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png" />
+        <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href="/assets/favicon/apple-touch-icon.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="/assets/favicon/favicon-32x32.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="/assets/favicon/favicon-16x16.png"
+        />
         <link rel="manifest" href="/assets/favicon/site.webmanifest" />
-        <link rel="mask-icon" href="/assets/favicon/safari-pinned-tab.svg" color="#1e293b" />
+        <link
+          rel="mask-icon"
+          href="/assets/favicon/safari-pinned-tab.svg"
+          color="#1e293b"
+        />
         <meta name="apple-mobile-web-app-title" content="Stud42" />
         <meta name="application-name" content="Stud42" />
         <meta name="msapplication-TileColor" content="#1e293b" />
         <meta name="theme-color" content="#1e293b" />
-        <script async src="https://kit.fontawesome.com/a8d6f88c41.js" crossOrigin="anonymous"></script>
+        <script
+          async
+          src="https://kit.fontawesome.com/a8d6f88c41.js"
+          crossOrigin="anonymous"
+        ></script>
       </Head>
       <body className="antialiased text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-800">
         <Main />

@@ -1,30 +1,31 @@
-import { ComponentWithAuthGuard } from '@components/AuthGuard'
-import React from 'react'
-import { useSidebar } from '@components/Sidebar'
+import { ComponentWithAuthGuard } from '@components/AuthGuard';
+import React from 'react';
+import { useSidebar } from '@components/Sidebar';
 
-type PageProps = {
-}
+type PageProps = {};
 
 const IndexPage: ComponentWithAuthGuard<PageProps> = () => {
-  const { SidebarProvider, Sidebar, PageContainer, PageContent } = useSidebar()
+  const { SidebarProvider, Sidebar, PageContainer, PageContent } = useSidebar();
 
-  return <SidebarProvider>
-    <PageContainer>
-      <Sidebar />
-      <PageContent className='p-2 flex-1'>
-        <h1>Statistics Page</h1>
-      </PageContent>
-    </PageContainer>
-  </SidebarProvider>
-}
+  return (
+    <SidebarProvider>
+      <PageContainer>
+        <Sidebar />
+        <PageContent className="p-2 flex-1">
+          <h1>Statistics Page</h1>
+        </PageContent>
+      </PageContainer>
+    </SidebarProvider>
+  );
+};
 
 export const getStaticProps = () => ({
   props: {},
-})
+});
 
 IndexPage.auth = {
   loading: <></>,
-  required: false
-}
+  required: false,
+};
 
-export default IndexPage
+export default IndexPage;
