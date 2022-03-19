@@ -31,7 +31,7 @@ export const Sidebar = ({ children: subSidebar }: { children?: JSX.Element }) =>
       <div className="flex flex-col text-slate-600 dark:text-slate-400 bg-slate-200 dark:bg-slate-900/80 flex-shrink-0">
         <div className="flex-shrink-0 p-4 flex flex-row justify-between">
           <span className="text-lg font-display antialiased font-black tracking-widest text-gray-900 uppercase rounded-lg dark:text-white focus:outline-none focus:shadow-outline">
-            <Image src="/assets/images/logo.png" alt='logo' width={48} height={48} quality={100} />
+            <Image src="/assets/images/logo.svg" alt='logo' width={48} height={48} quality={100} />
           </span>
           <button className="rounded-lg md:hidden focus:outline-none focus:shadow-outline" onClick={() => setOpen(!open)}>
             <svg fill="currentColor" viewBox="0 0 20 20" className="w-6 h-6">
