@@ -2,14 +2,16 @@ name: Tests - Backend 💻
 on: 
   pull_request:
     paths-ignore:
-     - 'web/ui/**'
-     - 'docs/**'
+    - '.github/**'
+    - 'web/ui/**'
+    - 'docs/**'
   push:
     branches:
       - main
     paths-ignore:
-     - 'web/ui/**'
-     - 'docs/**'
+    - '.github/**'
+    - 'web/ui/**'
+    - 'docs/**'
 
 jobs:
   applications-test-units:
