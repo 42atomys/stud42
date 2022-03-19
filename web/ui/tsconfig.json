@@ -30,6 +30,6 @@
       ]
     },
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "next.config.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "next.config.js", "src/components/AuthGuard/AuthGuard.stories.mdx"],
   "exclude": ["node_modules"]
 }
