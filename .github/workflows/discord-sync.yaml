@@ -1,0 +1,34 @@
+name: 🎮 Discord Sync
+on:
+  schedule:
+  - '*/10 * * * *'
+  workflow_call:
+
+jobs:
+  update_discord_stars:
+    name: ⭐ Stars
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install JQ
+      run: apt-get update && apt-get install jq -y
+    - uses: octokit/graphql-action@v2.x
+      id: get_stars
+      with:
+        query: |
+          query release($owner:String!,$repo:String!) {
+            repository(owner:$owner,name:$repo) {
+              stargazerCount
+            }
+          }
+        owner: ${{ github.event.repository.owner.name }}
+        repo: ${{ github.event.repository.name }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - run: |
+        curl --request PATCH \
+          --url https://discord.com/api/v9/channels/954517855498547282 \
+          --header 'Authorization: Bot ${{ secrets.DISCORD_BOT_TOKEN }}' \
+          --header 'Content-Type: application/json' \
+          --data '{
+          "name": "⭐ Stars: $(echo \"${{ steps.get_stars.outputs.data }}\" | jq -r '.repository.stargazerCount')"
+        }'
