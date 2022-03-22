@@ -7,6 +7,14 @@ import { Contribute, Star } from '@lib/github';
 import classNames from 'classnames';
 import Tooltip from '@components/Tooltip/Tooltip';
 
+/**
+ * Menu item component. This is used to create the menu items in the sidebar
+ * Apply automacailly the active class if the current path is the same as the href
+ * @param {string} href - The href to link to
+ * @param {string} icon - The icon to display in the menu item
+ * @param {string} name - The name of the menu item
+ * @returns {JSX.Element} The menu item component
+ */
 const MenuItem = ({
   href,
   icon,
@@ -49,6 +57,13 @@ const MenuItem = ({
   );
 };
 
+/**
+ * Sidebar component. This is used to create the sidebar in the page layout.
+ * Small sidebar is generatd when no {chidren} are passed in. The Full version with sub
+ * menu items is generated when {children} are passed in.
+ * @param {string} children - The children to display as second sidebar content
+ * @returns {JSX.Element} The sidebar component
+ */
 export const Sidebar = ({
   children: subSidebar,
 }: {

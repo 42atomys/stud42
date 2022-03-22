@@ -1,6 +1,13 @@
 import classNames from 'classnames';
 import React, { useState } from 'react';
 
+/**
+ * Tooltip component that displays a tooltip when hovered over
+ * @param {string} text - The text to display in the tooltip
+ * @param {string} children - The children to display. This is the content that will be hovered over
+ * TODO: @param {string} className - The className to apply to the tooltip
+ * TODO: @param {string} placement - The placement of the tooltip
+ */
 export const Tooltip = ({
   children,
   text,
