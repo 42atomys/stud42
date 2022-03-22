@@ -66,4 +66,20 @@ jobs:
       run: yarn install --frozen-lockfile
 
     - name: Jest
-      run: yarn test
+      run: yarn test:ci
+
+    - name: Quality Gate - Test coverage shall be above threshold
+      env:
+          TESTCOVERAGE_THRESHOLD: 80
+      run: |
+        echo "Quality Gate: checking test coverage is above threshold ..."
+        echo "Threshold             : $TESTCOVERAGE_THRESHOLD %"
+        totalCoverage=`cat coverage/coverage-summary.json | jq '.total.statements.pct'`
+        echo "Current test coverage : $totalCoverage %"
+        if (( $(echo "$totalCoverage $TESTCOVERAGE_THRESHOLD" | awk '{print ($1 > $2)}') )); then
+            echo "OK"
+        else
+            echo "Current test coverage is below threshold. Please add more unit tests or adjust threshold to a lower value."
+            echo "Failed"
+            exit 1
+        fi

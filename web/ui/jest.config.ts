@@ -13,6 +13,7 @@ const createJestConfig = nextJest({
 // Add any custom config to be passed to Jest
 const customJestConfig = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
+  coverageReporters: ['json-summary', 'lcov', 'json'],
   moduleNameMapper: {
     // Handle module aliases (this will be automatically configured for you soon)
     '^@components/(.*)$': '<rootDir>/src/components/$1',
