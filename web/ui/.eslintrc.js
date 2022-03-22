@@ -19,6 +19,18 @@ module.exports = {
     'no-console': 'error', // no console statements allowed
     'prettier/prettier': 'off', // don't show prettier errors as it will be fixed when saved anyway
     'import/extensions': 'off', // don't require files extensions
+    'import/no-extraneous-dependencies': [
+      'error',
+      {
+        devDependencies: [
+          '**/*.test.*',
+          '**/*.spec.*',
+          '**/*.stories.*',
+          '**/.storybook/**/*.*',
+        ],
+        peerDependencies: true,
+      },
+    ],
   },
   settings: {
     react: {

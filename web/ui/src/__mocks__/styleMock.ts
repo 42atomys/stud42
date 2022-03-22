@@ -1,3 +1,3 @@
-const styleMock = {}
+const styleMock = {};
 
-export default styleMock
+export default styleMock;

@@ -22,16 +22,14 @@ const meta: Meta = {
   component: Demo,
   parameters: {
     nextRouter: {
-      path: "/feed",
-      asPath: "/feed",
+      path: '/feed',
+      asPath: '/feed',
     },
-  }
+  },
 };
 
 export default meta;
 
-const Template: Story = args => (
-  <Demo {...args} />
-);
+const Template: Story = (args) => <Demo {...args} />;
 export const Default = Template.bind({});
 Default.args = {};

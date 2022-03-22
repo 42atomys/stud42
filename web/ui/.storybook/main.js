@@ -7,8 +7,8 @@ module.exports = {
   addons: [
     '@storybook/addon-links',
     '@storybook/addon-essentials',
-    "@storybook/addon-interactions",
-    "storybook-addon-next-router",
+    '@storybook/addon-interactions',
+    'storybook-addon-next-router',
     {
       /**
        * Fix Storybook issue with PostCSS@8
@@ -25,7 +25,7 @@ module.exports = {
   core: {
     builder: 'webpack5',
   },
-  framework: "@storybook/react",
+  framework: '@storybook/react',
   webpackFinal: (config) => {
     /**
      * Add support for alias-imports
@@ -34,10 +34,22 @@ module.exports = {
     config.resolve.alias = {
       ...config.resolve?.alias,
       '@': [path.resolve(__dirname, '../src/'), path.resolve(__dirname, '../')],
-      '@components': [path.resolve(__dirname, '../src/components'), path.resolve(__dirname, '../src/')],
-      '@styles': [path.resolve(__dirname, '../src/styles'), path.resolve(__dirname, '../src/')],
-      '@pages': [path.resolve(__dirname, '../src/pages'), path.resolve(__dirname, '../src/')],
-      '@lib': [path.resolve(__dirname, '../src/lib'), path.resolve(__dirname, '../src/')],
+      '@components': [
+        path.resolve(__dirname, '../src/components'),
+        path.resolve(__dirname, '../src/'),
+      ],
+      '@styles': [
+        path.resolve(__dirname, '../src/styles'),
+        path.resolve(__dirname, '../src/'),
+      ],
+      '@pages': [
+        path.resolve(__dirname, '../src/pages'),
+        path.resolve(__dirname, '../src/'),
+      ],
+      '@lib': [
+        path.resolve(__dirname, '../src/lib'),
+        path.resolve(__dirname, '../src/'),
+      ],
     };
 
     /**
