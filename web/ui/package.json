@@ -19,7 +19,7 @@
     "test": "jest --watch",
     "test:ci": "jest --passWithNoTests --coverage",
     "test:cypress": "cypress open",
-    "test:cypress:headless": "cypress run",
+    "test:cypress:headless": "cypr``ess run",
     "test:e2e": "start-server-and-test start http://localhost:3000 cypress",
     "test:e2e:headless": "start-server-and-test start http://localhost:3000 cypress:headless"
   },
