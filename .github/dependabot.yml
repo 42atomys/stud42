@@ -25,7 +25,7 @@ updates:
     schedule:
       day: sunday
       interval: weekly
-  - package-ecosystem: yarn
+  - package-ecosystem: npm
     directory: /web/ui
     labels:
       - aspect/depencencies 📦️
