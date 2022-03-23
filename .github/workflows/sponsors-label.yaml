@@ -24,7 +24,7 @@ jobs:
       run: |
         echo "repository_name=$(echo '${{ github.repository }}' | awk -F / '{print $2}')" >> $GITHUB_ENV
         echo "repository_owner=$(echo '${{ github.repository }}' | awk -F / '{print $1}')" >> $GITHUB_ENV
-        echo "opener=${{ github.event.issue.user.login }}${{ github.event.pull_request.user.login }}"
+        echo "opener=${{ github.event.issue.user.login }}${{ github.event.pull_request.user.login }}" >> $GITHUB_ENV
     - name: Extract info about author
       run: |
         echo "is_sponsor=$(gh api graphql -F owner=${{ env.repository_owner }} -F sponsor=${{ env.opener }} -f query='${{ env.REQUEST }}' --jq '.data.repositoryOwner.isSponsoredBy')" >> $GITHUB_ENV
@@ -33,4 +33,4 @@ jobs:
       run: gh issue edit ${{ github.event.issue.number }} --add-label "sponsor 💖"
     - name: Assign Sponsor label to Pull Request
       if: ${{ github.event_name == 'pull_request' }}
-      run: gh issue edit ${{ github.event.issue.number }} --add-label "sponsor 💖"
+      run: gh pr edit ${{ github.event.pull_request.number }} --add-label "sponsor 💖"
