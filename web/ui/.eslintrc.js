@@ -25,8 +25,6 @@ module.exports = {
         devDependencies: [
           '**/*.test.*',
           '**/*.spec.*',
-          '**/*.stories.*',
-          '**/.storybook/**/*.*',
         ],
         peerDependencies: true,
       },
