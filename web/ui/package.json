@@ -25,7 +25,7 @@
     "@apollo/react-hooks": "^4.0.0",
     "axios": "^0.26.1",
     "classnames": "^2.3.1",
-    "graphql": "^15.0.0",
+    "graphql": "^16.3.0",
     "graphql-tag": "^2.12.6",
     "graphql-ws": "^5.6.0",
     "isomorphic-unfetch": "^3.1.0",
