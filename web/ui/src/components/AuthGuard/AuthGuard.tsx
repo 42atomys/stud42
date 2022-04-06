@@ -1,6 +1,12 @@
 import { signIn, useSession } from 'next-auth/react';
 import { useEffect } from 'react';
-import { ComponentWithAuthGuard } from './auth';
+import type { ComponentWithAuthGuard } from './types';
+
+type AuthGuardAuth = {
+  loading: JSX.Element,
+  required: boolean,
+  unauthorized: Function,
+}
 
 export function AuthGuard({
   children,
@@ -12,7 +18,7 @@ export function AuthGuard({
     loading = <></>,
     required = true,
     unauthorized = signIn,
-  } = children.type.auth;
+  }: AuthGuardAuth = children.type.auth;
   const isUser = !!session?.user;
 
   useEffect(() => {

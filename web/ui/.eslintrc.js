@@ -1,4 +1,4 @@
-module.exports = {
+const config = {
   root: true,
   parser: '@typescript-eslint/parser',
 
@@ -11,7 +11,6 @@ module.exports = {
   },
 
   extends: ['airbnb-typescript', 'next', 'next/core-web-vitals', 'prettier'],
-
   rules: {
     'react/no-danger': 'off', // it's self explainatory that no-danger should be used sparingly
     'react/react-in-jsx-scope': 'off', // next.js does not require react in most components
@@ -41,3 +40,5 @@ module.exports = {
     amd: true,
   },
 };
+
+export default config;
