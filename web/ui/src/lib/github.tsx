@@ -117,7 +117,7 @@ const PROJECT_PATH = '42Atomys/stud42';
 
 export const getRepo = async (): Promise<Repository> => {
   try {
-    const { data } = await axios.get(
+    const { data } : { data: Repository } = await axios.get(
       `https://api.github.com/repos/${PROJECT_PATH}`
     );
     return data;

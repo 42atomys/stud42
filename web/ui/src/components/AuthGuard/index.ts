@@ -3,4 +3,4 @@ export type {
   ComponentWithAuthGuard,
   WithAuthGuard,
   NextComponentWithAuth,
-} from './auth';
+} from './types';
