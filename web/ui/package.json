@@ -40,6 +40,7 @@
   "devDependencies": {
     "@babel/core": "^7.17.8",
     "@testing-library/dom": "^8.12.0",
+    "@svgr/webpack": "^6.2.1",
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.4",
     "@testing-library/user-event": "^14.0.4",
@@ -50,6 +51,7 @@
     "autoprefixer": "^10.4.2",
     "babel-jest": "^27.5.1",
     "babel-loader": "^8.2.3",
+    "babel-plugin-inline-react-svg": "^2.0.1",
     "cypress": "^9.5.2",
     "eslint": "^8.12.0",
     "eslint-config-airbnb-typescript": "^16.1.0",
