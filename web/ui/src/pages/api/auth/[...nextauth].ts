@@ -55,7 +55,7 @@ export default NextAuth({
   // pages is not specified for that route.
   // https://next-auth.js.org/configuration/pages
   pages: {
-    // signIn: '/auth/signin',  // Displays signin buttons
+    signIn: '/auth/signin',
     // signOut: '/auth/signout', // Displays form with sign out button
     // error: '/auth/error', // Error code passed in query string as ?error=
     // verifyRequest: '/auth/verify-request', // Used for check email page
@@ -75,12 +75,6 @@ export default NextAuth({
   // Events are useful for logging
   // https://next-auth.js.org/configuration/events
   events: {},
-
-  // You can set the theme to 'light', 'dark' or use 'auto' to default to the
-  // whatever prefers-color-scheme is set to in the browser. Default is 'auto'
-  theme: {
-    colorScheme: 'light',
-  },
 
   // Enable debug messages in the console if you are having problems
   debug: false,
