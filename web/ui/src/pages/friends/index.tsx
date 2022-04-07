@@ -26,7 +26,7 @@ const IndexPage: NextPage<PageProps> = () => {
         currentLocation: null
       },
       {
-        login: 'clucas',
+        login: 'ol',
         firstName: 'Testeur',
         usualFirstName: 'Testeuse',
         lastName: 'Two',
@@ -37,7 +37,7 @@ const IndexPage: NextPage<PageProps> = () => {
         }
       },
       {
-        login: 'gdalmar',
+        login: 'tyrael',
         firstName: 'Testeur',
         usualFirstName: 'staffu',
         lastName: 'One',
@@ -48,7 +48,7 @@ const IndexPage: NextPage<PageProps> = () => {
         }
       },
       {
-        login: 'rgaiffe',
+        login: 'jpeg',
         firstName: 'MMmh',
         usualFirstName: null,
         lastName: 'Curious',
@@ -74,9 +74,10 @@ const IndexPage: NextPage<PageProps> = () => {
       <PageContainer>
         <Sidebar>
           <div className='mb-2'>
-            <div className='flex flex-row items-center bg-slate-200 dark:bg-slate-900 p-2 rounded'>
+            <div className='flex focus-within:border-indigo-500 border-2 border-transparent transition-all flex-row items-center bg-slate-200 dark:bg-slate-900 p-2 rounded'>
               <input className='bg-transparent flex-1 focus:outline-none peer placeholder:text-slate-400 dark:placeholder:text-slate-600' placeholder='Add a friend' maxLength={10} />
-              <i className='fa-light fa-user-plus px-2 cursor-pointer transition-all peer-focus:scale-125 peer-focus:text-indigo-500' />
+              <i className='fa-light fa-user-plus px-2 cursor-pointer transition-all fixed right-5 opacity-100 peer-focus:opacity-0 peer-focus:scale-125 peer-focus:text-indigo-500' />
+              <i className='fa-regular fa-user-plus px-2 cursor-pointer transition-all fixed right-5 opacity-0 peer-focus:opacity-100 peer-focus:scale-125 peer-focus:text-indigo-500' />
             </div>
           </div>
           <div>
@@ -132,86 +133,13 @@ const Example = () => {
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-          <Menu.Items className="absolute invisible group-hover:visible right-0 w-56 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-            <div className="px-1 py-1 ">
-              <Menu.Item>
-                {({ active }) => (
-                  <button
-                    className={`${active ? 'bg-violet-500 text-white' : 'text-gray-900'
-                      } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
-                  >
-                    {active ? (
-                      'V'
-                    ) : (
-                      'X'
-                    )}
-                    Edit
-                  </button>
-                )}
-              </Menu.Item>
-              <Menu.Item>
-                {({ active }) => (
-                  <button
-                    className={`${active ? 'bg-violet-500 text-white' : 'text-gray-900'
-                      } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
-                  >
-                    {active ? (
-                      'V'
-                    ) : (
-                      'X'
-                    )}
-                    Duplicate
-                  </button>
-                )}
-              </Menu.Item>
-            </div>
+          <Menu.Items className="absolute invisible group-hover:visible right-0 w-56 mt-2 origin-top-right bg-white dark:bg-slate-900 divide-y divide-gray-100 dark:divide-slate-800 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
             <div className="px-1 py-1">
               <Menu.Item>
-                {({ active }) => (
-                  <button
-                    className={`${active ? 'bg-violet-500 text-white' : 'text-gray-900'
-                      } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
-                  >
-                    {active ? (
-                      'V'
-                    ) : (
-                      'X'
-                    )}
-                    Archive
+                  <button className='hover:bg-red-500 hover:text-white text-red-500 group flex rounded-md items-center w-full px-2 py-2 text-sm'>
+                    <i className='fa-light fa-trash pr-2'></i>
+                    <span>Delete</span>
                   </button>
-                )}
-              </Menu.Item>
-              <Menu.Item>
-                {({ active }) => (
-                  <button
-                    className={`${active ? 'bg-violet-500 text-white' : 'text-gray-900'
-                      } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
-                  >
-                    {active ? (
-                      'V'
-                    ) : (
-                      'X'
-                    )}
-                    Move
-                  </button>
-                )}
-              </Menu.Item>
-            </div>
-            <div className="px-1 py-1">
-              <Menu.Item>
-                {({ active }) => (
-                  <button
-                    className={`${active ? 'bg-violet-500 text-white' : 'text-gray-900'
-                      } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
-                  >
-                    {active ? (
-                      'V'
-                    ) : (
-                      'X'
-                    )}
-                    Delete
-                  </button>
-                )}
               </Menu.Item>
             </div>
           </Menu.Items>
