@@ -49,5 +49,5 @@ func init() {
 	serveCmd.AddCommand(apiCmd)
 
 	apiPortFlag = apiCmd.Flags().StringP("port", "p", "4000", "port used to serve the interface")
-	playgroudActive = serveCmd.Flags().BoolP("GraphQLi", "g", false, "enable playground")
+	playgroudActive = apiCmd.Flags().BoolP("GraphQLi", "g", false, "enable playground")
 }

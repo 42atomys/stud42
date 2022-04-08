@@ -1,4 +1,6 @@
 scalar UUID
+scalar Any
+scalar Time
 
 type User {
   id: UUID!
@@ -14,16 +16,31 @@ type User {
   Nickname: String
   AvatarURL: String
   CoverURL: String
+
+  accounts: [Account]
+  sessions: [Session]
 }
 
-type OmniauthAccount {
-  id: UUID!
-  user: User!
-  userID: UUID!
-  provider: String!
-  uid: String!
-  username: String
-  email: String
+type Account {
+  id: ID
+  type: String
+  provider: String
+  providerAccountId: String
+  expires_at: Int
+  token_type: String
+  refresh_token: String
+  access_token: String
+  scope: String
+  id_token: String
+  session_state: String
+  user: User 
+}
+
+type Session {
+  id: ID
+  expires: Time
+  sessionToken: String
+  user: User
 }
 
 type Friendship {
@@ -62,10 +79,46 @@ type Query {
   helloWorld: String!
 }
 
-input Hello {
-  name: String!
+type Mutation {
+  createUser(input: CreateUserInput!): User!
+  linkAccount(input: LinkAccountInput!): Account!
+  getUserByAccount(provider: String!, uid: String!): User!
+  getUserByEmail(email: String!): User!
+  getUser(id: String!): User!
+
+
+  updateUser(id: String!, input: String!): User!
+  deleteUser(id: String!): User!
+  unlinkAccount(provider: String!, uid: String!): Account!
+  createSession(sessionToken: String!, userId: String!, expires: String!): Session!
+  getSessionAndUser(sessionToken: String!): Any
+  updateSession(sessionToken: String!): Session!
+  deleteSession(sessionToken: String!): Session!
 }
 
-type Mutation {
-  helloWorld(input: Hello!): String!
+input CreateUserInput {
+  name: String!
+  email: String!
+  image: String
+}
+
+input LinkAccountInput {
+  provider: PROVIDER
+  type: ACCOUNT_TYPE
+  providerAccountId: String!
+  accessToken: String!
+  tokenType: String!
+  expiresAt: Int
+  refreshToken: String
+  scope: String!
+  userID: String!
+}
+
+enum PROVIDER {
+  GITHUB
+  DUO
+}
+
+enum ACCOUNT_TYPE {
+  OAUTH
 }

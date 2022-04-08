@@ -17,6 +17,11 @@ config/*
 # Backend ignores 💻
 # =================================================
 
+# Generated code
+internal/api/generated/*
+internal/models/generated/*
+internal/models/structs_generated.go
+
 # =================================================
 # Frontned ignores 🕹
 # =================================================
