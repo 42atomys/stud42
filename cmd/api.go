@@ -5,17 +5,24 @@ Copyright © 2022 42Atomys
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"net/http"
+	"os"
 
+	"entgo.io/contrib/entgql"
+	"entgo.io/ent/dialect/sql/schema"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
+	"github.com/go-chi/chi/v5"
+	_ "github.com/lib/pq"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 
 	"atomys.codes/stud42/internal/api"
-	"atomys.codes/stud42/internal/api/generated"
 	"atomys.codes/stud42/internal/config"
+	modelgen "atomys.codes/stud42/internal/models/generated"
+	_ "atomys.codes/stud42/internal/models/generated/runtime"
 )
 
 var (
@@ -33,15 +40,38 @@ var apiCmd = &cobra.Command{
 			log.Fatal().Err(err).Msg("invalid configuration")
 		}
 
-		srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &api.Resolver{}}))
+		client, err := modelgen.Open(
+			"postgres",
+			os.Getenv("DATABASE_URL"),
+			modelgen.Debug(),
+		)
+		if err != nil {
+			log.Fatal().Err(err).Msg("failed to connect to database")
+		}
+
+		if err := client.Schema.Create(context.Background(), schema.WithAtlas(true)); err != nil {
+			log.Fatal().Err(err).Msg("running schema migration")
+		}
+
+		srv := handler.NewDefaultServer(api.NewSchema(client))
+		// srv.SetRecoverFunc(func(ctx context.Context, err interface{}) error {
+		// 	// notify bug tracker...
+		// 	log.Error().Err(err.(error)).Msg("unhandled error")
+		// 	return gqlerror.Errorf("Internal server error!")
+		// })
+
+		srv.Use(entgql.Transactioner{TxOpener: client})
+
+		router := chi.NewRouter()
+		router.Use(api.NetworkPolicyMiddleware)
 
 		if *playgroudActive {
-			http.Handle("/", playground.Handler("GraphQL playground", "/query"))
+			router.Handle("/", playground.Handler("GraphQL playground", "/query"))
 			log.Info().Msgf("connect to http://localhost:%s/ for GraphQL playground", *apiPortFlag)
 		}
 
-		http.Handle("/query", srv)
-		log.Fatal().Err(http.ListenAndServe(fmt.Sprintf(":%s", *apiPortFlag), nil)).Msg("Error during server start")
+		router.Handle("/query", srv)
+		log.Fatal().Err(http.ListenAndServe(fmt.Sprintf(":%s", *apiPortFlag), router)).Msg("Error during server start")
 	},
 }
 

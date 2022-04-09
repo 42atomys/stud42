@@ -1,0 +1,65 @@
+package api
+
+import (
+	"context"
+	"errors"
+	"net"
+	"net/http"
+	"os"
+
+	typesgen "atomys.codes/stud42/internal/api/generated/types"
+	"github.com/99designs/gqlgen/graphql"
+	"github.com/rs/zerolog/log"
+)
+
+type contextKey string
+
+// networkPolicyRequestIPContextKey is the context key for the request IP.
+// It is used by the NetworkPolicyMiddleware and the directiveAuthorizationByPolicy.
+// The type of the context value must be a net.IP.
+const networkPolicyRequestIPContextKey contextKey = "network_policy_request_ip"
+
+// errNetworkPolicy is the error returned by the directiveAuthorizationByPolicy.
+// when the request IP is not allowed by the policy.
+var errNetworkPolicy = errors.New("request blocked by network policy")
+
+// NetworkPolicyMiddleware is a middleware that checks the request IP and stores
+// it in the context for the directiveAuthorizationByPolicy. It is used by the
+// directiveAuthorizationByPolicy.
+func NetworkPolicyMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		requestIP := net.ParseIP(r.RemoteAddr)
+		ctx := context.WithValue(r.Context(), networkPolicyRequestIPContextKey, requestIP)
+		next.ServeHTTP(w, r.WithContext(ctx))
+	})
+}
+
+// directiveAuthorizationByPolicy is a directive that checks the request IP and
+// returns an error if the IP is not allowed by the policy.
+// The directive is registered in the schema and automatically used by the
+// resolver on fields that have the @authorizationByPolicy directive.
+func directiveAuthorizationByPolicy(ctx context.Context, obj interface{}, next graphql.Resolver, networkPolicy *typesgen.NetworkPolicy) (res interface{}, err error) {
+	requestIP := ctx.Value(networkPolicyRequestIPContextKey).(net.IP)
+
+	if os.Getenv("GO_ENV") == "development" {
+		log.Warn().Msg("network policy is not enforced in development mode")
+		return next(ctx)
+	}
+
+	switch *networkPolicy {
+	case typesgen.NetworkPolicyCluster:
+		if !requestIP.IsPrivate() {
+			return nil, errNetworkPolicy
+		}
+	case typesgen.NetworkPolicyLocal:
+		if !requestIP.IsLoopback() {
+			return nil, errNetworkPolicy
+		}
+	case typesgen.NetworkPolicyNone:
+		break
+	default:
+		break
+	}
+
+	return next(ctx)
+}

@@ -5,7 +5,7 @@ schema:
 # Where should the generated server code go?
 exec:
   filename: internal/api/generated/generated.go
-  package: generated
+  package: apigen
 
 # Uncomment to enable federation
 # federation:
@@ -14,8 +14,8 @@ exec:
 
 # Where should any generated models go?
 model:
-  filename: internal/models/structs_generated.go
-  package: models
+  filename: internal/api/generated/types/types_generated.go
+  package: typesgen
 
 # Where should the resolver implementations go?
 resolver:
@@ -36,6 +36,7 @@ struct_tag: json
 # if they match it will use them, otherwise it will generate them.
 autobind:
   - "atomys.codes/stud42/internal/models/generated"
+
 
 # This section declares type mapping between the GraphQL and go type systems
 #

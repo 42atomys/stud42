@@ -1,0 +1,85 @@
+mutation internalCreateUserMutation(
+  $duoID: Int!
+  $duoLogin: String!
+  $email: String!
+  $firstName: String!
+  $usualFirstName: String
+  $lastName: String!
+  $poolYear: String!
+  $poolMonth: String!
+  $phone: String!
+) {
+  internalCreateUser(
+    input: {
+      duoLogin: $duoLogin
+      email: $email
+      duoID: $duoID
+      firstName: $firstName
+      usualFirstName: $usualFirstName
+      lastName: $lastName
+      poolYear: $poolYear
+      poolMonth: $poolMonth
+      phone: $phone
+    }
+  )
+}
+
+mutation internalLinkAccountMutation(
+  $provider: PROVIDER!
+  $providerAccountId: String!
+  $token_type: String!
+  $access_token: String!
+  $refresh_token: String
+  $scope: String!
+  $expire_at: Int
+  $userId: String!
+) {
+  internalLinkAccount(
+    input: {
+      provider: $provider
+      type: OAUTH
+      providerAccountId: $providerAccountId
+      tokenType: $token_type
+      accessToken: $access_token
+      refreshToken: $refresh_token
+      scope: $scope
+      expiresAt: $expire_at
+      userID: $userId
+    }
+  ) {
+    id
+    type
+    provider
+    providerAccountId
+    user {
+      id
+    }
+  }
+}
+
+query internalGetUserQuery($id: UUID!) {
+  user: internalGetUser(id: $id) {
+    id
+    email
+    duoLogin
+    duoID
+  }
+}
+
+query internalGetUserByEmail($email: String!) {
+  user: internalGetUserByEmail(email: $email) {
+    id
+    email
+    duoLogin
+    duoID
+  }
+}
+
+query internalGetUserByAccount($provider: PROVIDER!, $providerAccountId: String!) {
+  user: internalGetUserByAccount(provider: $provider, uid: $providerAccountId) {
+    id
+    email
+    duoLogin
+    duoID
+  }
+}

@@ -28,6 +28,9 @@
       "@lib/*": [
         "lib/*"
       ],
+      "@gql/*": [
+        "graphql/*"
+      ],
       "@assets/*": [
         "../public/assets/*"
       ]
