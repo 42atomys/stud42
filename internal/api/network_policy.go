@@ -28,8 +28,14 @@ var errNetworkPolicy = errors.New("request blocked by network policy")
 // directiveAuthorizationByPolicy.
 func NetworkPolicyMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		requestIP := net.ParseIP(r.RemoteAddr)
-		ctx := context.WithValue(r.Context(), networkPolicyRequestIPContextKey, requestIP)
+		ip, _, err := net.SplitHostPort(r.RemoteAddr)
+		if err != nil {
+			log.Error().Err(err).Msg("could not get request IP")
+			http.Error(w, "could not get request IP", http.StatusInternalServerError)
+			return
+		}
+
+		ctx := context.WithValue(r.Context(), networkPolicyRequestIPContextKey, net.ParseIP(ip))
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
@@ -40,6 +46,7 @@ func NetworkPolicyMiddleware(next http.Handler) http.Handler {
 // resolver on fields that have the @authorizationByPolicy directive.
 func directiveAuthorizationByPolicy(ctx context.Context, obj interface{}, next graphql.Resolver, networkPolicy *typesgen.NetworkPolicy) (res interface{}, err error) {
 	requestIP := ctx.Value(networkPolicyRequestIPContextKey).(net.IP)
+	log.Debug().Msgf("Request from %s being tested against network policy %s", requestIP.String(), networkPolicy)
 
 	if os.Getenv("GO_ENV") == "development" {
 		log.Warn().Msg("network policy is not enforced in development mode")
