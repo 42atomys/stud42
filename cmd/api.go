@@ -14,6 +14,7 @@ import (
 	"entgo.io/ent/dialect/sql/schema"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
+	sentryhttp "github.com/getsentry/sentry-go/http"
 	"github.com/go-chi/chi/v5"
 	_ "github.com/lib/pq"
 	"github.com/rs/zerolog/log"
@@ -70,7 +71,12 @@ var apiCmd = &cobra.Command{
 			log.Info().Msgf("connect to http://localhost:%s/ for GraphQL playground", *apiPortFlag)
 		}
 
-		router.Handle("/query", srv)
+		sentryHandler := sentryhttp.New(sentryhttp.Options{
+			Repanic:         true,
+			WaitForDelivery: true,
+		})
+
+		router.Handle("/graphql", sentryHandler.Handle(srv))
 		log.Fatal().Err(http.ListenAndServe(fmt.Sprintf(":%s", *apiPortFlag), router)).Msg("Error during server start")
 	},
 }

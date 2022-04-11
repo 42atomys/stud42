@@ -21,6 +21,7 @@ package main
 import (
 	"os"
 
+	"github.com/getsentry/sentry-go"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 
@@ -35,8 +36,50 @@ func init() {
 	} else {
 		zerolog.SetGlobalLevel(zerolog.InfoLevel)
 	}
+
+	initSentry()
 }
 
 func main() {
-	cmd.Execute()
+	func() {
+		defer sentry.Recover()
+		cmd.Execute()
+	}()
+}
+
+/**
+ * Initialize sentry client
+ * https://docs.sentry.io/platforms/go/
+ */
+func initSentry() {
+	var tracesSampleRate = 0.0
+	if os.Getenv("GO_ENV") == "production" {
+		tracesSampleRate = 0.2
+	}
+
+	var env = "development"
+	if os.Getenv("GO_ENV") == "production" {
+		env = "production"
+	}
+
+	var release = "stud42@dev"
+	if os.Getenv("GO_ENV") == "production" {
+		release = "stud42@" + os.Getenv("APP_VERSION")
+	}
+
+	err := sentry.Init(sentry.ClientOptions{
+		Dsn:         "https://645991d145f84e66a5bbfa98b09bf0d6@o217344.ingest.sentry.io/6324341",
+		Debug:       true,
+		Environment: env,
+		Release:     release,
+		BeforeSend: func(event *sentry.Event, hint *sentry.EventHint) *sentry.Event {
+			panic("allo")
+			return event
+		},
+		TracesSampleRate: tracesSampleRate,
+		SampleRate:       tracesSampleRate,
+	})
+	if err != nil {
+		log.Fatal().Err(err).Msg("failed to initialize sentry")
+	}
 }

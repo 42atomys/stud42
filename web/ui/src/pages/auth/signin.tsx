@@ -33,6 +33,14 @@ export const LoginPage: NextPage<PageProps, {}> = ({ providers }) => {
             Sponsor it on Github
           </a>
         </Link>
+        <button
+  type="button"
+  onClick={() => {
+    throw new Error("Sentry Frontend Error");
+  }}
+>
+  Throw error
+</button>
       </div>
       {error && <Error error={error as ErrorType} />}
       <p>Sign up with your 42 account to enjoy app</p>

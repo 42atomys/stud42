@@ -26,8 +26,9 @@ import {
   Provider,
 } from '@graphql.d';
 import { ProviderType } from 'next-auth/providers';
+import { captureException } from '@sentry/nextjs';
 
-const url = 'http://localhost:4000/query';
+const url = 'http://localhost:4000/graphql';
 
 const providerMap: Record<string, Provider> = {
   github: Provider.GITHUB,
@@ -74,7 +75,9 @@ export const GraphQLAdapter = (): S42Adapter => {
           emailVerified: null,
           ...user,
         };
-      } catch (error) {
+      } catch (error: any) {
+        captureException(error)
+        throw error
         return { ...user, id: '', emailVerified: null };
       }
     },
@@ -168,6 +171,7 @@ export const GraphQLAdapter = (): S42Adapter => {
           userId: acc.user.id,
         };
       } catch (error) {
+        captureException(error)
         return null;
       }
     },

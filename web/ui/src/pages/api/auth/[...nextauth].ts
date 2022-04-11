@@ -1,4 +1,4 @@
-import GraphQLAdapter, { DuoContext } from '@lib/GraphqlAdapter';
+import GraphQLAdapter from '@lib/GraphqlAdapter';
 import NextAuth from 'next-auth';
 import FortyTwoProvider from 'next-auth/providers/42-school';
 import GithubProvider from 'next-auth/providers/github';
@@ -94,7 +94,7 @@ export default NextAuth({
       return false;
     },
 
-    async session({ session, token, user }) {
+    async session({ session }) {
       // console.log('session-session', session);
       // console.log('session-token', token);
       // console.log('session-user', user);
@@ -102,13 +102,14 @@ export default NextAuth({
     },
 
     
-    async jwt({ token, user, account, profile }) {
+    async jwt({ token, profile }) {
       // console.log('jwt-token', token);
       // console.log('jwt-user', user);
       // console.log('jwt-account', account);
       // console.log('jwt-profile', profile?.campus_users);
 
-      token.name = profile?.login
+      if (typeof profile?.login === 'string')
+        token.name = profile?.login
       // if (!account) return token;
 
       // if (account.provider === 'github') {
