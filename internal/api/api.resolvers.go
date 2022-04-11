@@ -15,7 +15,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func (r *mutationResolver) CreateUser(ctx context.Context, input typesgen.CreateUserInput) (uuid.UUID, error) {
+func (r *mutationResolver) InternalCreateUser(ctx context.Context, input typesgen.CreateUserInput) (uuid.UUID, error) {
 	return r.client.User.Create().
 		SetEmail(input.Email).
 		SetDuoLogin(input.DuoLogin).
@@ -31,7 +31,7 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input typesgen.Create
 		ID(ctx)
 }
 
-func (r *mutationResolver) LinkAccount(ctx context.Context, input typesgen.LinkAccountInput) (*generated.Account, error) {
+func (r *mutationResolver) InternalLinkAccount(ctx context.Context, input typesgen.LinkAccountInput) (*generated.Account, error) {
 	id, err := r.client.Account.Create().
 		SetProvider(input.Provider.String()).
 		SetProviderAccountID(input.ProviderAccountID).

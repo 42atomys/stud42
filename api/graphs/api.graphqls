@@ -51,8 +51,8 @@ type Query {
 }
 
 type Mutation {
-  createUser(input: CreateUserInput!): UUID! @authorizationByPolicy(networkPolicy: CLUSTER)
-  linkAccount(input: LinkAccountInput!): Account! @authorizationByPolicy(networkPolicy: CLUSTER)
+  internalCreateUser(input: CreateUserInput!): UUID! @authorizationByPolicy(networkPolicy: CLUSTER)
+  internalLinkAccount(input: LinkAccountInput!): Account! @authorizationByPolicy(networkPolicy: CLUSTER)
 }
 
 input CreateUserInput {
