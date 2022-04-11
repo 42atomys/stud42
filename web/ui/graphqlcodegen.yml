@@ -1,0 +1,39 @@
+overwrite: true
+schema: "../../api/graphs/api.graphqls"
+documents: src/graphql/**/*.gql
+generates:
+  src/graphql/generated.ts:
+    hooks:
+      afterOneFileWrite:
+        - prettier --write
+        - eslint --fix
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-react-apollo"
+    config:
+      # typescript-operations
+      arrayInputCoercion: true
+      # typescript-react-apollo
+      addDocBlocks: true
+      dedupeOperationSuffix: true
+      defaultScalarType: any
+      reactApolloVersion: 3
+      strictScalars: true
+      useTypeImports: true
+      withHooks: true
+      withMutationFn: true
+  src/graphql/schema.json:
+    hooks:
+      afterOneFileWrite:
+        - prettier --write
+    plugins:
+      - "introspection"
+config:
+  namingConvention:
+    typeNames: change-case-all#pascalCase
+    enumValues: change-case-all#upperCase
+  scalars:
+    Any: any
+    Time: Date
+    UUID: string

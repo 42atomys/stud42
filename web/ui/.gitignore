@@ -1,5 +1,0 @@
-.next/
-.env*
-!.env.example
-
-coverage/

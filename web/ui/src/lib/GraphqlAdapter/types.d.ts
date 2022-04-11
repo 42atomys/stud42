@@ -35,7 +35,7 @@ export type S42Adapter = Omit<
 /**
  * S42AdapterUser is the type of the user returned by the S42 adapter.
  * It is the same as the `AdapterUser` type from the `next-auth` library extended
- * with the `duo` property.
+ * with optionnal properties
  */
 export interface S42AdapterUser extends AdapterUser {
   // The `duo` property is used to store Duo context.
@@ -44,6 +44,16 @@ export interface S42AdapterUser extends AdapterUser {
   github?: GithubContext
 }
 
+/**
+ * EmailVerifiedOverride is used to surcharge the `AdapterUser` type from the
+ * `next-auth` library. The surcharge the `emailVerified` property
+ * to be able to work with your custom implementation
+ */
+interface EmailVerifiedOverride {
+  user: {
+    emailVerified: null
+  }
+}
 
 /**
  * DuoContext is used to store Duo context from the 42 API during the

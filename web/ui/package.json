@@ -6,7 +6,8 @@
     "node": ">=16.0.0"
   },
   "scripts": {
-    "dev": "next dev",
+    "generate": "graphql-codegen --config graphqlcodegen.yml",
+    "dev": "concurrently \"next dev\" \"yarn run generate --watch\"",
     "build": "next build",
     "start": "next start",
     "style:all": "yarn run style:lint && yarn run style:prettier",
@@ -40,6 +41,11 @@
   },
   "devDependencies": {
     "@babel/core": "^7.17.8",
+    "@graphql-codegen/cli": "2.6.2",
+    "@graphql-codegen/introspection": "2.1.1",
+    "@graphql-codegen/typescript": "2.4.8",
+    "@graphql-codegen/typescript-operations": "2.3.5",
+    "@graphql-codegen/typescript-react-apollo": "3.2.11",
     "@svgr/webpack": "^6.2.1",
     "@testing-library/dom": "^8.12.0",
     "@testing-library/jest-dom": "^5.16.2",
@@ -53,6 +59,7 @@
     "babel-jest": "^27.5.1",
     "babel-loader": "^8.2.3",
     "babel-plugin-inline-react-svg": "^2.0.1",
+    "concurrently": "^7.1.0",
     "cypress": "^9.5.2",
     "eslint": "^8.12.0",
     "eslint-config-airbnb-typescript": "^16.1.0",

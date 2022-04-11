@@ -28,8 +28,8 @@
       "@lib/*": [
         "lib/*"
       ],
-      "@gql/*": [
-        "graphql/*"
+      "@graphql.d": [
+        "graphql/generated.ts"
       ],
       "@assets/*": [
         "../public/assets/*"

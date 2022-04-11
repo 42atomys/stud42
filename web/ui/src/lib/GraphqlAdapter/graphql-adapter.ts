@@ -1,20 +1,37 @@
 import request from 'graphql-request';
 import { Account } from 'next-auth';
 import type { AdapterUser } from 'next-auth/adapters';
-import type { DuoContext, S42Adapter, S42AdapterUser } from './types';
+import type {
+  DuoContext,
+  EmailVerifiedOverride,
+  S42Adapter,
+  S42AdapterUser,
+} from './types';
 import {
-  internalGetUserQuery,
-  internalGetUserByEmailQuery,
-  internalGetUserByAccountQuery,
-  internalLinkAccountMutation,
-  internalCreateUserMutation,
-} from '@gql/definitions.gql';
+  InternalCreateUserDocument,
+  InternalCreateUserMutation,
+  InternalCreateUserMutationVariables,
+  InternalGetUserByAccountDocument,
+  InternalGetUserByAccountQuery,
+  InternalGetUserByAccountQueryVariables,
+  InternalGetUserByEmailDocument,
+  InternalGetUserByEmailQuery,
+  InternalGetUserByEmailQueryVariables,
+  InternalGetUserDocument,
+  InternalGetUserQuery,
+  InternalGetUserQueryVariables,
+  InternalLinkAccountDocument,
+  InternalLinkAccountMutation,
+  InternalLinkAccountMutationVariables,
+  Provider,
+} from '@graphql.d';
+import { ProviderType } from 'next-auth/providers';
 
 const url = 'http://localhost:4000/query';
 
-const providerMap: Record<string, string> = {
-  github: 'GITHUB',
-  '42-school': 'DUO',
+const providerMap: Record<string, Provider> = {
+  github: Provider.GITHUB,
+  '42-school': Provider.DUO,
 };
 
 /**
@@ -36,23 +53,24 @@ export const GraphQLAdapter = (): S42Adapter => {
 
       try {
         const typedUser = user as S42AdapterUser & { duo: DuoContext };
-        const data: { createUser: string } = await request(
-          url,
-          internalCreateUserMutation,
-          {
-            email: typedUser.email,
-            duoID: typedUser.duo.id,
-            duoLogin: typedUser.duo.login,
-            firstName: typedUser.duo.firstName,
-            usualFirstName: typedUser.duo.usualFirstName,
-            lastName: typedUser.duo.lastName,
-            poolYear: typedUser.duo.poolYear,
-            poolMonth: typedUser.duo.poolMonth,
-            phone: typedUser.duo.phone,
-          }
-        );
+
+        const { internalCreateUser: uuid } = await request<
+          InternalCreateUserMutation,
+          InternalCreateUserMutationVariables
+        >(url, InternalCreateUserDocument, {
+          email: typedUser.email as string,
+          duoID: typedUser.duo.id,
+          duoLogin: typedUser.duo.login,
+          firstName: typedUser.duo.firstName,
+          usualFirstName: typedUser.duo.usualFirstName,
+          lastName: typedUser.duo.lastName,
+          poolYear: typedUser.duo.poolYear,
+          poolMonth: typedUser.duo.poolMonth,
+          phone: typedUser.duo.phone,
+        });
+
         return {
-          id: data.createUser as string,
+          id: uuid,
           emailVerified: null,
           ...user,
         };
@@ -67,9 +85,12 @@ export const GraphQLAdapter = (): S42Adapter => {
      */
     getUser: async (id: string): Promise<AdapterUser | null> => {
       try {
-        const { user }: { user: (AdapterUser & DuoContext) | {} } =
-          await request(url, internalGetUserQuery, { id });
-        return user as AdapterUser & DuoContext;
+        const { user } = await request<
+          InternalGetUserQuery & EmailVerifiedOverride,
+          InternalGetUserQueryVariables
+        >(url, InternalGetUserDocument, { id });
+
+        return user;
       } catch (error) {
         return null;
       }
@@ -82,9 +103,11 @@ export const GraphQLAdapter = (): S42Adapter => {
      */
     getUserByEmail: async (email: string): Promise<AdapterUser | null> => {
       try {
-        const { user }: { user: (AdapterUser & DuoContext) | {} } =
-          await request(url, internalGetUserByEmailQuery, { email });
-        return user as AdapterUser & DuoContext;
+        const { user } = await request<
+          InternalGetUserByEmailQuery & EmailVerifiedOverride,
+          InternalGetUserByEmailQueryVariables
+        >(url, InternalGetUserByEmailDocument, { email });
+        return user;
       } catch (error) {
         return null;
       }
@@ -102,12 +125,14 @@ export const GraphQLAdapter = (): S42Adapter => {
       'provider' | 'providerAccountId'
     >): Promise<AdapterUser | null> => {
       try {
-        const { user }: { user: (AdapterUser & DuoContext) | {} } =
-          await request(url, internalGetUserByAccountQuery, {
-            provider: providerMap[provider],
-            providerAccountId,
-          });
-        return user as AdapterUser & DuoContext;
+        const { user } = await request<
+          InternalGetUserByAccountQuery & EmailVerifiedOverride,
+          InternalGetUserByAccountQueryVariables
+        >(url, InternalGetUserByAccountDocument, {
+          provider: providerMap[provider],
+          providerAccountId,
+        });
+        return user;
       } catch (error) {
         return null;
       }
@@ -122,21 +147,25 @@ export const GraphQLAdapter = (): S42Adapter => {
       account: Account
     ): Promise<Account | null | undefined> => {
       try {
-        const { provider, ...accountData } = account;
-        const { linkAccount }: { linkAccount: any | {} } = await request(
-          url,
-          internalLinkAccountMutation,
-          {
-            provider: providerMap[account.provider],
-            ...accountData,
-          }
-        );
+        const { internalLinkAccount: acc } = await request<
+          InternalLinkAccountMutation,
+          InternalLinkAccountMutationVariables
+        >(url, InternalLinkAccountDocument, {
+          provider: providerMap[account.provider],
+          providerAccountId: account.providerAccountId,
+          access_token: account.access_token || "",
+          refresh_token: account.refresh_token,
+          scope: account.scope || "",
+          token_type: account.token_type || "",
+          userId: account.userId,
+          expire_at: account.expires_at,
+        });
 
         return {
-          provider: linkAccount.provider,
-          providerAccountId: linkAccount.providerAccountId,
-          type: linkAccount.type,
-          userId: linkAccount.user.id,
+          provider: acc.provider,
+          providerAccountId: acc.providerAccountId,
+          type: acc.type as ProviderType,
+          userId: acc.user.id,
         };
       } catch (error) {
         return null;
