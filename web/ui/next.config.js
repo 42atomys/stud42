@@ -17,8 +17,8 @@ const nextConfig = {
   webpack: (config) => {
     const fileLoaderRule = config.module.rules.find(
       (rule) => rule.test && rule.test.test('.svg')
-    )
-    fileLoaderRule.exclude = /\.svg$/
+    );
+    fileLoaderRule.exclude = /\.svg$/;
 
     config.module.rules.push({
       test: /\.svg$/,
@@ -27,8 +27,8 @@ const nextConfig = {
         'next-swc-loader',
         {
           loader: '@svgr/webpack',
-          options: { babel: false }
-        }
+          options: { babel: false },
+        },
       ],
     });
 
@@ -58,8 +58,8 @@ const sentryWebpackPluginOptions = {
   // https://github.com/getsentry/sentry-webpack-plugin#options.
 
   authToken: process.env.SENTRY_AUTH_TOKEN,
-  include: "src/*",
-  ignore: ["node_modules", "webpack.config.js"],
+  include: 'src/*',
+  ignore: ['node_modules', 'webpack.config.js'],
 };
 
 module.exports = withSentryConfig(nextConfig, sentryWebpackPluginOptions);

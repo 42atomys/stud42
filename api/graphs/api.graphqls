@@ -34,10 +34,11 @@ type Account {
   type: String!
   provider: String!
   providerAccountId: String!
+  username: String!
   expires_at: Int
   token_type: String
-  refresh_token: String
-  access_token: String
+  refresh_token: String @authorizationByPolicy(networkPolicy: CLUSTER)
+  access_token: String @authorizationByPolicy(networkPolicy: CLUSTER)
   scope: String
   userID: UUID!
   user: User!
@@ -71,6 +72,7 @@ input LinkAccountInput {
   provider: PROVIDER
   type: ACCOUNT_TYPE
   providerAccountId: String!
+  username: String!
   accessToken: String!
   tokenType: String!
   expiresAt: Int
@@ -348,6 +350,21 @@ input AccountWhereInput {
   providerAccountIDHasSuffix: String
   providerAccountIDEqualFold: String
   providerAccountIDContainsFold: String
+  
+  """username field predicates"""
+  username: String
+  usernameNEQ: String
+  usernameIn: [String!]
+  usernameNotIn: [String!]
+  usernameGT: String
+  usernameGTE: String
+  usernameLT: String
+  usernameLTE: String
+  usernameContains: String
+  usernameHasPrefix: String
+  usernameHasSuffix: String
+  usernameEqualFold: String
+  usernameContainsFold: String
   
   """expires_at field predicates"""
   expiresAt: Int

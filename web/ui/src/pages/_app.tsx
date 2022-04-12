@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 
 import '../styles/globals.css';
 import { AppProps } from 'next/app';
-import AuthGuard, { NextComponentWithAuth } from '@components/AuthGuard';
+import { NextComponentType, NextPageContext } from 'next';
 
 const COOKIE_NAME = 'next-auth.session-token';
 const authToken = Cookies.get(COOKIE_NAME);
@@ -39,17 +39,17 @@ const Interface = ({
   Component,
   session,
   pageProps,
-}: AppProps & { Component: NextComponentWithAuth } & SessionProviderProps) => {
+}: AppProps & {
+  Component: NextComponentType<NextPageContext, any, {}>;
+} & SessionProviderProps) => {
   return (
-    <SessionProvider session={session} refetchOnWindowFocus={true}>
+    <SessionProvider
+      session={session}
+      refetchOnWindowFocus={true}
+      refetchInterval={60}
+    >
       <ApolloProvider client={apolloClient}>
-        {Component.auth?.required ? (
-          <AuthGuard>
-            <Component {...pageProps} />
-          </AuthGuard>
-        ) : (
-          <Component {...pageProps} />
-        )}
+        <Component {...pageProps} />
       </ApolloProvider>
     </SessionProvider>
   );

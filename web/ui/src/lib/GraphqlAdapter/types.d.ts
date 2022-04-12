@@ -1,4 +1,4 @@
-import type { Adapter, AdapterUser } from 'next-auth/adapters';
+import type { Adapter } from 'next-auth/adapters';
 
 /**
  * `createVerificationToken` and `useVerificationToken` are omitted because they
@@ -31,19 +31,6 @@ export type S42Adapter = Omit<
   | 'unlinkAccount'
 >;
 
-
-/**
- * S42AdapterUser is the type of the user returned by the S42 adapter.
- * It is the same as the `AdapterUser` type from the `next-auth` library extended
- * with optionnal properties
- */
-export interface S42AdapterUser extends AdapterUser {
-  // The `duo` property is used to store Duo context.
-  duo?: DuoContext;
-  // The `github` property is used to store GitHub context.
-  github?: GithubContext
-}
-
 /**
  * EmailVerifiedOverride is used to surcharge the `AdapterUser` type from the
  * `next-auth` library. The surcharge the `emailVerified` property
@@ -51,8 +38,8 @@ export interface S42AdapterUser extends AdapterUser {
  */
 interface EmailVerifiedOverride {
   user: {
-    emailVerified: null
-  }
+    emailVerified: null;
+  };
 }
 
 /**
@@ -73,5 +60,5 @@ export interface DuoContext {
 export interface GithubContext {
   id: number;
   login: string;
-  type: "User" | "Organization" | "Bot" | "Enterprise";
+  type: 'User' | 'Organization' | 'Bot' | 'Enterprise';
 }

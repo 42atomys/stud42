@@ -70,6 +70,10 @@ export default NextAuth({
   // https://next-auth.js.org/configuration/callbacks
   callbacks: {
     async signIn({ user, account, profile }) {
+      // Extend account with additional profile data to be saved to database
+      // with linkAccount function on adapter
+      account._profile = profile;
+
       if (account.provider == '42-school') {
         user.duo = {
           id: profile.id,
@@ -87,38 +91,30 @@ export default NextAuth({
           id: profile.id,
           login: profile.login,
           type: profile.type,
-        }
+        };
         return true;
       }
 
       return false;
     },
 
-    async session({ session }) {
-      // console.log('session-session', session);
-      // console.log('session-token', token);
-      // console.log('session-user', user);
+    async session({ session, user, token }) {
+      const { user: userToken, ...rest } = token;
+      session.user = user || userToken;
+      if (token) session.token = rest;
       return session;
     },
 
-    
-    async jwt({ token, profile }) {
-      // console.log('jwt-token', token);
-      // console.log('jwt-user', user);
-      // console.log('jwt-account', account);
-      // console.log('jwt-profile', profile?.campus_users);
-
-      if (typeof profile?.login === 'string')
-        token.name = profile?.login
-      // if (!account) return token;
-
-      // if (account.provider === 'github') {
-      //   user.login_github = profile?.login;
-      // }
-
-      // token.user = user;
-
+    async jwt({ token, user }) {
+      if (user) token.user = user;
       return token;
+    },
+
+    async redirect({ url, baseUrl }) {
+      if (url.startsWith(baseUrl)) return url;
+      // Allows relative callback URLs
+      else if (url.startsWith('/')) return new URL(url, baseUrl).toString();
+      return baseUrl;
     },
   },
 

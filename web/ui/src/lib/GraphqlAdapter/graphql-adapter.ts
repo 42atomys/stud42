@@ -1,12 +1,6 @@
 import request from 'graphql-request';
 import { Account } from 'next-auth';
-import type { AdapterUser } from 'next-auth/adapters';
-import type {
-  DuoContext,
-  EmailVerifiedOverride,
-  S42Adapter,
-  S42AdapterUser,
-} from './types';
+import type { DuoContext, S42Adapter } from './types';
 import {
   InternalCreateUserDocument,
   InternalCreateUserMutation,
@@ -27,6 +21,7 @@ import {
 } from '@graphql.d';
 import { ProviderType } from 'next-auth/providers';
 import { captureException } from '@sentry/nextjs';
+import { AdapterUser } from 'next-auth/adapters';
 
 const url = 'http://localhost:4000/graphql';
 
@@ -53,7 +48,7 @@ export const GraphQLAdapter = (): S42Adapter => {
       }
 
       try {
-        const typedUser = user as S42AdapterUser & { duo: DuoContext };
+        const typedUser = user as Omit<AdapterUser, 'id'> & { duo: DuoContext };
 
         const { internalCreateUser: uuid } = await request<
           InternalCreateUserMutation,
@@ -76,8 +71,8 @@ export const GraphQLAdapter = (): S42Adapter => {
           ...user,
         };
       } catch (error: any) {
-        captureException(error)
-        throw error
+        captureException(error);
+        throw error;
         return { ...user, id: '', emailVerified: null };
       }
     },
@@ -89,7 +84,7 @@ export const GraphQLAdapter = (): S42Adapter => {
     getUser: async (id: string): Promise<AdapterUser | null> => {
       try {
         const { user } = await request<
-          InternalGetUserQuery & EmailVerifiedOverride,
+          InternalGetUserQuery & { user: AdapterUser },
           InternalGetUserQueryVariables
         >(url, InternalGetUserDocument, { id });
 
@@ -107,7 +102,7 @@ export const GraphQLAdapter = (): S42Adapter => {
     getUserByEmail: async (email: string): Promise<AdapterUser | null> => {
       try {
         const { user } = await request<
-          InternalGetUserByEmailQuery & EmailVerifiedOverride,
+          InternalGetUserByEmailQuery & { user: AdapterUser },
           InternalGetUserByEmailQueryVariables
         >(url, InternalGetUserByEmailDocument, { email });
         return user;
@@ -129,7 +124,7 @@ export const GraphQLAdapter = (): S42Adapter => {
     >): Promise<AdapterUser | null> => {
       try {
         const { user } = await request<
-          InternalGetUserByAccountQuery & EmailVerifiedOverride,
+          InternalGetUserByAccountQuery & { user: AdapterUser },
           InternalGetUserByAccountQueryVariables
         >(url, InternalGetUserByAccountDocument, {
           provider: providerMap[provider],
@@ -150,16 +145,23 @@ export const GraphQLAdapter = (): S42Adapter => {
       account: Account
     ): Promise<Account | null | undefined> => {
       try {
+        if (!account._profile?.login) {
+          const err = new Error('Account must have a login');
+          captureException(err);
+          throw err;
+        }
+
         const { internalLinkAccount: acc } = await request<
           InternalLinkAccountMutation,
           InternalLinkAccountMutationVariables
         >(url, InternalLinkAccountDocument, {
           provider: providerMap[account.provider],
           providerAccountId: account.providerAccountId,
-          access_token: account.access_token || "",
+          username: account._profile.login,
+          access_token: account.access_token || '',
           refresh_token: account.refresh_token,
-          scope: account.scope || "",
-          token_type: account.token_type || "",
+          scope: account.scope || '',
+          token_type: account.token_type || '',
           userId: account.userId,
           expire_at: account.expires_at,
         });
@@ -167,11 +169,12 @@ export const GraphQLAdapter = (): S42Adapter => {
         return {
           provider: acc.provider,
           providerAccountId: acc.providerAccountId,
+          username: acc.username,
           type: acc.type as ProviderType,
           userId: acc.user.id,
         };
       } catch (error) {
-        captureException(error)
+        captureException(error);
         return null;
       }
     },

@@ -21,6 +21,7 @@ func (Account) Fields() []ent.Field {
 		field.String("type").NotEmpty().MaxLen(255),
 		field.String("provider").NotEmpty().MaxLen(255),
 		field.String("provider_account_id").NotEmpty().MaxLen(255),
+		field.String("username").NotEmpty().MaxLen(255),
 		field.Int("expires_at").Optional().Nillable(),
 		field.String("token_type").NotEmpty().MaxLen(255),
 		field.String("refresh_token").Unique().Optional().Nillable(),

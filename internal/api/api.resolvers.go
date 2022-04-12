@@ -35,6 +35,7 @@ func (r *mutationResolver) InternalLinkAccount(ctx context.Context, input typesg
 	id, err := r.client.Account.Create().
 		SetProvider(input.Provider.String()).
 		SetProviderAccountID(input.ProviderAccountID).
+		SetUsername(input.Username).
 		SetType(input.Type.String()).
 		SetAccessToken(input.AccessToken).
 		SetNillableRefreshToken(input.RefreshToken).

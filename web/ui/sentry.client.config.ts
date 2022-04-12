@@ -3,7 +3,7 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 import * as Sentry from '@sentry/nextjs';
-import { BrowserTracing } from "@sentry/tracing";
+import { BrowserTracing } from '@sentry/tracing';
 
 const SENTRY_DSN = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
 
@@ -11,7 +11,7 @@ Sentry.init({
   dsn: SENTRY_DSN,
   integrations: [new BrowserTracing()],
   // Adjust this value in production, or use tracesSampler for greater control
-  tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.2: 0,
+  tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.2 : 0,
   // ...
   // Note: if you want to override the automatic release value, do not set a
   // `release` value here - use the environment variable `SENTRY_RELEASE`, so

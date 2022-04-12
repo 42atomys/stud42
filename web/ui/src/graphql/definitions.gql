@@ -52,6 +52,7 @@ mutation internalCreateUser(
 mutation internalLinkAccount(
   $provider: PROVIDER!
   $providerAccountId: String!
+  $username: String!
   $token_type: String!
   $access_token: String!
   $refresh_token: String
@@ -64,6 +65,7 @@ mutation internalLinkAccount(
       provider: $provider
       type: OAUTH
       providerAccountId: $providerAccountId
+      username: $username
       tokenType: $token_type
       accessToken: $access_token
       refreshToken: $refresh_token
@@ -76,6 +78,7 @@ mutation internalLinkAccount(
     type
     provider
     providerAccountId
+    username
     user {
       id
     }
@@ -84,27 +87,28 @@ mutation internalLinkAccount(
 
 query internalGetUser($id: UUID!) {
   user: internalGetUser(id: $id) {
-    id
-    email
-    duoLogin
-    duoID
+    ...UserData
   }
 }
 
 query internalGetUserByEmail($email: String!) {
   user: internalGetUserByEmail(email: $email) {
-    id
-    email
-    duoLogin
-    duoID
+    ...UserData
   }
 }
 
 query internalGetUserByAccount($provider: PROVIDER!, $providerAccountId: String!) {
   user: internalGetUserByAccount(provider: $provider, uid: $providerAccountId) {
-    id
-    email
-    duoLogin
-    duoID
+    ...UserData
+  }
+}
+
+
+fragment UserData on User {
+  id
+  accounts {
+    provider
+    uid: providerAccountId
+    username
   }
 }
