@@ -36,6 +36,8 @@ jobs:
 
     - name: Install dependencies
       run: yarn install --frozen-lockfile
+    - name: Generate code
+      run: yarn generate
 
     - name: ESLint
       run: yarn style:lint
