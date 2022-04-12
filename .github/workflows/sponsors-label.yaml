@@ -29,8 +29,8 @@ jobs:
       run: |
         echo "is_sponsor=$(gh api graphql -F owner=${{ env.repository_owner }} -F sponsor=${{ env.opener }} -f query='${{ env.REQUEST }}' --jq '.data.repositoryOwner.isSponsoredBy')" >> $GITHUB_ENV
     - name: Assign Sponsor label to Issue
-      if: ${{ github.event_name == 'issues' }}
+      if: ${{ github.event_name == 'issues' && env.is_sponsor == 'true' }}
       run: gh issue edit ${{ github.event.issue.number }} -R ${{ env.repository_owner }}/${{ env.repository_name }} --add-label "sponsor 💖"
     - name: Assign Sponsor label to Pull Request
-      if: ${{ github.event_name == 'pull_request' }}
+      if: ${{ github.event_name == 'pull_request' && env.is_sponsor == 'true' }}
       run: gh pr edit ${{ github.event.pull_request.number }} -R ${{ env.repository_owner }}/${{ env.repository_name }} --add-label "sponsor 💖"
