@@ -73,7 +73,6 @@ func initSentry() {
 		Environment: env,
 		Release:     release,
 		BeforeSend: func(event *sentry.Event, hint *sentry.EventHint) *sentry.Event {
-			panic("allo")
 			return event
 		},
 		TracesSampleRate: tracesSampleRate,

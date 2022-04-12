@@ -40,7 +40,7 @@ func TestMarshalUUID(t *testing.T) {
 		input uuid.UUID
 		want  string
 	}{
-		{"valid uuid", uuid.MustParse("a0a0a0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a"), "a0a0a0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a"},
+		{"valid uuid", uuid.MustParse("a0a0a0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a"), "\"a0a0a0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a\""},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
