@@ -23,7 +23,7 @@ import { ProviderType } from 'next-auth/providers';
 import { captureException } from '@sentry/nextjs';
 import { AdapterUser } from 'next-auth/adapters';
 
-const url = 'http://localhost:4000/graphql';
+const url = process.env.NEXT_PUBLIC_GRAPHQL_API;
 
 const providerMap: Record<string, Provider> = {
   github: Provider.GITHUB,
