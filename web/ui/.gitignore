@@ -1,5 +1,3 @@
-.next/
-.env*
-!.env.example
 
-coverage/
+# Sentry
+.sentryclirc
