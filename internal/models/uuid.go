@@ -1,4 +1,4 @@
-package models
+package modelsutils
 
 import (
 	"errors"
@@ -12,7 +12,7 @@ import (
 // Returns the corresponding marshaller to perform this task.
 func MarshalUUID(uuid uuid.UUID) graphql.Marshaler {
 	return graphql.WriterFunc(func(w io.Writer) {
-		_, _ = io.WriteString(w, uuid.String())
+		_, _ = w.Write([]byte("\"" + uuid.String() + "\""))
 	})
 }
 

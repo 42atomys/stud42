@@ -6,6 +6,8 @@ import Image from 'next/image';
 import { Contribute, Star } from '@lib/github';
 import classNames from 'classnames';
 import Tooltip from '@components/Tooltip/Tooltip';
+import { useSession } from 'next-auth/react';
+import { Provider } from '@graphql.d';
 
 /**
  * Menu item component. This is used to create the menu items in the sidebar
@@ -34,7 +36,7 @@ const MenuItem = ({
           className={`duration-100 transition-all flex items-center justify-center my-3 text-xl`}
         >
           <div
-            className={`flex items-center justify-center text-xl rounded-full w-[50px] h-[50px] ${
+            className={`group relative flex items-center justify-center text-xl rounded-full w-[50px] h-[50px] ${
               activeRoute
                 ? 'text-white bg-indigo-200 dark:bg-indigo-500/20 border-2 border-indigo-500'
                 : 'border-transparent hover:border-slate-600 dark:hover:border-slate-400 hover:bg-slate-900/10 dark:hover:bg-slate-100/10'
@@ -42,7 +44,7 @@ const MenuItem = ({
           >
             <i
               className={classNames(
-                'fa-light',
+                'relative fa-light',
                 activeRoute
                   ? 'text-indigo-500'
                   : 'text-slate-600 dark:text-slate-400',
@@ -70,6 +72,7 @@ export const Sidebar = ({
   children?: JSX.Element;
 }) => {
   const { open, setOpen } = useContext(SidebarContext);
+  const { data: session } = useSession();
 
   return (
     <div className="md:flex flex-row md:flex-row md:min-h-screen w-full md:w-auto drop-shadow-xl md:drop-shadow-none">
@@ -119,6 +122,23 @@ export const Sidebar = ({
             open ? 'block' : 'hidden'
           } flex flex-col justify-center items-center text-center py-2`}
         >
+          <span className="text-sm text-slate-400 dark:text-slate-600">
+            {!subSidebar && (
+              <MenuItem
+                href="https://github.com/42Atomys/stud42"
+                icon="fa-brands fa-github"
+                name="Github"
+              />
+            )}
+            <MenuItem href="/auth/signout" icon="fa-sign-out" name="Logout" />
+          </span>
+          <span className="text-sm text-slate-400 dark:text-slate-600">
+            {
+              session?.user.accounts?.find(
+                (account) => account?.provider === Provider.DUO
+              )?.username
+            }
+          </span>
           <span className="text-sm text-slate-400 dark:text-slate-600">
             3.0+alpha.1
           </span>
