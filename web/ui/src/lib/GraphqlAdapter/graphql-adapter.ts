@@ -23,6 +23,9 @@ import { ProviderType } from 'next-auth/providers';
 import { captureException } from '@sentry/nextjs';
 import { AdapterUser } from 'next-auth/adapters';
 
+if (!process.env.NEXT_PUBLIC_GRAPHQL_API)
+  throw new Error('Missing NEXT_PUBLIC_GRAPHQL_API');
+
 const url = process.env.NEXT_PUBLIC_GRAPHQL_API;
 
 const providerMap: Record<string, Provider> = {
