@@ -82,6 +82,16 @@ export const LoginPage: NextPage<PageProps, {}> = () => {
           <span className="mr-2">Sign in with</span>
           <i className="fa-brands fa-github "></i>
         </button>
+
+        <button
+          className="w-fit flex flex-row group justify-center items-center bg-black hover:bg-white hover:text-black transition-all dark:border-0 border-black border-2 border-transparent text-white py-2 px-8 rounded uppercase my-4"
+          onClick={() =>
+            signIn('discord', { callbackUrl: callbackUrl as string })
+          }
+        >
+          <span className="mr-2">Sign in with</span>
+          <i className="fa-brands fa-discord"></i>
+        </button>
       </div>
     </div>
   );

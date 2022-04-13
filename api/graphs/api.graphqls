@@ -84,6 +84,7 @@ input LinkAccountInput {
 enum PROVIDER {
   GITHUB
   DUO
+  DISCORD
 }
 
 enum ACCOUNT_TYPE {

@@ -1,7 +1,8 @@
 import GraphQLAdapter from '@lib/GraphqlAdapter';
-import NextAuth from 'next-auth';
+import NextAuth, { Account, Profile, User } from 'next-auth';
 import FortyTwoProvider from 'next-auth/providers/42-school';
 import GithubProvider from 'next-auth/providers/github';
+import DiscordProvider from 'next-auth/providers/discord';
 
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
@@ -21,6 +22,11 @@ export default NextAuth({
       // @ts-ignore
       scope: 'user,user:email,user:follow',
     }),
+    DiscordProvider({
+      clientId: process.env.DISCORD_ID,
+      clientSecret: process.env.DISCORD_SECRET,
+      authorization: "https://discord.com/api/oauth2/authorize?scope=identify+email+connections+guilds.join",
+    })
   ],
   // The secret should be set to a reasonably long random string.
   // It is used to sign cookies and to sign and encrypt JSON Web Tokens, unless
@@ -69,10 +75,12 @@ export default NextAuth({
   // when an action is performed.
   // https://next-auth.js.org/configuration/callbacks
   callbacks: {
-    async signIn({ user, account, profile }) {
+    async signIn({ user, account, profile }: { user: User, account: Account, profile: Profile }) {
       // Extend account with additional profile data to be saved to database
       // with linkAccount function on adapter
-      account._profile = profile;
+
+      // @ts-ignore
+      account._profile = { }
 
       if (account.provider == '42-school') {
         user.duo = {
@@ -92,6 +100,10 @@ export default NextAuth({
           login: profile.login,
           type: profile.type,
         };
+        return true;
+      } else if (account.provider == 'discord' && account._profile) {
+        account._profile.login = `${profile.username}#${profile.discriminator}`
+
         return true;
       }
 
