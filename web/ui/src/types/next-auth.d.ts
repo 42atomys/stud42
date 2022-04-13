@@ -1,6 +1,5 @@
 import { UserDataFragment } from '@graphql.d';
-import { DuoContext } from '@lib/GraphqlAdapter';
-import { GithubContext } from '@lib/GraphqlAdapter/types';
+import { DuoContext, GithubContext } from '@lib/GraphqlAdapter';
 import {
   DefaultSession,
   DefaultAccount,
@@ -18,7 +17,7 @@ interface User extends Record<string, unknown>, DefaultUser {}
 interface Profile extends Record<string, unknown>, DefaultProfile {}
 
 interface Account extends Record<string, unknown>, DefaultAccount {
-  _profile?: {
+  _profile?: Profile & {
     login: string;
   };
 }
