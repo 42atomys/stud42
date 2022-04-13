@@ -1,3 +1,4 @@
+import GraphQLAdapter from '@lib/GraphqlAdapter';
 import NextAuth from 'next-auth';
 import FortyTwoProvider from 'next-auth/providers/42-school';
 import GithubProvider from 'next-auth/providers/github';
@@ -5,6 +6,8 @@ import GithubProvider from 'next-auth/providers/github';
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
 export default NextAuth({
+  // @ts-ignore
+  adapter: GraphQLAdapter(),
   // https://next-auth.js.org/configuration/providers
   providers: [
     FortyTwoProvider({
@@ -16,7 +19,7 @@ export default NextAuth({
       clientSecret: process.env.GITHUB_SECRET,
       // https://docs.github.com/en/developers/apps/building-oauth-apps/scopes-for-oauth-apps
       // @ts-ignore
-      scope: 'read:user,user:email,user:follow',
+      scope: 'user,user:email,user:follow',
     }),
   ],
   // The secret should be set to a reasonably long random string.
@@ -31,7 +34,7 @@ export default NextAuth({
     strategy: 'jwt',
 
     // Seconds - How long until an idle session expires and is no longer valid.
-    // maxAge: 30 * 24 * 60 * 60, // 30 days
+    maxAge: 30 * 24 * 60 * 60, // 30 days
 
     // Seconds - Throttle how frequently to write to database to extend a session.
     // Use it to limit write operations. Set to 0 to always update the database.
@@ -57,7 +60,7 @@ export default NextAuth({
   pages: {
     signIn: '/auth/signin',
     // signOut: '/auth/signout', // Displays form with sign out button
-    // error: '/auth/error', // Error code passed in query string as ?error=
+    error: '/auth/signin', // Error code passed in query string as ?error=
     // verifyRequest: '/auth/verify-request', // Used for check email page
     // newUser: null // If set, new users will be directed here on first sign in
   },
@@ -66,10 +69,53 @@ export default NextAuth({
   // when an action is performed.
   // https://next-auth.js.org/configuration/callbacks
   callbacks: {
-    // async signIn({ user, account, profile, email, credentials }) { return true },
-    // async redirect({ url, baseUrl }) { return baseUrl },
-    // async session({ session, token, user }) { return session },
-    // async jwt({ token, user, account, profile, isNewUser }) { return token }
+    async signIn({ user, account, profile }) {
+      // Extend account with additional profile data to be saved to database
+      // with linkAccount function on adapter
+      account._profile = profile;
+
+      if (account.provider == '42-school') {
+        user.duo = {
+          id: profile.id,
+          login: profile.login,
+          firstName: profile.first_name,
+          lastName: profile.last_name,
+          usualFirstName: profile.usual_first_name,
+          poolYear: profile.pool_year,
+          poolMonth: profile.pool_month,
+          phone: profile.phone,
+        };
+        return true;
+      } else if (account.provider == 'github') {
+        user.github = {
+          id: profile.id,
+          login: profile.login,
+          type: profile.type,
+        };
+        return true;
+      }
+
+      return false;
+    },
+
+    async session({ session, user, token }) {
+      const { user: userToken, ...rest } = token;
+      session.user = user || userToken;
+      if (token) session.token = rest;
+      return session;
+    },
+
+    async jwt({ token, user }) {
+      if (user) token.user = user;
+      return token;
+    },
+
+    async redirect({ url, baseUrl }) {
+      if (url.startsWith(baseUrl)) return url;
+      // Allows relative callback URLs
+      else if (url.startsWith('/')) return new URL(url, baseUrl).toString();
+      return baseUrl;
+    },
   },
 
   // Events are useful for logging

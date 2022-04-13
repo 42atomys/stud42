@@ -22,10 +22,7 @@ module.exports = {
     'import/no-extraneous-dependencies': [
       'error',
       {
-        devDependencies: [
-          '**/*.test.*',
-          '**/*.spec.*',
-        ],
+        devDependencies: ['**/*.test.*', '**/*.spec.*'],
         peerDependencies: true,
       },
     ],

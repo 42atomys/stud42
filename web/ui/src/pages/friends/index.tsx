@@ -1,11 +1,13 @@
-import { ComponentWithAuthGuard } from '@components/AuthGuard';
 import React from 'react';
 import { useSidebar } from '@components/Sidebar';
+import { useSession } from 'next-auth/react';
+import { NextPage } from 'next';
 
 type PageProps = {};
 
-const IndexPage: ComponentWithAuthGuard<PageProps> = () => {
+const IndexPage: NextPage<PageProps> = () => {
   const { SidebarProvider, Sidebar, PageContainer, PageContent } = useSidebar();
+  const { data: session } = useSession();
 
   return (
     <SidebarProvider>
@@ -15,19 +17,11 @@ const IndexPage: ComponentWithAuthGuard<PageProps> = () => {
         </Sidebar>
         <PageContent className="p-2 flex-1">
           <h1>Friends Page</h1>
+          <pre>{JSON.stringify(session, null, 2)}</pre>
         </PageContent>
       </PageContainer>
     </SidebarProvider>
   );
-};
-
-export const getStaticProps = () => ({
-  props: {},
-});
-
-IndexPage.auth = {
-  loading: <></>,
-  required: false,
 };
 
 export default IndexPage;

@@ -4,10 +4,8 @@
 # Globals 🤖
 # =================================================
 # local env files
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env*
+!.env.example
 
 # Configuration Files
 config/*
@@ -17,9 +15,18 @@ config/*
 # Backend ignores 💻
 # =================================================
 
+# Generated code
+internal/api/generated/*
+internal/models/generated/*
+internal/models/structs_generated.go
+
 # =================================================
 # Frontned ignores 🕹
 # =================================================
+
+# Generated code
+web/ui/src/graphql/schema.json
+web/ui/src/graphql/generated.ts
 
 # dependencies
 web/ui/node_modules
@@ -27,14 +34,14 @@ web/ui/*.pnp
 web/ui/*.pnp.js
 
 # testing
-web/ui/*/coverage
+web/ui/coverage
 
 # next.js
-web/ui/*/.next/
-web/ui/*/out/
+web/ui/.next/
+web/ui/out/
 
 # production
-web/ui/*/build
+web/ui/build
 
 # misc
 .DS_Store
@@ -44,8 +51,6 @@ web/ui/*/build
 web/ui/*npm-debug.log*
 web/ui/*yarn-debug.log*
 web/ui/*yarn-error.log*
-
-
 
 # vercel
 web/ui/*.vercel

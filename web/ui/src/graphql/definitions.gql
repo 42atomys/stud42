@@ -1,0 +1,114 @@
+# 
+# !!!! WARNING: NEVER IMPORT THIS MODULE DIRECTLY !!!!
+# 
+# This file is used to define the documents (queries and mutations) that are
+# available in the GraphQL interface.
+# To use this module, you must generate the schema using the `generate` script
+# by running `yarn run generate`.
+# To import this module, you must use the `import {} from '@graphql.d'` syntax.
+# All generated types will be available in the `generated.ts` siblings file.
+#
+# The name of query or mutation must do not contain prefix or suffix like `Query`
+# or `Mutation`. This is added automatically.
+#
+# EX: add a mutation called `mutation addFriend(){ addFriend(id: UUID!): bool }`
+# to this schema, you must use the following syntax to use it:
+#
+# To retrieve the generated gql document, you must use the following syntax:
+#
+# ```
+# import { addFriendMutationDocument } from '@graphql.d';
+# ```
+#
+# NOTE: We use GraphQL Code Generator to hard type the generated schema.
+# @see https://graphql-code-generator.com/
+
+mutation internalCreateUser(
+  $duoID: Int!
+  $duoLogin: String!
+  $email: String!
+  $firstName: String!
+  $usualFirstName: String
+  $lastName: String!
+  $poolYear: String!
+  $poolMonth: String!
+  $phone: String!
+) {
+  internalCreateUser(
+    input: {
+      duoLogin: $duoLogin
+      email: $email
+      duoID: $duoID
+      firstName: $firstName
+      usualFirstName: $usualFirstName
+      lastName: $lastName
+      poolYear: $poolYear
+      poolMonth: $poolMonth
+      phone: $phone
+    }
+  )
+}
+
+mutation internalLinkAccount(
+  $provider: PROVIDER!
+  $providerAccountId: String!
+  $username: String!
+  $token_type: String!
+  $access_token: String!
+  $refresh_token: String
+  $scope: String!
+  $expire_at: Int
+  $userId: String!
+) {
+  internalLinkAccount(
+    input: {
+      provider: $provider
+      type: OAUTH
+      providerAccountId: $providerAccountId
+      username: $username
+      tokenType: $token_type
+      accessToken: $access_token
+      refreshToken: $refresh_token
+      scope: $scope
+      expiresAt: $expire_at
+      userID: $userId
+    }
+  ) {
+    id
+    type
+    provider
+    providerAccountId
+    username
+    user {
+      id
+    }
+  }
+}
+
+query internalGetUser($id: UUID!) {
+  user: internalGetUser(id: $id) {
+    ...UserData
+  }
+}
+
+query internalGetUserByEmail($email: String!) {
+  user: internalGetUserByEmail(email: $email) {
+    ...UserData
+  }
+}
+
+query internalGetUserByAccount($provider: PROVIDER!, $providerAccountId: String!) {
+  user: internalGetUserByAccount(provider: $provider, uid: $providerAccountId) {
+    ...UserData
+  }
+}
+
+
+fragment UserData on User {
+  id
+  accounts {
+    provider
+    uid: providerAccountId
+    username
+  }
+}
