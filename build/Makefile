@@ -1,6 +1,7 @@
 
 generate:
 	go generate generate.go
+	go generate cmd/jwtks.go
 
 build:
 	go build -o stud42cli
