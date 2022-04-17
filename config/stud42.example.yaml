@@ -3,3 +3,9 @@ api: {}
 
 # Interface relatives configurations
 interface: {}
+
+# jwtks service relatives configurations
+jwtks:
+  certs:
+    private_key: /etc/stud42/certs/private.key
+    public_key: /etc/stud42/certs/public.pem

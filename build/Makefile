@@ -11,6 +11,11 @@ clean:
 
 regenerate: clean generate
 
+certs:
+	mkdir -p certs
+	openssl genrsa -out certs/private.key 4096
+	openssl rsa -in certs/private.key -out certs/public.pem -pubout -outform PEM
+
 all:
 	generate
 	build
