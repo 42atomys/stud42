@@ -6,6 +6,8 @@ scalar Time
 
 directive @authorizationByPolicy(networkPolicy: NETWORK_POLICY) on FIELD_DEFINITION
 
+directive @authenticated on FIELD_DEFINITION
+
 enum NETWORK_POLICY {
   NONE
   CLUSTER
@@ -45,7 +47,7 @@ type Account {
 }
 
 type Query {
-  me: User!
+  me: User! @authenticated
   internalGetUserByAccount(provider: PROVIDER!, uid: String!): User! @authorizationByPolicy(networkPolicy: CLUSTER)
   internalGetUserByEmail(email: String!): User! @authorizationByPolicy(networkPolicy: CLUSTER)
   internalGetUser(id: UUID!): User! @authorizationByPolicy(networkPolicy: CLUSTER)

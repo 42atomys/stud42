@@ -17,6 +17,7 @@ import (
 	sentryhttp "github.com/getsentry/sentry-go/http"
 	"github.com/go-chi/chi/v5"
 	_ "github.com/lib/pq"
+	"github.com/rs/cors"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 
@@ -64,7 +65,15 @@ var apiCmd = &cobra.Command{
 		srv.Use(entgql.Transactioner{TxOpener: client})
 
 		router := chi.NewRouter()
+		router.Use(cors.New(cors.Options{
+			AllowedOrigins:   []string{"http://localhost:3000"},
+			AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+			AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token", "Sentry-Trace"},
+			AllowCredentials: true,
+			Debug:            true,
+		}).Handler)
 		router.Use(api.NetworkPolicyMiddleware)
+		router.Use(api.AuthenticationMiddleware)
 
 		if *playgroudActive {
 			router.Handle("/", playground.Handler("GraphQL playground", "/graphql"))

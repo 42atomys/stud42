@@ -54,12 +54,7 @@ func (r *mutationResolver) InternalLinkAccount(ctx context.Context, input typesg
 }
 
 func (r *queryResolver) Me(ctx context.Context) (*generated.User, error) {
-	// if user := ForContext(ctx); user == nil {
-	// 	return nil, fmt.Errorf("access denied")
-	// }
-
-	// return ForContext(ctx), nil
-	return nil, fmt.Errorf("not implemented")
+	return CurrentUserFromContext(ctx)
 }
 
 func (r *queryResolver) InternalGetUserByAccount(ctx context.Context, provider typesgen.Provider, uid string) (*generated.User, error) {
@@ -87,86 +82,6 @@ func (r *userResolver) PoolMonth(ctx context.Context, obj *generated.User) (*int
 	panic(fmt.Errorf("not implemented"))
 }
 
-func (r *accountWhereInputResolver) UserID(ctx context.Context, obj *generated.AccountWhereInput, data *string) error {
-	panic(fmt.Errorf("not implemented"))
-}
-
-func (r *accountWhereInputResolver) UserIDNeq(ctx context.Context, obj *generated.AccountWhereInput, data *string) error {
-	panic(fmt.Errorf("not implemented"))
-}
-
-func (r *accountWhereInputResolver) UserIDIn(ctx context.Context, obj *generated.AccountWhereInput, data []string) error {
-	panic(fmt.Errorf("not implemented"))
-}
-
-func (r *accountWhereInputResolver) UserIDNotIn(ctx context.Context, obj *generated.AccountWhereInput, data []string) error {
-	panic(fmt.Errorf("not implemented"))
-}
-
-func (r *accountWhereInputResolver) ID(ctx context.Context, obj *generated.AccountWhereInput, data *string) error {
-	panic(fmt.Errorf("not implemented"))
-}
-
-func (r *accountWhereInputResolver) IDNeq(ctx context.Context, obj *generated.AccountWhereInput, data *string) error {
-	panic(fmt.Errorf("not implemented"))
-}
-
-func (r *accountWhereInputResolver) IDIn(ctx context.Context, obj *generated.AccountWhereInput, data []string) error {
-	panic(fmt.Errorf("not implemented"))
-}
-
-func (r *accountWhereInputResolver) IDNotIn(ctx context.Context, obj *generated.AccountWhereInput, data []string) error {
-	panic(fmt.Errorf("not implemented"))
-}
-
-func (r *accountWhereInputResolver) IDGt(ctx context.Context, obj *generated.AccountWhereInput, data *string) error {
-	panic(fmt.Errorf("not implemented"))
-}
-
-func (r *accountWhereInputResolver) IDGte(ctx context.Context, obj *generated.AccountWhereInput, data *string) error {
-	panic(fmt.Errorf("not implemented"))
-}
-
-func (r *accountWhereInputResolver) IDLt(ctx context.Context, obj *generated.AccountWhereInput, data *string) error {
-	panic(fmt.Errorf("not implemented"))
-}
-
-func (r *accountWhereInputResolver) IDLte(ctx context.Context, obj *generated.AccountWhereInput, data *string) error {
-	panic(fmt.Errorf("not implemented"))
-}
-
-func (r *userWhereInputResolver) ID(ctx context.Context, obj *generated.UserWhereInput, data *string) error {
-	panic(fmt.Errorf("not implemented"))
-}
-
-func (r *userWhereInputResolver) IDNeq(ctx context.Context, obj *generated.UserWhereInput, data *string) error {
-	panic(fmt.Errorf("not implemented"))
-}
-
-func (r *userWhereInputResolver) IDIn(ctx context.Context, obj *generated.UserWhereInput, data []string) error {
-	panic(fmt.Errorf("not implemented"))
-}
-
-func (r *userWhereInputResolver) IDNotIn(ctx context.Context, obj *generated.UserWhereInput, data []string) error {
-	panic(fmt.Errorf("not implemented"))
-}
-
-func (r *userWhereInputResolver) IDGt(ctx context.Context, obj *generated.UserWhereInput, data *string) error {
-	panic(fmt.Errorf("not implemented"))
-}
-
-func (r *userWhereInputResolver) IDGte(ctx context.Context, obj *generated.UserWhereInput, data *string) error {
-	panic(fmt.Errorf("not implemented"))
-}
-
-func (r *userWhereInputResolver) IDLt(ctx context.Context, obj *generated.UserWhereInput, data *string) error {
-	panic(fmt.Errorf("not implemented"))
-}
-
-func (r *userWhereInputResolver) IDLte(ctx context.Context, obj *generated.UserWhereInput, data *string) error {
-	panic(fmt.Errorf("not implemented"))
-}
-
 // Mutation returns apigen.MutationResolver implementation.
 func (r *Resolver) Mutation() apigen.MutationResolver { return &mutationResolver{r} }
 
@@ -176,16 +91,6 @@ func (r *Resolver) Query() apigen.QueryResolver { return &queryResolver{r} }
 // User returns apigen.UserResolver implementation.
 func (r *Resolver) User() apigen.UserResolver { return &userResolver{r} }
 
-// AccountWhereInput returns apigen.AccountWhereInputResolver implementation.
-func (r *Resolver) AccountWhereInput() apigen.AccountWhereInputResolver {
-	return &accountWhereInputResolver{r}
-}
-
-// UserWhereInput returns apigen.UserWhereInputResolver implementation.
-func (r *Resolver) UserWhereInput() apigen.UserWhereInputResolver { return &userWhereInputResolver{r} }
-
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type userResolver struct{ *Resolver }
-type accountWhereInputResolver struct{ *Resolver }
-type userWhereInputResolver struct{ *Resolver }

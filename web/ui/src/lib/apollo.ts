@@ -26,8 +26,7 @@ const authLink = setContext(async (_, { headers }: { headers: Headers }) => {
 });
 
 export const apolloClient = new ApolloClient({
-  link: from([authLink, httpLink]),
-  name: 'interface',
+  link: from([httpLink]),
   version: process.env.NEXT_PUBLIC_VERSION,
   ssrMode: true,
   connectToDevTools: process.env.NODE_ENV === 'development',

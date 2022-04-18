@@ -25,13 +25,12 @@ export default NextAuth({
     DiscordProvider({
       clientId: process.env.DISCORD_ID,
       clientSecret: process.env.DISCORD_SECRET,
-      authorization: "https://discord.com/api/oauth2/authorize?scope=identify+email+connections+guilds.join",
-    })
+      authorization:
+        'https://discord.com/api/oauth2/authorize?scope=identify+email+connections+guilds.join',
+    }),
   ],
-  // The secret should be set to a reasonably long random string.
-  // It is used to sign cookies and to sign and encrypt JSON Web Tokens, unless
-  // a separate secret is defined explicitly for encrypting the JWT.
-  secret: process.env.SECRET_KEY,
+
+  secret: '123',
 
   session: {
     // Use JSON Web Tokens for session instead of database sessions.
@@ -54,8 +53,26 @@ export default NextAuth({
   jwt: {
     // You can define your own encode/decode functions for signing and encryption
     // if you want to override the default behaviour.
-    // encode: async ({ secret, token, maxAge }) => {},
-    // decode: async ({ secret, token, maxAge }) => {},
+    encode: async ({ secret, token = {}, maxAge = 0 }) => {
+      const encryptionSecret = await getDerivedEncryptionKey(secret);
+      const now = () => (Date.now() / 1000) | 0;
+      return new EncryptJWT(token)
+        .setProtectedHeader({ alg: 'dir', enc: 'A256GCM' })
+        .setIssuedAt()
+        .setExpirationTime(now() + maxAge)
+        .setJti(uuid())
+        .setIssuer('next-auth')
+        .setNotBefore(now() - 1)
+        .encrypt(encryptionSecret);
+    },
+    decode: async ({ secret, token }) => {
+      if (!token) return null;
+      const encryptionSecret = await getDerivedEncryptionKey(secret);
+      const { payload } = await jwtDecrypt(token, encryptionSecret, {
+        clockTolerance: 15,
+      });
+      return payload;
+    },
   },
 
   // You can define custom pages to override the built-in ones. These will be regular Next.js pages
@@ -75,12 +92,20 @@ export default NextAuth({
   // when an action is performed.
   // https://next-auth.js.org/configuration/callbacks
   callbacks: {
-    async signIn({ user, account, profile }: { user: User, account: Account, profile: Profile }) {
+    async signIn({
+      user,
+      account,
+      profile,
+    }: {
+      user: User;
+      account: Account;
+      profile: Profile;
+    }) {
       // Extend account with additional profile data to be saved to database
       // with linkAccount function on adapter
 
       // @ts-ignore
-      account._profile = { }
+      account._profile = {};
 
       if (account.provider == '42-school') {
         user.duo = {
@@ -102,7 +127,7 @@ export default NextAuth({
         };
         return true;
       } else if (account.provider == 'discord' && account._profile) {
-        account._profile.login = `${profile.username}#${profile.discriminator}`
+        account._profile.login = `${profile.username}#${profile.discriminator}`;
 
         return true;
       }
@@ -134,6 +159,37 @@ export default NextAuth({
   // https://next-auth.js.org/configuration/events
   events: {},
 
+  cookies: {
+    // Wait the merge of the PR before enabling this
+    // https://github.com/nextauthjs/next-auth/pull/4385#issuecomment-1098584113
+    // sessionToken: {
+    //   name: `next-auth.session-token`, //`__s42.auth-token`,
+    //   options: {
+    //     httpOnly: true,
+    //     sameSite: 'lax',
+    //     path: '/',
+    //     secure: true
+    //   }
+    // },
+    callbackUrl: {
+      name: `__s42.callback-url`,
+      options: {
+        sameSite: 'lax',
+        path: '/',
+        secure: true,
+      },
+    },
+    csrfToken: {
+      name: `__s42.csrf-token`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: true,
+      },
+    },
+  },
+
   // Enable debug messages in the console if you are having problems
-  debug: false,
+  debug: true,
 });

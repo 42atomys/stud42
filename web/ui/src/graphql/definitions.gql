@@ -85,6 +85,12 @@ mutation internalLinkAccount(
   }
 }
 
+query me {
+  me {
+    ...UserData
+  }
+}
+
 query internalGetUser($id: UUID!) {
   user: internalGetUser(id: $id) {
     ...UserData
@@ -102,7 +108,6 @@ query internalGetUserByAccount($provider: PROVIDER!, $providerAccountId: String!
     ...UserData
   }
 }
-
 
 fragment UserData on User {
   id
