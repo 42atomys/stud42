@@ -26,7 +26,7 @@ var (
 // jwtksCmd represents the jwtks command
 var jwtksCmd = &cobra.Command{
 	Use:   "jwtks",
-	Short: "Serve the ID Provider service",
+	Short: "Serve the JWTKS Service",
 
 	Run: func(cmd *cobra.Command, args []string) {
 		if err := config.Load(); err != nil {

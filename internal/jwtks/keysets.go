@@ -7,6 +7,15 @@ import (
 	"github.com/lestrrat-go/jwx/v2/jwk"
 )
 
+/**
+ * keysSets hold references to all the keys used to sign and validate
+ * JWT Tokens.
+ *
+ * NOTE: Actually this Service and this endpoint can hold only one
+ * key set. But for the sake of simplicity, we are using a single key
+ * called `global` and we are using the `kid` field to identify the
+ * key.
+ */
 var keySets jwk.Set = jwk.NewSet()
 
 /**
