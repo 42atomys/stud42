@@ -15,10 +15,14 @@ config/*
 # Backend ignores 💻
 # =================================================
 
+# Certs
+certs/
+
 # Generated code
 internal/api/generated/*
 internal/models/generated/*
 internal/models/structs_generated.go
+internal/**/*.pb.go
 
 # =================================================
 # Frontned ignores 🕹

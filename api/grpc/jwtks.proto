@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option go_package = "internal/jwtks";
+
+package jwtks;
+
+service JWTKSService {
+  rpc GenerateToken (GenerateRequest) returns (Reply) {}
+  rpc ValidateToken (ValidateRequest) returns (Reply) {}
+}
+
+message GenerateRequest {
+  string user_id = 1;
+}
+
+message ValidateRequest {
+  string token = 1;
+  bool regenerate = 2;
+}
+
+message Reply {
+  string token = 1;
+  bool valid = 2;
+}
