@@ -38,7 +38,7 @@ func SetCertificates(privateKeyPath, publicKeyPath string) error {
 	if err != nil && !errors.Is(err, os.ErrNotExist) {
 		return err
 	} else if err != nil && errors.Is(err, os.ErrNotExist) {
-		log.Warn().Msgf("No private key given, no tokens can be generated")
+		log.Warn().Msg("No private key given, no tokens can be generated")
 	}
 
 	publicBytes, err := ioutil.ReadFile(publicKeyPath)
@@ -74,7 +74,7 @@ func setCertificatesFromBytes(privateKeyBytes, publicKeyBytes []byte) (err error
 
 		var ok bool
 		if publicKey, ok = parsedKey.(*rsa.PublicKey); !ok {
-			log.Error().Err(err).Msgf("Unable to parse RSA public key, generating a temp one", err)
+			log.Error().Err(err).Msgf("Unable to parse RSA public key, generating a temp one")
 			return err
 		}
 	} else {
