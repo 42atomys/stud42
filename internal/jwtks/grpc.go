@@ -9,8 +9,10 @@ import (
 	"github.com/google/uuid"
 	"github.com/lestrrat-go/jwx/v2/jwt"
 	"github.com/rs/zerolog/log"
+	"github.com/spf13/viper"
 	"google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
+	"google.golang.org/grpc/credentials"
 	status "google.golang.org/grpc/status"
 )
 
@@ -27,7 +29,15 @@ func ServeGRPC(port *string) error {
 		log.Fatal().Msgf("failed to listen: %v", err)
 	}
 
-	s := grpc.NewServer()
+	creds, err := credentials.NewServerTLSFromFile(
+		viper.GetString("jwtks.grpc.cert_public_key"),
+		viper.GetString("jwtks.grpc.cert_private_key"),
+	)
+	if err != nil {
+		log.Fatal().Msgf("failed to load credentials: %v", err)
+	}
+
+	s := grpc.NewServer(grpc.Creds(creds))
 	RegisterJWTKSServiceServer(s, &server{
 		tokenValidity: 30 * 24 * time.Hour,
 	})

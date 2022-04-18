@@ -6,6 +6,9 @@ interface: {}
 
 # jwtks service relatives configurations
 jwtks:
-  certs:
-    private_key: /etc/stud42/certs/private.key
-    public_key: /etc/stud42/certs/public.pem
+  jwk:
+    cert_private_key: /etc/stud42/certs/private.key
+    cert_public_key: /etc/stud42/certs/public.pem
+  grpc:
+    cert_private_key: /etc/stud42/certs/server.key
+    cert_public_key: /etc/stud42/certs/server.pem

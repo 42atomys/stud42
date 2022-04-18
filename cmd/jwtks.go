@@ -33,7 +33,7 @@ var jwtksCmd = &cobra.Command{
 			log.Fatal().Err(err).Msg("invalid configuration")
 		}
 
-		if err := jwtks.SetCertificates(viper.GetString("jwtks.certs.private_key"), viper.GetString("jwtks.certs.public_key")); err != nil {
+		if err := jwtks.SetCertificates(viper.GetString("jwtks.jwk.cert_private_key"), viper.GetString("jwtks.jwk.cert_public_key")); err != nil {
 			log.Fatal().Err(err).Msg("failed to set jwtks keys")
 		}
 
