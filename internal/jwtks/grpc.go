@@ -22,6 +22,13 @@ type server struct {
 	tokenValidity time.Duration
 }
 
+/**
+ * ServeGRPC starts a GRPC server on the given port. This server
+ * implements the JWTKSServiceServer interface and is used to
+ * generate and validate JWT tokens. JWTKS gRPC Server is secure
+ * using SSL/TLS in all environments except `DEVENV`
+ * @param port The port to listen on without `:` prefix.
+ */
 func ServeGRPC(port *string) error {
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", *port))
@@ -45,6 +52,11 @@ func ServeGRPC(port *string) error {
 	return s.Serve(lis)
 }
 
+/**
+ * GenerateToken generates a JWT token using the JWKS strategy.
+ * @param request The request containing the GenerateRequest.
+ * @return The Reply containing the generated JWT token and her validity.
+ */
 func (s *server) GenerateToken(ctx context.Context, r *GenerateRequest) (*Reply, error) {
 	tok, err := jwt.NewBuilder().
 		Issuer(`student-id-provider`).
@@ -77,6 +89,11 @@ func (s *server) GenerateToken(ctx context.Context, r *GenerateRequest) (*Reply,
 	return &Reply{Token: string(signed), Valid: true}, nil
 }
 
+/**
+ * ValidateToken validates a JWT token using the JWKS strategy.
+ * @param request The request containing the ValidateRequest.
+ * @return The Reply containing the validation result and the refresh token if needed
+ */
 func (s *server) ValidateToken(ctx context.Context, r *ValidateRequest) (*Reply, error) {
 	var err error
 	defer func() {

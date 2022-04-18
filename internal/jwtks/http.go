@@ -12,6 +12,15 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
+/**
+ * ServeHTTP starts a HTTP server on the given port. This server
+ * only handles the JWKS endpoint.
+ *
+ * NOTE: Actually this Service and this endpoint can hold only one
+ * key set. But for the sake of simplicity, we are using a single key
+ * called `global` and we are using the `kid` field to identify the
+ * key.
+ */
 func ServeHTTP(port *string) error {
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", *port))
 	if err != nil {
@@ -37,6 +46,9 @@ func ServeHTTP(port *string) error {
 	return http.Serve(lis, router)
 }
 
+/**
+ * jwksHandler handles the JWKS endpoint.
+ */
 func jwksHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
