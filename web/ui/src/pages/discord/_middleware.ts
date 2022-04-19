@@ -2,8 +2,6 @@ import { NextMiddleware, NextRequest, NextResponse } from 'next/server';
 import { JWT } from 'next-auth/jwt';
 
 import { withAuth } from 'next-auth/middleware';
-import { Provider } from '@graphql.d';
-
 /**
  * The Middleware is only called when the user is not authenticated.
  * (when the method `authorized` returns false)
@@ -18,19 +16,11 @@ const middleware: NextMiddleware = async () => {
  * next page will be rendered, otherwise the user will be redirected to the
  * login page.
  */
-const authorized = ({
-  token,
-}: {
+const authorized = async ({}: {
   token: JWT | null;
   req: NextRequest;
-}): Promise<boolean> | boolean => {
-  if (token?.user.accounts) {
-    return token.user.accounts.some(
-      (account) => account?.provider == Provider.DISCORD
-    );
-  }
-
-  return false;
+}): Promise<boolean> => {
+  return true;
 };
 
 export default withAuth(middleware, { callbacks: { authorized } });

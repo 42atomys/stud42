@@ -31,6 +31,7 @@ internal/**/*.pb.go
 # Generated code
 web/ui/src/graphql/schema.json
 web/ui/src/graphql/generated.ts
+web/ui/src/grpc/jwtks/jwtks.ts
 
 # dependencies
 web/ui/node_modules

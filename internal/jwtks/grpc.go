@@ -2,6 +2,7 @@ package jwtks
 
 import (
 	context "context"
+	"encoding/json"
 	"fmt"
 	"net"
 	"time"
@@ -31,7 +32,7 @@ type server struct {
  */
 func ServeGRPC(port *string) error {
 
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", *port))
+	lis, err := net.Listen("tcp4", fmt.Sprintf(":%s", *port))
 	if err != nil {
 		log.Fatal().Msgf("failed to listen: %v", err)
 	}
@@ -53,11 +54,19 @@ func ServeGRPC(port *string) error {
 }
 
 /**
- * GenerateToken generates a JWT token using the JWKS strategy.
- * @param request The request containing the GenerateRequest.
+ * SignPayload generates a JWT token using the JWKS strategy.
+ * @param request The request containing the payload to insert into the JWT.
  * @return The Reply containing the generated JWT token and her validity.
  */
-func (s *server) GenerateToken(ctx context.Context, r *GenerateRequest) (*Reply, error) {
+func (s *server) SignPayload(ctx context.Context, r *SignPayloadRequest) (*Reply, error) {
+	log.Warn().Msg(r.Payload)
+
+	var payload = make(map[string]interface{})
+
+	if err := json.Unmarshal([]byte(r.GetPayload()), &payload); err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to unmarshal token: %s", err)
+	}
+
 	tok, err := jwt.NewBuilder().
 		Issuer(`student-id-provider`).
 		IssuedAt(time.Now()).
@@ -67,14 +76,17 @@ func (s *server) GenerateToken(ctx context.Context, r *GenerateRequest) (*Reply,
 		// Following the spec, it should be an array of strings containing the
 		// audience of the token. "{type}:{entity}:{scope}"
 		Audience([]string{`user:current:private`, `app:stud42:public`}).
-		// Subject is required, and should be a string containing the subject of
-		// the token, usually the user ID.
-		Subject(r.UserId).
 		// ID is required, and should be a string containing a unique identifier
 		// for the token. It's recommended to use a UUID.
 		// @TODO generate and set a unique ID to invalidate the token for more security.
 		JwtID(uuid.NewString()).
 		Build()
+
+	for k, v := range payload {
+		if err := tok.Set(k, v); err != nil {
+			return nil, status.Errorf(codes.Internal, "failed to set token: %s", err)
+		}
+	}
 
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to build token: %s", err)
@@ -95,6 +107,7 @@ func (s *server) GenerateToken(ctx context.Context, r *GenerateRequest) (*Reply,
  * @return The Reply containing the validation result and the refresh token if needed
  */
 func (s *server) ValidateToken(ctx context.Context, r *ValidateRequest) (*Reply, error) {
+	log.Debug().Msg("token validation asked")
 	var err error
 	defer func() {
 		if err != nil {
@@ -102,7 +115,7 @@ func (s *server) ValidateToken(ctx context.Context, r *ValidateRequest) (*Reply,
 		}
 	}()
 
-	tok, err := jwt.ParseString(r.Token)
+	tok, err := jwt.ParseString(r.Token, jwt.WithKeySet(GetKeySet()))
 	if err != nil {
 		log.Error().Err(err).Msg("failed to parse JWT")
 		return nil, status.Errorf(codes.InvalidArgument, "failed to parse JWT: %s", err)

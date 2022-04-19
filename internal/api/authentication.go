@@ -5,9 +5,15 @@ import (
 	"errors"
 	"net/http"
 	"strings"
+	"time"
 
 	modelgen "atomys.codes/stud42/internal/models/generated"
+	"atomys.codes/stud42/internal/models/generated/user"
 	"github.com/99designs/gqlgen/graphql"
+	"github.com/google/uuid"
+	"github.com/lestrrat-go/jwx/v2/jwk"
+	"github.com/lestrrat-go/jwx/v2/jwt"
+	"github.com/rs/zerolog/log"
 )
 
 // authTokenContextKey is the context key to store the JWT Token from the
@@ -30,9 +36,7 @@ func AuthenticationMiddleware(next http.Handler) http.Handler {
 		if len(splitToken) == 2 {
 			token = strings.TrimSpace(splitToken[1])
 		} else {
-			// TODO : Change when PR on next-auth is merged
-			// https://github.com/nextauthjs/next-auth/pull/4385
-			cookie, _ := r.Cookie("next-auth.session-token")
+			cookie, _ := r.Cookie("__s42.auth-token")
 
 			if cookie != nil {
 				token = cookie.Value
@@ -51,61 +55,37 @@ func AuthenticationMiddleware(next http.Handler) http.Handler {
 // resolver on fields that have the @authorization directive.
 func directiveAuthorization(client *modelgen.Client) func(ctx context.Context, obj interface{}, next graphql.Resolver) (res interface{}, err error) {
 	return func(ctx context.Context, obj interface{}, next graphql.Resolver) (res interface{}, err error) {
-		// jweToken, _ := ctx.Value(authTokenContextKey).(string)
+		jwtToken, _ := ctx.Value(authTokenContextKey).(string)
 
-		// if jweToken == "" {
-		// 	log.Debug().Msg("request not authenticated")
-		// 	return nil, errUnauthenticated
-		// }
+		if jwtToken == "" {
+			log.Debug().Msg("request not authenticated")
+			return nil, errUnauthenticated
+		}
 
-		// log.Debug().Msgf("T: %s", jweToken)
+		log.Debug().Msgf("T: %s", jwtToken)
 
-		// // Extract sub from jwe
-		// // Decrypt the receive key
-		// jwe, err := jose.ParseEncrypted(jweToken)
-		// if err != nil {
-		// 	log.Error().Err(err).Msg("error parsing token")
-		// 	return nil, errors.New("internal server error")
-		// }
+		jwks, err := jwk.Fetch(ctx, "http://127.0.0.1:5500/jwks")
+		if err != nil {
+			log.Error().Err(err).Msg("error fetching jwks")
+			return nil, err
+		}
 
-		// var decryptedKey []byte
-		// if secret := os.Getenv("NEXTAUTH_SECRET"); secret != "" {
-		// 	log.Debug().Msgf("secre: %s", secret)
-		// 	encryptionKey := hkdf.New(sha256.New, []byte(secret), []byte{}, []byte("NextAuth.js Generated Encryption Key"))
-		// 	decryptedKey, err = jwe.Decrypt(encryptionKey)
-		// 	if err != nil {
-		// 		log.Error().Err(err).Msg("error decrypting token")
-		// 		return nil, errors.New("internal server error")
-		// 	}
-		// }
+		tok, err := jwt.ParseString(jwtToken, jwt.WithKeySet(jwks))
+		if err != nil {
+			log.Error().Err(err).Msg("failed to parse JWT")
+			return nil, err
+		}
 
-		// log.Debug().Msgf("decrypted key: %s", decryptedKey)
+		if !tok.Expiration().IsZero() && tok.Expiration().Before(time.Now().UTC()) {
+			return nil, errors.New("token expired")
+		}
 
-		// var claims = &jwt.StandardClaims{}
-		// token, err := jwt.ParseWithClaims(jwtToken, claims, func(token *jwt.Token) (interface{}, error) {
-		// 	if secret := os.Getenv("NEXTAUTH_SECRET"); secret != "" {
-		// 		return secret, nil
-		// 	}
-		// 	return nil, errors.New("NEXTAUTH_SECRET env variable not set")
-		// })
+		user, err := client.User.Query().Where(user.ID(uuid.MustParse(tok.Subject()))).Only(ctx)
+		if err != nil {
+			return nil, errUnauthenticated
+		}
 
-		// if err != nil {
-		// 	if err == jwt.ErrSignatureInvalid {
-		// 		return nil, errUnauthenticated
-		// 	}
-		// 	log.Error().Err(err).Msg("error parsing token")
-		// 	return nil, errors.New("internal server error")
-		// }
-		// if !token.Valid {
-		// 	return nil, errUnauthenticated
-		// }
-
-		// user, err := client.User.Query().Where(user.ID(uuid.MustParse(claims.Subject))).Only(ctx)
-		// if err != nil {
-		// 	return nil, errUnauthenticated
-		// }
-
-		// ctx = context.WithValue(ctx, currentUsreContextKey, user)
+		ctx = context.WithValue(ctx, currentUsreContextKey, user)
 
 		return next(ctx)
 	}

@@ -3,6 +3,7 @@ import NextAuth, { Account, Profile, User } from 'next-auth';
 import FortyTwoProvider from 'next-auth/providers/42-school';
 import GithubProvider from 'next-auth/providers/github';
 import DiscordProvider from 'next-auth/providers/discord';
+import { decodeJWT, encodeJWT } from '@lib/jwt';
 
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
@@ -30,8 +31,6 @@ export default NextAuth({
     }),
   ],
 
-  secret: '123',
-
   session: {
     // Use JSON Web Tokens for session instead of database sessions.
     // This option can be used with or without a database for users/accounts.
@@ -51,28 +50,9 @@ export default NextAuth({
   // option is set - or by default if no database is specified.
   // https://next-auth.js.org/configuration/options#jwt
   jwt: {
-    // You can define your own encode/decode functions for signing and encryption
-    // if you want to override the default behaviour.
-    encode: async ({ secret, token = {}, maxAge = 0 }) => {
-      const encryptionSecret = await getDerivedEncryptionKey(secret);
-      const now = () => (Date.now() / 1000) | 0;
-      return new EncryptJWT(token)
-        .setProtectedHeader({ alg: 'dir', enc: 'A256GCM' })
-        .setIssuedAt()
-        .setExpirationTime(now() + maxAge)
-        .setJti(uuid())
-        .setIssuer('next-auth')
-        .setNotBefore(now() - 1)
-        .encrypt(encryptionSecret);
-    },
-    decode: async ({ secret, token }) => {
-      if (!token) return null;
-      const encryptionSecret = await getDerivedEncryptionKey(secret);
-      const { payload } = await jwtDecrypt(token, encryptionSecret, {
-        clockTolerance: 15,
-      });
-      return payload;
-    },
+    // encode the payload
+    encode: encodeJWT,
+    decode: decodeJWT,
   },
 
   // You can define custom pages to override the built-in ones. These will be regular Next.js pages
@@ -105,9 +85,11 @@ export default NextAuth({
       // with linkAccount function on adapter
 
       // @ts-ignore
-      account._profile = {};
+      account._profile = {
+        login: (profile.login as string) || '',
+      };
 
-      if (account.provider == '42-school') {
+      if (account.provider == '42-school' && account._profile) {
         user.duo = {
           id: profile.id,
           login: profile.login,
@@ -119,7 +101,7 @@ export default NextAuth({
           phone: profile.phone,
         };
         return true;
-      } else if (account.provider == 'github') {
+      } else if (account.provider == 'github' && account._profile) {
         user.github = {
           id: profile.id,
           login: profile.login,
@@ -135,15 +117,13 @@ export default NextAuth({
       return false;
     },
 
-    async session({ session, user, token }) {
-      const { user: userToken, ...rest } = token;
-      session.user = user || userToken;
-      if (token) session.token = rest;
+    async session({ session, token }) {
+      delete session.user;
+      if (token) session.token = token;
       return session;
     },
 
-    async jwt({ token, user }) {
-      if (user) token.user = user;
+    async jwt({ token }) {
       return token;
     },
 
@@ -162,15 +142,15 @@ export default NextAuth({
   cookies: {
     // Wait the merge of the PR before enabling this
     // https://github.com/nextauthjs/next-auth/pull/4385#issuecomment-1098584113
-    // sessionToken: {
-    //   name: `next-auth.session-token`, //`__s42.auth-token`,
-    //   options: {
-    //     httpOnly: true,
-    //     sameSite: 'lax',
-    //     path: '/',
-    //     secure: true
-    //   }
-    // },
+    sessionToken: {
+      name: `__s42.auth-token`,
+      options: {
+        httpOnly: false,
+        sameSite: 'lax',
+        path: '/',
+        secure: true,
+      },
+    },
     callbackUrl: {
       name: `__s42.callback-url`,
       options: {

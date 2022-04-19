@@ -31,6 +31,9 @@
       "@graphql.d": [
         "graphql/generated.ts"
       ],
+      "@grpc.d": [
+        "grpc/"
+      ],
       "@assets/*": [
         "../public/assets/*"
       ]
