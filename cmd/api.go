@@ -66,6 +66,7 @@ var apiCmd = &cobra.Command{
 
 		router := chi.NewRouter()
 		router.Use(cors.New(cors.Options{
+			// TODO @42Atomys Add all enviroment origins
 			AllowedOrigins:   []string{"http://localhost:3000"},
 			AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 			AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token", "Sentry-Trace"},

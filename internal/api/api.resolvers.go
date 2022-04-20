@@ -98,18 +98,13 @@ func (r *queryResolver) InternalGetUser(ctx context.Context, id uuid.UUID) (*gen
 	return r.client.User.Get(ctx, id)
 }
 
-func (r *userResolver) Features(ctx context.Context, obj *generated.User) ([]*typesgen.Feature, error) {
-	var features = make([]*typesgen.Feature, 0)
-
-	alphaAccess := typesgen.FeatureAlphaAccess
-	betaAccess := typesgen.FeatureBetaAccess
-	discordAccess := typesgen.FeatureDiscordAccess
-
+func (r *userResolver) Features(ctx context.Context, obj *generated.User) (features []typesgen.Feature, err error) {
+	// TODO @42Atomys Remove hardcoded check
 	if obj.DuoLogin == "gdalmar" || obj.DuoLogin == "rgaiffe" {
-		features = append(features, &alphaAccess, &betaAccess, &discordAccess)
-		return features, nil
+		return typesgen.AllFeature, nil
 	}
 
+	// TODO Move github utils outside of resolvers
 	httpClient := oauth2.NewClient(context.Background(), oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: os.Getenv("GITHUB_TOKEN")},
 	))
@@ -135,7 +130,7 @@ func (r *userResolver) Features(ctx context.Context, obj *generated.User) ([]*ty
 		).
 		OnlyX(ctx).Username
 
-	err := client.Query(ctx, &query, map[string]interface{}{
+	err = client.Query(ctx, &query, map[string]interface{}{
 		"login": githubv4.String(username),
 	})
 	if err != nil {
@@ -144,11 +139,11 @@ func (r *userResolver) Features(ctx context.Context, obj *generated.User) ([]*ty
 	}
 
 	if query.User.SponsorshipForViewerAsSponsorable.Tier.MonthlyPriceInDollars > 5 {
-		features = append(features, &discordAccess)
+		features = append(features, typesgen.FeatureDiscordAccess)
 	}
 
 	if query.User.SponsorshipForViewerAsSponsorable.Tier.MonthlyPriceInDollars > 25 {
-		features = append(features, &betaAccess)
+		features = append(features, typesgen.FeatureBetaAccess)
 	}
 
 	return features, nil

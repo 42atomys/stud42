@@ -35,7 +35,7 @@ type User {
   AvatarURL: String
   CoverURL: String
   accounts: [Account]
-  features: [FEATURE]
+  features: [FEATURE!]!
 }
 
 type Account {
