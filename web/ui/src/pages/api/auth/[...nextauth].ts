@@ -89,7 +89,7 @@ export default NextAuth({
         login: (profile.login as string) || '',
       };
 
-      if (account.provider == '42-school' && account._profile) {
+      if (account.provider == '42-school') {
         user.duo = {
           id: profile.id,
           login: profile.login,
@@ -101,7 +101,7 @@ export default NextAuth({
           phone: profile.phone,
         };
         return true;
-      } else if (account.provider == 'github' && account._profile) {
+      } else if (account.provider == 'github') {
         user.github = {
           id: profile.id,
           login: profile.login,
