@@ -1,9 +1,17 @@
 import config from '@config';
 import { SignToken } from 'grpc/jwtks';
 import jwt, { JwtHeader } from 'jsonwebtoken';
-import JwksClient, { SigningKey } from 'jwks-rsa';
+import JwksClient from 'jwks-rsa';
 import { JWT, JWTOptions } from 'next-auth/jwt';
 
+/**
+ * encodeJWT will encode a JWT token using the JWT library and the
+ * JWKS client. This method map the `next-auth` encode method. It
+ * takes a payload and returns a promise that resolves to a signed JWT token.
+ *
+ * @param token The payload to encode.
+ * @returns A promise that resolves to the signed JWT token.
+ */
 export const encodeJWT: JWTOptions['encode'] = async ({
   token: payload = {},
 }) => {
@@ -14,10 +22,18 @@ export const encodeJWT: JWTOptions['encode'] = async ({
   ).token;
 };
 
+/**
+ * decodeJWT will decode a JWT token using the JWT library and the
+ * JWKS client. This method map the `next-auth` decode method. It
+ * takes a token and returns a promise that resolves the payload of the
+ * JWT token ONLY if the token is valid.
+ *
+ * @param token The JWT token to decode.
+ * @returns A promise that resolves to the payload of the JWT token.
+ */
 export const decodeJWT: JWTOptions['decode'] = async ({ token }) => {
   if (!token) return null;
 
-  console.log(config.jwks.endpoints.sets)
   const c = JwksClient({
     jwksUri: config.jwks.endpoints.sets,
   });
@@ -27,7 +43,7 @@ export const decodeJWT: JWTOptions['decode'] = async ({ token }) => {
     callback: (_: Error | null, publicKey: string) => void
   ) => {
     c.getSigningKey(header.kid, (err, key) => {
-      if (err) return callback(err, "");
+      if (err) return callback(err, '');
       callback(err, key.getPublicKey());
     });
   };

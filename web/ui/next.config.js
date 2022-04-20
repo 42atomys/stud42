@@ -43,10 +43,10 @@ const nextConfig = {
         {
           loader: 'yaml-loader',
           options: {
-            asJSON: true
-          }
-        }
-      ]
+            asJSON: true,
+          },
+        },
+      ],
     });
 
     config.module.rules.push({

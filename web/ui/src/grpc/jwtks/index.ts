@@ -2,34 +2,36 @@ import * as grpc from '@grpc/grpc-js';
 import { readFileSync } from 'fs';
 import { jwtks } from './jwtks';
 
-import config from '@config'
+import config from '@config';
 
 export * from './jwtks';
 
-const secure = (): grpc.ChannelCredentials => {
+/**
+ * secureCredentials is a gRPC credential used to authenticate the gRPC
+ * endpoint.
+ */
+const secureCredentials = (): grpc.ChannelCredentials => {
+  const { rootCertFile, privateKeyFile, publicKeyFile } = config.jwks.certs;
+
   return grpc.credentials.createSsl(
-    readFileSync(config.jwks.certs.rootCertFile),
-    readFileSync(config.jwks.certs.privateKeyFile),
-    readFileSync(config.jwks.certs.publicKeyFile)
+    rootCertFile ? readFileSync(rootCertFile) : null,
+    privateKeyFile ? readFileSync(privateKeyFile) : null,
+    publicKeyFile ? readFileSync(publicKeyFile) : null
   );
 };
 
-const insecure = (): grpc.ChannelCredentials => {
-  return grpc.credentials.createInsecure();
-};
-
+/**
+ * JWTKSClient is a gRPC client used to communicate with the JWTKS service.
+ */
 export const JWTKSClient = new jwtks.JWTKSServiceClient(
   config.jwks.endpoints.sign,
-  config.jwks.insecure ? insecure() : secure()
+  config.jwks.insecure ? grpc.credentials.createInsecure() : secureCredentials()
 );
 
-type SignTokenFn = {
-  (req: { payload: string }): Promise<{
-    token: string;
-    valid: boolean;
-  }>;
-};
-
+/**
+ * SignToken is a function used to sign a JWT token. It takes a payload
+ * and returns a promise that resolves to a signed JWT token.
+ */
 export const SignToken: SignTokenFn = async (req) => {
   return new Promise<any>((resolve, reject) => {
     JWTKSClient.SignPayload(new jwtks.SignPayloadRequest(req), (err, token) => {
@@ -39,13 +41,10 @@ export const SignToken: SignTokenFn = async (req) => {
   });
 };
 
-type ValidateTokenFn = {
-  (req: { token: string; regenerate?: boolean }): Promise<{
-    token: string;
-    valid: boolean;
-  }>;
-};
-
+/**
+ * ValidateToken is a function used to validate a JWT token. It takes a
+ * token and returns a promise that resolves to a validated JWT token.
+ */
 export const ValidateToken: ValidateTokenFn = async (req) => {
   return new Promise<any>((resolve, reject) => {
     JWTKSClient.ValidateToken(new jwtks.ValidateRequest(req), (err, token) => {
