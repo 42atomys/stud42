@@ -21,7 +21,7 @@ type PageProps = {
 
 export const LoginPage: NextPage<PageProps, {}> = () => {
   const {
-    query: { callbackUrl, error },
+    query: { callbackUrl, error, provider },
   } = useRouter();
 
   return (
@@ -61,27 +61,45 @@ export const LoginPage: NextPage<PageProps, {}> = () => {
         <p className="text-sm text-slate-600 dark:text-slate-400 mb-10">
           Only one step, click bellow !
         </p>
-        <button
-          className="w-fit flex flex-row group justify-center items-center bg-black hover:bg-white hover:text-black transition-all dark:border-0 border-black border-2 border-transparent text-white py-2 px-8 rounded uppercase my-4"
-          onClick={() =>
-            signIn('42-school', { callbackUrl: callbackUrl as string })
-          }
-        >
-          <span>Sign in with</span>
-          <Logo42
-            height={18}
-            className="ml-2 transition-all fill-white group-hover:fill-black"
-          />
-        </button>
-        <button
-          className="w-fit flex flex-row group justify-center items-center bg-black hover:bg-white hover:text-black transition-all dark:border-0 border-black border-2 border-transparent text-white py-2 px-8 rounded uppercase my-4"
-          onClick={() =>
-            signIn('github', { callbackUrl: callbackUrl as string })
-          }
-        >
-          <span className="mr-2">Sign in with</span>
-          <i className="fa-brands fa-github "></i>
-        </button>
+
+        {(!provider || provider == 'duo') && (
+          <button
+            className="w-fit flex flex-row group justify-center items-center bg-black hover:bg-white hover:text-black transition-all dark:border-0 border-black border-2 border-transparent text-white py-2 px-8 rounded uppercase my-4"
+            onClick={() =>
+              signIn('42-school', { callbackUrl: callbackUrl as string })
+            }
+          >
+            <span>Sign in with</span>
+            <Logo42
+              height={18}
+              className="ml-2 transition-all fill-white group-hover:fill-black"
+            />
+          </button>
+        )}
+
+        {provider == 'github' && (
+          <button
+            className="w-fit flex flex-row group justify-center items-center bg-black hover:bg-white hover:text-black transition-all dark:border-0 border-black border-2 border-transparent text-white py-2 px-8 rounded uppercase my-4"
+            onClick={() =>
+              signIn('github', { callbackUrl: callbackUrl as string })
+            }
+          >
+            <span className="mr-2">Sign in with</span>
+            <i className="fa-brands fa-github "></i>
+          </button>
+        )}
+
+        {provider == 'discord' && (
+          <button
+            className="w-fit flex flex-row group justify-center items-center bg-black hover:bg-white hover:text-black transition-all dark:border-0 border-black border-2 border-transparent text-white py-2 px-8 rounded uppercase my-4"
+            onClick={() =>
+              signIn('discord', { callbackUrl: callbackUrl as string })
+            }
+          >
+            <span className="mr-2">Sign in with</span>
+            <i className="fa-brands fa-discord"></i>
+          </button>
+        )}
       </div>
     </div>
   );

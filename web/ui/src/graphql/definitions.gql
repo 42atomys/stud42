@@ -85,6 +85,23 @@ mutation internalLinkAccount(
   }
 }
 
+mutation inviteOnDiscord {
+  inviteOnDiscord
+}
+
+query me {
+  me {
+    ...UserData
+  }
+}
+
+query meWithFeatures {
+  me {
+    ...UserData
+    features
+  }
+}
+
 query internalGetUser($id: UUID!) {
   user: internalGetUser(id: $id) {
     ...UserData
@@ -102,7 +119,6 @@ query internalGetUserByAccount($provider: PROVIDER!, $providerAccountId: String!
     ...UserData
   }
 }
-
 
 fragment UserData on User {
   id
