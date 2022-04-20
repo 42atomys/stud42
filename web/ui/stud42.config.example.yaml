@@ -1,3 +1,5 @@
+# Full documentation are located on Typescript definitions
+# @see src/types/stud42.config.d.ts
 jwks:
   endpoint: localhost:5000
   insecure: false
