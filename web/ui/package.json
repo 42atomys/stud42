@@ -63,7 +63,7 @@
     "babel-loader": "^8.2.3",
     "babel-plugin-inline-react-svg": "^2.0.1",
     "concurrently": "^7.1.0",
-    "cypress": "^9.5.3",
+    "cypress": "^9.5.4",
     "eslint": "^8.13.0",
     "eslint-config-airbnb-typescript": "^16.1.0",
     "eslint-config-next": "12.1.5",
