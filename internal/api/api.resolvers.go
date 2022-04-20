@@ -98,7 +98,9 @@ func (r *queryResolver) InternalGetUser(ctx context.Context, id uuid.UUID) (*gen
 	return r.client.User.Get(ctx, id)
 }
 
-func (r *userResolver) Features(ctx context.Context, obj *generated.User) (features []typesgen.Feature, err error) {
+func (r *userResolver) Features(ctx context.Context, obj *generated.User) ([]typesgen.Feature, error) {
+	var features = make([]typesgen.Feature, 0)
+
 	// TODO @42Atomys Remove hardcoded check
 	if obj.DuoLogin == "gdalmar" || obj.DuoLogin == "rgaiffe" {
 		return typesgen.AllFeature, nil
@@ -130,7 +132,7 @@ func (r *userResolver) Features(ctx context.Context, obj *generated.User) (featu
 		).
 		OnlyX(ctx).Username
 
-	err = client.Query(ctx, &query, map[string]interface{}{
+	err := client.Query(ctx, &query, map[string]interface{}{
 		"login": githubv4.String(username),
 	})
 	if err != nil {
