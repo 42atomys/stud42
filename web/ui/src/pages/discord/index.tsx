@@ -1,9 +1,11 @@
+import { useMutation } from '@apollo/client';
 import { Emoji } from '@components/Emoji';
 import {
   Feature,
   MeWithFeaturesDocument,
   MeWithFeaturesQuery,
   Provider,
+  useInviteOnDiscordMutation,
 } from '@graphql.d';
 import { queryAuthenticatedSSR } from '@lib/apollo';
 import classNames from 'classnames';
@@ -18,8 +20,12 @@ const SponsorGithubPart = ({
   hasDiscordAccess: boolean;
 }) => {
   const [invited, setInvited] = useState(false);
+  const [joinDiscordMutation] = useInviteOnDiscordMutation({
+    onError: () => setInvited(false),
+  });
 
   const joinDiscord = () => {
+    joinDiscordMutation();
     setInvited(true);
   };
 

@@ -5,7 +5,6 @@ package api
 
 import (
 	"context"
-	"fmt"
 	"os"
 
 	apigen "atomys.codes/stud42/internal/api/generated"
@@ -13,9 +12,11 @@ import (
 	"atomys.codes/stud42/internal/models/generated"
 	"atomys.codes/stud42/internal/models/generated/account"
 	"atomys.codes/stud42/internal/models/generated/user"
+	"github.com/bwmarrin/discordgo"
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
 	"github.com/shurcooL/githubv4"
+	"github.com/spf13/viper"
 	"golang.org/x/oauth2"
 )
 
@@ -57,6 +58,25 @@ func (r *mutationResolver) InternalLinkAccount(ctx context.Context, input typesg
 	return r.client.Account.Get(ctx, id)
 }
 
+func (r *mutationResolver) InviteOnDiscord(ctx context.Context) (bool, error) {
+	cu, err := CurrentUserFromContext(ctx)
+	if err != nil {
+		return false, err
+	}
+	s, err := discordgo.New("Bot " + os.Getenv("DISCORD_TOKEN"))
+	if err != nil {
+		return false, err
+	}
+
+	acc := r.client.Account.Query().Where(account.UserID(cu.ID), account.Provider(string(typesgen.ProviderDiscord))).OnlyX(ctx)
+
+	err = s.GuildMemberAdd(acc.AccessToken, viper.GetString("discord.guild_id"), acc.ProviderAccountID, "", []string{}, false, false)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}
+
 func (r *queryResolver) Me(ctx context.Context) (*generated.User, error) {
 	return CurrentUserFromContext(ctx)
 }
@@ -78,21 +98,6 @@ func (r *queryResolver) InternalGetUser(ctx context.Context, id uuid.UUID) (*gen
 	return r.client.User.Get(ctx, id)
 }
 
-func (r *userResolver) PoolYear(ctx context.Context, obj *generated.User) (*int, error) {
-	panic(fmt.Errorf("not implemented"))
-}
-
-func (r *userResolver) PoolMonth(ctx context.Context, obj *generated.User) (*int, error) {
-	panic(fmt.Errorf("not implemented"))
-}
-
-/**
- * Features are currently tested with the discord page.
- * Fetch the Github API at each request.
- * TODO move this behivior to an external service and cache it. Update it with Github webhooks.
- *
- * @BETA This is a beta feature.
- */
 func (r *userResolver) Features(ctx context.Context, obj *generated.User) ([]*typesgen.Feature, error) {
 	var features = make([]*typesgen.Feature, 0)
 

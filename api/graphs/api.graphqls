@@ -29,8 +29,8 @@ type User {
   usualFirstName: String
   lastName: String!
   Phone: String
-  PoolYear: Int
-  PoolMonth: Int
+  PoolYear: String
+  PoolMonth: String
   Nickname: String
   AvatarURL: String
   CoverURL: String
@@ -63,6 +63,7 @@ type Query {
 type Mutation {
   internalCreateUser(input: CreateUserInput!): UUID! @authorizationByPolicy(networkPolicy: CLUSTER)
   internalLinkAccount(input: LinkAccountInput!): Account! @authorizationByPolicy(networkPolicy: CLUSTER)
+  inviteOnDiscord: Boolean! @authenticated
 }
 
 input CreateUserInput {

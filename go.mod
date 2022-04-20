@@ -6,6 +6,7 @@ require (
 	entgo.io/contrib v0.2.0
 	entgo.io/ent v0.10.1
 	github.com/99designs/gqlgen v0.17.2
+	github.com/bwmarrin/discordgo v0.25.0
 	github.com/getsentry/sentry-go v0.13.0
 	github.com/go-chi/chi v1.5.4
 	github.com/go-chi/chi/v5 v5.0.7

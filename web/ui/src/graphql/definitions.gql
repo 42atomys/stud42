@@ -85,6 +85,10 @@ mutation internalLinkAccount(
   }
 }
 
+mutation inviteOnDiscord {
+  inviteOnDiscord
+}
+
 query me {
   me {
     ...UserData
