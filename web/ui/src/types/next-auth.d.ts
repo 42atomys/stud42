@@ -1,6 +1,5 @@
-import { UserDataFragment } from '@graphql.d';
-import { DuoContext } from '@lib/GraphqlAdapter';
-import { GithubContext } from '@lib/GraphqlAdapter/types';
+import { DuoContext, GithubContext } from '@lib/GraphqlAdapter';
+import { JwtPayload } from 'jsonwebtoken';
 import {
   DefaultSession,
   DefaultAccount,
@@ -8,9 +7,8 @@ import {
   DefaultProfile,
 } from 'next-auth';
 
-interface Session extends DefaultSession {
-  user: JWT['user'];
-  token: Omit<JWT, 'user'>;
+interface Session extends Omit<DefaultSession, 'user'> {
+  token: JWT;
 }
 
 interface User extends Record<string, unknown>, DefaultUser {}
@@ -18,17 +16,19 @@ interface User extends Record<string, unknown>, DefaultUser {}
 interface Profile extends Record<string, unknown>, DefaultProfile {}
 
 interface Account extends Record<string, unknown>, DefaultAccount {
-  _profile?: {
+  _profile?: Profile & {
     login: string;
   };
 }
 
-interface JWT {
-  sub: string;
-  iat: number;
+interface JWT extends JwtPayload {
+  aud: [string];
   exp: number;
+  iat: number;
+  iss: string;
   jti: string;
-  user: UserDataFragment;
+  nbf: number;
+  sub: string;
 }
 
 declare module 'next-auth' {

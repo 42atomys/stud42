@@ -11,11 +11,11 @@ package jwtks;
   */
 service JWTKSService {
   /**
-   * GenerateToken generates a JWT token using the JWKS strategy.
-   * @param request The request containing the GenerateRequest.
+   * SignPayload generates a JWT token using the JWKS strategy.
+   * @param request The request containing the payload to insert into the JWT.
    * @return The Reply containing the generated JWT token and her validity.
    */
-  rpc GenerateToken (GenerateRequest) returns (Reply) {}
+  rpc SignPayload (SignPayloadRequest) returns (Reply) {}
 
   /**
    * ValidateToken validates a JWT token using the JWKS strategy.
@@ -25,9 +25,9 @@ service JWTKSService {
   rpc ValidateToken (ValidateRequest) returns (Reply) {}
 }
 
-message GenerateRequest {
-  // The UserID of the user to generate the token for.
-  string user_id = 1;
+message SignPayloadRequest {
+  // The payload to insert into the JWT.
+  string payload = 1;
 }
 
 message ValidateRequest {

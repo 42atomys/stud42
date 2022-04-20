@@ -1,7 +1,9 @@
 import GraphQLAdapter from '@lib/GraphqlAdapter';
-import NextAuth from 'next-auth';
+import NextAuth, { Account, Profile, User } from 'next-auth';
 import FortyTwoProvider from 'next-auth/providers/42-school';
 import GithubProvider from 'next-auth/providers/github';
+import DiscordProvider from 'next-auth/providers/discord';
+import { decodeJWT, encodeJWT } from '@lib/jwt';
 
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
@@ -21,11 +23,13 @@ export default NextAuth({
       // @ts-ignore
       scope: 'user,user:email,user:follow',
     }),
+    DiscordProvider({
+      clientId: process.env.DISCORD_ID,
+      clientSecret: process.env.DISCORD_SECRET,
+      authorization:
+        'https://discord.com/api/oauth2/authorize?scope=identify+email+connections+guilds.join',
+    }),
   ],
-  // The secret should be set to a reasonably long random string.
-  // It is used to sign cookies and to sign and encrypt JSON Web Tokens, unless
-  // a separate secret is defined explicitly for encrypting the JWT.
-  secret: process.env.SECRET_KEY,
 
   session: {
     // Use JSON Web Tokens for session instead of database sessions.
@@ -46,10 +50,9 @@ export default NextAuth({
   // option is set - or by default if no database is specified.
   // https://next-auth.js.org/configuration/options#jwt
   jwt: {
-    // You can define your own encode/decode functions for signing and encryption
-    // if you want to override the default behaviour.
-    // encode: async ({ secret, token, maxAge }) => {},
-    // decode: async ({ secret, token, maxAge }) => {},
+    // encode the payload
+    encode: encodeJWT,
+    decode: decodeJWT,
   },
 
   // You can define custom pages to override the built-in ones. These will be regular Next.js pages
@@ -69,10 +72,22 @@ export default NextAuth({
   // when an action is performed.
   // https://next-auth.js.org/configuration/callbacks
   callbacks: {
-    async signIn({ user, account, profile }) {
+    async signIn({
+      user,
+      account,
+      profile,
+    }: {
+      user: User;
+      account: Account;
+      profile: Profile;
+    }) {
       // Extend account with additional profile data to be saved to database
       // with linkAccount function on adapter
-      account._profile = profile;
+
+      // @ts-ignore
+      account._profile = {
+        login: (profile.login as string) || '',
+      };
 
       if (account.provider == '42-school') {
         user.duo = {
@@ -93,20 +108,22 @@ export default NextAuth({
           type: profile.type,
         };
         return true;
+      } else if (account.provider == 'discord' && account._profile) {
+        account._profile.login = `${profile.username}#${profile.discriminator}`;
+
+        return true;
       }
 
       return false;
     },
 
-    async session({ session, user, token }) {
-      const { user: userToken, ...rest } = token;
-      session.user = user || userToken;
-      if (token) session.token = rest;
+    async session({ session, token }) {
+      delete session.user;
+      if (token) session.token = token;
       return session;
     },
 
-    async jwt({ token, user }) {
-      if (user) token.user = user;
+    async jwt({ token }) {
       return token;
     },
 
@@ -122,6 +139,37 @@ export default NextAuth({
   // https://next-auth.js.org/configuration/events
   events: {},
 
+  cookies: {
+    // Wait the merge of the PR before enabling this
+    // https://github.com/nextauthjs/next-auth/pull/4385#issuecomment-1098584113
+    sessionToken: {
+      name: `__s42.auth-token`,
+      options: {
+        httpOnly: false,
+        sameSite: 'lax',
+        path: '/',
+        secure: true,
+      },
+    },
+    callbackUrl: {
+      name: `__s42.callback-url`,
+      options: {
+        sameSite: 'lax',
+        path: '/',
+        secure: true,
+      },
+    },
+    csrfToken: {
+      name: `__s42.csrf-token`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: true,
+      },
+    },
+  },
+
   // Enable debug messages in the console if you are having problems
-  debug: false,
+  debug: true,
 });

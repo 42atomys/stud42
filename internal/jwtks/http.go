@@ -22,7 +22,7 @@ import (
  * key.
  */
 func ServeHTTP(port *string) error {
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", *port))
+	lis, err := net.Listen("tcp4", fmt.Sprintf(":%s", *port))
 	if err != nil {
 		log.Fatal().Msgf("failed to listen: %v", err)
 	}

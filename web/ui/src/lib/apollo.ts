@@ -3,23 +3,31 @@ import {
   from,
   createHttpLink,
   InMemoryCache,
+  QueryOptions,
+  ApolloQueryResult,
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
+import { IncomingMessage } from 'http';
 import Cookies from 'js-cookie';
+import { NextApiRequestCookies } from 'next/dist/server/api-utils';
 
 const httpLink = createHttpLink({
   uri: process.env.NEXT_PUBLIC_GRAPHQL_API,
   credentials: 'include',
 });
 
-const authLink = setContext(async (_, { headers }: { headers: Headers }) => {
-  const COOKIE_NAME = 'next-auth.session-token';
-  const authToken = Cookies.get(COOKIE_NAME);
+const authLink = setContext((_, context) => {
+  const COOKIE_NAME = '__s42.auth-token';
+  let authToken = Cookies.get(COOKIE_NAME);
+
+  if (!authToken) {
+    authToken = context.authToken;
+  }
 
   const modifiedHeader = {
     headers: {
-      ...headers,
-      authorization: authToken ? `Bearer ${authToken}` : '',
+      ...context.headers,
+      Authorization: authToken ? `Bearer ${authToken}` : '',
     },
   };
   return modifiedHeader;
@@ -27,9 +35,8 @@ const authLink = setContext(async (_, { headers }: { headers: Headers }) => {
 
 export const apolloClient = new ApolloClient({
   link: from([authLink, httpLink]),
-  name: 'interface',
   version: process.env.NEXT_PUBLIC_VERSION,
-  ssrMode: true,
+  ssrMode: typeof window === 'undefined',
   connectToDevTools: process.env.NODE_ENV === 'development',
   cache: new InMemoryCache(),
   credentials: 'include',
@@ -39,13 +46,36 @@ export const apolloClient = new ApolloClient({
       errorPolicy: 'ignore',
     },
     query: {
-      fetchPolicy: 'network-only',
+      fetchPolicy: typeof window === 'undefined' ? 'no-cache' : 'network-only',
       errorPolicy: 'all',
     },
     mutate: {
+      fetchPolicy: typeof window === 'undefined' ? 'no-cache' : 'network-only',
       errorPolicy: 'all',
     },
   },
 });
+
+type ServerSideRequest = IncomingMessage & {
+  cookies: NextApiRequestCookies & {
+    '__s42.auth-token'?: string;
+  };
+};
+
+export const queryAuthenticatedSSR = async <T = any>(
+  req: ServerSideRequest,
+  opts: QueryOptions<T>
+): Promise<ApolloQueryResult<T>> => {
+  const { query, context, ...rest } = opts;
+
+  return apolloClient.query<T>({
+    query,
+    context: {
+      authToken: req.cookies['__s42.auth-token'],
+      ...context,
+    },
+    ...rest,
+  });
+};
 
 export default apolloClient;
