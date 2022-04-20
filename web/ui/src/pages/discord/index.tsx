@@ -1,4 +1,3 @@
-import { useMutation } from '@apollo/client';
 import { Emoji } from '@components/Emoji';
 import {
   Feature,

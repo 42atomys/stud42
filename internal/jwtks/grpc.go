@@ -59,8 +59,6 @@ func ServeGRPC(port *string) error {
  * @return The Reply containing the generated JWT token and her validity.
  */
 func (s *server) SignPayload(ctx context.Context, r *SignPayloadRequest) (*Reply, error) {
-	log.Warn().Msg(r.Payload)
-
 	var payload = make(map[string]interface{})
 
 	if err := json.Unmarshal([]byte(r.GetPayload()), &payload); err != nil {
