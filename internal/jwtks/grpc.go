@@ -107,7 +107,6 @@ func (s *server) SignPayload(ctx context.Context, r *SignPayloadRequest) (*Reply
  * @return The Reply containing the validation result and the refresh token if needed
  */
 func (s *server) ValidateToken(ctx context.Context, r *ValidateRequest) (*Reply, error) {
-	log.Debug().Msg("token validation asked")
 	var err error
 	defer func() {
 		if err != nil {
