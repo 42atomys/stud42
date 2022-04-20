@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+option go_package = "internal/jwtks";
+
+package jwtks;
+
+/**
+ * JWTKSService is the service that handles all grpc requests 
+ * for the JWTKSService. It is responsible for generating and
+  * validating JWT tokens, using tje JWKS strategy.
+  */
+service JWTKSService {
+  /**
+   * GenerateToken generates a JWT token using the JWKS strategy.
+   * @param request The request containing the GenerateRequest.
+   * @return The Reply containing the generated JWT token and her validity.
+   */
+  rpc GenerateToken (GenerateRequest) returns (Reply) {}
+
+  /**
+   * ValidateToken validates a JWT token using the JWKS strategy.
+   * @param request The request containing the ValidateRequest.
+   * @return The Reply containing the validation result and the refresh token if needed
+   */
+  rpc ValidateToken (ValidateRequest) returns (Reply) {}
+}
+
+message GenerateRequest {
+  // The UserID of the user to generate the token for.
+  string user_id = 1;
+}
+
+message ValidateRequest {
+  // The token to validate.
+  string token = 1;
+  // Regenerate the token or not. (Default false)
+  bool regenerate = 2;
+}
+
+message Reply {
+  // The generated token.
+  string token = 1;
+  // The validity of the token.
+  bool valid = 2;
+}
