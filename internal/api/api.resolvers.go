@@ -6,6 +6,7 @@ package api
 import (
 	"context"
 	"fmt"
+	"os"
 
 	apigen "atomys.codes/stud42/internal/api/generated"
 	typesgen "atomys.codes/stud42/internal/api/generated/types"
@@ -13,6 +14,9 @@ import (
 	"atomys.codes/stud42/internal/models/generated/account"
 	"atomys.codes/stud42/internal/models/generated/user"
 	"github.com/google/uuid"
+	"github.com/rs/zerolog/log"
+	"github.com/shurcooL/githubv4"
+	"golang.org/x/oauth2"
 )
 
 func (r *mutationResolver) InternalCreateUser(ctx context.Context, input typesgen.CreateUserInput) (uuid.UUID, error) {
@@ -80,6 +84,69 @@ func (r *userResolver) PoolYear(ctx context.Context, obj *generated.User) (*int,
 
 func (r *userResolver) PoolMonth(ctx context.Context, obj *generated.User) (*int, error) {
 	panic(fmt.Errorf("not implemented"))
+}
+
+/**
+ * Features are currently tested with the discord page.
+ * Fetch the Github API at each request.
+ * TODO move this behivior to an external service and cache it. Update it with Github webhooks.
+ *
+ * @BETA This is a beta feature.
+ */
+func (r *userResolver) Features(ctx context.Context, obj *generated.User) ([]*typesgen.Feature, error) {
+	var features = make([]*typesgen.Feature, 0)
+
+	alphaAccess := typesgen.FeatureAlphaAccess
+	betaAccess := typesgen.FeatureBetaAccess
+	discordAccess := typesgen.FeatureDiscordAccess
+
+	if obj.DuoLogin == "gdalmar" || obj.DuoLogin == "rgaiffe" {
+		features = append(features, &alphaAccess, &betaAccess, &discordAccess)
+		return features, nil
+	}
+
+	httpClient := oauth2.NewClient(context.Background(), oauth2.StaticTokenSource(
+		&oauth2.Token{AccessToken: os.Getenv("GITHUB_TOKEN")},
+	))
+
+	client := githubv4.NewClient(httpClient)
+
+	var query struct {
+		User struct {
+			SponsorshipForViewerAsSponsorable struct {
+				Tier struct {
+					ID                    string
+					MonthlyPriceInDollars int
+				}
+			}
+		} `graphql:"user(login: $login)"`
+	}
+
+	username := r.client.Account.Query().
+		Select("username").
+		Where(
+			account.UserID(obj.ID),
+			account.Provider(string(typesgen.ProviderGithub)),
+		).
+		OnlyX(ctx).Username
+
+	err := client.Query(ctx, &query, map[string]interface{}{
+		"login": githubv4.String(username),
+	})
+	if err != nil {
+		log.Error().Err(err).Msg("failed to query github")
+		return nil, err
+	}
+
+	if query.User.SponsorshipForViewerAsSponsorable.Tier.MonthlyPriceInDollars > 5 {
+		features = append(features, &discordAccess)
+	}
+
+	if query.User.SponsorshipForViewerAsSponsorable.Tier.MonthlyPriceInDollars > 25 {
+		features = append(features, &betaAccess)
+	}
+
+	return features, nil
 }
 
 // Mutation returns apigen.MutationResolver implementation.

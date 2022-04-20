@@ -62,8 +62,6 @@ func directiveAuthorization(client *modelgen.Client) func(ctx context.Context, o
 			return nil, errUnauthenticated
 		}
 
-		log.Debug().Msgf("T: %s", jwtToken)
-
 		jwks, err := jwk.Fetch(ctx, "http://127.0.0.1:5500/jwks")
 		if err != nil {
 			log.Error().Err(err).Msg("error fetching jwks")

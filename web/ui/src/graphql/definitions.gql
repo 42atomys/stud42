@@ -91,6 +91,13 @@ query me {
   }
 }
 
+query meWithFeatures {
+  me {
+    ...UserData
+    features
+  }
+}
+
 query internalGetUser($id: UUID!) {
   user: internalGetUser(id: $id) {
     ...UserData

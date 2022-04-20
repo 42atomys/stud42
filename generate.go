@@ -19,7 +19,6 @@ import (
 
 func main() {
 	ex, err := entgql.NewExtension(
-		entgql.WithWhereFilters(false),
 		entgql.WithSchemaPath("./api/graphs/api.graphqls"),
 	)
 	if err != nil {

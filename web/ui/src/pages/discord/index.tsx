@@ -1,5 +1,10 @@
 import { Emoji } from '@components/Emoji';
-import { MeDocument, MeQuery, Provider } from '@graphql.d';
+import {
+  Feature,
+  MeWithFeaturesDocument,
+  MeWithFeaturesQuery,
+  Provider,
+} from '@graphql.d';
 import { queryAuthenticatedSSR } from '@lib/apollo';
 import classNames from 'classnames';
 import { GetServerSideProps, NextPage } from 'next';
@@ -8,9 +13,9 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 const SponsorGithubPart = ({
-  isGithubSponsor,
+  hasDiscordAccess,
 }: {
-  isGithubSponsor: boolean;
+  hasDiscordAccess: boolean;
 }) => {
   const [invited, setInvited] = useState(false);
 
@@ -18,7 +23,7 @@ const SponsorGithubPart = ({
     setInvited(true);
   };
 
-  if (isGithubSponsor) {
+  if (hasDiscordAccess) {
     return (
       <div className="flex flex-col justify-center items-center mb-6 text-center">
         <h2 className="text-4xl font-display font-bold mb-4 mt-20 bg-clip-text text-transparent bg-gradient-to-l from-emerald-500 to-cyan-500 w-fit">
@@ -164,16 +169,20 @@ const Steps = ({ currentStep }: { currentStep: number }) => {
 };
 
 interface PageProps {
-  me: MeQuery['me'];
+  me: MeWithFeaturesQuery['me'];
 }
 
 export const IndexPage: NextPage<PageProps, {}> = ({ me }) => {
-  const isGithubSponsor = false;
+  const hasDiscordAccess = me.features?.some(
+    (f) => f === Feature.DISCORD_ACCESS
+  );
+
   let currentStep =
     (me.accounts?.filter(
       (a) => a?.provider === Provider.GITHUB || a?.provider === Provider.DISCORD
     ).length || 0) + 1;
-  if (currentStep == 3 && isGithubSponsor) currentStep = 4;
+
+  if (currentStep == 3 && hasDiscordAccess) currentStep = 4;
 
   if (!me) {
     return <>OUPS</>;
@@ -285,7 +294,7 @@ export const IndexPage: NextPage<PageProps, {}> = ({ me }) => {
           )}
 
           {(currentStep == 3 || currentStep == 4) && (
-            <SponsorGithubPart isGithubSponsor={isGithubSponsor} />
+            <SponsorGithubPart hasDiscordAccess={hasDiscordAccess || false} />
           )}
         </div>
       </div>
@@ -294,8 +303,8 @@ export const IndexPage: NextPage<PageProps, {}> = ({ me }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const { data } = await queryAuthenticatedSSR<MeQuery>(req, {
-    query: MeDocument,
+  const { data } = await queryAuthenticatedSSR<MeWithFeaturesQuery>(req, {
+    query: MeWithFeaturesDocument,
   });
 
   if (!data) {
