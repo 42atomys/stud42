@@ -1,6 +1,7 @@
+import config from '@config';
 import { SignToken } from 'grpc/jwtks';
 import jwt, { JwtHeader } from 'jsonwebtoken';
-import JwksClient from 'jwks-rsa';
+import JwksClient, { SigningKey } from 'jwks-rsa';
 import { JWT, JWTOptions } from 'next-auth/jwt';
 
 export const encodeJWT: JWTOptions['encode'] = async ({
@@ -16,16 +17,18 @@ export const encodeJWT: JWTOptions['encode'] = async ({
 export const decodeJWT: JWTOptions['decode'] = async ({ token }) => {
   if (!token) return null;
 
+  console.log(config.jwks.endpoints.sets)
   const c = JwksClient({
-    jwksUri: 'http://127.0.0.1:5500/jwks',
+    jwksUri: config.jwks.endpoints.sets,
   });
 
   const getKey = (
     header: JwtHeader,
-    callback: (_: null, publicKey: string) => void
+    callback: (_: Error | null, publicKey: string) => void
   ) => {
     c.getSigningKey(header.kid, (err, key) => {
-      callback(null, key.getPublicKey());
+      if (err) return callback(err, "");
+      callback(err, key.getPublicKey());
     });
   };
 

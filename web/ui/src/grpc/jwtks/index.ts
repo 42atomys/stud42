@@ -2,13 +2,15 @@ import * as grpc from '@grpc/grpc-js';
 import { readFileSync } from 'fs';
 import { jwtks } from './jwtks';
 
+import config from '@config'
+
 export * from './jwtks';
 
 const secure = (): grpc.ChannelCredentials => {
   return grpc.credentials.createSsl(
-    readFileSync('/root/.local/share/mkcert/rootCA.pem'),
-    readFileSync('../../certs/server-key.pem'),
-    readFileSync('../../certs/server-cert.pem')
+    readFileSync(config.jwks.certs.rootCertFile),
+    readFileSync(config.jwks.certs.privateKeyFile),
+    readFileSync(config.jwks.certs.publicKeyFile)
   );
 };
 
@@ -17,9 +19,8 @@ const insecure = (): grpc.ChannelCredentials => {
 };
 
 export const JWTKSClient = new jwtks.JWTKSServiceClient(
-  'localhost:5000',
-  // @ts-ignore
-  process.env.NODE_ENV === 'DEVENV' ? insecure() : secure()
+  config.jwks.endpoints.sign,
+  config.jwks.insecure ? insecure() : secure()
 );
 
 type SignTokenFn = {
