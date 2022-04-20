@@ -5,14 +5,19 @@ package api
 
 import (
 	"context"
-	"fmt"
+	"os"
 
 	apigen "atomys.codes/stud42/internal/api/generated"
 	typesgen "atomys.codes/stud42/internal/api/generated/types"
 	"atomys.codes/stud42/internal/models/generated"
 	"atomys.codes/stud42/internal/models/generated/account"
 	"atomys.codes/stud42/internal/models/generated/user"
+	"github.com/bwmarrin/discordgo"
 	"github.com/google/uuid"
+	"github.com/rs/zerolog/log"
+	"github.com/shurcooL/githubv4"
+	"github.com/spf13/viper"
+	"golang.org/x/oauth2"
 )
 
 func (r *mutationResolver) InternalCreateUser(ctx context.Context, input typesgen.CreateUserInput) (uuid.UUID, error) {
@@ -53,13 +58,27 @@ func (r *mutationResolver) InternalLinkAccount(ctx context.Context, input typesg
 	return r.client.Account.Get(ctx, id)
 }
 
-func (r *queryResolver) Me(ctx context.Context) (*generated.User, error) {
-	// if user := ForContext(ctx); user == nil {
-	// 	return nil, fmt.Errorf("access denied")
-	// }
+func (r *mutationResolver) InviteOnDiscord(ctx context.Context) (bool, error) {
+	cu, err := CurrentUserFromContext(ctx)
+	if err != nil {
+		return false, err
+	}
+	s, err := discordgo.New("Bot " + os.Getenv("DISCORD_TOKEN"))
+	if err != nil {
+		return false, err
+	}
 
-	// return ForContext(ctx), nil
-	return nil, fmt.Errorf("not implemented")
+	acc := r.client.Account.Query().Where(account.UserID(cu.ID), account.Provider(string(typesgen.ProviderDiscord))).OnlyX(ctx)
+
+	err = s.GuildMemberAdd(acc.AccessToken, viper.GetString("discord.guild_id"), acc.ProviderAccountID, "", []string{}, false, false)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}
+
+func (r *queryResolver) Me(ctx context.Context) (*generated.User, error) {
+	return CurrentUserFromContext(ctx)
 }
 
 func (r *queryResolver) InternalGetUserByAccount(ctx context.Context, provider typesgen.Provider, uid string) (*generated.User, error) {
@@ -79,92 +98,57 @@ func (r *queryResolver) InternalGetUser(ctx context.Context, id uuid.UUID) (*gen
 	return r.client.User.Get(ctx, id)
 }
 
-func (r *userResolver) PoolYear(ctx context.Context, obj *generated.User) (*int, error) {
-	panic(fmt.Errorf("not implemented"))
-}
+func (r *userResolver) Features(ctx context.Context, obj *generated.User) ([]typesgen.Feature, error) {
+	var features = make([]typesgen.Feature, 0)
 
-func (r *userResolver) PoolMonth(ctx context.Context, obj *generated.User) (*int, error) {
-	panic(fmt.Errorf("not implemented"))
-}
+	// TODO @42Atomys Remove hardcoded check
+	if obj.DuoLogin == "gdalmar" || obj.DuoLogin == "rgaiffe" {
+		return typesgen.AllFeature, nil
+	}
 
-func (r *accountWhereInputResolver) UserID(ctx context.Context, obj *generated.AccountWhereInput, data *string) error {
-	panic(fmt.Errorf("not implemented"))
-}
+	// TODO Move github utils outside of resolvers
+	httpClient := oauth2.NewClient(context.Background(), oauth2.StaticTokenSource(
+		&oauth2.Token{AccessToken: os.Getenv("GITHUB_TOKEN")},
+	))
 
-func (r *accountWhereInputResolver) UserIDNeq(ctx context.Context, obj *generated.AccountWhereInput, data *string) error {
-	panic(fmt.Errorf("not implemented"))
-}
+	client := githubv4.NewClient(httpClient)
 
-func (r *accountWhereInputResolver) UserIDIn(ctx context.Context, obj *generated.AccountWhereInput, data []string) error {
-	panic(fmt.Errorf("not implemented"))
-}
+	var query struct {
+		User struct {
+			SponsorshipForViewerAsSponsorable struct {
+				Tier struct {
+					ID                    string
+					MonthlyPriceInDollars int
+				}
+			}
+		} `graphql:"user(login: $login)"`
+	}
 
-func (r *accountWhereInputResolver) UserIDNotIn(ctx context.Context, obj *generated.AccountWhereInput, data []string) error {
-	panic(fmt.Errorf("not implemented"))
-}
+	username := r.client.Account.Query().
+		Select("username").
+		Where(
+			account.UserID(obj.ID),
+			account.Provider(string(typesgen.ProviderGithub)),
+		).
+		OnlyX(ctx).Username
 
-func (r *accountWhereInputResolver) ID(ctx context.Context, obj *generated.AccountWhereInput, data *string) error {
-	panic(fmt.Errorf("not implemented"))
-}
+	err := client.Query(ctx, &query, map[string]interface{}{
+		"login": githubv4.String(username),
+	})
+	if err != nil {
+		log.Error().Err(err).Msg("failed to query github")
+		return nil, err
+	}
 
-func (r *accountWhereInputResolver) IDNeq(ctx context.Context, obj *generated.AccountWhereInput, data *string) error {
-	panic(fmt.Errorf("not implemented"))
-}
+	if query.User.SponsorshipForViewerAsSponsorable.Tier.MonthlyPriceInDollars > 5 {
+		features = append(features, typesgen.FeatureDiscordAccess)
+	}
 
-func (r *accountWhereInputResolver) IDIn(ctx context.Context, obj *generated.AccountWhereInput, data []string) error {
-	panic(fmt.Errorf("not implemented"))
-}
+	if query.User.SponsorshipForViewerAsSponsorable.Tier.MonthlyPriceInDollars > 25 {
+		features = append(features, typesgen.FeatureBetaAccess)
+	}
 
-func (r *accountWhereInputResolver) IDNotIn(ctx context.Context, obj *generated.AccountWhereInput, data []string) error {
-	panic(fmt.Errorf("not implemented"))
-}
-
-func (r *accountWhereInputResolver) IDGt(ctx context.Context, obj *generated.AccountWhereInput, data *string) error {
-	panic(fmt.Errorf("not implemented"))
-}
-
-func (r *accountWhereInputResolver) IDGte(ctx context.Context, obj *generated.AccountWhereInput, data *string) error {
-	panic(fmt.Errorf("not implemented"))
-}
-
-func (r *accountWhereInputResolver) IDLt(ctx context.Context, obj *generated.AccountWhereInput, data *string) error {
-	panic(fmt.Errorf("not implemented"))
-}
-
-func (r *accountWhereInputResolver) IDLte(ctx context.Context, obj *generated.AccountWhereInput, data *string) error {
-	panic(fmt.Errorf("not implemented"))
-}
-
-func (r *userWhereInputResolver) ID(ctx context.Context, obj *generated.UserWhereInput, data *string) error {
-	panic(fmt.Errorf("not implemented"))
-}
-
-func (r *userWhereInputResolver) IDNeq(ctx context.Context, obj *generated.UserWhereInput, data *string) error {
-	panic(fmt.Errorf("not implemented"))
-}
-
-func (r *userWhereInputResolver) IDIn(ctx context.Context, obj *generated.UserWhereInput, data []string) error {
-	panic(fmt.Errorf("not implemented"))
-}
-
-func (r *userWhereInputResolver) IDNotIn(ctx context.Context, obj *generated.UserWhereInput, data []string) error {
-	panic(fmt.Errorf("not implemented"))
-}
-
-func (r *userWhereInputResolver) IDGt(ctx context.Context, obj *generated.UserWhereInput, data *string) error {
-	panic(fmt.Errorf("not implemented"))
-}
-
-func (r *userWhereInputResolver) IDGte(ctx context.Context, obj *generated.UserWhereInput, data *string) error {
-	panic(fmt.Errorf("not implemented"))
-}
-
-func (r *userWhereInputResolver) IDLt(ctx context.Context, obj *generated.UserWhereInput, data *string) error {
-	panic(fmt.Errorf("not implemented"))
-}
-
-func (r *userWhereInputResolver) IDLte(ctx context.Context, obj *generated.UserWhereInput, data *string) error {
-	panic(fmt.Errorf("not implemented"))
+	return features, nil
 }
 
 // Mutation returns apigen.MutationResolver implementation.
@@ -176,16 +160,6 @@ func (r *Resolver) Query() apigen.QueryResolver { return &queryResolver{r} }
 // User returns apigen.UserResolver implementation.
 func (r *Resolver) User() apigen.UserResolver { return &userResolver{r} }
 
-// AccountWhereInput returns apigen.AccountWhereInputResolver implementation.
-func (r *Resolver) AccountWhereInput() apigen.AccountWhereInputResolver {
-	return &accountWhereInputResolver{r}
-}
-
-// UserWhereInput returns apigen.UserWhereInputResolver implementation.
-func (r *Resolver) UserWhereInput() apigen.UserWhereInputResolver { return &userWhereInputResolver{r} }
-
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type userResolver struct{ *Resolver }
-type accountWhereInputResolver struct{ *Resolver }
-type userWhereInputResolver struct{ *Resolver }

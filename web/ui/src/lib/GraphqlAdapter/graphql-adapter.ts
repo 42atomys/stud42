@@ -31,6 +31,7 @@ const url = process.env.NEXT_PUBLIC_GRAPHQL_API;
 const providerMap: Record<string, Provider> = {
   github: Provider.GITHUB,
   '42-school': Provider.DUO,
+  discord: Provider.DISCORD,
 };
 
 /**

@@ -9,6 +9,10 @@ const nextConfig = {
     includePaths: [path.join(__dirname, 'src/styles')],
   },
 
+  images: {
+    domains: ['twemoji.maxcdn.com'],
+  },
+
   sentry: {
     disableServerWebpackPlugin: true,
     disableClientWebpackPlugin: true,
@@ -28,6 +32,19 @@ const nextConfig = {
         {
           loader: '@svgr/webpack',
           options: { babel: false },
+        },
+      ],
+    });
+
+    config.module.rules.push({
+      test: /\.ya?ml$/,
+      type: 'json',
+      use: [
+        {
+          loader: 'yaml-loader',
+          options: {
+            asJSON: true,
+          },
         },
       ],
     });

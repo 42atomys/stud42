@@ -12,8 +12,6 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-type contextKey string
-
 // networkPolicyRequestIPContextKey is the context key for the request IP.
 // It is used by the NetworkPolicyMiddleware and the directiveAuthorizationByPolicy.
 // The type of the context value must be a net.IP.

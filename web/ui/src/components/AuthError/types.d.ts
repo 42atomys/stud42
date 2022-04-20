@@ -6,6 +6,7 @@ type ErrorType =
   | 'oauthcreateaccount'
   | 'oauthaccountnotlinked'
   | 'oauthcallback'
+  | 'oauthsignin'
   | 'callback'
   | 'sessionrequired';
 

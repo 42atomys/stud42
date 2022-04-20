@@ -33,6 +33,10 @@ export const Error = ({
       name: 'OAuth callback error',
       message: 'An error occured while linking your account',
     },
+    oauthsignin: {
+      name: 'OAuth sign in error',
+      message: 'An error occured while signing in',
+    },
     callback: {
       name: 'Callback error',
       message: 'An error occured while processing the callback',

@@ -12,12 +12,15 @@ import (
 
 type Resolver struct{ client *modelgen.Client }
 
+type contextKey string
+
 // NewSchema creates a graphql executable schema.
 func NewSchema(client *modelgen.Client) graphql.ExecutableSchema {
 	return apigen.NewExecutableSchema(apigen.Config{
 		Resolvers: &Resolver{client},
 		Directives: apigen.DirectiveRoot{
 			AuthorizationByPolicy: directiveAuthorizationByPolicy,
+			Authenticated:         directiveAuthorization(client),
 		},
 	})
 }

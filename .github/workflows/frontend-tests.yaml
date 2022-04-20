@@ -36,6 +36,11 @@ jobs:
 
     - name: Install dependencies
       run: yarn install --frozen-lockfile
+    - name: Install protoc
+      run: |
+        wget -O /tmp/protoc.zip https://github.com/protocolbuffers/protobuf/releases/download/v3.20.0/protoc-3.20.0-linux-x86_64.zip
+        unzip -ud /tmp/protoc /tmp/protoc.zip
+        mv /tmp/protoc/bin/protoc /usr/local/bin/protoc
     - name: Generate code
       run: yarn generate
 

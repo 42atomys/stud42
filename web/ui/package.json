@@ -6,7 +6,9 @@
     "node": ">=16.0.0"
   },
   "scripts": {
-    "generate": "graphql-codegen --config graphqlcodegen.yml",
+    "generate": "yarn run generate:gql && yarn run generate:grpc",
+    "generate:gql": "graphql-codegen --config graphqlcodegen.yml",
+    "generate:grpc": "mkdir -p src/grpc/jwtks && protoc -I ../../api/grpc --ts_out=src/grpc/jwtks ../../api/grpc/jwtks.proto",
     "dev": "next dev",
     "dev:watch": "concurrently \"yarn run dev\" \"yarn run generate --watch\"",
     "build": "next build",
@@ -25,22 +27,31 @@
   "dependencies": {
     "@apollo/client": "^3.5.10",
     "@apollo/react-hooks": "^4.0.0",
+    "@grpc/grpc-js": "^1.6.5",
     "@sentry/nextjs": "^6.19.6",
     "@sentry/tracing": "^6.19.6",
     "axios": "^0.26.1",
     "classnames": "^2.3.1",
+    "google-protobuf": "^3.20.1-rc.1",
     "graphql": "^16.3.0",
     "graphql-request": "^4.2.0",
     "graphql-tag": "^2.12.6",
     "graphql-ws": "^5.6.4",
+    "grpc": "^1.24.11",
+    "grpc-tools": "^1.11.2",
+    "grpc_tools_node_protoc_ts": "^5.3.2",
     "isomorphic-unfetch": "^3.1.0",
     "js-cookie": "^3.0.1",
-    "next": "12.1.4",
+    "jsonwebtoken": "^8.5.1",
+    "jwks-rsa": "^2.0.5",
+    "next": "^12.1.5",
     "next-auth": "^4.0.5",
-    "react": "17.0.2",
+    "protoc-gen-ts": "^0.8.2",
+    "react": "^18.0.0",
     "react-burger-menu": "^3.0.6",
-    "react-dom": "^17.0.2",
-    "sass": "^1.50.0"
+    "react-dom": "^18.0.0",
+    "sass": "^1.45.0",
+    "twemoji": "^14.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.17.9",
@@ -54,8 +65,9 @@
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.4",
     "@testing-library/user-event": "^14.0.4",
+    "@types/google-protobuf": "^3.15.5",
     "@types/node": "17.0.23",
-    "@types/react": "^17.0.43",
+    "@types/react": "^18.0.5",
     "@typescript-eslint/eslint-plugin": "^5.11.0",
     "@typescript-eslint/parser": "^5.19.0",
     "autoprefixer": "^10.4.2",
@@ -78,7 +90,8 @@
     "start-server-and-test": "^1.14.0",
     "tailwindcss": "^3.0.22",
     "ts-node": "^10.7.0",
-    "typescript": "4.6.3"
+    "typescript": "4.6.3",
+    "yaml-loader": "^0.7.0"
   },
   "resolutions": {
     "@apollo/client": "^3.5.10",
