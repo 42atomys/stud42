@@ -14,6 +14,7 @@ import (
 	"github.com/lestrrat-go/jwx/v2/jwk"
 	"github.com/lestrrat-go/jwx/v2/jwt"
 	"github.com/rs/zerolog/log"
+	"github.com/spf13/viper"
 )
 
 // authTokenContextKey is the context key to store the JWT Token from the
@@ -62,7 +63,7 @@ func directiveAuthorization(client *modelgen.Client) func(ctx context.Context, o
 			return nil, errUnauthenticated
 		}
 
-		jwks, err := jwk.Fetch(ctx, "http://127.0.0.1:5500/jwks")
+		jwks, err := jwk.Fetch(ctx, viper.GetString("jwtks.endpoint"))
 		if err != nil {
 			log.Error().Err(err).Msg("error fetching jwks")
 			return nil, err

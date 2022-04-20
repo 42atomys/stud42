@@ -6,9 +6,15 @@ interface: {}
 
 # jwtks service relatives configurations
 jwtks:
+  # Endpoint of the public JWKSet can be used to validate
+  # a JWT Token
+  endpoint: http://127.0.0.1:5500/jwks
+  # Certs used to sign and validate the JWT
+  # Also called : The JWK
   jwk:
     cert_private_key: /etc/stud42/certs/private.key
     cert_public_key: /etc/stud42/certs/public.pem
+  # Certs used to secure the GRPC Endpoint with SSL/TLS
   grpc:
     cert_private_key: /etc/stud42/certs/server.key
     cert_public_key: /etc/stud42/certs/server.pem
