@@ -2,3 +2,8 @@
 node_modules/
 cypress/
 coverage/
+
+# Generated code
+src/grpc/jwtks/jwtks.ts
+src/graphql/generated.ts
+src/graphql/schema.json
