@@ -1,12 +1,13 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: dev.stud42.atomys.app
+  name: s42-app
   namespace: istio-system
 spec:
   dnsNames:
-    - dev.stud42.atomys.app
+    - s42.app
+    - '*.s42.app'
   issuerRef:
     kind: ClusterIssuer
     name: ovh-issuer
-  secretName: stud42-dev-cert
+  secretName: s42-app-tls
