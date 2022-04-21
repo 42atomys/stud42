@@ -16,7 +16,6 @@ jobs:
     - id: files
       uses: tj-actions/changed-files@v18.7
       with:
-        sha: ${{ github.sha }}
         separator: '\n'
         files_from_source_file: |
           deploy/**
