@@ -13,16 +13,18 @@ jobs:
     name: 'K8S Manifests Linters 🤖'
     runs-on: ubuntu-latest
     steps:
-    - id: files-raw
-      uses: jitterbit/get-changed-files@v1
-      with:
-        format: 'space-delimited'
-        token: ${{ github.token }}
-    - run: |
-        result=$(echo ${{ steps.files-raw.outputs.all }} | tr ' ' '\n' | grep 'deploy/' | egrep -i '.(yml|yaml)$')
-        echo "::set-output name=FILES::$result"
-      id: files
+    #! CANNOT ACTUALLY DONE. Wait k8s-lint accept dynamic separator
+    # - id: files-raw
+    #   uses: jitterbit/get-changed-files@v1
+    #   with:
+    #     format: 'space-delimited'
+    #     token: ${{ github.token }}
+    # - run: |
+    #     result=$(echo ${{ steps.files-raw.outputs.all }} | tr ' ' '\n' | grep 'deploy/' | egrep -i '.(yml|yaml)$')
+    #     echo "::set-output name=FILES::$result"
+    #   id: files
     - uses: azure/k8s-lint@v1
       with:
         lintType: kubeval
-        manifests: ${{ steps.files.outputs.FILES }}
+        manifests: |
+          deploy/**.yaml
