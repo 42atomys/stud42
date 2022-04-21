@@ -1,0 +1,28 @@
+name: 'Tests - K8S Manifests 🤖'
+on:
+  pull_request:
+    paths:
+    - deploy/**.yaml
+  push:
+    branches:
+    - main
+    paths:
+    - deploy/**.yaml
+jobs:
+  manifests_linter:
+    name: 'K8S Manifests Linters 🤖'
+    runs-on: ubuntu-latest
+    steps:
+    - id: files-raw
+      uses: jitterbit/get-changed-files@v1
+      with:
+        format: 'space-delimited'
+        token: ${{ github.token }}
+    - run: |
+        result=$(echo ${{ steps.files-raw.outputs.all }}  | tr ' ' '\n')
+        echo "::set-output name=FILES::$result"
+      id: files
+    - uses: azure/k8s-lint@v1
+      with:
+        lintType: kubeval
+        manifests: ${{ steps.files.outputs.FILES }}
