@@ -13,16 +13,15 @@ jobs:
     name: 'K8S Manifests Linters 🤖'
     runs-on: ubuntu-latest
     steps:
-    - id: files-raw
-      uses: jitterbit/get-changed-files@v1
+    - id: files
+      uses: tj-actions/changed-files@v18.7
       with:
-        format: 'space-delimited'
+        sha: ${{ github.sha }}
+        separator: '\n'
+        files_from_source_file: |
+          deploy/**
         token: ${{ github.token }}
-    - run: |
-        result=$(echo ${{ steps.files-raw.outputs.all }}  | tr ' ' '\n')
-        echo "::set-output name=FILES::$result"
-      id: files
     - uses: azure/k8s-lint@v1
       with:
         lintType: kubeval
-        manifests: ${{ steps.files.outputs.FILES }}
+        manifests: ${{ steps.files.outputs.files }}
