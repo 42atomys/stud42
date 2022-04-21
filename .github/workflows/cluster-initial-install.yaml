@@ -1,4 +1,4 @@
-name: '🤖 Kubernetes Cluster - Initial Install (not destructive)'
+name: 'K8S Cluster - Install 🤖'
 on: 
   workflow_dispatch:
     inputs:
