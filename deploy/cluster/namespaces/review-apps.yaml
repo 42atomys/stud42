@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: review-apps
+  labels:
+    kubernetes.io/name: review-apps
+    kubernetes.io/description: |
+      Namespace used to scope any services / storages and stuffs relative to the
+      review-apps environment of the project.
+      Used during the Pull Request review on Github. Services and endpoint of
+      reviews-app link to the sandbox.
+    pod-security.kubernetes.io/warn-enforce: restricted
+    pod-security.kubernetes.io/warn-enforce-version: '1.23'
+    app.kubernetes.io/created-by: github-actions

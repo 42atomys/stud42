@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: staging
+  labels:
+    kubernetes.io/name: next
+    kubernetes.io/description: |
+      Namespace used to scope any services / storages and stuffs relative to the
+      staging environment of the project
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/enforce-version: '1.23'
+    app.kubernetes.io/created-by: github-actions

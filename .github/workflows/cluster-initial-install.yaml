@@ -1,0 +1,74 @@
+name: '🤖 Kubernetes Cluster - Initial Install (not destructive)'
+on: 
+  workflow_dispatch:
+    inputs:
+      install_istio:
+        type: boolean
+        required: true
+        description: (Re)Install Istio ?
+      install_cert_manager:
+        type: boolean
+        required: true
+        description: (Re)Install Cert Manager ?
+
+jobs:
+  core_install:
+    runs-on: ubuntu-latest
+    name: Create deployer service accounts
+    steps:
+    - uses: azure/setup-kubectl@v2.0
+    - uses: azure/setup-helm@v1
+    - uses: azure/k8s-set-context@v2
+      with:
+        method: kubeconfig
+        kubeconfig: ${{ secrets.KUBECONFIG_ADMIN }}
+        cluster-type: generic
+    - uses: Azure/k8s-deploy@v3.1
+      name: Create namespaces
+      with:
+        action: deploy
+        manifests: |
+          deploy/cluster/namespaces/
+        token: ${{ github.token }}
+    - uses: Azure/k8s-deploy@v3.1
+      name: Create deployer service accounts
+      with:
+        action: deploy
+        manifests: |
+          deploy/cluster/rbac/deployer*.yaml
+        token: ${{ github.token }}
+    - name: Install istio
+      if: ${{ github.event.inputs.install_istio == 'true' }} 
+      run: |
+        curl -L https://istio.io/downloadIstio | sh -
+        istioctl install -y 
+    - name: Install cert-manager
+      if: ${{ github.event.inputs.install_cert_manager == 'true' }} 
+      run: |
+        kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.8.0/cert-manager.yaml
+        git clone https://github.com/baarde/cert-manager-webhook-ovh.git
+        cd cert-manager-webhook-ovh
+        helm install cert-manager-webhook-ovh ./deploy/cert-manager-webhook-ovh --set groupName='acme.s42.app'
+    - name: Create ovh-credentials secrets for cert-manager
+      uses: azure/k8s-create-secret@v2
+      if: ${{ github.event.inputs.install_cert_manager == 'true' }} 
+      with:
+        namespace: cert-manager
+        secret-type: Opaque
+        secret-name: ovh-credentials
+        string-data: ${{ secrets.SECRET__OVH_CREDENTIALS_SECRET_KEY }}
+    - uses: Azure/k8s-deploy@v3.1
+      name: Install issuers & certificates
+      with:
+        action: deploy
+        manifests: |
+          deploy/cluster/cert-manager/issuers
+          deploy/cluster/cert-manager/certificates
+        token: ${{ github.token }}
+    - uses: Azure/k8s-deploy@v3.1
+      name: Install gateways
+      with:
+        action: deploy
+        manifests: |
+          deploy/cluster/istio/gateways
+        token: ${{ github.token }}

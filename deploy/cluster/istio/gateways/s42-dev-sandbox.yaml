@@ -1,8 +1,8 @@
 apiVersion: networking.istio.io/v1beta1
 kind: Gateway
 metadata:
-  name: gateway-stud42
-  namespace: prod
+  name: s42-dev-live
+  namespace: sandbox
 spec:
   selector:
     istio: ingressgateway # use istio default controller
@@ -13,6 +13,7 @@ spec:
         protocol: HTTPS
       tls:
         mode: SIMPLE
-        credentialName: "stud42-cert"
+        credentialName: s42-dev-tls
       hosts:
-        - "stud42.atomys.app"
+        - "s42.dev"
+        - "*.s42.dev"

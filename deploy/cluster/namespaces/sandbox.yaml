@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sandbox
+  labels:
+    kubernetes.io/name: sandbox
+    kubernetes.io/description: |
+      Namespace used to scope any services / storages and stuffs relative to the
+      sandbox environment of the project.
+      All storages of this namespaces are stateless and dont have any persisted
+      volumes.
+    pod-security.kubernetes.io/warn-enforce: restricted
+    pod-security.kubernetes.io/warn-enforce-version: '1.23'
+    app.kubernetes.io/created-by: github-actions
