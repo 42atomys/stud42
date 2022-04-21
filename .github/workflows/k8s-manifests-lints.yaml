@@ -19,7 +19,7 @@ jobs:
         format: 'space-delimited'
         token: ${{ github.token }}
     - run: |
-        result=$(echo ${{ steps.files-raw.outputs.all }}  | tr ' ' '\n' | grep 'deploy/')
+        result=$(echo ${{ steps.files-raw.outputs.all }} | tr ' ' '\n' | grep 'deploy/' | egrep -i '.(yml|yaml)$')
         echo "::set-output name=FILES::$result"
       id: files
     - uses: azure/k8s-lint@v1
