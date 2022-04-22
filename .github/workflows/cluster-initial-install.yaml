@@ -81,10 +81,16 @@ jobs:
       matrix:
         namespace: [ review-apps, staging, sandbox, production ]
     steps:
-    - name: Create docker-registry secret for GitHub Packages on ${{ matrix.namespace }}
-      uses: azure/k8s-create-secret@v2
+    - uses: azure/setup-kubectl@v2.0
+    - uses: azure/k8s-set-context@v2
       with:
-        namespace: ${{ matrix.namespace }}
-        secret-type: docker-registry
-        secret-name: ghcr-creds
-        string-data: ${{ secrets.SECRET__GHCR_TOKEN }}
+        method: kubeconfig
+        kubeconfig: ${{ secrets.KUBECONFIG_ADMIN }}
+        cluster-type: generic
+    - name: Create docker-registry secret for GitHub Packages on ${{ matrix.namespace }}
+      run: |
+        kubectl create secret docker-registry ghcr-creds \
+          --namespace=${{ matrix.namespace }} \
+          --docker-username=${{ github.repository_owner }} \
+          --docker-password=${{ secrets.SECRET__GHCR_TOKEN }} \
+          --docker-server=ghcr.io
