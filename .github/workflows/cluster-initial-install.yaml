@@ -14,7 +14,7 @@ on:
 jobs:
   core_install:
     runs-on: ubuntu-latest
-    name: Create deployer service accounts
+    name: Install the core of the cluster
     steps:
     - uses: azure/setup-kubectl@v2.0
     - uses: azure/setup-helm@v1
@@ -72,3 +72,19 @@ jobs:
         manifests: |
           deploy/cluster/istio/gateways
         token: ${{ github.token }}
+  update_secrets:
+    name: Install cross cluster secrets
+    runs-on: ubuntu-latest
+    needs: core_install
+    strategy:
+      fail-fast: true
+      matrix:
+        namespace: [ review-apps, staging, sandbox, production ]
+    steps:
+    - name: Create docker-registry secret for GitHub Packages on ${{ matrix.namespace }}
+      uses: azure/k8s-create-secret@v2
+      with:
+        namespace: ${{ matrix.namespace }}
+        secret-type: docker-registry
+        secret-name: ghcr-creds
+        string-data: ${{ secrets.SECRET__GHCR_TOKEN }}
