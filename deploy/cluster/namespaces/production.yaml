@@ -1,0 +1,11 @@
+# Namespace used to scope any services / storages and stuffs relative to the
+# production environment of the project
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: production
+  labels:
+    kubernetes.io/name: live
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/enforce-version: '1.23'
+    app.kubernetes.io/created-by: github-actions

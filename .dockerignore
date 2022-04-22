@@ -1,0 +1,68 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# =================================================
+# Globals 🤖
+# =================================================
+# local env files
+.env*
+
+# Configuration Files
+config/*
+web/ui/stud42.config.yaml
+
+# =================================================
+# Backend ignores 💻
+# =================================================
+
+# Certs
+certs/
+
+# Generated code
+internal/api/generated/*
+internal/models/generated/*
+internal/models/structs_generated.go
+internal/**/*.pb.go
+
+# =================================================
+# Frontned ignores 🕹
+# =================================================
+
+# Generated code
+web/ui/src/graphql/schema.json
+web/ui/src/graphql/generated.ts
+web/ui/src/grpc/jwtks/jwtks.ts
+
+# dependencies
+web/ui/node_modules
+web/ui/*.pnp
+web/ui/*.pnp.js
+
+# testing
+web/ui/coverage
+
+# next.js
+web/ui/.next/
+web/ui/out/
+
+# production
+web/ui/build
+
+# misc
+deploy/
+docs/
+config/*
+tools/
+.github
+.DS_Store
+*.pem
+
+# debug
+web/ui/*npm-debug.log*
+web/ui/*yarn-debug.log*
+web/ui/*yarn-error.log*
+
+# vercel
+web/ui/*.vercel
+
+# typescript
+web/ui/**.tsbuildinfo
