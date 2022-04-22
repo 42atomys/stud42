@@ -1,0 +1,22 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: ovh-issuer
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: 'acme@stud42.fr'
+    privateKeySecretRef:
+      name: letsencrypt-account-key
+    solvers:
+    - dns01:
+        webhook:
+          groupName: 'acme.stud42.atomys.app'
+          solverName: ovh
+          config:
+            endpoint: ovh-eu
+            applicationKey: 'OVH_APPLICATION_KEY'
+            applicationSecretRef:
+              key: applicationSecret
+              name: ovh-credentials
+            consumerKey: 'OVH_CONSUMER_KEY'

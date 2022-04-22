@@ -1,14 +1,17 @@
-FROM golang:1.17-alpine AS build
+FROM golang:1.18 AS build
 
 WORKDIR /build
 COPY . /build
-RUN CGO_ENABLED=0 GOARCH=amd64 GOOS=linux go build -o stud42
+
+RUN apt-get update && \
+    apt-get install -y unzip && \
+    make -f build/Makefile deps generate build
 
 FROM alpine
 
 LABEL maintener "42Atomys <contact@atomys.fr>"
 LABEL repository "https://github.com/42Atomys/stud42"
 
-COPY --from=build /build/stud42 /stud42
+COPY --from=build /build/stud42cli /stud42cli
 
-CMD ["/stud42"]
+CMD ["/stud42cli"]

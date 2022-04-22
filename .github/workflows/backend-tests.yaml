@@ -5,6 +5,7 @@ on:
     - '.github/**'
     - 'web/ui/**'
     - 'docs/**'
+    - 'deploy/**'
   push:
     branches:
       - main
@@ -12,6 +13,7 @@ on:
     - '.github/**'
     - 'web/ui/**'
     - 'docs/**'
+    - 'deploy/**'
 
 jobs:
   linters:
