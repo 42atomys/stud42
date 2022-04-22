@@ -16,8 +16,9 @@ jobs:
       contents: read
     steps:
     - uses: azure/setup-kubectl@v2.0
-    - uses: azure/k8s-set-context@v1
+    - uses: azure/k8s-set-context@v2
       with:
+        cluster-type: generic
         method: service-account
         k8s-url: ${{ secrets._K8S_CLUSTER_ENDPOINT }}
         k8s-secret: ${{ secrets.SECRET_REVIEW_APPS_DEPLOYER_TOKEN }}
