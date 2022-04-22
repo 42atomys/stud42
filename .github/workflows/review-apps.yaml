@@ -39,10 +39,10 @@ jobs:
         github-token: ${{ github.token }}
 
     - name: Build and push Docker image
-      uses: docker/build-push-action@v1
+      uses: docker/build-push-action@v2
       with:
         context: .
         push: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
-        dockerfile: build/Dockerfile
+        file: build/Dockerfile
