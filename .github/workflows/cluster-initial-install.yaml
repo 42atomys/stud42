@@ -29,8 +29,9 @@ jobs:
     - name: Install istio
       if: ${{ github.event.inputs.install_istio == 'true' }} 
       run: |
-        curl -L https://istio.io/downloadIstio | sh -
-        istioctl install -y 
+        curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.13.3 sh -
+        mv istio-1.13.3/bin/istioctl /usr/local/bin/istioctl
+        /usr/local/bin/istioctl install -y 
     - name: Install cert-manager
       if: ${{ github.event.inputs.install_cert_manager == 'true' }} 
       run: |
