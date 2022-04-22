@@ -25,7 +25,7 @@ jobs:
         kubeconfig: ${{ secrets.KUBECONFIG_ADMIN }}
         cluster-type: generic
     - run: kubectl apply -f deploy/cluster/namespaces
-    - run: kubectl apply -f deploy/cluster/rbac/deployer*.yaml
+    - run: ls -1 deploy/cluster/rbac/deployer*.yaml | xargs -l kubectl apply -f
     - name: Install istio
       if: ${{ github.event.inputs.install_istio == 'true' }} 
       run: |
