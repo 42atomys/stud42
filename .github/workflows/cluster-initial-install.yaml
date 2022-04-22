@@ -43,13 +43,8 @@ jobs:
         cd cert-manager-webhook-ovh
         helm upgrade -n cert-manager --install cert-manager-webhook-ovh ./deploy/cert-manager-webhook-ovh --set groupName='acme.s42.app'
     - name: Create ovh-credentials secrets for cert-manager
-      uses: azure/k8s-create-secret@v2
       if: ${{ github.event.inputs.install_cert_manager == 'true' }} 
-      with:
-        namespace: cert-manager
-        secret-type: Opaque
-        secret-name: ovh-credentials
-        string-data: ${{ secrets.SECRET__OVH_CREDENTIALS_SECRET_KEY }}
+      run: kubectl create secret -n cert-manager generic ovh-credentials --from-literal=OVH_APPLICATION_KEY=${{ secrets.SECRET__OVH_CREDENTIALS_SECRET_KEY }}
     - run: |
         kubectl apply -f \
         deploy/cluster/cert-manager/issuers \
