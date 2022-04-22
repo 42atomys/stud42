@@ -1,7 +1,11 @@
-name: 'K8S Cluster - Install 🤖'
+name: 'K8S Cluster - (Re)Install 🤖'
 on: 
   workflow_dispatch:
     inputs:
+      install_namespaces:
+        type: boolean
+        required: true
+        description: (Re)Install Namespaces ?
       install_istio:
         type: boolean
         required: true
@@ -10,6 +14,14 @@ on:
         type: boolean
         required: true
         description: (Re)Install Cert Manager ?
+      install_issuers_and_certificates:
+        type: boolean
+        required: true
+        description: (Re)Install Certificates and Issuers ?
+      install_ghcr_secrets:
+        type: boolean
+        required: true
+        description: (Re)Install GHCR Docker Registry secrets ?
 
 jobs:
   core_install:
@@ -26,8 +38,9 @@ jobs:
         cluster-type: generic
     - run: kubectl apply -f deploy/cluster/namespaces
     - run: ls -1 deploy/cluster/rbac/deployer*.yaml | xargs -l kubectl apply -f
-    - name: Install istio
       if: ${{ github.event.inputs.install_istio == 'true' }} 
+    - name: Install istio
+      if: ${{ github.event.inputs.install_namespaces == 'true' }} 
       run: |
         curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.13.3 sh -
         mv istio-1.13.3/bin/istioctl /usr/local/bin/istioctl
@@ -45,16 +58,18 @@ jobs:
     - name: Create ovh-credentials secrets for cert-manager
       if: ${{ github.event.inputs.install_cert_manager == 'true' }} 
       run: kubectl create secret -n cert-manager generic ovh-credentials --from-literal=OVH_APPLICATION_KEY=${{ secrets.SECRET__OVH_CREDENTIALS_SECRET_KEY }}
-    - run: |
-        kubectl apply -f \
-        deploy/cluster/cert-manager/issuers \
-        deploy/cluster/cert-manager/certificates \
-        deploy/cluster/istio/gateways
+    - name: Deploy cert-manager issuers & certificates
+      if: ${{ github.event.inputs.install_issuers_and_certificates == 'true' }} 
+      run: |
+        kubectl apply -f deploy/cluster/cert-manager/issuers
+        kubectl apply -f deploy/cluster/cert-manager/certificates
+        kubectl apply -f deploy/cluster/istio/gateways
 
   update_secrets:
     name: Install cross cluster secrets
     runs-on: ubuntu-latest
     needs: core_install
+    if: ${{ github.event.inputs.install_ghcr_secrets == 'true' }} 
     strategy:
       fail-fast: true
       matrix:
@@ -68,6 +83,7 @@ jobs:
         cluster-type: generic
     - name: Create docker-registry secret for GitHub Packages on ${{ matrix.namespace }}
       run: |
+        kubectl delete secret --namespace=${{ matrix.namespace }} ghcr-creds --ignore-not-found
         kubectl create secret docker-registry ghcr-creds \
           --namespace=${{ matrix.namespace }} \
           --docker-username=${{ github.repository_owner }} \
