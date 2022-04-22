@@ -61,7 +61,9 @@ jobs:
         helm upgrade -n cert-manager --install cert-manager-webhook-ovh ./deploy/cert-manager-webhook-ovh --set groupName='acme.s42.app'
     - name: Create ovh-credentials secrets for cert-manager
       if: ${{ github.event.inputs.install_cert_manager == 'true' }} 
-      run: kubectl create secret -n cert-manager generic ovh-credentials --from-literal=OVH_APPLICATION_KEY=${{ secrets.SECRET__OVH_CREDENTIALS_SECRET_KEY }}
+      run: |
+        kubectl delete secret -n cert-manager ovh-credentials --ignore-not-found
+        kubectl create secret -n cert-manager generic ovh-credentials --from-literal=OVH_APPLICATION_KEY=${{ secrets.SECRET__OVH_CREDENTIALS_SECRET_KEY }}
     - name: Deploy cert-manager issuers & certificates
       if: ${{ github.event.inputs.install_issuers_and_certificates == 'true' }} 
       run: |
