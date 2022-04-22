@@ -1,4 +1,4 @@
-hname: 'K8S Cluster - Install 🤖'
+name: 'K8S Cluster - Install 🤖'
 on: 
   workflow_dispatch:
     inputs:
