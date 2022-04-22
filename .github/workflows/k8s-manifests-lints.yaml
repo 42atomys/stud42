@@ -33,7 +33,7 @@ jobs:
         result=$(echo ${{ steps.files-raw.outputs.all }} | tr ' ' '\n' | grep 'deploy/' | egrep -i '.(yml|yaml)$')
         echo "::set-output name=FILES::$result"
       id: files
-    - uses: azure/k8s-lint@v1
+    - uses: azure/k8s-lint@v2
       with:
         lintType: dryrun
         manifests: ${{ steps.files.outputs.FILES }}
