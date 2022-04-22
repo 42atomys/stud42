@@ -1,4 +1,4 @@
-name: 'K8S Cluster - Install 🤖'
+hname: 'K8S Cluster - Install 🤖'
 on: 
   workflow_dispatch:
     inputs:
@@ -36,9 +36,12 @@ jobs:
       if: ${{ github.event.inputs.install_cert_manager == 'true' }} 
       run: |
         kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.8.0/cert-manager.yaml
+    - name: Install cert-manager-webhook-ovh
+      if: ${{ github.event.inputs.install_cert_manager == 'true' }} 
+      run: |
         git clone https://github.com/baarde/cert-manager-webhook-ovh.git
         cd cert-manager-webhook-ovh
-        helm install cert-manager-webhook-ovh ./deploy/cert-manager-webhook-ovh --set groupName='acme.s42.app'
+        helm upgrade -n cert-manager --install cert-manager-webhook-ovh ./deploy/cert-manager-webhook-ovh --set groupName='acme.s42.app'
     - name: Create ovh-credentials secrets for cert-manager
       uses: azure/k8s-create-secret@v2
       if: ${{ github.event.inputs.install_cert_manager == 'true' }} 
