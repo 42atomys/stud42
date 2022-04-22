@@ -2,10 +2,6 @@ name: 'K8S Cluster - (Re)Install 🤖'
 on: 
   workflow_dispatch:
     inputs:
-      install_namespaces:
-        type: boolean
-        required: true
-        description: (Re)Install Namespaces ?
       install_istio:
         type: boolean
         required: true
@@ -22,7 +18,14 @@ on:
         type: boolean
         required: true
         description: (Re)Install GHCR Docker Registry secrets ?
-
+      install_namespaces:
+        type: boolean
+        required: true
+        description: (Re)Install Namespaces ?
+      install_deployer:
+        type: boolean
+        required: true
+        description: (Re)Install Deployers ?
 jobs:
   core_install:
     runs-on: ubuntu-latest
@@ -37,10 +40,11 @@ jobs:
         kubeconfig: ${{ secrets.KUBECONFIG_ADMIN }}
         cluster-type: generic
     - run: kubectl apply -f deploy/cluster/namespaces
-    - run: ls -1 deploy/cluster/rbac/deployer*.yaml | xargs -l kubectl apply -f
-      if: ${{ github.event.inputs.install_istio == 'true' }} 
-    - name: Install istio
       if: ${{ github.event.inputs.install_namespaces == 'true' }} 
+    - run: ls -1 deploy/cluster/rbac/deployer*.yaml | xargs -l kubectl apply -f
+      if: ${{ github.event.inputs.install_deployer == 'true' }} 
+    - name: Install istio
+      if: ${{ github.event.inputs.install_istio == 'true' }} 
       run: |
         curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.13.3 sh -
         mv istio-1.13.3/bin/istioctl /usr/local/bin/istioctl
