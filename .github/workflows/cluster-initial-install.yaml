@@ -24,22 +24,8 @@ jobs:
         method: kubeconfig
         kubeconfig: ${{ secrets.KUBECONFIG_ADMIN }}
         cluster-type: generic
-    - uses: Azure/k8s-deploy@v3.1
-      name: Create namespaces
-      with:
-        action: deploy
-        annotate-namespace: false
-        pull-images: false
-        manifests: |
-          deploy/cluster/namespaces/
-        token: ${{ github.token }}
-    - uses: Azure/k8s-deploy@v3.1
-      name: Create deployer service accounts
-      with:
-        action: deploy
-        manifests: |
-          deploy/cluster/rbac/deployer*.yaml
-        token: ${{ github.token }}
+    - run: kubectl apply -f deploy/cluster/namespaces
+    - run: kubectl apply -f deploy/cluster/rbac/deployer*.yaml
     - name: Install istio
       if: ${{ github.event.inputs.install_istio == 'true' }} 
       run: |
@@ -60,21 +46,12 @@ jobs:
         secret-type: Opaque
         secret-name: ovh-credentials
         string-data: ${{ secrets.SECRET__OVH_CREDENTIALS_SECRET_KEY }}
-    - uses: Azure/k8s-deploy@v3.1
-      name: Install issuers & certificates
-      with:
-        action: deploy
-        manifests: |
-          deploy/cluster/cert-manager/issuers
-          deploy/cluster/cert-manager/certificates
-        token: ${{ github.token }}
-    - uses: Azure/k8s-deploy@v3.1
-      name: Install gateways
-      with:
-        action: deploy
-        manifests: |
-          deploy/cluster/istio/gateways
-        token: ${{ github.token }}
+    - run: |
+        kubectl apply -f \
+        deploy/cluster/cert-manager/issuers \
+        deploy/cluster/cert-manager/certificates \
+        deploy/cluster/istio/gateways
+
   update_secrets:
     name: Install cross cluster secrets
     runs-on: ubuntu-latest
