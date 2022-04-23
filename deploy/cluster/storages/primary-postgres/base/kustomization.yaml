@@ -1,0 +1,12 @@
+resources:
+- pvc.yaml
+- deployment.yaml
+- service.yaml
+
+commonLabels:
+  kubernetes.io/name: postgres
+  app.kubernetes.io/version: '14.2'
+  app.kubernetes.io/component: database
+  app.kubernetes.io/part-of: s42-app
+  app.kubernetes.io/managed-by: kustomize
+  app.kubernetes.io/created-by: github-actions
