@@ -125,7 +125,7 @@ jobs:
 
   storages_install:
     runs-on: ubuntu-latest
-    name: Insatll storages
+    name: Install storages
     needs: [ update_secrets ]
     if: github.event.inputs.install_primary_postgres_storage == 'true'
     steps:
