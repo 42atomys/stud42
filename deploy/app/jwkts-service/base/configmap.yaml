@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: stud42-config
+data:
+  stud42.yaml: |
+    # API relatives configurations
+    api: {}
+
+    # Interface relatives configurations
+    interface: {}
+
+    # jwtks service relatives configurations
+    jwtks:
+      # Endpoint of the public JWKSet can be used to validate
+      # a JWT Token
+      endpoint: https://s42.app/.well-known/jwks
+      # Certs used to sign and validate the JWT
+      # Also called : The JWK
+      jwk:
+        cert_private_key: /etc/certs/tls.key
+        cert_public_key: /etc/certs/tls.crt
+      # Certs used to secure the GRPC Endpoint with SSL/TLS
+      grpc:
+        cert_private_key: /etc/certs/tls.key
+        cert_public_key: /etc/certs/tls.crt
+
+    discord:
+      guild_id: '248936708379246593'

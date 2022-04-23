@@ -1,0 +1,10 @@
+bases:
+- ../base
+
+namespace: production
+
+images:
+- name: ghcr.io/42atomys/stud42
+  newTag: next
+
+namePrefix: prod-
