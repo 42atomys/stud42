@@ -1,0 +1,33 @@
+name: 'Service - JTWKS Secrets 🔐'
+on: 
+  workflow_dispatch:
+    inputs:
+      install_jwk_secret:
+        type: boolean
+        required: true
+        description: (Re)Install JWK Secret used to generate JWT ?
+jobs:
+  jwtks_update_secrets:
+    name: Install cross cluster secrets
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.install_jwk_secret == 'true' }} 
+    strategy:
+      fail-fast: true
+      matrix:
+        namespace: [ review-apps, staging, sandbox, production ]
+    steps:
+    - uses: actions/checkout@v3
+    - uses: azure/setup-kubectl@v2.0
+    - uses: azure/k8s-set-context@v2
+      with:
+        method: kubeconfig
+        kubeconfig: ${{ secrets.KUBECONFIG_ADMIN }}
+        cluster-type: generic
+    - name: Create jwtks-service-jwk-tls secret on ${{ matrix.namespace }}
+      run: |
+        make -f build/Makefile certs
+        kubectl delete secret --namespace=${{ matrix.namespace }} jwtks-service-jwk-tls --ignore-not-found
+        kubectl create secret generic jwtks-service-jwk-tls \
+          --namespace=${{ matrix.namespace }} \
+          --from-file=private.key=./certs/private.key \
+          --from-file=public.pem=./certs/public.pem

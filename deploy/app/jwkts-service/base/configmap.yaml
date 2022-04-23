@@ -18,12 +18,12 @@ data:
       # Certs used to sign and validate the JWT
       # Also called : The JWK
       jwk:
-        cert_private_key: /etc/certs/tls.key
-        cert_public_key: /etc/certs/tls.crt
+        cert_private_key: /etc/certs/jwk/private.pem
+        cert_public_key: /etc/certs/jwk/public.pem
       # Certs used to secure the GRPC Endpoint with SSL/TLS
       grpc:
-        cert_private_key: /etc/certs/tls.key
-        cert_public_key: /etc/certs/tls.crt
+        cert_private_key: /etc/certs/grpc/tls.key
+        cert_public_key: /etc/certs/grpc/tls.crt
 
     discord:
       guild_id: '248936708379246593'

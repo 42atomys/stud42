@@ -14,7 +14,7 @@ regenerate: clean generate
 
 certs:
 	mkdir -p certs
-	openssl genrsa -out certs/private.key 4096
+	openssl genrsa -out certs/private.key 8192
 	openssl rsa -in certs/private.key -out certs/public.pem -pubout -outform PEM
 
 deps:
@@ -26,4 +26,4 @@ all:
 	generate
 	build
 
-.PHONY: clean deps generate build all
+.PHONY: certs clean deps generate build all

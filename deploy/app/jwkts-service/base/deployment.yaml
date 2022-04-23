@@ -11,6 +11,8 @@ spec:
       containers:
       - name: service
         image: app
+        args: [ serve, jwtks ]
+        command: [ /stud42cli ]
         env:
         - name: GO_ENV
           value: review-apps
@@ -20,8 +22,14 @@ spec:
               key: 'JWTKS_SERVICE_DSN'
               name: 'sentry-dsns'
         volumeMounts:
-          - name: certs
-            mountPath: '/etc/certs'
+          - name: certs-grpc
+            mountPath: '/etc/certs/grpc'
+            readOnly: true
+          - name: certs-jwk
+            mountPath: '/etc/certs/jwk'
+            readOnly: true
+          - name: config
+            mountPath: /config
             readOnly: true
         resources:
           limits:
@@ -31,6 +39,12 @@ spec:
         - containerPort: 5000
         - containerPort: 5500
       volumes:
-      - name: certs
+      - name: certs-grpc
         secret:
           secretName: jwtks-service-tls
+      - name: certs-jwk
+        secret:
+          secretName: jwtks-service-jwk-tls
+      - name: config
+        configMap:
+          name: stud42-config
