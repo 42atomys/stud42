@@ -95,3 +95,15 @@ jobs:
           --docker-username=${{ github.repository_owner }} \
           --docker-password=${{ secrets.SECRET__GHCR_TOKEN }} \
           --docker-server=ghcr.io
+    - name: Create github-token secret on ${{ matrix.namespace }}
+      run: |
+        kubectl delete secret --namespace=${{ matrix.namespace }} github-token --ignore-not-found
+        kubectl create secret generic github-token \
+          --namespace=${{ matrix.namespace }} \
+          --from-literal=GITHUB_TOKEN=${{ secrets.SECRET__GITHUB_TOKEN }}
+    - name: Create discord-token secret on ${{ matrix.namespace }}
+      run: |
+        kubectl delete secret --namespace=${{ matrix.namespace }} discord-token --ignore-not-found
+        kubectl create secret generic discord-token \
+          --namespace=${{ matrix.namespace }} \
+          --from-literal=DISCORD_TOKEN=${{ secrets.SECRET__DISCORD_TOKEN }}

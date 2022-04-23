@@ -1,8 +1,5 @@
 resources:
-- certificate.yaml
-- deployment.yaml
-- service.yaml
-- virtual-service.yaml
+- configmap.yaml
 
 commonLabels:
   kubernetes.io/name: jwtks-service

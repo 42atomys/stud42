@@ -1,0 +1,23 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: jwtks-service-http
+spec:
+  hosts:
+  - next.s42.app
+  gateways:
+  - s42-app-next
+  http:
+  - name: api-http
+    match:
+    - method:
+        exact: GET
+      uri:
+        prefix: "/api"
+    rewrite:
+      uri: "/"
+    route:
+    - destination:
+        host: api-http
+        port:
+          number: 4000

@@ -1,13 +1,12 @@
 resources:
-- certificate.yaml
 - deployment.yaml
 - service.yaml
 - virtual-service.yaml
 
 commonLabels:
-  kubernetes.io/name: jwtks-service
+  kubernetes.io/name: api
   app.kubernetes.io/version: '0.1'
-  app.kubernetes.io/component: micro-service
+  app.kubernetes.io/component: backend
   app.kubernetes.io/part-of: s42-app
   app.kubernetes.io/managed-by: kustomize
   app.kubernetes.io/created-by: github-actions
