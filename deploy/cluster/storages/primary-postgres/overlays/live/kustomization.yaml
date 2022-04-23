@@ -1,6 +1,6 @@
 resources:
 - ../../base
-
+namePrefix: prod-
 namespace: production
 
 patches:
