@@ -12,3 +12,12 @@ commonLabels:
   app.kubernetes.io/part-of: s42-app
   app.kubernetes.io/managed-by: kustomize
   app.kubernetes.io/created-by: github-actions
+
+vars:
+- name: SERVICE_NAME
+  objref:
+    kind: Service
+    name: jwtks-service-grpc
+    apiVersion: v1
+  fieldref:
+    fieldpath: metadata.name
