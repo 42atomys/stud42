@@ -68,6 +68,10 @@ jobs:
         kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
         kustomize build . | kubectl apply -f -
 
+        cd deploy/app/api/overlays/next
+        kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
+        kustomize build . | kubectl apply -f -
+
   deploy_live:
     name: Deploy to live 🚀
     runs-on: ubuntu-latest
@@ -85,5 +89,9 @@ jobs:
         kustomize build deploy/app/config/overlays/live | kubectl apply -f -
 
         cd deploy/app/jwkts-service/overlays/live
+        kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
+        kustomize build . | kubectl apply -f -
+
+        cd deploy/app/api/overlays/live
         kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
         kustomize build . | kubectl apply -f -
