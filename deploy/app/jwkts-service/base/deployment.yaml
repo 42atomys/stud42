@@ -10,7 +10,7 @@ spec:
       - name: ghcr-creds
       containers:
       - name: service
-        image: ghcr.io/42atomys/stud42:latest
+        image: app
         env:
         - name: GO_ENV
           value: review-apps
