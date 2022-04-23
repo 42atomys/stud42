@@ -7,7 +7,6 @@ spec:
   dnsNames:
     - s42.dev
     - '*.s42.dev'
-    - '*.next.s42.dev'
     - '*.reviews.s42.dev'
   issuerRef:
     kind: ClusterIssuer

@@ -15,5 +15,4 @@ spec:
         mode: SIMPLE
         credentialName: s42-app-tls
       hosts:
-        - "s42.app"
-        - "*.s42.app"
+      - "s42.app"
