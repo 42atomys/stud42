@@ -8,3 +8,26 @@ images:
 - name: app
   newName: ghcr.io/42atomys/stud42
   newTag: latest
+
+replacements:
+- source:
+    kind: Service
+    name: jwtks-service-grpc
+    fieldPath: metadata.name
+  targets:
+  - select:
+      kind: Certificate
+      name: jwtks-service
+    fieldPaths:
+    - spec.dnsNames.0
+- source:
+    kind: Service
+    name: jwtks-service-http
+    fieldPath: metadata.name
+  targets:
+  - select:
+      kind: VirtualService
+      name: jwtks-service-http
+    fieldPaths:
+     - spec.http.*.name
+     - spec.http.*.route.*.destination.host
