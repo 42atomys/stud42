@@ -3,7 +3,7 @@ kind: Kustomization
 namePrefix: prod-
 resources:
 - ../../base
-namespace: production
+namespace: staging
 images:
 - name: app
   newName: ghcr.io/42atomys/stud42
