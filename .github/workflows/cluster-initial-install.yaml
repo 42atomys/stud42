@@ -26,6 +26,14 @@ on:
         type: boolean
         required: true
         description: (Re)Install Deployers ?
+      install_primary_postgres_storage:
+        type: boolean
+        required: true
+        description: (Re)Install Primary PostgreSQL Storage ?
+      install_postgres_secrets:
+        type: boolean
+        required: true
+        description: (Re)set postgres password ?
 jobs:
   core_install:
     runs-on: ubuntu-latest
@@ -107,3 +115,27 @@ jobs:
         kubectl create secret generic discord-token \
           --namespace=${{ matrix.namespace }} \
           --from-literal=DISCORD_TOKEN=${{ secrets.SECRET__DISCORD_TOKEN }}
+    - name: Create primary-postgres-credentials secret on ${{ matrix.namespace }}
+      if: ${{ github.actor == github.repository_owner	&& (github.event.inputs.install_postgres_secrets == 'true' || github.event.inputs.install_primary_postgres_storage == 'true') }} 
+      run: |
+        kubectl delete secret --namespace=${{ matrix.namespace }} primary-postgres-credentials --ignore-not-found
+        kubectl create secret generic primary-postgres-credentials \
+          --namespace=${{ matrix.namespace }} \
+          --from-literal=POSTGRES_PASSWORD=$(openssl rand -base64 42)
+
+  storages_install:
+    runs-on: ubuntu-latest
+    name: Insatll storages
+    needs: [ update_secrets ]
+    if: github.event.inputs.install_primary_postgres_storage == 'true'
+    steps:
+    - uses: actions/checkout@v3
+    - uses: azure/setup-kubectl@v2.0
+    - uses: azure/k8s-set-context@v2
+      with:
+        method: kubeconfig
+        kubeconfig: ${{ secrets.KUBECONFIG_ADMIN }}
+        cluster-type: generic
+    - run: |
+        kustomize build deploy/cluster/storages/primary-postgres/overlays/next | kubectl apply -f -
+        kustomize build deploy/cluster/storages/primary-postgres/overlays/live | kubectl apply -f -

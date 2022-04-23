@@ -1,0 +1,13 @@
+resources:
+- ../../base
+
+namespace: production
+
+patches:
+- target:
+    kind: PersistentVolumeClaim
+    name: primary-postgres
+  patch: |-
+    - op: replace
+      path: /spec/resources/requests/storage
+      value: 10Gi
