@@ -14,10 +14,10 @@ on:
         type: boolean
         required: true
         description: (Re)Install Certificates and Issuers ?
-      install_ghcr_secrets:
+      install_secrets:
         type: boolean
         required: true
-        description: (Re)Install GHCR Docker Registry secrets ?
+        description: (Re)Install cross env secrets ?
       install_namespaces:
         type: boolean
         required: true
@@ -75,7 +75,7 @@ jobs:
     name: Install cross cluster secrets
     runs-on: ubuntu-latest
     needs: core_install
-    if: ${{ github.event.inputs.install_ghcr_secrets == 'true' }} 
+    if: ${{ github.event.inputs.install_secrets == 'true' }} 
     strategy:
       fail-fast: true
       matrix:
