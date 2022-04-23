@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: jwtks-service
+  name: api
 spec:
   selector: {}
   template:
@@ -16,8 +16,21 @@ spec:
         env:
         - name: GO_ENV
           value: production
+        # DATABASE_HOST MUST BE in [1] position inside the env array
+        # to be kustomize during deployment
+        - name: DATABASE_HOST
+          value: primary-postgres
+        - name: DATABASE_USERNAME
+          value: postgres
+        - name: DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: POSTGRES_PASSWORD
+              name: primary-postgres-credentials
+        - name: DATABASE_NAME
+          value: s42
         - name: DATABASE_URL
-          value: '_____________TODO'
+          value: postgresql://$(DATABASE_USERNAME):$(DATABASE_PASSWORD)@$(DATABASE_HOST):5432/$(DATABASE_NAME)
         - name: GITHUB_TOKEN
           valueFrom:
             secretKeyRef:

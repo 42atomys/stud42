@@ -9,25 +9,24 @@ images:
   newName: ghcr.io/42atomys/stud42
   newTag: latest
 
+patches:
+- target:
+    kind: Deployment
+    name: api
+  patch: |-
+    - op: replace
+      path: /spec/template/spec/containers/0/env/1/value
+      value: prod-primary-postgres
+
 replacements:
 - source:
     kind: Service
-    name: jwtks-service-grpc
-    fieldPath: metadata.name
-  targets:
-  - select:
-      kind: Certificate
-      name: jwtks-service
-    fieldPaths:
-    - spec.dnsNames.0
-- source:
-    kind: Service
-    name: jwtks-service-http
+    name: api-http
     fieldPath: metadata.name
   targets:
   - select:
       kind: VirtualService
-      name: jwtks-service-http
+      name: api-http
     fieldPaths:
      - spec.http.*.name
      - spec.http.*.route.*.destination.host
