@@ -4,9 +4,9 @@ metadata:
   name: jwtks-service-http
 spec:
   hosts:
-  - next.s42.dev
+  - next.s42.app
   http:
-  - name: "jwtks-service-http"
+  - name: $(SERVICE_NAME)
     match:
     - method:
         exact: GET
@@ -16,6 +16,6 @@ spec:
       uri: "/jwks"
     route:
     - destination:
-        host: jwtks-service-http
+        host: $(SERVICE_NAME)
         port:
           number: 5500

@@ -16,4 +16,3 @@ spec:
         credentialName: next-s42-app-tls
       hosts:
         - "next.s42.app"
-        - "*.next.s42.app"

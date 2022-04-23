@@ -6,7 +6,7 @@ metadata:
 spec:
   dnsNames:
     - s42.app
-    - '*.s42.app'
+    - next.s42.app
   issuerRef:
     kind: ClusterIssuer
     name: ovh-issuer
