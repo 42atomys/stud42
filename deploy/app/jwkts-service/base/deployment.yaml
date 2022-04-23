@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jwtks-service
+spec:
+  selector: {}
+  template:
+    spec:
+      imagePullSecrets:
+      - name: ghcr-creds
+      containers:
+      - name: service
+        image: app
+        env:
+        - name: GO_ENV
+          value: review-apps
+        - name: SENTRY_DSN
+          valueFrom:
+            secretKeyRef:
+              key: 'JWTKS_SERVICE_DSN'
+              name: 'sentry-dsns'
+        volumeMounts:
+          - name: certs
+            mountPath: '/etc/certs'
+            readOnly: true
+        resources:
+          limits:
+            memory: "42Mi"
+            cpu: "5m"
+        ports:
+        - containerPort: 5000
+        - containerPort: 5500
+      volumes:
+      - name: certs
+        secret:
+          secretName: jwtks-service-tls
