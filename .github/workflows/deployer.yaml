@@ -30,7 +30,6 @@ jobs:
   build_and_push:
     name: 'Build & push to ghcr.io 🔧'
     runs-on: ubuntu-latest
-    needs: [ dump_contexts_to_log ]
     permissions:
       contents: read
       packages: write
@@ -68,7 +67,7 @@ jobs:
     name: Deploy to next 🎉
     runs-on: ubuntu-latest
     needs: [ build_and_push ]
-    if: ${{ github.event.action == 'prereleased' }}
+    if: ${{ github.event.action == 'prereleased' || (github.event.action == 'published' && github.event.release.draft == false && github.event.release.prerelease == true) }}
     steps:
     - uses: actions/checkout@v3
     - uses: azure/setup-kubectl@v2.0
@@ -87,7 +86,7 @@ jobs:
     name: Deploy to live 🚀
     runs-on: ubuntu-latest
     needs: [ build_and_push, deploy_next ]
-    if: ${{ github.event.action == 'released' }}
+    if: ${{ github.event.action == 'released' || (github.event.action == 'published' && github.event.release.draft == false && github.event.release.prerelease == false) }}
     steps:
     - uses: actions/checkout@v3
     - uses: azure/setup-kubectl@v2.0
