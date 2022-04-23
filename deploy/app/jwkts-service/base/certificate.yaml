@@ -4,7 +4,7 @@ metadata:
   name: jwtks-service
 spec:
   dnsNames:
-  - $(SERVICE_NAME)
+  - jwtks-service-http
   issuerRef:
     kind: ClusterIssuer
     name: selfsigned-issuer

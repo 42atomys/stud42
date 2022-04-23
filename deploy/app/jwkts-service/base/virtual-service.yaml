@@ -6,7 +6,7 @@ spec:
   hosts:
   - next.s42.app
   http:
-  - name: $(SERVICE_NAME)
+  - name: jwtks-service-http
     match:
     - method:
         exact: GET
@@ -16,6 +16,6 @@ spec:
       uri: "/jwks"
     route:
     - destination:
-        host: $(SERVICE_NAME)
+        host: jwtks-service-http
         port:
           number: 5500
