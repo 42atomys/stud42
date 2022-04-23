@@ -11,12 +11,12 @@ spec:
     solvers:
     - dns01:
         webhook:
-          groupName: 'acme.stud42.atomys.app'
+          groupName: 'acme.s42.app'
           solverName: ovh
           config:
             endpoint: ovh-eu
-            applicationKey: 'OVH_APPLICATION_KEY'
+            applicationKey: 'UsCsfHBWCye7M1DM'
             applicationSecretRef:
-              key: applicationSecret
+              key: OVH_APPLICATION_KEY
               name: ovh-credentials
-            consumerKey: 'OVH_CONSUMER_KEY'
+            consumerKey: XIDSwFARyRPlTVy5EIkJBB1fA3S7iub7

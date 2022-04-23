@@ -1,13 +1,13 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: s42-app
+  name: next-s42-app
   namespace: istio-system
 spec:
   dnsNames:
-    - s42.app
-    - '*.s42.app'
+    - next.s42.app
+    - '*.next.s42.app'
   issuerRef:
     kind: ClusterIssuer
     name: ovh-issuer
-  secretName: s42-app-tls
+  secretName: next-s42-app-tls
