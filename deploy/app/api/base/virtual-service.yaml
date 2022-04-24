@@ -4,16 +4,29 @@ metadata:
   name: api-http
 spec:
   hosts:
-  - next.s42.app
+  - s42.app
   gateways:
-  - s42-app-next
+  - s42-app
   http:
-  - name: api-http
+  - name: api-http-gql
+    match:
+    - method:
+        exact: POST
+      uri:
+        exact: "/graphql"
+    rewrite:
+      uri: "/graphql"
+    route:
+    - destination:
+        host: api-http
+        port:
+          number: 4000
+  - name: api-http-gqli
     match:
     - method:
         exact: GET
       uri:
-        prefix: "/api"
+        exact: "/graphql"
     rewrite:
       uri: "/"
     route:

@@ -16,8 +16,8 @@ spec:
         env:
         - name: GO_ENV
           value: production
-        # DATABASE_HOST MUST BE in [1] position inside the env array
-        # to be kustomize during deployment
+        - name: CORS_ORIGIN
+          value: http://localhost:3000
         - name: DATABASE_HOST
           value: primary-postgres
         - name: DATABASE_USERNAME
@@ -30,7 +30,7 @@ spec:
         - name: DATABASE_NAME
           value: s42
         - name: DATABASE_URL
-          value: postgresql://$(DATABASE_USERNAME):$(DATABASE_PASSWORD)@$(DATABASE_HOST):5432/$(DATABASE_NAME)
+          value: postgresql://$(DATABASE_USERNAME):$(DATABASE_PASSWORD)@$(DATABASE_HOST):5432/$(DATABASE_NAME)?sslmode=disable
         - name: GITHUB_TOKEN
           valueFrom:
             secretKeyRef:
