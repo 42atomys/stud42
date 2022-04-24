@@ -7,9 +7,10 @@ import (
 	"net/http"
 	"os"
 
-	typesgen "atomys.codes/stud42/internal/api/generated/types"
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/rs/zerolog/log"
+
+	typesgen "atomys.codes/stud42/internal/api/generated/types"
 )
 
 // networkPolicyRequestIPContextKey is the context key for the request IP.
@@ -26,14 +27,18 @@ var errNetworkPolicy = errors.New("request blocked by network policy")
 // directiveAuthorizationByPolicy.
 func NetworkPolicyMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		ip, _, err := net.SplitHostPort(r.RemoteAddr)
-		if err != nil {
-			log.Error().Err(err).Msg("could not get request IP")
-			http.Error(w, "could not get request IP", http.StatusInternalServerError)
-			return
+		var clientIp = r.Header.Get("X-Forwarded-For")
+		if clientIp == "" {
+			var err error
+			clientIp, _, err = net.SplitHostPort(r.RemoteAddr)
+			if err != nil {
+				log.Error().Err(err).Msg("could not get request IP")
+				http.Error(w, "could not get request IP", http.StatusInternalServerError)
+				return
+			}
 		}
 
-		ctx := context.WithValue(r.Context(), networkPolicyRequestIPContextKey, net.ParseIP(ip))
+		ctx := context.WithValue(r.Context(), networkPolicyRequestIPContextKey, net.ParseIP(clientIp))
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

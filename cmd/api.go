@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strings"
 
 	"entgo.io/contrib/entgql"
 	"entgo.io/ent/dialect/sql/schema"
@@ -66,8 +67,7 @@ var apiCmd = &cobra.Command{
 
 		router := chi.NewRouter()
 		router.Use(cors.New(cors.Options{
-			// TODO @42Atomys Add all enviroment origins
-			AllowedOrigins:   []string{"http://localhost:3000"},
+			AllowedOrigins:   strings.Split(os.Getenv("CORS_ORIGIN"), ","),
 			AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 			AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token", "Sentry-Trace"},
 			AllowCredentials: true,

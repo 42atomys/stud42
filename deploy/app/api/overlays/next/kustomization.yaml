@@ -9,17 +9,9 @@ images:
   newName: ghcr.io/42atomys/stud42
   newTag: latest
 
-patches:
-- target:
-    kind: Deployment
-    name: api
-  patch: |-
-    - op: replace
-      path: /spec/template/spec/containers/0/env/1/value
-      value: next-primary-postgres
-    - op: replace
-      path: /spec/template/spec/volumes/0/configMap/name
-      value: next-stud42-config
+patchesStrategicMerge:
+- ./use-next-primary-postgres.yaml
+- ./use-next-routing.yaml
 
 replacements:
 - source:

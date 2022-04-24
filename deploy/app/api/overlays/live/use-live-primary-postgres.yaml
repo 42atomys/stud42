@@ -1,0 +1,13 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+spec:
+  selector: {}
+  template:
+    spec:
+      containers:
+      - name: service
+        env:
+        - name: DATABASE_HOST
+          value: prod-primary-postgres

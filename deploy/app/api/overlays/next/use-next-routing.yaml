@@ -1,0 +1,24 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: api-http
+spec:
+  hosts:
+  - next.s42.app
+  gateways:
+  - s42-app-next
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+spec:
+  selector: {}
+  template:
+    spec:
+      containers:
+      - name: service
+        env:
+        - name: CORS_ORIGIN
+          value: https://next.s42.app
