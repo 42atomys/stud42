@@ -40,7 +40,7 @@ jobs:
     name: Install the core of the cluster
     steps:
     - uses: actions/checkout@v3
-    - uses: azure/setup-kubectl@v2.0
+    - uses: azure/setup-kubectl@v2.1
     - uses: azure/setup-helm@v1
     - uses: azure/k8s-set-context@v2
       with:
@@ -89,7 +89,7 @@ jobs:
       matrix:
         namespace: [ review-apps, staging, sandbox, production ]
     steps:
-    - uses: azure/setup-kubectl@v2.0
+    - uses: azure/setup-kubectl@v2.1
     - uses: azure/k8s-set-context@v2
       with:
         method: kubeconfig
@@ -130,7 +130,7 @@ jobs:
     if: github.event.inputs.install_primary_postgres_storage == 'true'
     steps:
     - uses: actions/checkout@v3
-    - uses: azure/setup-kubectl@v2.0
+    - uses: azure/setup-kubectl@v2.1
     - uses: azure/k8s-set-context@v2
       with:
         method: kubeconfig
