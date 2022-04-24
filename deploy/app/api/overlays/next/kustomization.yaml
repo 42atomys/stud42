@@ -17,6 +17,9 @@ patches:
     - op: replace
       path: /spec/template/spec/containers/0/env/1/value
       value: next-primary-postgres
+    - op: replace
+      path: /spec/template/spec/volumes/0/configMap/name
+      value: next-stud42-config
 
 replacements:
 - source:
