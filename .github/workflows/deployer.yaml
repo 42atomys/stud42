@@ -54,7 +54,7 @@ jobs:
     if: ${{ github.event.action == 'prereleased' || (github.event.action == 'published' && github.event.release.draft == false && github.event.release.prerelease == true) }}
     steps:
     - uses: actions/checkout@v3
-    - uses: azure/setup-kubectl@v2.0
+    - uses: azure/setup-kubectl@v2.1
     - uses: imranismail/setup-kustomize@v1
     - uses: azure/k8s-set-context@v2
       with:
@@ -79,7 +79,7 @@ jobs:
     if: ${{ github.event.action == 'released' || (github.event.action == 'published' && github.event.release.draft == false && github.event.release.prerelease == false) }}
     steps:
     - uses: actions/checkout@v3
-    - uses: azure/setup-kubectl@v2.0
+    - uses: azure/setup-kubectl@v2.1
     - uses: azure/k8s-set-context@v2
       with:
         method: kubeconfig
