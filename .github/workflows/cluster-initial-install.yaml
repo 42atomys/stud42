@@ -121,7 +121,7 @@ jobs:
         kubectl delete secret --namespace=${{ matrix.namespace }} primary-postgres-credentials --ignore-not-found
         kubectl create secret generic primary-postgres-credentials \
           --namespace=${{ matrix.namespace }} \
-          --from-literal=POSTGRES_PASSWORD=$(openssl rand -base64 42)
+          --from-literal=POSTGRES_PASSWORD=$(openssl rand -base64 42 | sed "s/[\/\+]/42/g")
 
   storages_install:
     runs-on: ubuntu-latest
