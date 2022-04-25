@@ -47,6 +47,30 @@ jobs:
         labels: ${{ steps.meta.outputs.labels }}
         file: build/Dockerfile
 
+  deploy_sandbox:
+    name: Deploy to next 🎉
+    runs-on: ubuntu-latest
+    needs: [ build_and_push ]
+    steps:
+    - uses: actions/checkout@v3
+    - uses: azure/setup-kubectl@v2.1
+    - uses: imranismail/setup-kustomize@v1
+    - uses: azure/k8s-set-context@v2
+      with:
+        method: kubeconfig
+        kubeconfig: ${{ secrets.KUBECONFIG_ADMIN }}
+        cluster-type: generic
+    - run: |
+        kustomize build deploy/app/config/overlays/sandbox | kubectl apply -f -
+
+        cd ${{github.workspace }}/deploy/app/jwkts-service/overlays/sandbox
+        kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
+        kustomize build . | kubectl apply -f -
+
+        cd ${{github.workspace }}/deploy/app/api/overlays/sandbox
+        kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
+        kustomize build . | kubectl apply -f -
+
   deploy_next:
     name: Deploy to next 🎉
     runs-on: ubuntu-latest
