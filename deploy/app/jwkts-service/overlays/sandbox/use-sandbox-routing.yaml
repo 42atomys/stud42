@@ -1,0 +1,9 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: jwtks-service-http
+spec:
+  hosts:
+  - sandbox.s42.dev
+  gateways:
+  - s42-dev-sandbox

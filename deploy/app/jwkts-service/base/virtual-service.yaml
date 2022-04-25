@@ -4,9 +4,9 @@ metadata:
   name: jwtks-service-http
 spec:
   hosts:
-  - next.s42.app
+  - s42.app
   gateways:
-  - s42-app-next
+  - s42-app
   http:
   - name: jwtks-service-http
     match:

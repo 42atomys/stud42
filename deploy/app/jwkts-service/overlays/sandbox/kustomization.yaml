@@ -1,16 +1,16 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namePrefix: next-
+namePrefix: sand-
 resources:
 - ../../base
-namespace: staging
+namespace: sandbox
 images:
 - name: app
   newName: ghcr.io/42atomys/stud42
   newTag: latest
 
 patchesStrategicMerge:
-- ./use-next-routing.yaml
+- ./use-sandbox-routing.yaml
 
 replacements:
 - source:
