@@ -1,0 +1,24 @@
+$patch: delete
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: primary-postgres
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: primary-postgres
+spec:
+  selector: {}
+
+  template:
+    spec:
+      containers:
+      - name: postgres
+        volumeMounts:
+        - name: data
+          mountPath: ''
+          $patch: delete
+      volumes:
+      - name: data
+        $patch: delete

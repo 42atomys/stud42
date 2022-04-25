@@ -1,0 +1,7 @@
+resources:
+- ../../base
+namePrefix: sand-
+namespace: sandbox
+
+patchesStrategicMerge:
+- ./use-stateless-storage.yaml
