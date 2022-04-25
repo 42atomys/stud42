@@ -37,15 +37,24 @@ func ServeGRPC(port *string) error {
 		log.Fatal().Msgf("failed to listen: %v", err)
 	}
 
-	creds, err := credentials.NewServerTLSFromFile(
-		viper.GetString("jwtks.grpc.cert_public_key"),
-		viper.GetString("jwtks.grpc.cert_private_key"),
-	)
-	if err != nil {
-		log.Fatal().Msgf("failed to load credentials: %v", err)
+	var s *grpc.Server
+	var insecure = viper.GetBool("jwtks.grpc.insecure")
+
+	if !insecure {
+		log.Warn().Msg("GRPC Server is insecure, don't use in production!")
+		s = grpc.NewServer()
+	} else {
+		creds, err := credentials.NewServerTLSFromFile(
+			viper.GetString("jwtks.grpc.cert_public_key"),
+			viper.GetString("jwtks.grpc.cert_private_key"),
+		)
+		if err != nil {
+			log.Fatal().Msgf("failed to load credentials: %v", err)
+		}
+
+		s = grpc.NewServer(grpc.Creds(creds))
 	}
 
-	s := grpc.NewServer(grpc.Creds(creds))
 	RegisterJWTKSServiceServer(s, &server{
 		tokenValidity: 30 * 24 * time.Hour,
 	})
