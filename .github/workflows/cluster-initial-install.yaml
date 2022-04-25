@@ -137,5 +137,6 @@ jobs:
         kubeconfig: ${{ secrets.KUBECONFIG_ADMIN }}
         cluster-type: generic
     - run: |
+        kustomize build deploy/cluster/storages/primary-postgres/overlays/sandbox | kubectl apply -f -
         kustomize build deploy/cluster/storages/primary-postgres/overlays/next | kubectl apply -f -
         kustomize build deploy/cluster/storages/primary-postgres/overlays/live | kubectl apply -f -
