@@ -48,7 +48,7 @@ jobs:
         file: build/Dockerfile
 
   deploy_sandbox:
-    name: Deploy to next 🎉
+    name: Deploy to sandbox 🏖
     runs-on: ubuntu-latest
     needs: [ build_and_push ]
     steps:

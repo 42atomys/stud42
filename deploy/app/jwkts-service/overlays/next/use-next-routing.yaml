@@ -1,4 +1,4 @@
-apiVersion: networking.istio.io/v1beta1
+gcmapiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
   name: jwtks-service-http
