@@ -16,6 +16,9 @@ jwtks:
     cert_public_key: /etc/stud42/certs/public.pem
   # Certs used to secure the GRPC Endpoint with SSL/TLS
   grpc:
+    # Set if the JWTKS grpc endpoint need to be insecure
+    # /!\ DONT SET AS TRUE IN PRODUCTION
+    insecure: true
     cert_private_key: /etc/stud42/certs/server.key
     cert_public_key: /etc/stud42/certs/server.pem
 
