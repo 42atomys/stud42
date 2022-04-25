@@ -1,7 +1,7 @@
 apiVersion: networking.istio.io/v1beta1
 kind: Gateway
 metadata:
-  name: s42-dev-live
+  name: s42-dev-sandbox
   namespace: sandbox
 spec:
   selector:
