@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: api
 spec:
+  revisionHistoryLimit: 1
   selector: {}
   template:
     spec:

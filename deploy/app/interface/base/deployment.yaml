@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: interface
 spec:
+  revisionHistoryLimit: 1
   selector: {}
   template:
     spec:
@@ -80,7 +81,7 @@ spec:
       volumes:
       - name: certs-grpc
         secret:
-          secretName: jwtks-service-jwk-tls
+          secretName: jwtks-service-tls
       - name: config
         configMap:
           name: stud42-config
