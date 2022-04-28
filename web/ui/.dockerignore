@@ -1,0 +1,40 @@
+# =================================================
+# Frontned ignores 🕹
+# =================================================
+
+# Generated code
+src/graphql/schema.json
+src/graphql/generated.ts
+src/grpc/jwtks/jwtks.ts
+
+# dependencies
+node_modules
+*.pnp
+*.pnp.js
+
+# testing
+coverage
+
+# next.js
+.next/
+out/
+
+# misc
+deploy/
+docs/
+config/*
+tools/
+.github
+.DS_Store
+*.pem
+
+# debug
+*npm-debug.log*
+*yarn-debug.log*
+*yarn-error.log*
+
+# vercel
+*.vercel
+
+# typescript
+**.tsbuildinfo

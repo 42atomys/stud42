@@ -6,8 +6,6 @@ import Image from 'next/image';
 import { Contribute, Star } from '@lib/github';
 import classNames from 'classnames';
 import Tooltip from '@components/Tooltip/Tooltip';
-import { useSession } from 'next-auth/react';
-import { Provider } from '@graphql.d';
 
 /**
  * Menu item component. This is used to create the menu items in the sidebar
@@ -72,7 +70,6 @@ export const Sidebar = ({
   children?: JSX.Element;
 }) => {
   const { open, setOpen } = useContext(SidebarContext);
-  const { data: session } = useSession();
 
   return (
     <div className="md:flex flex-row md:flex-row md:min-h-screen w-full md:w-auto drop-shadow-xl md:drop-shadow-none">
@@ -131,13 +128,6 @@ export const Sidebar = ({
               />
             )}
             <MenuItem href="/auth/signout" icon="fa-sign-out" name="Logout" />
-          </span>
-          <span className="text-sm text-slate-400 dark:text-slate-600">
-            {
-              session?.user.accounts?.find(
-                (account) => account?.provider === Provider.DUO
-              )?.username
-            }
           </span>
           <span className="text-sm text-slate-400 dark:text-slate-600">
             3.0+alpha.1

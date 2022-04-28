@@ -2,7 +2,7 @@ import * as grpc from '@grpc/grpc-js';
 import { readFileSync } from 'fs';
 import { jwtks } from './jwtks';
 
-import config from '@config';
+import { getConfig } from '@lib/config';
 
 export * from './jwtks';
 
@@ -11,12 +11,12 @@ export * from './jwtks';
  * endpoint.
  */
 const secureCredentials = (): grpc.ChannelCredentials => {
-  const { rootCertFile, privateKeyFile, publicKeyFile } = config.jwks.certs;
+  const { certRootCaFile, certPrivateKeyFile, certPublicKeyFile } = getConfig().jwtks.grpc;
 
   return grpc.credentials.createSsl(
-    rootCertFile ? readFileSync(rootCertFile) : null,
-    privateKeyFile ? readFileSync(privateKeyFile) : null,
-    publicKeyFile ? readFileSync(publicKeyFile) : null
+    certRootCaFile ? readFileSync(certRootCaFile) : null,
+    certPrivateKeyFile ? readFileSync(certPrivateKeyFile) : null,
+    certPublicKeyFile ? readFileSync(certPublicKeyFile) : null
   );
 };
 
@@ -24,8 +24,8 @@ const secureCredentials = (): grpc.ChannelCredentials => {
  * JWTKSClient is a gRPC client used to communicate with the JWTKS service.
  */
 export const JWTKSClient = new jwtks.JWTKSServiceClient(
-  config.jwks.endpoints.sign,
-  config.jwks.insecure ? grpc.credentials.createInsecure() : secureCredentials()
+  getConfig().jwtks.endpoints.sign,
+  getConfig().jwtks.grpc.insecure ? grpc.credentials.createInsecure() : secureCredentials()
 );
 
 /**
