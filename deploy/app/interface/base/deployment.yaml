@@ -65,16 +65,22 @@ spec:
         - name: CONFIG_PATH
           value: /config/stud42.yaml
         volumeMounts:
-          - name: config
-            mountPath: /config
-            readOnly: true
+        - name: config
+          mountPath: /config
+          readOnly: true
+        - name: certs-grpc
+          mountPath: '/etc/certs/grpc'
+          readOnly: true
         resources:
           limits:
-            memory: "100Mi"
-            cpu: "100m"
+            memory: "1000Mi"
+            cpu: "1"
         ports:
         - containerPort: 3000
       volumes:
+      - name: certs-grpc
+        secret:
+          secretName: jwtks-service-jwk-tls
       - name: config
         configMap:
           name: stud42-config
