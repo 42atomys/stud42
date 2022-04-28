@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: stud42-config
+data:
+  stud42.yaml: |
+    # API relatives configurations
+    api: {}
+
+    # Interface relatives configurations
+    interface: {}
+
+    # jwtks service relatives configurations
+    jwtks:
+      # Endpoint of the public JWKSet can be used to validate
+      # a JWT Token
+      endpoints:
+        sets: https://next.s42.app/.well-known/jwks
+        sign: next-jwtks-service-grpc:5000
+      # Certs used to sign and validate the JWT
+      # Also called : The JWK
+      jwk:
+        cert_private_key: /etc/certs/jwk/private.pem
+        cert_public_key: /etc/certs/jwk/public.pem
+      # Certs used to secure the GRPC Endpoint with SSL/TLS
+      grpc:
+        insecure: false
+        cert_root_ca_file: ''
+        cert_private_key_file: /etc/certs/grpc/private.pem
+        cert_public_key_file: /etc/certs/grpc/public.pem
+
+    discord:
+      guild_id: '248936708379246593'
