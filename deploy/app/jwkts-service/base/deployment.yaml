@@ -4,6 +4,7 @@ metadata:
   name: jwtks-service
 spec:
   selector: {}
+  revisionHistoryLimit: 1
   template:
     spec:
       imagePullSecrets:
