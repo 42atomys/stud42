@@ -70,7 +70,7 @@ func (r *mutationResolver) InviteOnDiscord(ctx context.Context) (bool, error) {
 
 	acc := r.client.Account.Query().Where(account.UserID(cu.ID), account.Provider(string(typesgen.ProviderDiscord))).OnlyX(ctx)
 
-	err = s.GuildMemberAdd(acc.AccessToken, viper.GetString("discord.guild_id"), acc.ProviderAccountID, "", []string{}, false, false)
+	err = s.GuildMemberAdd(acc.AccessToken, viper.GetString("discord.guildID"), acc.ProviderAccountID, "", []string{}, false, false)
 	if err != nil {
 		return false, err
 	}

@@ -30,16 +30,16 @@ jwtks:
   # Certs used to sign and validate the JWT
   # Also called : The JWK
   jwk:
-    cert_private_key: /etc/stud42/certs/private.key
-    cert_public_key: /etc/stud42/certs/public.pem
+    certPrivateKeyFile: /etc/stud42/certs/private.key
+    certPublicKeyFile: /etc/stud42/certs/public.pem
   # Certs used to secure the GRPC Endpoint with SSL/TLS
   grpc:
     # Set if the JWTKS grpc endpoint need to be insecure
     # /!\ DONT SET AS TRUE IN PRODUCTION
     insecure: true
-    cert_root_ca_file: /etc/stud42/certs/root.ca
-    cert_private_key_file: /etc/stud42/certs/server.key
-    cert_public_key_file: /etc/stud42/certs/server.pem
+    certRootCaFile: /etc/stud42/certs/root.ca
+    certPrivateKeyFile: /etc/stud42/certs/server.key
+    certPublicKeyFile: /etc/stud42/certs/server.pem
 
 discord:
-  guild_id: '248936708379246593'
+  guildID: '248936708379246593'
