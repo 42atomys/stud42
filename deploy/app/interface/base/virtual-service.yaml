@@ -10,9 +10,7 @@ spec:
   http:
   - name: interface-http
     match:
-    - method:
-        exact: GET
-      uri:
+    - uri:
         prefix: "/"
     route:
     - destination:
