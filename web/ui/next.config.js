@@ -8,7 +8,7 @@ const nextConfig = {
   poweredByHeader: false,
 
   experimental: {
-    outputStandalone: true
+    outputStandalone: true,
   },
   sassOptions: {
     includePaths: [path.join(__dirname, 'src/styles')],
