@@ -1,4 +1,4 @@
-import config from '@config';
+import { getConfig } from '@lib/config';
 import { SignToken } from 'grpc/jwtks';
 import jwt, { JwtHeader } from 'jsonwebtoken';
 import JwksClient from 'jwks-rsa';
@@ -35,7 +35,7 @@ export const decodeJWT: JWTOptions['decode'] = async ({ token }) => {
   if (!token) return null;
 
   const c = JwksClient({
-    jwksUri: config.jwks.endpoints.sets,
+    jwksUri: getConfig().jwtks.endpoints.sets,
   });
 
   const getKey = (
@@ -43,7 +43,7 @@ export const decodeJWT: JWTOptions['decode'] = async ({ token }) => {
     callback: (_: Error | null, publicKey: string) => void
   ) => {
     c.getSigningKey(header.kid, (err, key) => {
-      if (err) return callback(err, '');
+      if (err || !key) return callback(err, '');
       callback(err, key.getPublicKey());
     });
   };

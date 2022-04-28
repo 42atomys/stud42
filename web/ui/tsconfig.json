@@ -36,9 +36,6 @@
       ],
       "@assets/*": [
         "../public/assets/*"
-      ],
-      "@config": [
-        "../stud42.config.yaml"
       ]
     },
   },

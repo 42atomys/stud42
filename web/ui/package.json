@@ -51,7 +51,8 @@
     "react-burger-menu": "^3.0.6",
     "react-dom": "^18.0.0",
     "sass": "^1.45.0",
-    "twemoji": "^14.0.2"
+    "twemoji": "^14.0.2",
+    "yaml": "^2.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.17.9",

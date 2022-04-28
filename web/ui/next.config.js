@@ -5,6 +5,11 @@ const { withSentryConfig } = require('@sentry/nextjs');
 
 const nextConfig = {
   reactStrictMode: true,
+  poweredByHeader: false,
+
+  experimental: {
+    outputStandalone: true
+  },
   sassOptions: {
     includePaths: [path.join(__dirname, 'src/styles')],
   },

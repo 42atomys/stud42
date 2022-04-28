@@ -7,14 +7,15 @@ import (
 	"strings"
 	"time"
 
-	modelgen "atomys.codes/stud42/internal/models/generated"
-	"atomys.codes/stud42/internal/models/generated/user"
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/google/uuid"
 	"github.com/lestrrat-go/jwx/v2/jwk"
 	"github.com/lestrrat-go/jwx/v2/jwt"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
+
+	modelgen "atomys.codes/stud42/internal/models/generated"
+	"atomys.codes/stud42/internal/models/generated/user"
 )
 
 // authTokenContextKey is the context key to store the JWT Token from the
@@ -63,7 +64,7 @@ func directiveAuthorization(client *modelgen.Client) func(ctx context.Context, o
 			return nil, errUnauthenticated
 		}
 
-		jwks, err := jwk.Fetch(ctx, viper.GetString("jwtks.endpoint"))
+		jwks, err := jwk.Fetch(ctx, viper.GetString("jwtks.endpoints.sets"))
 		if err != nil {
 			log.Error().Err(err).Msg("error fetching jwks")
 			return nil, err

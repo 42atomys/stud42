@@ -8,7 +8,25 @@ interface: {}
 jwtks:
   # Endpoint of the public JWKSet can be used to validate
   # a JWT Token
-  endpoint: http://127.0.0.1:5500/jwks
+  endpoints:
+    # The endpoint used to retrieve the public key for the JWT token.
+    # This endpoint is a HTTP(S) endpoint. If you have access to the
+    # DEVENV, you can use the public dev endpoint. Else, use the
+    # `jwtks-service` configured locally.
+    #
+    # In production, the JWTKS endpoint is a HTTPS endpoint. Accessible
+    # to the public.
+    sets: http://127.0.0.1:5500/jwks
+    # The endpoint used to retrieve the public key for the JWT token.
+    # This endpoint is a gRPC endpoint. In order to use this endpoint,
+    # the `jwtks-service` must be running. If you have access to the DEVENV
+    # you can use the public dev endpoint and set `insecure` to `true` to
+    # bypass the TLS certificate check during development ONLY.
+    #
+    # In production, the endpoint should be `secure` and use a TLS
+    # certificate. The communication with the signing server is cluster
+    # specific and cannot be called from outside the cluster.
+    sign: localhost:5000
   # Certs used to sign and validate the JWT
   # Also called : The JWK
   jwk:
@@ -19,8 +37,9 @@ jwtks:
     # Set if the JWTKS grpc endpoint need to be insecure
     # /!\ DONT SET AS TRUE IN PRODUCTION
     insecure: true
-    cert_private_key: /etc/stud42/certs/server.key
-    cert_public_key: /etc/stud42/certs/server.pem
+    cert_root_ca_file: /etc/stud42/certs/root.ca
+    cert_private_key_file: /etc/stud42/certs/server.key
+    cert_public_key_file: /etc/stud42/certs/server.pem
 
 discord:
   guild_id: '248936708379246593'

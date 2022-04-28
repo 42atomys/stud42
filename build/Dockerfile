@@ -1,4 +1,5 @@
-FROM golang:1.18 AS build
+# GOLANG BUILD - BUILD
+FROM golang:1.18 AS go-build
 
 WORKDIR /build
 COPY . /build
@@ -7,11 +8,42 @@ RUN apt-get update && \
     apt-get install -y unzip && \
     make -f build/Makefile deps generate build
 
-FROM alpine
+# INTERFACE BUILD - DEPS
+FROM node:16 AS node-deps
+WORKDIR /build
+COPY web/ui/package.json web/ui/yarn.lock ./
+RUN yarn install --frozen-lockfile
+
+# INTERFACE BUILD - BUILD
+FROM node:16 AS node-builder
+WORKDIR /build
+COPY --from=node-deps /build/node_modules ./node_modules
+COPY . .
+
+ENV NEXT_TELEMETRY_DISABLED 1
+
+RUN make -f build/Makefile deps && \
+    cd web/ui && \
+    yarn add -D @graphql-codegen/cli && \
+    yarn generate && yarn build
+
+
+# RUNNER 
+FROM node:16-alpine AS runner
 
 LABEL maintener "42Atomys <contact@atomys.fr>"
 LABEL repository "https://github.com/42Atomys/stud42"
 
-COPY --from=build /build/stud42cli /stud42cli
+WORKDIR /app
 
-CMD ["/stud42cli"]
+ENV NEXT_TELEMETRY_DISABLED 1
+
+COPY --from=node-builder /build/web/ui/next.config.js ./
+COPY --from=node-builder /build/web/ui/public ./public
+COPY --from=node-builder /build/web/ui/package.json ./package.json
+COPY --from=node-builder /build/web/ui/.next ./.next
+COPY --from=node-builder /build/web/ui/.next/standalone ./
+
+COPY --from=go-build /build/stud42cli /usr/local/bin/stud42cli
+
+CMD ["stud42cli"]
