@@ -40,7 +40,7 @@ func ServeGRPC(port *string) error {
 	var s *grpc.Server
 	var insecure = viper.GetBool("jwtks.grpc.insecure")
 
-	if !insecure {
+	if insecure {
 		log.Warn().Msg("GRPC Server is insecure, don't use in production!")
 		s = grpc.NewServer()
 	} else {
