@@ -34,6 +34,10 @@ on:
         type: boolean
         required: true
         description: (Re)set postgres password ?
+      install_monitoring:
+        type: boolean
+        required: true
+        description: (Re)set monitoring stack ?
 jobs:
   core_install:
     runs-on: ubuntu-latest
@@ -78,6 +82,11 @@ jobs:
         kubectl apply -f deploy/cluster/cert-manager/issuers
         kubectl apply -f deploy/cluster/cert-manager/certificates
         kubectl apply -f deploy/cluster/istio/gateways
+    - name: Install Prometheus Operator
+      if: ${{ github.event.inputs.install_monitoring == 'true' }} 
+      run: |
+        kubectl apply --server-side -f deploy/cluster/monitoring/setup
+        kubectl apply --server-side -f deploy/cluster/monitoring
 
   update_secrets:
     name: Install cross cluster secrets
