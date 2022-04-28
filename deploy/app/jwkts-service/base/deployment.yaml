@@ -34,14 +34,14 @@ spec:
         resources:
           limits:
             memory: "42Mi"
-            cpu: "5m"
+            cpu: "200m"
         ports:
         - containerPort: 5000
         - containerPort: 5500
       volumes:
       - name: certs-grpc
         secret:
-          secretName: jwtks-service-jwk-tls
+          secretName: jwtks-service-tls
       - name: certs-jwk
         secret:
           secretName: jwtks-service-jwk-tls
