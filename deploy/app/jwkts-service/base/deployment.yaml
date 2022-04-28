@@ -11,8 +11,8 @@ spec:
       containers:
       - name: service
         image: app
-        args: [ serve, jwtks ]
-        command: [ /stud42cli ]
+        args: [ '--config', '/config/stud42.yaml', serve, jwtks ]
+        command: [ stud42cli ]
         env:
         - name: GO_ENV
           value: review-apps
@@ -41,7 +41,7 @@ spec:
       volumes:
       - name: certs-grpc
         secret:
-          secretName: jwtks-service-tls
+          secretName: jwtks-service-jwk-tls
       - name: certs-jwk
         secret:
           secretName: jwtks-service-jwk-tls
