@@ -11,6 +11,7 @@ spec:
       containers:
       - name: interface
         image: app
+        imagePullPolicy: Always
         args: [ server.js ]
         env:
         - name: NODE_ENV
@@ -69,7 +70,7 @@ spec:
             readOnly: true
         resources:
           limits:
-            memory: "10Mi"
+            memory: "100Mi"
             cpu: "100m"
         ports:
         - containerPort: 3000
