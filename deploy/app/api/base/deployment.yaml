@@ -11,8 +11,8 @@ spec:
       containers:
       - name: service
         image: app
-        args: [ serve, api, -g ]
-        command: [ /stud42cli ]
+        args: [ '--config', '/config/stud42.yaml', serve, api, '-g' ]
+        command: [ stud42cli ]
         env:
         - name: GO_ENV
           value: production
