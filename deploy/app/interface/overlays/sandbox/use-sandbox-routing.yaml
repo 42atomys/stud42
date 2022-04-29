@@ -4,9 +4,9 @@ metadata:
   name: interface-http
 spec:
   hosts:
-  - next.s42.app
+  - sandbox.s42.dev
   gateways:
-  - s42-app-next
+  - s42-dev-sandbox
 
 ---
 apiVersion: apps/v1

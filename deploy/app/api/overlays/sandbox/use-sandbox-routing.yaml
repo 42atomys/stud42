@@ -4,9 +4,9 @@ metadata:
   name: api-http
 spec:
   hosts:
-  - sandbox.s42.app
+  - sandbox.s42.dev
   gateways:
-  - s42-app-sandbox
+  - s42-dev-sandbox
 
 ---
 apiVersion: apps/v1
