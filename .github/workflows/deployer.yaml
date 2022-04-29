@@ -46,7 +46,6 @@ jobs:
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
         file: build/Dockerfile
-        build-args: FONTAWESOME_NPM_AUTH_TOKEN=${{ secrets.__NPM_FONTAWESOME_AUTH_TOKEN }}
 
   deploy_sandbox:
     name: Deploy to sandbox 🏖
