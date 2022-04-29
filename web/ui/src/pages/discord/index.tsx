@@ -196,7 +196,7 @@ export const IndexPage: NextPage<PageProps, {}> = ({ me }) => {
   return (
     <div className="w-full min-h-[100vh] h-[100%] bg-repeat bg-slate-900 bg-grid-400">
       <div className="w-full min-h-[100vh] h-[100%] bg-gradient-to-b from-slate-900/80 to-transparent p-4">
-        <div className="w-full h-full flex flex-col justify-center items-center text-center">
+        <div className="w-full min-h-[calc(100vh-2rem)] h-[calc(100%-2rem)] flex flex-col justify-center items-center text-center">
           <div className="flex flex-col justify-center items-center mb-20">
             <Image
               src="/assets/images/logo.svg"
