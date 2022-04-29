@@ -7,3 +7,13 @@ spec:
   - sandbox.s42.dev
   gateways:
   - s42-dev-sandbox
+
+replacements:
+- source:
+    kind: Deployment
+    fieldPath: metadata.labels.[app.kubernetes.io/version]
+  targets:
+  - select:
+      kind: Deployment
+    fieldPaths:
+     - spec.template.spec.containers.[name=service].env.[name=APP_VERSION].value

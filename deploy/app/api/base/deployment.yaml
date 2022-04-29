@@ -17,6 +17,8 @@ spec:
         env:
         - name: GO_ENV
           value: production
+        - name: APP_VERSION
+          value: latest
         - name: CORS_ORIGIN
           value: http://localhost:3000
         - name: DATABASE_HOST

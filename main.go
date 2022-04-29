@@ -29,7 +29,7 @@ import (
 )
 
 func init() {
-	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr}).With().Str("version", os.Getenv("APP_VERSION")).Logger()
 	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
 	if os.Getenv("DEBUG") == "true" {
 		zerolog.SetGlobalLevel(zerolog.DebugLevel)
