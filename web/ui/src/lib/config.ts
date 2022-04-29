@@ -9,9 +9,10 @@ export const getConfig = (): Configuration => {
 };
 
 export const getServiceToken = (): string => {
-  if (!process.env.S42_SERVICE_TOKEN) throw new Error('No S42_SERVICE_TOKEN env var set.');
+  if (!process.env.S42_SERVICE_TOKEN)
+    throw new Error('No S42_SERVICE_TOKEN env var set.');
 
-  return process.env.S42_SERVICE_TOKEN
+  return process.env.S42_SERVICE_TOKEN;
 };
 
 export default getConfig;
