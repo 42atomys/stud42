@@ -144,7 +144,7 @@ jobs:
         kubectl delete secret --namespace=${{ matrix.namespace }} s42-service-token --ignore-not-found
         kubectl create secret generic s42-service-token \
           --namespace=${{ matrix.namespace }} \
-          --from-literal=SECRET=$(openssl rand -base64 512 | sed "s/[\/\+]/42/g")
+          --from-literal=SECRET=$(openssl rand -base64 512 | sed "s/[\/\+]/42/g" | tr -d '\n')
   storages_install:
     runs-on: ubuntu-latest
     name: Install storages
