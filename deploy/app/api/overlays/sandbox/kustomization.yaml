@@ -13,6 +13,14 @@ patchesStrategicMerge:
 - ./use-sandbox-primary-postgres.yaml
 - ./use-sandbox-routing.yaml
 
+patches:
+- target:
+    kind: Deployment
+  patch: |-
+    - op: replace
+      path: "/spec/template/spec/containers/0/imagePullPolicy"
+      value: Always
+
 replacements:
 - source:
     kind: Service
