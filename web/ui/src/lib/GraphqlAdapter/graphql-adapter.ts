@@ -22,6 +22,7 @@ import {
 import { ProviderType } from 'next-auth/providers';
 import { captureException } from '@sentry/nextjs';
 import { AdapterUser } from 'next-auth/adapters';
+import { getServiceToken } from '@lib/config';
 
 if (!process.env.NEXT_PUBLIC_GRAPHQL_API)
   throw new Error('Missing NEXT_PUBLIC_GRAPHQL_API');
@@ -57,17 +58,22 @@ export const GraphQLAdapter = (): S42Adapter => {
         const { internalCreateUser: uuid } = await request<
           InternalCreateUserMutation,
           InternalCreateUserMutationVariables
-        >(url, InternalCreateUserDocument, {
-          email: typedUser.email as string,
-          duoID: typedUser.duo.id,
-          duoLogin: typedUser.duo.login,
-          firstName: typedUser.duo.firstName,
-          usualFirstName: typedUser.duo.usualFirstName,
-          lastName: typedUser.duo.lastName,
-          poolYear: typedUser.duo.poolYear,
-          poolMonth: typedUser.duo.poolMonth,
-          phone: typedUser.duo.phone,
-        });
+        >(
+          url,
+          InternalCreateUserDocument,
+          {
+            email: typedUser.email as string,
+            duoID: typedUser.duo.id,
+            duoLogin: typedUser.duo.login,
+            firstName: typedUser.duo.firstName,
+            usualFirstName: typedUser.duo.usualFirstName,
+            lastName: typedUser.duo.lastName,
+            poolYear: typedUser.duo.poolYear,
+            poolMonth: typedUser.duo.poolMonth,
+            phone: typedUser.duo.phone,
+          },
+          { Authorization: `ServiceToken ${getServiceToken()}` }
+        );
 
         return {
           id: uuid,
@@ -90,7 +96,12 @@ export const GraphQLAdapter = (): S42Adapter => {
         const { user } = await request<
           InternalGetUserQuery & { user: AdapterUser },
           InternalGetUserQueryVariables
-        >(url, InternalGetUserDocument, { id });
+        >(
+          url,
+          InternalGetUserDocument,
+          { id },
+          { Authorization: `ServiceToken ${getServiceToken()}` }
+        );
 
         return user;
       } catch (error) {
@@ -108,7 +119,12 @@ export const GraphQLAdapter = (): S42Adapter => {
         const { user } = await request<
           InternalGetUserByEmailQuery & { user: AdapterUser },
           InternalGetUserByEmailQueryVariables
-        >(url, InternalGetUserByEmailDocument, { email });
+        >(
+          url,
+          InternalGetUserByEmailDocument,
+          { email },
+          { Authorization: `ServiceToken ${getServiceToken()}` }
+        );
         return user;
       } catch (error) {
         return null;
@@ -130,10 +146,15 @@ export const GraphQLAdapter = (): S42Adapter => {
         const { user } = await request<
           InternalGetUserByAccountQuery & { user: AdapterUser },
           InternalGetUserByAccountQueryVariables
-        >(url, InternalGetUserByAccountDocument, {
-          provider: providerMap[provider],
-          providerAccountId,
-        });
+        >(
+          url,
+          InternalGetUserByAccountDocument,
+          {
+            provider: providerMap[provider],
+            providerAccountId,
+          },
+          { Authorization: `ServiceToken ${getServiceToken()}` }
+        );
         return user;
       } catch (error) {
         return null;
@@ -158,17 +179,22 @@ export const GraphQLAdapter = (): S42Adapter => {
         const { internalLinkAccount: acc } = await request<
           InternalLinkAccountMutation,
           InternalLinkAccountMutationVariables
-        >(url, InternalLinkAccountDocument, {
-          provider: providerMap[account.provider],
-          providerAccountId: account.providerAccountId,
-          username: account._profile.login,
-          access_token: account.access_token || '',
-          refresh_token: account.refresh_token,
-          scope: account.scope || '',
-          token_type: account.token_type || '',
-          userId: account.userId,
-          expire_at: account.expires_at,
-        });
+        >(
+          url,
+          InternalLinkAccountDocument,
+          {
+            provider: providerMap[account.provider],
+            providerAccountId: account.providerAccountId,
+            username: account._profile.login,
+            access_token: account.access_token || '',
+            refresh_token: account.refresh_token,
+            scope: account.scope || '',
+            token_type: account.token_type || '',
+            userId: account.userId,
+            expire_at: account.expires_at,
+          },
+          { Authorization: `ServiceToken ${getServiceToken()}` }
+        );
 
         return {
           provider: acc.provider,

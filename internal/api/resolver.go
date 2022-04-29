@@ -19,8 +19,8 @@ func NewSchema(client *modelgen.Client) graphql.ExecutableSchema {
 	return apigen.NewExecutableSchema(apigen.Config{
 		Resolvers: &Resolver{client},
 		Directives: apigen.DirectiveRoot{
-			AuthorizationByPolicy: directiveAuthorizationByPolicy,
-			Authenticated:         directiveAuthorization(client),
+			AuthzByPolicy: directiveAuthzByPolicy,
+			Authenticated: directiveAuthorization(client),
 		},
 	})
 }
