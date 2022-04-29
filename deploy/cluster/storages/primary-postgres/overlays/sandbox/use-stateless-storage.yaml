@@ -17,7 +17,7 @@ spec:
       - name: postgres
         volumeMounts:
         - name: data
-          mountPath: ''
+          mountPath: /var/lib/postgresql/data
           $patch: delete
       volumes:
       - name: data

@@ -51,6 +51,7 @@ jobs:
     name: Deploy to sandbox 🏖
     runs-on: ubuntu-latest
     needs: [ build_and_push ]
+    if: ${{ contains('refs/heads/main', github.ref) }}
     steps:
     - uses: actions/checkout@v3
     - uses: azure/setup-kubectl@v2.1
