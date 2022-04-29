@@ -16,7 +16,9 @@ spec:
         command: [ stud42cli ]
         env:
         - name: GO_ENV
-          value: review-apps
+          value: production
+        - name: APP_VERSION
+          value: latest
         - name: SENTRY_DSN
           valueFrom:
             secretKeyRef:
