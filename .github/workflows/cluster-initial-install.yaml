@@ -51,6 +51,7 @@ jobs:
         method: kubeconfig
         kubeconfig: ${{ secrets.KUBECONFIG_ADMIN }}
         cluster-type: generic
+    - uses: alexdglover/jsonnet-render@v1
     - run: kubectl apply -f deploy/cluster/namespaces
       if: ${{ github.event.inputs.install_namespaces == 'true' }} 
     - run: ls -1 deploy/cluster/rbac/deployer*.yaml | xargs -l kubectl apply -f
@@ -85,8 +86,7 @@ jobs:
     - name: Install Prometheus Operator
       if: ${{ github.event.inputs.install_monitoring == 'true' }} 
       run: |
-        kubectl apply --server-side -f deploy/cluster/monitoring/setup
-        kubectl apply --server-side -f deploy/cluster/monitoring
+        cd ./deploy/cluster/monitoring && ./build.sh
 
   update_secrets:
     name: Install cross cluster secrets
