@@ -33,6 +33,7 @@ export default function Document() {
         <meta name="theme-color" content="#1e293b" />
         <script
           async
+          defer
           src="https://kit.fontawesome.com/a8d6f88c41.js"
           crossOrigin="anonymous"
         ></script>
