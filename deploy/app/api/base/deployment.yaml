@@ -49,6 +49,11 @@ spec:
             secretKeyRef:
               key: 'API_DSN'
               name: 'sentry-dsns'
+        - name: S42_SERVICE_TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: TOKEN
+              name: s42-service-token
         volumeMounts:
           - name: config
             mountPath: /config

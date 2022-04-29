@@ -24,6 +24,11 @@ spec:
             secretKeyRef:
               key: 'JWTKS_SERVICE_DSN'
               name: 'sentry-dsns'
+        - name: S42_SERVICE_TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: TOKEN
+              name: s42-service-token
         volumeMounts:
           - name: certs-grpc
             mountPath: '/etc/certs/grpc'

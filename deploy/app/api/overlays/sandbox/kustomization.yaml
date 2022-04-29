@@ -7,7 +7,7 @@ namespace: sandbox
 images:
 - name: app
   newName: ghcr.io/42atomys/stud42
-  newTag: latest
+  newTag: main
 
 patchesStrategicMerge:
 - ./use-sandbox-primary-postgres.yaml

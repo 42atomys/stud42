@@ -64,6 +64,11 @@ spec:
               name: 'sentry-dsns'
         - name: CONFIG_PATH
           value: /config/stud42.yaml
+        - name: S42_SERVICE_TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: TOKEN
+              name: s42-service-token
         volumeMounts:
         - name: config
           mountPath: /config
