@@ -46,6 +46,9 @@ jobs:
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
         file: build/Dockerfile
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        build-args: FONTAWESOME_NPM_AUTH_TOKEN=${{ secrets.__NPM_FONTAWESOME_AUTH_TOKEN }}
 
   deploy_sandbox:
     name: Deploy to sandbox 🏖
