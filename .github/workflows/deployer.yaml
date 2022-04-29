@@ -65,15 +65,15 @@ jobs:
         kustomize build deploy/app/config/overlays/sandbox | kubectl apply -f -
 
         cd ${{github.workspace }}/deploy/app/jwtks-service/overlays/sandbox
-        kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
+        kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.ref_name }}
         kustomize build . | kubectl apply -f -
 
         cd ${{github.workspace }}/deploy/app/api/overlays/sandbox
-        kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
+        kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.ref_name }}
         kustomize build . | kubectl apply -f -
 
         cd ${{github.workspace }}/deploy/app/interface/overlays/sandbox
-        kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
+        kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.ref_name }}
         kustomize build . | kubectl apply -f -
 
   deploy_next:
