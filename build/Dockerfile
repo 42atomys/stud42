@@ -11,7 +11,9 @@ RUN apt-get update && \
 # INTERFACE BUILD - DEPS
 FROM node:16 AS node-deps
 WORKDIR /build
-COPY web/ui/package.json web/ui/yarn.lock ./
+COPY web/ui/package.json web/ui/.npmrc web/ui/yarn.lock ./
+ARG FONTAWESOME_NPM_AUTH_TOKEN
+ENV FONTAWESOME_NPM_AUTH_TOKEN=$FONTAWESOME_NPM_AUTH_TOKEN
 RUN yarn install --frozen-lockfile
 
 # INTERFACE BUILD - BUILD

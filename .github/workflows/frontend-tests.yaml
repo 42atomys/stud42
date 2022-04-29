@@ -35,6 +35,8 @@ jobs:
           ${{ runner.os }}-node-
 
     - name: Install dependencies
+      env:
+        FONTAWESOME_NPM_AUTH_TOKEN: ${{ secrets.__NPM_FONTAWESOME_AUTH_TOKEN }}
       run: yarn install --frozen-lockfile
     - name: Install protoc
       run: |
@@ -70,8 +72,9 @@ jobs:
           ${{ runner.os }}-node-
 
     - name: Install dependencies
+      env:
+        FONTAWESOME_NPM_AUTH_TOKEN: ${{ secrets.__NPM_FONTAWESOME_AUTH_TOKEN }}
       run: yarn install --frozen-lockfile
-
     - name: Jest
       run: yarn test:ci
 
