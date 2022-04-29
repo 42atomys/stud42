@@ -29,6 +29,7 @@ func NetworkPolicyMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		var clientIp = r.Header.Get("X-Forwarded-For")
 		if clientIp == "" {
+			log.Debug().Msg("X-Forwarded-For header not found falling back to remote address")
 			var err error
 			clientIp, _, err = net.SplitHostPort(r.RemoteAddr)
 			if err != nil {
