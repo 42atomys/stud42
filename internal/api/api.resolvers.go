@@ -31,6 +31,7 @@ func (r *mutationResolver) InternalCreateUser(ctx context.Context, input typesge
 		SetPoolYear(input.PoolYear).
 		SetPoolMonth(input.PoolMonth).
 		SetPhone(input.Phone).
+		SetIsStaff(input.IsStaff).
 		OnConflictColumns(user.FieldDuoID).
 		UpdateDuoID().
 		ID(ctx)

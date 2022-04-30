@@ -75,6 +75,7 @@ input CreateUserInput {
   poolYear: String!
   poolMonth: String!
   phone: String!
+  isStaff: Boolean!
 }
 
 input LinkAccountInput {
