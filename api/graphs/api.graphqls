@@ -72,9 +72,10 @@ input CreateUserInput {
   firstName: String!
   usualFirstName: String
   lastName: String!
-  poolYear: String!
-  poolMonth: String!
-  phone: String!
+  poolYear: String
+  poolMonth: String
+  phone: String
+  isStaff: Boolean!
 }
 
 input LinkAccountInput {

@@ -29,12 +29,13 @@ func (User) Fields() []ent.Field {
 		field.String("first_name").NotEmpty().MaxLen(255),
 		field.String("usual_first_name").Nillable().Optional().MaxLen(255),
 		field.String("last_name").NotEmpty().MaxLen(255),
-		field.String("phone").MaxLen(255),
-		field.String("pool_year"),
-		field.String("pool_month"),
+		field.String("phone").Optional().Nillable().MaxLen(255),
+		field.String("pool_year").Optional().Nillable(),
+		field.String("pool_month").Optional().Nillable(),
 		field.String("nickname").Optional().Nillable().Unique().MaxLen(255),
 		field.String("avatar_url").Optional().Nillable().MaxLen(255),
 		field.String("cover_url").Optional().Nillable().MaxLen(255),
+		field.Bool("is_staff").Default(false),
 	}
 }
 

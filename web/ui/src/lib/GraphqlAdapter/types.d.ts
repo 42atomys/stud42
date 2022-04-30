@@ -55,6 +55,7 @@ export interface DuoContext {
   poolYear: string;
   poolMonth: string;
   phone: string;
+  isStaff: boolean;
 }
 
 export interface GithubContext {

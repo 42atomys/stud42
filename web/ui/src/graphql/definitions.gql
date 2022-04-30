@@ -30,9 +30,10 @@ mutation internalCreateUser(
   $firstName: String!
   $usualFirstName: String
   $lastName: String!
-  $poolYear: String!
-  $poolMonth: String!
-  $phone: String!
+  $poolYear: String
+  $poolMonth: String
+  $phone: String
+  $isStaff: Boolean!
 ) {
   internalCreateUser(
     input: {
@@ -45,6 +46,7 @@ mutation internalCreateUser(
       poolYear: $poolYear
       poolMonth: $poolMonth
       phone: $phone
+      isStaff: $isStaff
     }
   )
 }
