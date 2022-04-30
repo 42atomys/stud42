@@ -107,6 +107,18 @@ func (r *userResolver) Features(ctx context.Context, obj *generated.User) ([]typ
 		return typesgen.AllFeature, nil
 	}
 
+	acc, err := r.client.Account.Query().
+		Select("username").
+		Where(
+			account.UserID(obj.ID),
+			account.Provider(string(typesgen.ProviderGithub)),
+		).
+		Only(ctx)
+
+	if (err != nil) || (acc == nil) {
+		return features, nil
+	}
+
 	// TODO Move github utils outside of resolvers
 	httpClient := oauth2.NewClient(context.Background(), oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: os.Getenv("GITHUB_TOKEN")},
@@ -125,16 +137,8 @@ func (r *userResolver) Features(ctx context.Context, obj *generated.User) ([]typ
 		} `graphql:"user(login: $login)"`
 	}
 
-	username := r.client.Account.Query().
-		Select("username").
-		Where(
-			account.UserID(obj.ID),
-			account.Provider(string(typesgen.ProviderGithub)),
-		).
-		OnlyX(ctx).Username
-
-	err := client.Query(ctx, &query, map[string]interface{}{
-		"login": githubv4.String(username),
+	err = client.Query(ctx, &query, map[string]interface{}{
+		"login": githubv4.String(acc.Username),
 	})
 	if err != nil {
 		log.Error().Err(err).Msg("failed to query github")
