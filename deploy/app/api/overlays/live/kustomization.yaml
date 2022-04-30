@@ -3,15 +3,15 @@ kind: Kustomization
 namePrefix: prod-
 resources:
 - ../../base
-namespace: staging
+namespace: production
 images:
 - name: app
   newName: ghcr.io/42atomys/stud42
   newTag: latest
 
 patchesStrategicMerge:
-- ./use-next-primary-postgres.yaml
-- ./use-next-routing.yaml
+- ./use-live-primary-postgres.yaml
+- ./use-live-routing.yaml
 
 replacements:
 - source:
@@ -25,3 +25,11 @@ replacements:
     fieldPaths:
      - spec.http.*.name
      - spec.http.*.route.*.destination.host
+- source:
+    kind: Deployment
+    fieldPath: metadata.labels.[app.kubernetes.io/version]
+  targets:
+  - select:
+      kind: Deployment
+    fieldPaths:
+     - spec.template.spec.containers.[name=service].env.[name=APP_VERSION].value
