@@ -1,0 +1,26 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: interface-http
+spec:
+  hosts:
+  - s42.app
+  gateways:
+  - s42-app
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: interface
+spec:
+  selector: {}
+  template:
+    spec:
+      containers:
+      - name: interface
+        env:
+        - name: NEXT_PUBLIC_GRAPHQL_API
+          value: https://s42.app/graphql
+        - name: NEXTAUTH_URL
+          value: https://s42.app

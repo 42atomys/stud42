@@ -15,30 +15,22 @@ patchesStrategicMerge:
 replacements:
 - source:
     kind: Service
-    name: jwtks-service-grpc
-    fieldPath: metadata.name
-  targets:
-  - select:
-      kind: Certificate
-      name: jwtks-service
-    fieldPaths:
-    - spec.dnsNames.0
-- source:
-    kind: Service
-    name: jwtks-service-http
+    name: interface-http
     fieldPath: metadata.name
   targets:
   - select:
       kind: VirtualService
-      name: jwtks-service-http
+      name: interface-http
     fieldPaths:
      - spec.http.*.name
      - spec.http.*.route.*.destination.host
 - source:
     kind: Deployment
+    name: interface
     fieldPath: metadata.labels.[app.kubernetes.io/version]
   targets:
   - select:
       kind: Deployment
+      name: interface
     fieldPaths:
-     - spec.template.spec.containers.[name=service].env.[name=APP_VERSION].value
+     - spec.template.spec.containers.[name=interface].env.[name=APP_VERSION].value
