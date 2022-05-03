@@ -66,6 +66,57 @@ const IndexPage: NextPage<PageProps> = () => {
     ]
   };
 
+  const data: { friends: User[] } = {
+    friends: [
+      {
+        login: 'noich',
+        firstName: 'Noich',
+        usualFirstName: null,
+        lastName: 'One',
+        lastConnectedAt: '2020-01-01 00:00:00',
+        currentLocation: null
+      },
+      {
+        login: 'ol',
+        firstName: 'Testeur',
+        usualFirstName: 'Testeuse',
+        lastName: 'Two',
+        lastConnectedAt: '2020-09-01 00:00:00',
+        currentLocation: {
+          campus: 'Paris',
+          host: 'e2r1p12'
+        }
+      },
+      {
+        login: 'tyrael',
+        firstName: 'Testeur',
+        usualFirstName: 'staffu',
+        lastName: 'One',
+        lastConnectedAt: '2021-02-23 00:00:00',
+        currentLocation: {
+          campus: 'Paris',
+          host: 'in Space 🚀'
+        }
+      },
+      {
+        login: 'jpeg',
+        firstName: 'MMmh',
+        usualFirstName: null,
+        lastName: 'Curious',
+        lastConnectedAt: null,
+        currentLocation: null
+      },
+      {
+        login: 'titus',
+        firstName: null,
+        usualFirstName: null,
+        lastName: null,
+        lastConnectedAt: null,
+        currentLocation: null
+      }
+    ]
+  };
+
   return (
     <SidebarProvider>
       <Head>
