@@ -1,9 +1,0 @@
-# Full documentation are located on Typescript definitions
-# @see src/types/stud42.config.d.ts
-jwks:
-  endpoint: localhost:5000
-  insecure: false
-  certs:
-    rootCertFile: ../../certs/rootCA.pem
-    publicKeyFile: ../../certs/server-cert.pem
-    privateKeyFile: ../../certs/server-key.pem
