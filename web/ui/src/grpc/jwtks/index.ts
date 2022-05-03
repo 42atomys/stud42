@@ -11,7 +11,8 @@ export * from './jwtks';
  * endpoint.
  */
 const secureCredentials = (): grpc.ChannelCredentials => {
-  const { certRootCaFile, certPrivateKeyFile, certPublicKeyFile } = getConfig().jwtks.grpc;
+  const { certRootCaFile, certPrivateKeyFile, certPublicKeyFile } =
+    getConfig().jwtks.grpc;
 
   return grpc.credentials.createSsl(
     certRootCaFile ? readFileSync(certRootCaFile) : null,
@@ -25,7 +26,9 @@ const secureCredentials = (): grpc.ChannelCredentials => {
  */
 export const JWTKSClient = new jwtks.JWTKSServiceClient(
   getConfig().jwtks.endpoints.sign,
-  getConfig().jwtks.grpc.insecure ? grpc.credentials.createInsecure() : secureCredentials()
+  getConfig().jwtks.grpc.insecure
+    ? grpc.credentials.createInsecure()
+    : secureCredentials()
 );
 
 /**

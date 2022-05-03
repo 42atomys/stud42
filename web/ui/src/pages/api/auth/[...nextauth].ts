@@ -99,6 +99,7 @@ export default NextAuth({
           poolYear: profile.pool_year,
           poolMonth: profile.pool_month,
           phone: profile.phone,
+          isStaff: profile['staff?'] || false,
         };
         return true;
       } else if (account.provider == 'github') {

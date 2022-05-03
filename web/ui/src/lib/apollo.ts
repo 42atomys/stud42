@@ -7,7 +7,6 @@ import {
   ApolloQueryResult,
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
-import { IncomingMessage } from 'http';
 import Cookies from 'js-cookie';
 import { NextApiRequestCookies } from 'next/dist/server/api-utils';
 
@@ -56,7 +55,7 @@ export const apolloClient = new ApolloClient({
   },
 });
 
-type ServerSideRequest = IncomingMessage & {
+export type ServerSideRequest = {
   cookies: NextApiRequestCookies & {
     '__s42.auth-token'?: string;
   };

@@ -2,7 +2,7 @@ type Configuration = {
   /**
    * Configuration relating to the JWT token.
    */
-   jwtks: {
+  jwtks: {
     /**
      * Endpoints used to retrieve the public key for the JWT token using
      * the JWKS endpoint, and signing the JWT token.

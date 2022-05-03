@@ -9,8 +9,8 @@ import {
 import { queryAuthenticatedSSR } from '@lib/apollo';
 import classNames from 'classnames';
 import { GetServerSideProps, NextPage } from 'next';
+import { signIn } from 'next-auth/react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useState } from 'react';
 
 const SponsorGithubPart = ({
@@ -111,11 +111,11 @@ const Step = ({
   icon: string;
   title: string;
 }) => (
-  <div className="w-1/3 px-2">
+  <div className="w-full md:w-1/3 px-2 mb-10 md:mb-0 text-left md:text-center">
     <div className="relative">
       <hr
         className={classNames(
-          'border-2 rounded-full mb-4 ml-14',
+          'border-2 rounded-full mb-2 md:mb-4 ml-14',
           done ? 'border-indigo-500' : 'border-slate-500'
         )}
       />
@@ -132,7 +132,7 @@ const Step = ({
         <i className={icon}></i>
       </div>
     </div>
-    <div>
+    <div className="ml-14 md:ml-0">
       <h1 className="font-bold uppercase text-indigo-500">Step {step}</h1>
       <p>{title}</p>
     </div>
@@ -141,7 +141,7 @@ const Step = ({
 
 const Steps = ({ currentStep }: { currentStep: number }) => {
   return (
-    <div className="mt-20 w-full md:w-1/2 px-4 flex">
+    <div className="mt-20 w-full md:w-2/3 lg:w-1/2 px-4 flex flex-col md:flex-row items-center md:items-start">
       <Step
         done={currentStep >= 1}
         step={1}
@@ -194,9 +194,9 @@ export const IndexPage: NextPage<PageProps, {}> = ({ me }) => {
   }
 
   return (
-    <div className="w-full h-[100vh] bg-repeat bg-slate-900 bg-grid-400">
-      <div className="w-full h-[100vh] bg-gradient-to-b from-slate-900/80 to-transparent p-4">
-        <div className="w-full h-full flex flex-col justify-center items-center text-center">
+    <div className="w-full min-h-[100vh] h-[100%] bg-repeat bg-slate-900 bg-grid-400">
+      <div className="w-full min-h-[100vh] h-[100%] bg-gradient-to-b from-slate-900/80 to-transparent p-4">
+        <div className="w-full min-h-[calc(100vh-2rem)] h-[calc(100%-2rem)] flex flex-col justify-center items-center text-center">
           <div className="flex flex-col justify-center items-center mb-20">
             <Image
               src="/assets/images/logo.svg"
@@ -213,7 +213,7 @@ export const IndexPage: NextPage<PageProps, {}> = ({ me }) => {
             </small>
           </div>
 
-          <div className="w-full md:w-1/2 relative shadow-xl flex rounded-xl bg-slate-900/70 backdrop-blur ring-1 ring-inset ring-white/10">
+          <div className="w-full md:w-2/3 lg:w-1/2 relative shadow-xl flex rounded-xl bg-slate-900/70 backdrop-blur ring-1 ring-inset ring-white/10">
             <pre className="flex text-sm leading-6">
               <code className="flex-auto relative block text-slate-50 pt-4 pb-4 px-4 whitespace-pre-line">
                 <span className="text-slate-100 block mb-6">
@@ -244,6 +244,13 @@ export const IndexPage: NextPage<PageProps, {}> = ({ me }) => {
                   <span className="mr-2">Stud42 V3 Open-Source is born</span>
                   <Emoji emoji="🎉" size={20} />
                 </span>
+                <span className="flex items-center justify-center relative text-violet-500 font-bold">
+                  <Emoji emoji="🚀" size={20} />
+                  <span className="mx-2">
+                    Join us today to be a early supporter of the future
+                  </span>
+                  <Emoji emoji="🚀" size={20} />
+                </span>
               </code>
             </pre>
           </div>
@@ -264,12 +271,13 @@ export const IndexPage: NextPage<PageProps, {}> = ({ me }) => {
                 <b className="text-indigo-400">Discord</b> account.
               </small>
               <div className="flex flex-col justify-around mt-10">
-                <Link href="/auth/signin?callbackUrl=/discord&provider=discord">
-                  <a className="my-1 py-4 px-6 rounded-lg text-white text-lg bg-black font-medium border-2 border-black hover:px-14 hover:bg-slate-900 hover:border-indigo-500 focus:px-14 focus:border-indigo-500 focus:bg-indigo-500 transition-all">
-                    <i className="fa-brands fa-discord" />
-                    <span className="ml-2">Link your Discord account</span>
-                  </a>
-                </Link>
+                <button
+                  onClick={() => signIn('discord', { callbackUrl: '/discord' })}
+                  className="my-1 py-4 px-6 rounded-lg text-white text-lg bg-black font-medium border-2 border-black hover:px-14 hover:bg-slate-900 hover:border-indigo-500 focus:px-14 focus:border-indigo-500 focus:bg-indigo-500 transition-all"
+                >
+                  <i className="fa-brands fa-discord" />
+                  <span className="ml-2">Link your Discord account</span>
+                </button>
               </div>
             </div>
           )}
@@ -288,12 +296,13 @@ export const IndexPage: NextPage<PageProps, {}> = ({ me }) => {
                 <b className="text-indigo-400">Discord</b> account.
               </small>
               <div className="flex flex-col justify-around mt-10">
-                <Link href="/auth/signin?callbackUrl=/discord&provider=github">
-                  <a className="my-1 py-4 px-6 rounded-lg text-white text-lg bg-black font-medium border-2 border-black hover:px-14 hover:bg-slate-900 hover:border-indigo-500 focus:px-14 focus:border-indigo-500 focus:bg-indigo-500 transition-all">
-                    <i className="fa-brands fa-github" />
-                    <span className="ml-2">Link your Github account</span>
-                  </a>
-                </Link>
+                <button
+                  onClick={() => signIn('github', { callbackUrl: '/discord' })}
+                  className="my-1 py-4 px-6 rounded-lg text-white text-lg bg-black font-medium border-2 border-black hover:px-14 hover:bg-slate-900 hover:border-indigo-500 focus:px-14 focus:border-indigo-500 focus:bg-indigo-500 transition-all"
+                >
+                  <i className="fa-brands fa-github" />
+                  <span className="ml-2">Link your Github account</span>
+                </button>
               </div>
             </div>
           )}

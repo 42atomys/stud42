@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: api
 spec:
+  revisionHistoryLimit: 1
   selector: {}
   template:
     spec:
@@ -11,11 +12,13 @@ spec:
       containers:
       - name: service
         image: app
-        args: [ serve, api, -g ]
-        command: [ /stud42cli ]
+        args: [ '--config', '/config/stud42.yaml', serve, api, '-g' ]
+        command: [ stud42cli ]
         env:
         - name: GO_ENV
           value: production
+        - name: APP_VERSION
+          value: latest
         - name: CORS_ORIGIN
           value: http://localhost:3000
         - name: DATABASE_HOST
@@ -46,6 +49,11 @@ spec:
             secretKeyRef:
               key: 'API_DSN'
               name: 'sentry-dsns'
+        - name: S42_SERVICE_TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: TOKEN
+              name: s42-service-token
         volumeMounts:
           - name: config
             mountPath: /config

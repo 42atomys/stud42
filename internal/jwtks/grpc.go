@@ -40,13 +40,13 @@ func ServeGRPC(port *string) error {
 	var s *grpc.Server
 	var insecure = viper.GetBool("jwtks.grpc.insecure")
 
-	if !insecure {
+	if insecure {
 		log.Warn().Msg("GRPC Server is insecure, don't use in production!")
 		s = grpc.NewServer()
 	} else {
 		creds, err := credentials.NewServerTLSFromFile(
-			viper.GetString("jwtks.grpc.cert_public_key_file"),
-			viper.GetString("jwtks.grpc.cert_private_key_file"),
+			viper.GetString("jwtks.grpc.certPublicKeyFile"),
+			viper.GetString("jwtks.grpc.certPrivateKeyFile"),
 		)
 		if err != nil {
 			log.Fatal().Msgf("failed to load credentials: %v", err)

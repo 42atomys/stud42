@@ -31,11 +31,6 @@ export default function Document() {
         <meta name="application-name" content="Stud42" />
         <meta name="msapplication-TileColor" content="#1e293b" />
         <meta name="theme-color" content="#1e293b" />
-        <script
-          async
-          src="https://kit.fontawesome.com/a8d6f88c41.js"
-          crossOrigin="anonymous"
-        ></script>
       </Head>
       <body className="antialiased text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-800">
         <Main />

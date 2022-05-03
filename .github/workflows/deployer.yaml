@@ -51,6 +51,7 @@ jobs:
     name: Deploy to sandbox 🏖
     runs-on: ubuntu-latest
     needs: [ build_and_push ]
+    if: ${{ contains('refs/heads/main', github.ref) }}
     steps:
     - uses: actions/checkout@v3
     - uses: azure/setup-kubectl@v2.1
@@ -63,12 +64,16 @@ jobs:
     - run: |
         kustomize build deploy/app/config/overlays/sandbox | kubectl apply -f -
 
-        cd ${{github.workspace }}/deploy/app/jwkts-service/overlays/sandbox
-        kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
+        cd ${{github.workspace }}/deploy/app/jwtks-service/overlays/sandbox
+        kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.ref_name }}
         kustomize build . | kubectl apply -f -
 
         cd ${{github.workspace }}/deploy/app/api/overlays/sandbox
-        kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
+        kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.ref_name }}
+        kustomize build . | kubectl apply -f -
+
+        cd ${{github.workspace }}/deploy/app/interface/overlays/sandbox
+        kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.ref_name }}
         kustomize build . | kubectl apply -f -
 
   deploy_next:
@@ -88,11 +93,15 @@ jobs:
     - run: |
         kustomize build deploy/app/config/overlays/next | kubectl apply -f -
 
-        cd ${{github.workspace }}/deploy/app/jwkts-service/overlays/next
+        cd ${{github.workspace }}/deploy/app/jwtks-service/overlays/next
         kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
         kustomize build . | kubectl apply -f -
 
         cd ${{github.workspace }}/deploy/app/api/overlays/next
+        kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
+        kustomize build . | kubectl apply -f -
+
+        cd ${{github.workspace }}/deploy/app/interface/overlays/next
         kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
         kustomize build . | kubectl apply -f -
 
@@ -112,10 +121,14 @@ jobs:
     - run: |
         kustomize build deploy/app/config/overlays/live | kubectl apply -f -
 
-        cd ${{github.workspace }}/deploy/app/jwkts-service/overlays/live
+        cd ${{github.workspace }}/deploy/app/jwtks-service/overlays/live
         kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
         kustomize build . | kubectl apply -f -
 
         cd ${{github.workspace }}/deploy/app/api/overlays/live
+        kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
+        kustomize build . | kubectl apply -f -
+
+        cd ${{github.workspace }}/deploy/app/interface/overlays/live
         kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
         kustomize build . | kubectl apply -f -

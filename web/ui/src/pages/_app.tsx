@@ -5,6 +5,7 @@ import '../styles/globals.css';
 import { AppProps } from 'next/app';
 import { NextComponentType, NextPageContext } from 'next';
 import apolloClient from '@lib/apollo';
+import Script from 'next/script';
 
 const Interface = ({
   Component,
@@ -22,6 +23,10 @@ const Interface = ({
       <ApolloProvider client={apolloClient}>
         <Component {...pageProps} />
       </ApolloProvider>
+      <Script
+        src="https://kit.fontawesome.com/a8d6f88c41.js"
+        crossOrigin="anonymous"
+      ></Script>
     </SessionProvider>
   );
 };

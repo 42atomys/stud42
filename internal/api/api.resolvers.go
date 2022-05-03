@@ -28,9 +28,10 @@ func (r *mutationResolver) InternalCreateUser(ctx context.Context, input typesge
 		SetFirstName(input.FirstName).
 		SetNillableUsualFirstName(input.UsualFirstName).
 		SetLastName(input.LastName).
-		SetPoolYear(input.PoolYear).
-		SetPoolMonth(input.PoolMonth).
-		SetPhone(input.Phone).
+		SetNillablePoolYear(input.PoolYear).
+		SetNillablePoolMonth(input.PoolMonth).
+		SetNillablePhone(input.Phone).
+		SetIsStaff(input.IsStaff).
 		OnConflictColumns(user.FieldDuoID).
 		UpdateDuoID().
 		ID(ctx)
@@ -70,7 +71,7 @@ func (r *mutationResolver) InviteOnDiscord(ctx context.Context) (bool, error) {
 
 	acc := r.client.Account.Query().Where(account.UserID(cu.ID), account.Provider(string(typesgen.ProviderDiscord))).OnlyX(ctx)
 
-	err = s.GuildMemberAdd(acc.AccessToken, viper.GetString("discord.guild_id"), acc.ProviderAccountID, "", []string{}, false, false)
+	err = s.GuildMemberAdd(acc.AccessToken, viper.GetString("discord.guildID"), acc.ProviderAccountID, "", []string{}, false, false)
 	if err != nil {
 		return false, err
 	}
@@ -106,6 +107,18 @@ func (r *userResolver) Features(ctx context.Context, obj *generated.User) ([]typ
 		return typesgen.AllFeature, nil
 	}
 
+	acc, err := r.client.Account.Query().
+		Select("username").
+		Where(
+			account.UserID(obj.ID),
+			account.Provider(string(typesgen.ProviderGithub)),
+		).
+		Only(ctx)
+
+	if (err != nil) || (acc == nil) {
+		return features, nil
+	}
+
 	// TODO Move github utils outside of resolvers
 	httpClient := oauth2.NewClient(context.Background(), oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: os.Getenv("GITHUB_TOKEN")},
@@ -124,16 +137,8 @@ func (r *userResolver) Features(ctx context.Context, obj *generated.User) ([]typ
 		} `graphql:"user(login: $login)"`
 	}
 
-	username := r.client.Account.Query().
-		Select("username").
-		Where(
-			account.UserID(obj.ID),
-			account.Provider(string(typesgen.ProviderGithub)),
-		).
-		OnlyX(ctx).Username
-
-	err := client.Query(ctx, &query, map[string]interface{}{
-		"login": githubv4.String(username),
+	err = client.Query(ctx, &query, map[string]interface{}{
+		"login": githubv4.String(acc.Username),
 	})
 	if err != nil {
 		log.Error().Err(err).Msg("failed to query github")

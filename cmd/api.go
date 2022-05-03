@@ -73,7 +73,7 @@ var apiCmd = &cobra.Command{
 			AllowCredentials: true,
 			Debug:            true,
 		}).Handler)
-		router.Use(api.NetworkPolicyMiddleware)
+		router.Use(api.AuthzByPolicyMiddleware)
 		router.Use(api.AuthenticationMiddleware)
 
 		if *playgroudActive {

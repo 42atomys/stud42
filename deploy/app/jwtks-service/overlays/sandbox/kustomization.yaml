@@ -12,6 +12,14 @@ images:
 patchesStrategicMerge:
 - ./use-sandbox-routing.yaml
 
+patches:
+- target:
+    kind: Deployment
+  patch: |-
+    - op: replace
+      path: "/spec/template/spec/containers/0/imagePullPolicy"
+      value: Always
+
 replacements:
 - source:
     kind: Service
@@ -34,3 +42,11 @@ replacements:
     fieldPaths:
      - spec.http.*.name
      - spec.http.*.route.*.destination.host
+- source:
+    kind: Deployment
+    fieldPath: metadata.labels.[app.kubernetes.io/version]
+  targets:
+  - select:
+      kind: Deployment
+    fieldPaths:
+     - spec.template.spec.containers.[name=service].env.[name=APP_VERSION].value

@@ -6,7 +6,7 @@ spec:
   hosts:
   - s42.app
   gateways:
-  - s42-app
+  - s42-app-live
   http:
   - name: api-http-gql
     match:

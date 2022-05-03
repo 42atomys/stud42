@@ -4,14 +4,13 @@ scalar Any
 
 scalar Time
 
-directive @authorizationByPolicy(networkPolicy: NETWORK_POLICY) on FIELD_DEFINITION
+directive @authzByPolicy(policy: POLICY) on FIELD_DEFINITION
 
 directive @authenticated on FIELD_DEFINITION
 
-enum NETWORK_POLICY {
+enum POLICY {
+  SERVICE_TOKEN
   NONE
-  CLUSTER
-  LOCAL
 }
 
 enum FEATURE {
@@ -46,8 +45,8 @@ type Account {
   username: String!
   expires_at: Int
   token_type: String
-  refresh_token: String @authorizationByPolicy(networkPolicy: CLUSTER)
-  access_token: String @authorizationByPolicy(networkPolicy: CLUSTER)
+  refresh_token: String @authzByPolicy(policy: SERVICE_TOKEN)
+  access_token: String @authzByPolicy(policy: SERVICE_TOKEN)
   scope: String
   userID: UUID!
   user: User!
@@ -55,14 +54,14 @@ type Account {
 
 type Query {
   me: User! @authenticated
-  internalGetUserByAccount(provider: PROVIDER!, uid: String!): User! @authorizationByPolicy(networkPolicy: CLUSTER)
-  internalGetUserByEmail(email: String!): User! @authorizationByPolicy(networkPolicy: CLUSTER)
-  internalGetUser(id: UUID!): User! @authorizationByPolicy(networkPolicy: CLUSTER)
+  internalGetUserByAccount(provider: PROVIDER!, uid: String!): User! @authzByPolicy(policy: SERVICE_TOKEN)
+  internalGetUserByEmail(email: String!): User! @authzByPolicy(policy: SERVICE_TOKEN)
+  internalGetUser(id: UUID!): User! @authzByPolicy(policy: SERVICE_TOKEN)
 }
 
 type Mutation {
-  internalCreateUser(input: CreateUserInput!): UUID! @authorizationByPolicy(networkPolicy: CLUSTER)
-  internalLinkAccount(input: LinkAccountInput!): Account! @authorizationByPolicy(networkPolicy: CLUSTER)
+  internalCreateUser(input: CreateUserInput!): UUID! @authzByPolicy(policy: SERVICE_TOKEN)
+  internalLinkAccount(input: LinkAccountInput!): Account! @authzByPolicy(policy: SERVICE_TOKEN)
   inviteOnDiscord: Boolean! @authenticated
 }
 
@@ -73,9 +72,10 @@ input CreateUserInput {
   firstName: String!
   usualFirstName: String
   lastName: String!
-  poolYear: String!
-  poolMonth: String!
-  phone: String!
+  poolYear: String
+  poolMonth: String
+  phone: String
+  isStaff: Boolean!
 }
 
 input LinkAccountInput {

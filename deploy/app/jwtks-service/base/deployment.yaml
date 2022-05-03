@@ -4,6 +4,7 @@ metadata:
   name: jwtks-service
 spec:
   selector: {}
+  revisionHistoryLimit: 1
   template:
     spec:
       imagePullSecrets:
@@ -11,16 +12,23 @@ spec:
       containers:
       - name: service
         image: app
-        args: [ serve, jwtks ]
-        command: [ /stud42cli ]
+        args: [ '--config', '/config/stud42.yaml', serve, jwtks ]
+        command: [ stud42cli ]
         env:
         - name: GO_ENV
-          value: review-apps
+          value: production
+        - name: APP_VERSION
+          value: latest
         - name: SENTRY_DSN
           valueFrom:
             secretKeyRef:
               key: 'JWTKS_SERVICE_DSN'
               name: 'sentry-dsns'
+        - name: S42_SERVICE_TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: TOKEN
+              name: s42-service-token
         volumeMounts:
           - name: certs-grpc
             mountPath: '/etc/certs/grpc'
@@ -34,7 +42,7 @@ spec:
         resources:
           limits:
             memory: "42Mi"
-            cpu: "5m"
+            cpu: "200m"
         ports:
         - containerPort: 5000
         - containerPort: 5500

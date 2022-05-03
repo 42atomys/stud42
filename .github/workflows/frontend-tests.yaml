@@ -71,7 +71,6 @@ jobs:
 
     - name: Install dependencies
       run: yarn install --frozen-lockfile
-
     - name: Jest
       run: yarn test:ci
 

@@ -1,0 +1,36 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namePrefix: next-
+resources:
+- ../../base
+namespace: staging
+images:
+- name: app
+  newName: ghcr.io/42atomys/stud42
+  newTag: latest
+
+patchesStrategicMerge:
+- ./use-next-routing.yaml
+
+replacements:
+- source:
+    kind: Service
+    name: interface-http
+    fieldPath: metadata.name
+  targets:
+  - select:
+      kind: VirtualService
+      name: interface-http
+    fieldPaths:
+     - spec.http.*.name
+     - spec.http.*.route.*.destination.host
+- source:
+    kind: Deployment
+    name: interface
+    fieldPath: metadata.labels.[app.kubernetes.io/version]
+  targets:
+  - select:
+      kind: Deployment
+      name: interface
+    fieldPaths:
+     - spec.template.spec.containers.[name=interface].env.[name=APP_VERSION].value

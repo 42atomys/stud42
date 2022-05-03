@@ -14,15 +14,20 @@ data:
     jwtks:
       # Endpoint of the public JWKSet can be used to validate
       # a JWT Token
-      endpoint: https://sandbox.s42.dev/.well-known/jwks
+      endpoints:
+        sets: https://sandbox.s42.dev/.well-known/jwks
+        sign: sand-jwtks-service-grpc:5000
       # Certs used to sign and validate the JWT
       # Also called : The JWK
       jwk:
-        cert_private_key: /etc/certs/jwk/private.pem
-        cert_public_key: /etc/certs/jwk/public.pem
+        certPrivateKeyFile: /etc/certs/jwk/private.key
+        certPublicKeyFile: /etc/certs/jwk/public.pem
       # Certs used to secure the GRPC Endpoint with SSL/TLS
       grpc:
-        insecure: true
+        insecure: false
+        certRootCaFile: /etc/certs/grpc/ca.crt
+        certPrivateKeyFile: /etc/certs/grpc/tls.key
+        certPublicKeyFile: /etc/certs/grpc/tls.crt
 
     discord:
-      guild_id: '248936708379246593'
+      guildID: '248936708379246593'
