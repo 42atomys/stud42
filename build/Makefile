@@ -1,3 +1,6 @@
+# This makefile MUST be run from the root of the repository.
+# You can do this by running:
+#   make -f build/Makefile [action]
 
 generate:
 	go generate generate.go
@@ -18,8 +21,11 @@ certs:
 	openssl rsa -in certs/private.key -out certs/public.pem -pubout -outform PEM
 
 deps:
-	wget -O /tmp/protoc.zip https://github.com/protocolbuffers/protobuf/releases/download/v3.20.1/protoc-3.20.1-linux-x86_64.zip
-	unzip -uo /tmp/protoc -d /usr/local bin/protoc
+	./build/install-dependencies.sh
+
+local-dev-setup: deps generate certs
+	docker-compose -f docker-compose.local.yaml up -d
+	docker exec -it s42_postgres psql -c 'CREATE EXTENSION IF NOT EXISTS "uuid-ossp";' -U postgres -d s42
 
 all:
 	deps

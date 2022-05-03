@@ -1,0 +1,13 @@
+version: '3'
+services:
+  database:
+    container_name: s42_postgres
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: any
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: s42
+    image: postgres:14.2-alpine3.15
