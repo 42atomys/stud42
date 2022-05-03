@@ -78,7 +78,7 @@
     "concurrently": "^7.1.0",
     "cypress": "^9.5.4",
     "eslint": "^8.14.0",
-    "eslint-config-airbnb-typescript": "^16.1.0",
+    "eslint-config-airbnb-typescript": "^17.0.0",
     "eslint-config-next": "12.1.5",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.26.0",
