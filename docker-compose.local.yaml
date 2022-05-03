@@ -10,4 +10,6 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
       POSTGRES_DB: s42
+    ports:
+    - "5432:5432"
     image: postgres:14.2-alpine3.15

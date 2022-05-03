@@ -1,4 +1,4 @@
-const config = {
+module.exports = {
   root: true,
   parser: '@typescript-eslint/parser',
 
@@ -37,5 +37,3 @@ const config = {
     amd: true,
   },
 };
-
-export default config;

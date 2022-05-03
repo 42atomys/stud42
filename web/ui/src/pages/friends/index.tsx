@@ -4,16 +4,16 @@ import Avatar from '@components/Avatar/Avatar';
 import Name from '@components/Name';
 import { LocationBadge } from '@components/Badge';
 import { Location, User } from 'types/globals';
-import Twemoji from 'react-twemoji';
 import classNames from 'classnames';
 import Head from 'next/head';
 import { Menu, Transition } from '@headlessui/react';
+import Emoji from '@components/Emoji';
+import { NextPage } from 'next';
 
 type PageProps = {};
 
 const IndexPage: NextPage<PageProps> = () => {
   const { SidebarProvider, Sidebar, PageContainer, PageContent } = useSidebar();
-  const { data: session } = useSession();
 
   const data: { friends: User[] } = {
     friends: [
@@ -62,52 +62,17 @@ const IndexPage: NextPage<PageProps> = () => {
         lastName: null,
         lastConnectedAt: null,
         currentLocation: null
-      }
-    ]
-  };
-
-  const data: { friends: User[] } = {
-    friends: [
+      },
       {
-        login: 'noich',
-        firstName: 'Noich',
+        login: 'coton',
+        firstName: null,
         usualFirstName: null,
-        lastName: 'One',
-        lastConnectedAt: '2020-01-01 00:00:00',
-        currentLocation: null
-      },
-      {
-        login: 'ol',
-        firstName: 'Testeur',
-        usualFirstName: 'Testeuse',
-        lastName: 'Two',
-        lastConnectedAt: '2020-09-01 00:00:00',
-        currentLocation: {
-          campus: 'Paris',
-          host: 'e2r1p12'
-        }
-      },
-      {
-        login: 'tyrael',
-        firstName: 'Testeur',
-        usualFirstName: 'staffu',
-        lastName: 'One',
-        lastConnectedAt: '2021-02-23 00:00:00',
-        currentLocation: {
-          campus: 'Paris',
-          host: 'in Space 🚀'
-        }
-      },
-      {
-        login: 'jpeg',
-        firstName: 'MMmh',
-        usualFirstName: null,
-        lastName: 'Curious',
+        lastName: null,
         lastConnectedAt: null,
         currentLocation: null
       },
       {
-        login: 'titus',
+        login: 'oren',
         firstName: null,
         usualFirstName: null,
         lastName: null,
@@ -140,10 +105,8 @@ const IndexPage: NextPage<PageProps> = () => {
               * and set it dynamically based on the url
             */}
               <li className={classNames('bg-indigo-500/20 text-indigo-500', 'empty:hidden transition-all hover:cursor-pointer px-2 py-2 rounded hover:bg-indigo-500/20 hover:text-indigo-500 flex flex-row items-center')}>
-                <Twemoji noWrapper={true} options={{ folder: 'svg', ext: '.svg', className: 'w-[24px] h-[24px]' }}>
-                  <i>👥</i>
-                  <span className='ml-2'>All friends</span>
-                </Twemoji>
+                <Emoji emoji='👥' size={24} />
+                <span className='ml-2'>All friends</span>
               </li>
             </ul>
             <span className='flex p-2 text-xs text-slate-400 dark:text-slate-600 italic'>You can create and manage custom groups in the future</span>
@@ -153,8 +116,8 @@ const IndexPage: NextPage<PageProps> = () => {
           {data.friends.map(friend => (
             // <div key={`friend-list-user-${friend.login}`} className='flex flex-col items-center border rounded-md border-slate-500/10 p-4 m-2 text-center grow-[1] max-w-[200px] transition-all hover:scale-[102%] hover:shadow-lg hover:shadow-slate-300/20 dark:hover:shadow-slate-700/20 hover:cursor-pointer hover:border-indigo-500'>
 
-            <div key={`friend-list-user-${friend.login}`} className='flex flex-col relative group items-center p-4 m-2 text-center grow-[1] max-w-[200px] transition-all rounded-lg border-2 border-transparent hover:cursor-pointer hover:scale-[102%] hover:border-indigo-500'>
-              <Avatar login={friend.login} size='xxxl' rounded className='mb-4' />
+            <div key={`friend-list-user-${friend.login}`} className='flex flex-col relative group items-center p-4 m-2 text-center grow-[1] min-w-[200px] max-w-[200px] transition-all rounded-lg border-2 border-transparent hover:cursor-pointer hover:scale-[102%] hover:border-indigo-500'>
+              <Avatar login={friend.login} size='xxxl' rounded className='mb-4 bg-slate-800' />
               <h2 className='font-bold uppercase'>{friend.login}</h2>
               <Name className='font-light' user={friend} />
               <LocationBadge {...friend.currentLocation as Location} />
@@ -203,10 +166,5 @@ const Example = () => {
 export const getStaticProps = () => ({
   props: {},
 });
-
-IndexPage.auth = {
-  loading: <></>,
-  required: false,
-};
 
 export default IndexPage;
