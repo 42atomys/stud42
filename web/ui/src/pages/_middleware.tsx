@@ -12,7 +12,6 @@ export const middleware: NextMiddleware = async (req) => {
   if (
     pathname.startsWith('/api') ||
     pathname.startsWith('/assets') ||
-    pathname.startsWith('/auth') ||
     pathname.startsWith('/discord')
   ) {
     return NextResponse.next();
@@ -21,6 +20,10 @@ export const middleware: NextMiddleware = async (req) => {
   const { data } = await queryAuthenticatedSSR<MeWithFeaturesQuery>(req, {
     query: MeWithFeaturesDocument,
   });
+
+  if (pathname.startsWith('/auth') && data) {
+    return NextResponse.redirect(new URL('/', req.url));
+  }
 
   if (!data) {
     return NextResponse.redirect(
