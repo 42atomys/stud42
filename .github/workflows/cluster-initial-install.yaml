@@ -61,7 +61,14 @@ jobs:
       run: |
         curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.13.3 sh -
         mv istio-1.13.3/bin/istioctl /usr/local/bin/istioctl
-        /usr/local/bin/istioctl install -y --set components.pilot.k8s.strategy.rollingUpdate.maxUnavailable=0 --set components.pilot.k8s.strategy.rollingUpdate.maxSurge=1 --set meshConfig.defaultConfig.gatewayTopology.numTrustedProxies=2
+        /usr/local/bin/istioctl install -y \
+          --set components.pilot.k8s.strategy.rollingUpdate.maxUnavailable=0 \
+          --set components.pilot.k8s.strategy.rollingUpdate.maxSurge=1 \
+          --set components.pilot.k8s.resources.requests.cpu="500m" \
+          --set components.pilot.k8s.resources.requests.memory="1Gi" \
+          --set components.pilot.k8s.resources.limits.cpu="500m" \
+          --set components.pilot.k8s.resources.limits.memory="2Gi" \
+          --set meshConfig.defaultConfig.gatewayTopology.numTrustedProxies=2
     - name: Install cert-manager
       if: ${{ github.event.inputs.install_cert_manager == 'true' }} 
       run: |
