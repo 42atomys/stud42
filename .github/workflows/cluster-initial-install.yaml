@@ -34,6 +34,10 @@ on:
         type: boolean
         required: true
         description: (Re)set postgres password ?
+      install_monitoring:
+        type: boolean
+        required: true
+        description: (Re)set monitoring stack ?
 jobs:
   core_install:
     runs-on: ubuntu-latest
@@ -47,6 +51,7 @@ jobs:
         method: kubeconfig
         kubeconfig: ${{ secrets.KUBECONFIG_ADMIN }}
         cluster-type: generic
+    - uses: alexdglover/jsonnet-render@v1
     - run: kubectl apply -f deploy/cluster/namespaces
       if: ${{ github.event.inputs.install_namespaces == 'true' }} 
     - run: ls -1 deploy/cluster/rbac/deployer*.yaml | xargs -l kubectl apply -f
@@ -78,6 +83,10 @@ jobs:
         kubectl apply -f deploy/cluster/cert-manager/issuers
         kubectl apply -f deploy/cluster/cert-manager/certificates
         kubectl apply -f deploy/cluster/istio/gateways
+    - name: Install Prometheus Operator
+      if: ${{ github.event.inputs.install_monitoring == 'true' }} 
+      run: |
+        cd ./deploy/cluster/monitoring && ./build.sh
 
   update_secrets:
     name: Install cross cluster secrets
