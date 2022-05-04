@@ -51,7 +51,7 @@ jobs:
         method: kubeconfig
         kubeconfig: ${{ secrets.KUBECONFIG_ADMIN }}
         cluster-type: generic
-    - uses: zendesk/setup-jsonnet@v1
+    - uses: kobtea/setup-jsonnet-action@v1
     - run: kubectl apply -f deploy/cluster/namespaces
       if: ${{ github.event.inputs.install_namespaces == 'true' }} 
     - run: ls -1 deploy/cluster/rbac/deployer*.yaml | xargs -l kubectl apply -f
