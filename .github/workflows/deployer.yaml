@@ -1,8 +1,9 @@
 name: 'Deployer 🔧'
 on:
-  pull_request: 
-    branches:
-    - main
+  # Disabled due to the private repository and no review-apps currently supported
+  # pull_request: 
+  #   branches:
+  #   - main
   push:
     branches:
     - main

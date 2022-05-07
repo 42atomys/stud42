@@ -34,6 +34,10 @@ on:
         type: boolean
         required: true
         description: (Re)set postgres password ?
+      install_monitoring:
+        type: boolean
+        required: true
+        description: (Re)set monitoring stack ?
 jobs:
   core_install:
     runs-on: ubuntu-latest
@@ -47,6 +51,7 @@ jobs:
         method: kubeconfig
         kubeconfig: ${{ secrets.KUBECONFIG_ADMIN }}
         cluster-type: generic
+    - uses: kobtea/setup-jsonnet-action@v1
     - run: kubectl apply -f deploy/cluster/namespaces
       if: ${{ github.event.inputs.install_namespaces == 'true' }} 
     - run: ls -1 deploy/cluster/rbac/deployer*.yaml | xargs -l kubectl apply -f
@@ -56,7 +61,14 @@ jobs:
       run: |
         curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.13.3 sh -
         mv istio-1.13.3/bin/istioctl /usr/local/bin/istioctl
-        /usr/local/bin/istioctl install -y --set components.pilot.k8s.strategy.rollingUpdate.maxUnavailable=0 --set components.pilot.k8s.strategy.rollingUpdate.maxSurge=1 --set meshConfig.defaultConfig.gatewayTopology.numTrustedProxies=2
+        /usr/local/bin/istioctl install -y \
+          --set components.pilot.k8s.strategy.rollingUpdate.maxUnavailable=0 \
+          --set components.pilot.k8s.strategy.rollingUpdate.maxSurge=1 \
+          --set components.pilot.k8s.resources.requests.cpu="500m" \
+          --set components.pilot.k8s.resources.requests.memory="1Gi" \
+          --set components.pilot.k8s.resources.limits.cpu="500m" \
+          --set components.pilot.k8s.resources.limits.memory="2Gi" \
+          --set meshConfig.defaultConfig.gatewayTopology.numTrustedProxies=2
     - name: Install cert-manager
       if: ${{ github.event.inputs.install_cert_manager == 'true' }} 
       run: |
@@ -78,6 +90,10 @@ jobs:
         kubectl apply -f deploy/cluster/cert-manager/issuers
         kubectl apply -f deploy/cluster/cert-manager/certificates
         kubectl apply -f deploy/cluster/istio/gateways
+    - name: Install Prometheus Operator
+      if: ${{ github.event.inputs.install_monitoring == 'true' }} 
+      run: |
+        cd ./deploy/cluster/monitoring && ./build.sh
 
   update_secrets:
     name: Install cross cluster secrets
