@@ -26,6 +26,10 @@ resolver:
 # Optional: turn on use `gqlgen:"fieldName"` tags in your models
 struct_tag: json
 
+directives:
+  extraStructTag:
+    skip_runtime: true
+
 # Optional: turn on to use []Thing instead of []*Thing
 # omit_slice_element_pointers: false
 

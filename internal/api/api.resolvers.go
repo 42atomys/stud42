@@ -7,18 +7,43 @@ import (
 	"context"
 	"os"
 
-	apigen "atomys.codes/stud42/internal/api/generated"
-	typesgen "atomys.codes/stud42/internal/api/generated/types"
-	"atomys.codes/stud42/internal/models/generated"
-	"atomys.codes/stud42/internal/models/generated/account"
-	"atomys.codes/stud42/internal/models/generated/user"
 	"github.com/bwmarrin/discordgo"
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
 	"github.com/shurcooL/githubv4"
 	"github.com/spf13/viper"
 	"golang.org/x/oauth2"
+
+	apigen "atomys.codes/stud42/internal/api/generated"
+	typesgen "atomys.codes/stud42/internal/api/generated/types"
+	"atomys.codes/stud42/internal/models/generated"
+	"atomys.codes/stud42/internal/models/generated/account"
+	"atomys.codes/stud42/internal/models/generated/user"
 )
+
+func (r *mutationResolver) CreateFriendship(ctx context.Context, userID uuid.UUID) (bool, error) {
+	cu, err := CurrentUserFromContext(ctx)
+	if err != nil {
+		return false, err
+	}
+
+	if _, err := r.client.User.UpdateOne(cu).AddFollowingIDs(userID).Save(ctx); err != nil {
+		return false, err
+	}
+	return true, nil
+}
+
+func (r *mutationResolver) DeleteFriendship(ctx context.Context, userID uuid.UUID) (bool, error) {
+	cu, err := CurrentUserFromContext(ctx)
+	if err != nil {
+		return false, err
+	}
+
+	if _, err := r.client.User.UpdateOne(cu).RemoveFollowingIDs(userID).Save(ctx); err != nil {
+		return false, err
+	}
+	return true, nil
+}
 
 func (r *mutationResolver) InternalCreateUser(ctx context.Context, input typesgen.CreateUserInput) (uuid.UUID, error) {
 	return r.client.User.Create().
@@ -32,8 +57,9 @@ func (r *mutationResolver) InternalCreateUser(ctx context.Context, input typesge
 		SetNillablePoolMonth(input.PoolMonth).
 		SetNillablePhone(input.Phone).
 		SetIsStaff(input.IsStaff).
+		SetIsAUser(true).
 		OnConflictColumns(user.FieldDuoID).
-		UpdateDuoID().
+		UpdateNewValues().
 		ID(ctx)
 }
 
@@ -79,7 +105,29 @@ func (r *mutationResolver) InviteOnDiscord(ctx context.Context) (bool, error) {
 }
 
 func (r *queryResolver) Me(ctx context.Context) (*generated.User, error) {
-	return CurrentUserFromContext(ctx)
+	cu, err := CurrentUserFromContext(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return r.client.User.Query().WithFollowing(func(q *generated.UserQuery) {
+		q.Order(generated.Asc(user.FieldDuoLogin))
+	}).Where(user.ID(cu.ID)).First(ctx)
+}
+
+func (r *queryResolver) SearchUser(ctx context.Context, query string) ([]*generated.User, error) {
+	cu, _ := CurrentUserFromContext(ctx)
+	return r.client.User.Query().
+		Where(user.Or(
+			user.DuoLoginContainsFold(query),
+			user.FirstNameContainsFold(query),
+			user.LastNameContainsFold(query),
+			user.UsualFirstNameContainsFold(query),
+		),
+			user.IDNEQ(cu.ID),
+		).
+		Limit(10).
+		All(ctx)
 }
 
 func (r *queryResolver) InternalGetUserByAccount(ctx context.Context, provider typesgen.Provider, uid string) (*generated.User, error) {

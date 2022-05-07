@@ -146,7 +146,9 @@ export const Sidebar = ({
           </div>
 
           <div className="p-4 flex flex-col h-full bg-slate-100/60 dark:bg-slate-800/40 rounded-tl-md">
-            {React.Children.map(subSidebar, c => <>{c}</>)}
+            {React.Children.map(subSidebar, (c) => (
+              <>{c}</>
+            ))}
           </div>
         </div>
       )}

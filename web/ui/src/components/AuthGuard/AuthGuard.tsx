@@ -3,10 +3,10 @@ import { useEffect } from 'react';
 import type { ComponentWithAuthGuard } from './types';
 
 type AuthGuardAuth = {
-  loading: JSX.Element,
-  required: boolean,
-  unauthorized: Function,
-}
+  loading: JSX.Element;
+  required: boolean;
+  unauthorized: Function;
+};
 
 export function AuthGuard({
   children,

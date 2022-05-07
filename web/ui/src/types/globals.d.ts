@@ -1,18 +1,18 @@
 export type User = {
-  firstName: string | null
-  lastName: string | null
-  usualFirstName?: string | null
-  login: string
-  hasNickname?: boolean = false
-  nickname?: string
-  currentLocation: Location | null
-  lastConnectedAt: string | Date | null
-}
+  firstName: string | null;
+  lastName: string | null;
+  usualFirstName?: string | null;
+  duoLogin: string;
+  hasNickname?: boolean = false;
+  nickname?: string;
+  currentLocation: Location | null;
+  lastConnectedAt: string | Date | null;
+};
 
 export type Location = {
-  campus: string
-  host: string
-}
+  campus: string;
+  host: string;
+};
 
 /**
  * Allow to extend the type of the props of a component
@@ -20,5 +20,5 @@ export type Location = {
  * @property {string} className
  */
 export type ClassNameProps = {
-  className?: string
-}
+  className?: string;
+};

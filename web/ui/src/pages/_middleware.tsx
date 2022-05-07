@@ -22,10 +22,8 @@ export const middleware: NextMiddleware = async (req) => {
   });
 
   if (pathname.startsWith('/auth')) {
-    if (data)
-      return NextResponse.redirect(new URL('/', req.url));
-    else
-      return NextResponse.next();
+    if (data) return NextResponse.redirect(new URL('/', req.url));
+    else return NextResponse.next();
   }
 
   if (!data) {
