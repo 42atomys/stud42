@@ -23,7 +23,7 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED 1
 
 RUN apt-get update -y && \
-    apt-get install jq && \
+    apt-get install -y jq && \
     make -f build/Makefile deps && \
     cd web/ui && \
     yarn add -D @graphql-codegen/cli && \
