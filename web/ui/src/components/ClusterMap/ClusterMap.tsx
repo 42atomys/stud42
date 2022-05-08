@@ -23,8 +23,8 @@ export const ClusterWorkspace = ({
 }: {
   identifier: string;
   displayText?: string;
-  connected: boolean;
-  friend: boolean;
+  connected?: boolean;
+  friend?: boolean;
 }) => {
   return (
     <div

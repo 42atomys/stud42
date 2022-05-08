@@ -92,10 +92,6 @@ export const IndexPage: NextPage<PageProps> = () => {
                       key={`cluster-workspace-${row}-${workspace}`}
                       identifier={`e1${row}p${workspace}`}
                       displayText={workspace.toString()}
-                      connected={
-                        workspace === 8 || (workspace === 11 && row === 'r9')
-                      }
-                      friend={workspace === 11}
                     />
                   );
                 })}
