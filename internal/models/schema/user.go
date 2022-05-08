@@ -36,12 +36,14 @@ func (User) Fields() []ent.Field {
 		field.String("avatar_url").Optional().Nillable().MaxLen(255),
 		field.String("cover_url").Optional().Nillable().MaxLen(255),
 		field.Bool("is_staff").Default(false),
+		field.Bool("is_a_user").Default(false),
 	}
 }
 
 func (User) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("accounts", Account.Type),
+		edge.To("following", User.Type).From("followers"),
 	}
 }
 

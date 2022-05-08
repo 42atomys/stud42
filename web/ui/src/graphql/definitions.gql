@@ -91,42 +91,76 @@ mutation inviteOnDiscord {
   inviteOnDiscord
 }
 
+query searchUser($query: String!) {
+  searchUser(query: $query) {
+    id
+    duoLogin
+    firstName
+    usualFirstName
+    lastName
+  }
+}
+
+mutation createFriendship($userID: UUID!) {
+  createFriendship(userID: $userID)
+}
+
+mutation deleteFriendship($userID: UUID!) {
+  deleteFriendship(userID: $userID)
+}
+
 query me {
   me {
-    ...UserData
+    ...UserAccountsData
   }
 }
 
 query meWithFeatures {
   me {
-    ...UserData
+    ...UserAccountsData
     features
+  }
+}
+
+query myFollowings {
+  me {
+    following {
+      id
+      ...UserIdentyData
+    }
   }
 }
 
 query internalGetUser($id: UUID!) {
   user: internalGetUser(id: $id) {
-    ...UserData
+    ...UserAccountsData
   }
 }
 
 query internalGetUserByEmail($email: String!) {
   user: internalGetUserByEmail(email: $email) {
-    ...UserData
+    ...UserAccountsData
   }
 }
 
 query internalGetUserByAccount($provider: PROVIDER!, $providerAccountId: String!) {
   user: internalGetUserByAccount(provider: $provider, uid: $providerAccountId) {
-    ...UserData
+    ...UserAccountsData
   }
 }
 
-fragment UserData on User {
+fragment UserAccountsData on User {
   id
   accounts {
     provider
     uid: providerAccountId
     username
   }
+}
+
+fragment UserIdentyData on User {
+  duoLogin
+  firstName
+  usualFirstName
+  lastName
 }

@@ -83,7 +83,6 @@ export const GraphQLAdapter = (): S42Adapter => {
         };
       } catch (error: any) {
         captureException(error);
-        throw error;
         return { ...user, id: '', emailVerified: null };
       }
     },

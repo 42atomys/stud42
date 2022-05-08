@@ -5,7 +5,7 @@ WORKDIR /build
 COPY . /build
 
 RUN apt-get update && \
-    apt-get install -y unzip && \
+    apt-get install -y unzip jq && \
     make -f build/Makefile deps generate build
 
 # INTERFACE BUILD - DEPS
@@ -22,7 +22,9 @@ COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED 1
 
-RUN make -f build/Makefile deps && \
+RUN apt-get update -y && \
+    apt-get install -y jq && \
+    make -f build/Makefile deps && \
     cd web/ui && \
     yarn add -D @graphql-codegen/cli && \
     yarn generate && yarn build

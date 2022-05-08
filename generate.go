@@ -3,21 +3,31 @@
 
 package main
 
-//go:generate echo "⌛ Auto-generating schema"
 //go:generate go run generate.go
-//go:generate echo "⌛ Auto-generating gql"
-//go:generate go run -mod=mod github.com/99designs/gqlgen generate
-//go:generate echo "✔️ Successfully generated"
 
 import (
+	"fmt"
 	"log"
+	"os"
 
 	"entgo.io/contrib/entgql"
 	"entgo.io/ent/entc"
 	"entgo.io/ent/entc/gen"
+	gqlgenapi "github.com/99designs/gqlgen/api"
+	"github.com/99designs/gqlgen/codegen/config"
+	"github.com/99designs/gqlgen/plugin/modelgen"
+	"github.com/vektah/gqlparser/v2/ast"
 )
 
 func main() {
+	log.Println("⌛ Auto-generating schema")
+	generateEntc()
+	log.Println("⌛ Auto-generating gql")
+	generateGqlGen()
+	log.Println("✔️ Successfully generated")
+}
+
+func generateEntc() {
 	ex, err := entgql.NewExtension(
 		entgql.WithSchemaPath("./api/graphs/api.graphqls"),
 	)
@@ -38,4 +48,35 @@ func main() {
 	if err != nil {
 		log.Fatalf("running ent codegen: %v", err)
 	}
+}
+
+func generateGqlGen() {
+	cfg, err := config.LoadConfigFromDefaultLocations()
+	if err != nil {
+		log.Fatalf("cannot load config: %v", err)
+	}
+
+	// Attaching the mutation function onto modelgen plugin
+	p := modelgen.Plugin{
+		FieldHook: extraStructTagFieldHook,
+	}
+
+	err = gqlgenapi.Generate(cfg, gqlgenapi.ReplacePlugin(&p))
+
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err.Error())
+		os.Exit(3)
+	}
+}
+
+func extraStructTagFieldHook(td *ast.Definition, fd *ast.FieldDefinition, f *modelgen.Field) (*modelgen.Field, error) {
+
+	c := fd.Directives.ForName("extraStructTag")
+	if c != nil {
+		for _, arg := range c.Arguments {
+			f.Tag += fmt.Sprintf(" %s:%s", arg.Name, arg.Value.String())
+		}
+	}
+
+	return f, nil
 }
