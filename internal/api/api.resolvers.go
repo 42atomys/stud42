@@ -193,11 +193,11 @@ func (r *userResolver) Features(ctx context.Context, obj *generated.User) ([]typ
 		return nil, err
 	}
 
-	if query.User.SponsorshipForViewerAsSponsorable.Tier.MonthlyPriceInDollars > 5 {
+	if query.User.SponsorshipForViewerAsSponsorable.Tier.MonthlyPriceInDollars >= 5 {
 		features = append(features, typesgen.FeatureDiscordAccess)
 	}
 
-	if query.User.SponsorshipForViewerAsSponsorable.Tier.MonthlyPriceInDollars > 25 {
+	if query.User.SponsorshipForViewerAsSponsorable.Tier.MonthlyPriceInDollars >= 25 {
 		features = append(features, typesgen.FeatureBetaAccess)
 	}
 
