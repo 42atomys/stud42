@@ -1,8 +1,7 @@
 import React from 'react';
-import { useSidebar } from '@components/Sidebar';
+import { Menu, MenuCategory, MenuItem, useSidebar } from '@components/Sidebar';
 import classNames from 'classnames';
 import Head from 'next/head';
-import Emoji from '@components/Emoji';
 import { NextPage } from 'next';
 import UserPopup from '@components/UserPopup/UserPopup';
 import { Search } from '@components/Search';
@@ -26,23 +25,16 @@ const IndexPage: NextPage<PageProps> = () => {
         <Sidebar>
           <Search />
           <div>
-            <ul>
-              <li className="font-bold my-2 ml-2">Friends lists</li>
-              {/*
-               * Actually All friends is the only group. When multiple groups feature is available
-               * this will be the place to display the groups. Remove the first argument of classNames
-               * and set it dynamically based on the url
-               */}
-              <li
-                className={classNames(
-                  'bg-indigo-500/20 text-indigo-500',
-                  'empty:hidden transition-all hover:cursor-pointer px-2 py-2 rounded hover:bg-indigo-500/20 hover:text-indigo-500 flex flex-row items-center'
-                )}
-              >
-                <Emoji emoji="👥" size={24} />
-                <span className="ml-2">All friends</span>
-              </li>
-            </ul>
+            <Menu>
+              <MenuCategory name="Friends lists">
+                {/*
+                 * Actually All friends is the only group. When multiple groups feature is available
+                 * this will be the place to display the groups. Remove the first argument of classNames
+                 * and set it dynamically based on the url
+                 */}
+                <MenuItem active={true} emoji="👥" name="All friends" />
+              </MenuCategory>
+            </Menu>
             <span className="flex p-2 text-xs text-slate-400 dark:text-slate-600 italic">
               You can create and manage custom groups in the future
             </span>
