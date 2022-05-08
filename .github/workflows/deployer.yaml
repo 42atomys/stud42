@@ -10,7 +10,7 @@ on:
   release:
     types:
     - prereleased
-    - published
+    - released
 jobs:
   build_and_push:
     name: 'Build & push to ghcr.io 🔧'
