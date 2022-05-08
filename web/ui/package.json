@@ -60,7 +60,7 @@
     "@babel/core": "^7.17.9",
     "@graphql-codegen/cli": "2.6.2",
     "@graphql-codegen/introspection": "2.1.1",
-    "@graphql-codegen/typescript": "2.4.8",
+    "@graphql-codegen/typescript": "2.4.10",
     "@graphql-codegen/typescript-operations": "2.3.7",
     "@graphql-codegen/typescript-react-apollo": "3.2.11",
     "@svgr/webpack": "^6.2.1",
