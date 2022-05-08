@@ -10,9 +10,7 @@ const IndexPage: ComponentWithAuthGuard<PageProps> = () => {
   return (
     <SidebarProvider>
       <PageContainer>
-        <Sidebar>
-          <a>Sidebar</a>
-        </Sidebar>
+        <Sidebar></Sidebar>
         <PageContent className="p-2 flex-1">
           <h1>Clusters</h1>
         </PageContent>

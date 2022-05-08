@@ -16,6 +16,7 @@ export const UserPopup = ({ user }: UserPopupProps) => {
       />
       <h2 className="font-bold uppercase">{user.duoLogin}</h2>
       <Name className="font-light" user={user} />
+      {/* @ts-ignore */}
       <LocationBadge {...(user.currentLocation as Location)} />
       <DropdownMenu userID={user.id} />
     </div>
