@@ -1,31 +1,17 @@
-import { ComponentWithAuthGuard } from '@components/AuthGuard';
-import React from 'react';
-import { useSidebar } from '@components/Sidebar';
+import type { GetServerSideProps, NextPage } from 'next';
 
 type PageProps = {};
 
-const IndexPage: ComponentWithAuthGuard<PageProps> = () => {
-  const { SidebarProvider, Sidebar, PageContainer, PageContent } = useSidebar();
+const Home: NextPage<PageProps> = () => <></>;
 
-  return (
-    <SidebarProvider>
-      <PageContainer>
-        <Sidebar></Sidebar>
-        <PageContent className="p-2 flex-1">
-          <h1>Clusters</h1>
-        </PageContent>
-      </PageContainer>
-    </SidebarProvider>
-  );
+export const getServerSideProps: GetServerSideProps = async () => {
+  return {
+    redirect: {
+      destination: '/clusters/paris/e1',
+      permanent: false,
+    },
+    props: {},
+  };
 };
 
-export const getStaticProps = () => ({
-  props: {},
-});
-
-IndexPage.auth = {
-  loading: <></>,
-  required: false,
-};
-
-export default IndexPage;
+export default Home;

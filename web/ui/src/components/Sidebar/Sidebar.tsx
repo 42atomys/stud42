@@ -67,7 +67,7 @@ const MenuItem = ({
 export const Sidebar = ({
   children: subSidebar,
 }: {
-  children?: React.ReactNode[];
+  children?: React.ReactNode[] | React.ReactNode;
 }) => {
   const { open, setOpen } = useContext(SidebarContext);
 

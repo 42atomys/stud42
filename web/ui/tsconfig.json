@@ -20,6 +20,9 @@
       "@components/*": [
         "components/*"
       ],
+      "@containers/*": [
+        "containers/*"
+      ],
       "@styles/*": [
         "styles/*"
       ],
