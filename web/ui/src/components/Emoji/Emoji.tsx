@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { Props } from './types';
 
-const codepoints = (char) => {
+const codepoints = (char: string): string | undefined => {
   return char.codePointAt(0)?.toString(16);
 };
 
@@ -12,7 +12,8 @@ const codepoints = (char) => {
 export const Emoji = ({ emoji, size = 16, ...props }: Props) => {
   var emojiCode: string[] = [];
   for (let c of emoji) {
-    emojiCode.push(codepoints(c));
+    let code = codepoints(c);
+    if (code) emojiCode.push(code);
   }
 
   if (emojiCode.length < 1) return null;

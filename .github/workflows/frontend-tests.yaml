@@ -49,6 +49,9 @@ jobs:
 
     - name: Prettier
       run: yarn style:prettier
+
+    - name: TypeScript
+      run: yarn style:ts
   tests:
     name: Frontend Tests 🕹
     runs-on: ubuntu-latest
