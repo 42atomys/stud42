@@ -4,6 +4,9 @@ const path = require('path');
 const { withSentryConfig } = require('@sentry/nextjs');
 
 const nextConfig = {
+  images: {
+    domains: ['cdn.intra.42.fr', 'twemoji.maxcdn.com'],
+  },
   reactStrictMode: true,
   poweredByHeader: false,
 
@@ -12,10 +15,6 @@ const nextConfig = {
   },
   sassOptions: {
     includePaths: [path.join(__dirname, 'src/styles')],
-  },
-
-  images: {
-    domains: ['twemoji.maxcdn.com'],
   },
 
   sentry: {

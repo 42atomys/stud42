@@ -2,7 +2,7 @@ import { Html, Head, Main, NextScript } from 'next/document';
 
 export default function Document() {
   return (
-    <Html>
+    <Html className="bg-white dark:bg-slate-900">
       <Head>
         <link
           rel="apple-touch-icon"
@@ -32,7 +32,7 @@ export default function Document() {
         <meta name="msapplication-TileColor" content="#1e293b" />
         <meta name="theme-color" content="#1e293b" />
       </Head>
-      <body className="antialiased text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-800">
+      <body className="antialiased text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-800/60">
         <Main />
         <NextScript />
       </body>

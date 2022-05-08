@@ -21,8 +21,9 @@ export const middleware: NextMiddleware = async (req) => {
     query: MeWithFeaturesDocument,
   });
 
-  if (pathname.startsWith('/auth') && data) {
-    return NextResponse.redirect(new URL('/', req.url));
+  if (pathname.startsWith('/auth')) {
+    if (data) return NextResponse.redirect(new URL('/', req.url));
+    else return NextResponse.next();
   }
 
   if (!data) {

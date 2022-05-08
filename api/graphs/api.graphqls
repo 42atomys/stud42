@@ -8,6 +8,8 @@ directive @authzByPolicy(policy: POLICY) on FIELD_DEFINITION
 
 directive @authenticated on FIELD_DEFINITION
 
+directive @extraStructTag on FIELD_DEFINITION
+
 enum POLICY {
   SERVICE_TOKEN
   NONE
@@ -35,6 +37,8 @@ type User {
   CoverURL: String
   accounts: [Account]
   features: [FEATURE!]!
+  following: [User]!
+  followers: [User]!
 }
 
 type Account {
@@ -54,12 +58,17 @@ type Account {
 
 type Query {
   me: User! @authenticated
+  searchUser(query: String!): [User!]! @authenticated
+
   internalGetUserByAccount(provider: PROVIDER!, uid: String!): User! @authzByPolicy(policy: SERVICE_TOKEN)
   internalGetUserByEmail(email: String!): User! @authzByPolicy(policy: SERVICE_TOKEN)
   internalGetUser(id: UUID!): User! @authzByPolicy(policy: SERVICE_TOKEN)
 }
 
 type Mutation {
+  createFriendship(userID: UUID!): Boolean! @authenticated
+  deleteFriendship(userID: UUID!): Boolean! @authenticated
+
   internalCreateUser(input: CreateUserInput!): UUID! @authzByPolicy(policy: SERVICE_TOKEN)
   internalLinkAccount(input: LinkAccountInput!): Account! @authzByPolicy(policy: SERVICE_TOKEN)
   inviteOnDiscord: Boolean! @authenticated
