@@ -151,7 +151,7 @@ func (r *userResolver) Features(ctx context.Context, obj *generated.User) ([]typ
 	var features = make([]typesgen.Feature, 0)
 
 	// TODO @42Atomys Remove hardcoded check
-	if obj.DuoLogin == "gdalmar" || obj.DuoLogin == "rgaiffe" {
+	if obj.DuoLogin == "gdalmar" {
 		return typesgen.AllFeature, nil
 	}
 
