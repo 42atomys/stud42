@@ -8,6 +8,14 @@ spec:
     istio: ingressgateway # use istio default controller
   servers:
     - port:
+        number: 80
+        name: http
+        protocol: HTTP
+      hosts:
+      - next.s42.app
+      tls:
+        httpsRedirect: true
+    - port:
         number: 443
         name: https
         protocol: HTTPS
@@ -15,4 +23,4 @@ spec:
         mode: SIMPLE
         credentialName: next-s42-app-tls
       hosts:
-        - "next.s42.app"
+        - next.s42.app
