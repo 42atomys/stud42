@@ -5,14 +5,12 @@ Copyright © 2022 42Atomys
 package cmd
 
 import (
-	"context"
 	"fmt"
 	"net/http"
 	"os"
 	"strings"
 
 	"entgo.io/contrib/entgql"
-	"entgo.io/ent/dialect/sql/schema"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 	sentryhttp "github.com/getsentry/sentry-go/http"
@@ -24,7 +22,7 @@ import (
 
 	"atomys.codes/stud42/internal/api"
 	"atomys.codes/stud42/internal/config"
-	modelgen "atomys.codes/stud42/internal/models/generated"
+	modelsutils "atomys.codes/stud42/internal/models"
 	_ "atomys.codes/stud42/internal/models/generated/runtime"
 )
 
@@ -43,27 +41,22 @@ var apiCmd = &cobra.Command{
 			log.Fatal().Err(err).Msg("invalid configuration")
 		}
 
-		client, err := modelgen.Open(
-			"postgres",
-			os.Getenv("DATABASE_URL"),
-			modelgen.Debug(),
-		)
-		if err != nil {
+		if err := modelsutils.Connect(); err != nil {
 			log.Fatal().Err(err).Msg("failed to connect to database")
 		}
 
-		if err := client.Schema.Create(context.Background(), schema.WithAtlas(true)); err != nil {
-			log.Fatal().Err(err).Msg("running schema migration")
+		if err := modelsutils.Migrate(); err != nil {
+			log.Fatal().Err(err).Msg("failed to migrate database")
 		}
 
-		srv := handler.NewDefaultServer(api.NewSchema(client))
+		srv := handler.NewDefaultServer(api.NewSchema(modelsutils.Client()))
 		// srv.SetRecoverFunc(func(ctx context.Context, err interface{}) error {
 		// 	// notify bug tracker...
 		// 	log.Error().Err(err.(error)).Msg("unhandled error")
 		// 	return gqlerror.Errorf("Internal server error!")
 		// })
 
-		srv.Use(entgql.Transactioner{TxOpener: client})
+		srv.Use(entgql.Transactioner{TxOpener: modelsutils.Client()})
 
 		router := chi.NewRouter()
 		router.Use(cors.New(cors.Options{
