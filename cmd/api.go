@@ -12,6 +12,7 @@ import (
 
 	"entgo.io/contrib/entgql"
 	"github.com/99designs/gqlgen/graphql/handler"
+	"github.com/99designs/gqlgen/graphql/handler/extension"
 	"github.com/99designs/gqlgen/graphql/playground"
 	sentryhttp "github.com/getsentry/sentry-go/http"
 	"github.com/go-chi/chi/v5"
@@ -57,6 +58,7 @@ var apiCmd = &cobra.Command{
 		// })
 
 		srv.Use(entgql.Transactioner{TxOpener: modelsutils.Client()})
+		srv.Use(extension.FixedComplexityLimit(20))
 
 		router := chi.NewRouter()
 		router.Use(cors.New(cors.Options{

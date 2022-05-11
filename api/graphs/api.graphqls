@@ -4,6 +4,8 @@ scalar Any
 
 scalar Time
 
+scalar Cursor
+
 directive @authzByPolicy(policy: POLICY) on FIELD_DEFINITION
 
 directive @authenticated on FIELD_DEFINITION
@@ -19,6 +21,13 @@ enum FEATURE {
   DISCORD_ACCESS
   ALPHA_ACCESS
   BETA_ACCESS
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: Cursor
+  endCursor: Cursor
 }
 
 type User {
@@ -56,9 +65,52 @@ type Account {
   user: User!
 }
 
+type Campus {
+  id: UUID!
+  name: String!
+  active: Boolean!
+  timeZone: String!
+  languageCode: String!
+  country: String
+}
+
+type Location {
+  id: UUID!
+  duoID: Int!
+  userID: UUID!
+  campusID: UUID!
+  beginAt: Time!
+  endAt: Time
+  identifier: String!
+  userDuoID: Int
+  userDuoLogin: String
+
+  user: User
+  campus: Campus
+}
+
+type LocationConnection {
+  totalCount: Int!
+  pageInfo: PageInfo!
+  edges: [LocationEdge]
+}
+
+type LocationEdge {
+  node: Location
+  cursor: Cursor!
+}
+
 type Query {
   me: User! @authenticated
   searchUser(query: String!): [User!]! @authenticated
+
+  campus(id: UUID!): Campus @authenticated
+  user(id: UUID!): User @authenticated
+  location(id: UUID!): Location @authenticated
+
+  locations(page: PageInput!, campusID: UUID!): LocationConnection! @authenticated
+  locationsByCampusName(page: PageInput!, campusName: String!): LocationConnection! @authenticated
+  locationsByCluster(page: PageInput!, campusName: String!, identifierPrefix: String): LocationConnection! @authenticated
 
   internalGetUserByAccount(provider: PROVIDER!, uid: String!): User! @authzByPolicy(policy: SERVICE_TOKEN)
   internalGetUserByEmail(email: String!): User! @authzByPolicy(policy: SERVICE_TOKEN)
@@ -72,6 +124,13 @@ type Mutation {
   internalCreateUser(input: CreateUserInput!): UUID! @authzByPolicy(policy: SERVICE_TOKEN)
   internalLinkAccount(input: LinkAccountInput!): Account! @authzByPolicy(policy: SERVICE_TOKEN)
   inviteOnDiscord: Boolean! @authenticated
+}
+
+input PageInput {
+  after: Cursor
+  first: Int! = 100
+  before: Cursor
+  last: Int
 }
 
 input CreateUserInput {

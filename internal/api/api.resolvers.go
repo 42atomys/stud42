@@ -7,18 +7,19 @@ import (
 	"context"
 	"os"
 
+	apigen "atomys.codes/stud42/internal/api/generated"
+	typesgen "atomys.codes/stud42/internal/api/generated/types"
+	"atomys.codes/stud42/internal/models/generated"
+	"atomys.codes/stud42/internal/models/generated/account"
+	"atomys.codes/stud42/internal/models/generated/campus"
+	"atomys.codes/stud42/internal/models/generated/location"
+	"atomys.codes/stud42/internal/models/generated/user"
 	"github.com/bwmarrin/discordgo"
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
 	"github.com/shurcooL/githubv4"
 	"github.com/spf13/viper"
 	"golang.org/x/oauth2"
-
-	apigen "atomys.codes/stud42/internal/api/generated"
-	typesgen "atomys.codes/stud42/internal/api/generated/types"
-	"atomys.codes/stud42/internal/models/generated"
-	"atomys.codes/stud42/internal/models/generated/account"
-	"atomys.codes/stud42/internal/models/generated/user"
 )
 
 func (r *mutationResolver) CreateFriendship(ctx context.Context, userID uuid.UUID) (bool, error) {
@@ -128,6 +129,47 @@ func (r *queryResolver) SearchUser(ctx context.Context, query string) ([]*genera
 		).
 		Limit(10).
 		All(ctx)
+}
+
+func (r *queryResolver) Campus(ctx context.Context, id uuid.UUID) (*generated.Campus, error) {
+	return r.client.Campus.Query().Where(campus.ID(id)).Only(ctx)
+}
+
+func (r *queryResolver) User(ctx context.Context, id uuid.UUID) (*generated.User, error) {
+	return r.client.User.Query().Where(user.ID(id)).Only(ctx)
+}
+
+func (r *queryResolver) Location(ctx context.Context, id uuid.UUID) (*generated.Location, error) {
+	return r.client.Location.Query().Where(location.ID(id)).Only(ctx)
+}
+
+func (r *queryResolver) Locations(ctx context.Context, page typesgen.PageInput, campusID uuid.UUID) (*generated.LocationConnection, error) {
+	return r.client.Location.Query().
+		Where(location.CampusID(campusID)).
+		WithCampus().
+		WithUser().
+		Where(location.EndAtIsNil()).
+		Paginate(ctx, page.After, &page.First, page.Before, page.Last)
+}
+
+func (r *queryResolver) LocationsByCampusName(ctx context.Context, page typesgen.PageInput, campusName string) (*generated.LocationConnection, error) {
+	return r.client.Campus.Query().
+		Where(campus.Name(campusName)).
+		QueryLocations().
+		WithCampus().
+		WithUser().
+		Where(location.EndAtIsNil()).
+		Paginate(ctx, page.After, &page.First, page.Before, page.Last)
+}
+
+func (r *queryResolver) LocationsByCluster(ctx context.Context, page typesgen.PageInput, campusName string, identifierPrefix *string) (*generated.LocationConnection, error) {
+	return r.client.Campus.Query().
+		Where(campus.Name(campusName)).
+		QueryLocations().
+		WithCampus().
+		WithUser().
+		Where(location.IdentifierHasPrefix(*identifierPrefix), location.EndAtIsNil()).
+		Paginate(ctx, page.After, &page.First, page.Before, page.Last)
 }
 
 func (r *queryResolver) InternalGetUserByAccount(ctx context.Context, provider typesgen.Provider, uid string) (*generated.User, error) {
