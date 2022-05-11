@@ -24,14 +24,10 @@ package cmd
 import (
 	"context"
 	"database/sql"
-	"encoding/json"
 	"errors"
-	"os"
 
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
-	"golang.org/x/oauth2"
-	"golang.org/x/oauth2/clientcredentials"
 
 	modelsutils "atomys.codes/stud42/internal/models"
 	"atomys.codes/stud42/pkg/duoapi"
@@ -47,23 +43,9 @@ var campusCmd = &cobra.Command{
 			log.Fatal().Msg("Failed to connect to database")
 		}
 
-		c := clientcredentials.Config{
-			ClientID:     os.Getenv("FORTY_TWO_CLIENT_ID"),
-			ClientSecret: os.Getenv("FORTY_TWO_CLIENT_SECRET"),
-			TokenURL:     "https://api.intra.42.fr/oauth/token",
-			AuthStyle:    oauth2.AuthStyleInHeader,
-		}
-
-		resp, err := c.Client(context.Background()).Get("https://api.intra.42.fr/v2/campus?per_page=100")
+		campus, err := duoapi.CampusAll()
 		if err != nil {
-			log.Fatal().Err(err).Msg("Failed to get response")
-		}
-		defer resp.Body.Close()
-
-		var campus = make([]*duoapi.Campus, 0)
-		err = json.NewDecoder(resp.Body).Decode(&campus)
-		if err != nil {
-			log.Fatal().Err(err).Msg("Failed to decode response")
+			log.Fatal().Err(err).Msg("Failed to get duoapi response")
 		}
 
 		client := modelsutils.Client()
