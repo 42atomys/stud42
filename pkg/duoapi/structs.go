@@ -2,6 +2,8 @@ package duoapi
 
 import "time"
 
+type HeaderLink map[string]string
+
 type Campus struct {
 	ID                 int         `json:"id"`
 	Name               string      `json:"name"`
@@ -39,7 +41,27 @@ type Location struct {
 }
 
 type LocationUser struct {
-	ID    int    `json:"id"`
-	Login string `json:"login"`
-	URL   string `json:"url"`
+	ID              int       `json:"id"`
+	Email           string    `json:"email"`
+	Login           string    `json:"login"`
+	FirstName       string    `json:"first_name"`
+	LastName        string    `json:"last_name"`
+	UsualFullName   string    `json:"usual_full_name"`
+	UsualFirstName  string    `json:"usual_first_name"`
+	URL             string    `json:"url"`
+	Phone           string    `json:"phone"`
+	Displayname     string    `json:"displayname"`
+	ImageURL        string    `json:"image_url"`
+	NewImageURL     string    `json:"new_image_url"`
+	Staff           bool      `json:"staff?"`
+	CorrectionPoint int       `json:"correction_point"`
+	PoolMonth       string    `json:"pool_month"`
+	PoolYear        string    `json:"pool_year"`
+	Location        string    `json:"location"`
+	Wallet          int       `json:"wallet"`
+	AnonymizeDate   time.Time `json:"anonymize_date"`
+	CreatedAt       time.Time `json:"created_at"`
+	UpdatedAt       time.Time `json:"updated_at"`
+	Alumni          bool      `json:"alumni"`
+	IsLaunched      bool      `json:"is_launched?"`
 }
