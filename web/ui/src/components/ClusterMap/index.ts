@@ -2,6 +2,7 @@ export {
   ClusterMap,
   ClusterRow,
   ClusterWorkspace,
+  ClusterWorkspaceWithUser,
   ClusterPillar,
   ClusterEmpty,
 } from './ClusterMap';

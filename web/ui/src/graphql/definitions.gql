@@ -132,7 +132,7 @@ query myFollowings {
 }
 
 query clusterView($campusName: String!, $identifierPrefix: String!) { 
-  locationsByCluster(campusName: $campusName, identifierPrefix: $identifierPrefix, page:{ }) {
+  locationsByCluster(campusName: $campusName, identifierPrefix: $identifierPrefix, page:{ first: 1000 }) {
     totalCount
     pageInfo {
       hasNextPage
@@ -149,6 +149,7 @@ query clusterView($campusName: String!, $identifierPrefix: String!) {
           firstName
           usualFirstName
           lastName
+          isFollowing
         }
       }
     }

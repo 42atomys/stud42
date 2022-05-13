@@ -246,6 +246,30 @@ func (r *userResolver) Features(ctx context.Context, obj *generated.User) ([]typ
 	return features, nil
 }
 
+func (r *userResolver) IsFollowing(ctx context.Context, obj *generated.User) (bool, error) {
+	cu, _ := CurrentUserFromContext(ctx)
+
+	for _, f := range cu.Edges.Following {
+		if f.ID == obj.ID {
+			return true, nil
+		}
+	}
+
+	return false, nil
+}
+
+func (r *userResolver) IsFollower(ctx context.Context, obj *generated.User) (bool, error) {
+	cu, _ := CurrentUserFromContext(ctx)
+
+	for _, f := range cu.Edges.Followers {
+		if f.ID == obj.ID {
+			return true, nil
+		}
+	}
+
+	return false, nil
+}
+
 // Mutation returns apigen.MutationResolver implementation.
 func (r *Resolver) Mutation() apigen.MutationResolver { return &mutationResolver{r} }
 

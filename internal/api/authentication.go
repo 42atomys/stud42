@@ -80,7 +80,7 @@ func directiveAuthorization(client *modelgen.Client) func(ctx context.Context, o
 			return nil, errors.New("token expired")
 		}
 
-		user, err := client.User.Query().Where(user.ID(uuid.MustParse(tok.Subject()))).Only(ctx)
+		user, err := client.User.Query().Where(user.ID(uuid.MustParse(tok.Subject()))).WithFollowing().WithFollowers().Only(ctx)
 		if err != nil {
 			return nil, errUnauthenticated
 		}

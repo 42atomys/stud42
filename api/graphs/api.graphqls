@@ -46,6 +46,8 @@ type User {
   CoverURL: String
   accounts: [Account]
   features: [FEATURE!]!
+  isFollowing: Boolean!
+  isFollower: Boolean!
   following: [User]!
   followers: [User]!
 }
@@ -85,8 +87,8 @@ type Location {
   userDuoID: Int
   userDuoLogin: String
 
-  user: User
-  campus: Campus
+  user: User!
+  campus: Campus!
 }
 
 type LocationConnection {

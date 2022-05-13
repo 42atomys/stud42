@@ -8,9 +8,11 @@ import {
   ClusterPillar,
   ClusterRow,
   ClusterWorkspace,
+  ClusterWorkspaceWithUser,
   extractNode,
 } from '@components/ClusterMap';
 import { useClusterViewQuery } from '@graphql.d';
+import Loader from '@components/Loader';
 
 type PageProps = {
   cluster: 'e1' | 'e2' | 'e3';
@@ -83,10 +85,12 @@ export const IndexPage: NextPage<PageProps> = ({ cluster }) => {
     <SidebarProvider>
       <PageContainer>
         <ClusterSidebar campus="paris" cluster={cluster as string} />
-        <PageContent className="p-2 flex-1">
-          {loading && <div>Loading...</div>}
+        <PageContent
+          className={'p-2 flex-1 flex justify-center min-h-screen items-center'}
+        >
+          {loading && <Loader />}
           {error && <div>Error!</div>}
-          {data && (
+          {!loading && data && (
             <ClusterMap>
               {Object.keys(clusterRows).map((row) => (
                 <ClusterRow key={`cluster-row-${row}`} displayText={row}>
@@ -95,17 +99,28 @@ export const IndexPage: NextPage<PageProps> = ({ cluster }) => {
                     if (workspace === 'pillar') return <ClusterPillar />;
 
                     const identifier = `${cluster}${row}p${workspace}`;
+                    const key = `cluster-workspace-${row}-${workspace}`;
                     const loc = extractNode(
                       data.locationsByCluster,
                       identifier
                     );
 
+                    if (loc) {
+                      return (
+                        <ClusterWorkspaceWithUser
+                          key={key}
+                          identifier={identifier}
+                          displayText={workspace.toString()}
+                          location={loc}
+                        />
+                      );
+                    }
+
                     return (
                       <ClusterWorkspace
-                        key={`cluster-workspace-${row}-${workspace}`}
+                        key={key}
                         identifier={identifier}
                         displayText={workspace.toString()}
-                        connected={loc != null}
                       />
                     );
                   })}
