@@ -25,7 +25,7 @@ spec:
         command: ["sh", "-c", "chown -R 472:472 /var/lib/grafana"]
         volumeMounts:
         - mountPath: /var/lib/grafana
-          name: grafana-pvcm
+          name: grafana-pv
       containers:
         - name: grafana
           image: grafana/grafana:8.5.2
