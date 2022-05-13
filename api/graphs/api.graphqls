@@ -92,7 +92,7 @@ type Location {
 type LocationConnection {
   totalCount: Int!
   pageInfo: PageInfo!
-  edges: [LocationEdge]
+  edges: [LocationEdge]!
 }
 
 type LocationEdge {
