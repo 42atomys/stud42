@@ -6,6 +6,7 @@ import { NextPage } from 'next';
 import UserPopup from '@components/UserPopup/UserPopup';
 import { Search } from '@components/Search';
 import { useMyFollowingsQuery, User } from '@graphql.d';
+import Loader from '@components/Loader';
 
 type PageProps = {};
 
@@ -40,29 +41,29 @@ const IndexPage: NextPage<PageProps> = () => {
             </span>
           </div>
         </Sidebar>
-        {!loading && (
-          <PageContent
-            className={classNames(
-              `p-2 flex-1 flex flex-wrap justify-center`,
-              hasFollowing ? 'h-fit' : 'min-h-screen items-center'
-            )}
-          >
-            {!hasFollowing && (
-              <div className="text-center">
-                <h1 className="text-4xl font-light text-slate-500">
-                  You are not following anyone
-                </h1>
-                <span className="text-slate-400 dark:text-slate-600">
-                  Follow your first friend by entering her login, first name or
-                  last name on the sidebar
-                </span>
-              </div>
-            )}
-            {me?.following.map((user) => (
-              <UserPopup key={user?.duoLogin} user={user as User} />
-            ))}
-          </PageContent>
-        )}
+        <PageContent
+          className={classNames(
+            `p-2 flex-1 flex flex-wrap justify-center`,
+            hasFollowing ? 'h-fit' : 'min-h-screen items-center',
+            loading && 'min-h-screen items-center'
+          )}
+        >
+          {loading && <Loader />}
+          {!loading && data && !hasFollowing && (
+            <div className="text-center">
+              <h1 className="text-4xl font-light text-slate-500">
+                You are not following anyone
+              </h1>
+              <span className="text-slate-400 dark:text-slate-600">
+                Follow your first friend by entering her login, first name or
+                last name on the sidebar
+              </span>
+            </div>
+          )}
+          {me?.following.map((user) => (
+            <UserPopup key={user?.duoLogin} user={user as User} />
+          ))}
+        </PageContent>
       </PageContainer>
     </SidebarProvider>
   );
