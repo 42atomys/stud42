@@ -1,9 +1,10 @@
 package api
 
 import (
+	"github.com/99designs/gqlgen/graphql"
+
 	apigen "atomys.codes/stud42/internal/api/generated"
 	modelgen "atomys.codes/stud42/internal/models/generated"
-	"github.com/99designs/gqlgen/graphql"
 )
 
 // This file will not be regenerated automatically.

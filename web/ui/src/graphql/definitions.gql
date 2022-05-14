@@ -131,6 +131,31 @@ query myFollowings {
   }
 }
 
+query clusterView($campusName: String!, $identifierPrefix: String!) { 
+  locationsByCluster(campusName: $campusName, identifierPrefix: $identifierPrefix, page:{ first: 1000 }) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+    edges {
+      cursor
+      node {
+        identifier
+        user {
+          duoLogin
+          firstName
+          usualFirstName
+          lastName
+          isFollowing
+        }
+      }
+    }
+  }
+}
+
 query internalGetUser($id: UUID!) {
   user: internalGetUser(id: $id) {
     ...UserAccountsData

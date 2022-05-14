@@ -37,7 +37,11 @@ func init() {
 		zerolog.SetGlobalLevel(zerolog.InfoLevel)
 	}
 
-	initSentry()
+	if os.Getenv("GO_ENV") != "" &&
+		os.Getenv("GO_ENV") != "development" &&
+		os.Getenv("SENTRY_DSN") != "" {
+		initSentry()
+	}
 }
 
 func main() {

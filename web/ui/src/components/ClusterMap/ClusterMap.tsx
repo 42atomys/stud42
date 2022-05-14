@@ -1,3 +1,4 @@
+import Avatar from '@components/Avatar';
 import classNames from 'classnames';
 import { Children } from 'react';
 
@@ -15,6 +16,33 @@ export const ClusterMap = ({
   );
 };
 
+export const ClusterWorkspaceWithUser = ({
+  displayText,
+  location,
+}: {
+  identifier: string;
+  displayText?: string;
+  location: {
+    identifier: string;
+    user: { isFollowing: boolean; duoLogin: string };
+  };
+}) => {
+  return (
+    <div
+      className={classNames(
+        'flex flex-1 flex-col justify-center items-center m-0.5 rounded text-slate-500',
+        location.user.isFollowing
+          ? 'cursor-pointer bg-blue-300/30 dark:bg-blue-700/30 text-blue-500'
+          : 'cursor-pointer bg-emerald-300/30 dark:bg-emerald-700/30 text-emerald-500'
+      )}
+    >
+      <span className="mb-1">
+        <Avatar login={location.user.duoLogin} rounded={false} size="md" />
+      </span>
+      <span className="text-xs">{displayText || location.identifier}</span>
+    </div>
+  );
+};
 export const ClusterWorkspace = ({
   identifier,
   displayText,
