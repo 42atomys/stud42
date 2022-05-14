@@ -38,8 +38,6 @@ import (
 	"atomys.codes/stud42/pkg/duoapi"
 )
 
-var campusIDFlag *string
-
 // locationsCmd represents the locations command
 var locationsCmd = &cobra.Command{
 	Use:   "locations",
