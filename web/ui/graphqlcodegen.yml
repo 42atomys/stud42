@@ -35,5 +35,6 @@ config:
     enumValues: change-case-all#upperCase
   scalars:
     Any: any
+    Cursor: any
     Time: Date
     UUID: string
