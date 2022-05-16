@@ -73,7 +73,7 @@
     "@types/react": "^18.0.5",
     "@typescript-eslint/eslint-plugin": "^5.11.0",
     "@typescript-eslint/parser": "^5.23.0",
-    "autoprefixer": "^10.4.5",
+    "autoprefixer": "^10.4.7",
     "babel-jest": "^28.1.0",
     "babel-loader": "^8.2.3",
     "babel-plugin-inline-react-svg": "^2.0.1",
