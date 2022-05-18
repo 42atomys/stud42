@@ -1,3 +1,5 @@
+import { NodeFinderFunc, NodeIndexFinderFunc } from "./types";
+
 /**
  * findIndexForNode will extract the index of the node object from a graphql
  * query result object. (for example you can see the request locationsByCluster)
