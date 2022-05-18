@@ -3,7 +3,7 @@ import { Menu, MenuCategory, MenuItem, useSidebar } from '@components/Sidebar';
 import classNames from 'classnames';
 import Head from 'next/head';
 import { NextPage } from 'next';
-import UserPopup from '@components/UserPopup/UserPopup';
+import UserCard from '@components/UserCard';
 import { Search } from '@components/Search';
 import { useMyFollowingsQuery, User } from '@graphql.d';
 import Loader from '@components/Loader';
@@ -61,7 +61,7 @@ const IndexPage: NextPage<PageProps> = () => {
             </div>
           )}
           {me?.following.map((user) => (
-            <UserPopup key={user?.duoLogin} user={user as User} />
+            <UserCard key={user?.duoLogin} user={user as User} className="m-2" />
           ))}
         </PageContent>
       </PageContainer>

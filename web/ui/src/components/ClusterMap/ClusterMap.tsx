@@ -1,6 +1,7 @@
 import Avatar from '@components/Avatar';
 import classNames from 'classnames';
 import { Children } from 'react';
+import { MapLocation } from './types';
 
 export const ClusterMap = ({
   children,
@@ -19,13 +20,16 @@ export const ClusterMap = ({
 export const ClusterWorkspaceWithUser = ({
   displayText,
   location,
+  onMouseEnter,
+  onMouseLeave,
+  onClick,
 }: {
   identifier: string;
   displayText?: string;
-  location: {
-    identifier: string;
-    user: { isFollowing: boolean; duoLogin: string };
-  };
+  location: MapLocation;
+  onMouseEnter?: (e: React.MouseEvent<HTMLDivElement>, location: MapLocation) => void;
+  onMouseLeave?: (e: React.MouseEvent<HTMLDivElement>, location: MapLocation) => void;
+  onClick?: (e: React.MouseEvent<HTMLDivElement>, location: MapLocation) => void;
 }) => {
   return (
     <div
@@ -35,6 +39,9 @@ export const ClusterWorkspaceWithUser = ({
           ? 'cursor-pointer bg-blue-300/30 dark:bg-blue-700/30 text-blue-500'
           : 'cursor-pointer bg-emerald-300/30 dark:bg-emerald-700/30 text-emerald-500'
       )}
+      onMouseEnter={(e) => onMouseEnter && onMouseEnter(e, location)}
+      onMouseLeave={(e) => onMouseLeave && onMouseLeave(e, location)}
+      onClick={(e) => onClick && onClick(e, location)}
     >
       <span className="mb-1">
         <Avatar login={location.user.duoLogin} rounded={false} size="md" />
@@ -60,11 +67,11 @@ export const ClusterWorkspace = ({
         'flex flex-1 flex-col justify-center items-center m-0.5 rounded text-slate-500',
         !connected && 'bg-slate-200/30 dark:bg-slate-900/30',
         connected &&
-          !friend &&
-          'cursor-pointer bg-emerald-300/30 dark:bg-emerald-700/30 text-emerald-500',
+        !friend &&
+        'cursor-pointer bg-emerald-300/30 dark:bg-emerald-700/30 text-emerald-500',
         connected &&
-          friend &&
-          'cursor-pointer bg-blue-300/30 dark:bg-blue-700/30 text-blue-500'
+        friend &&
+        'cursor-pointer bg-blue-300/30 dark:bg-blue-700/30 text-blue-500'
       )}
     >
       <span className="opacity-50">
