@@ -31,7 +31,7 @@ export const Avatar = ({
       className={classNames(
         className,
         rounded ? 'rounded-full' : 'rounded',
-        'bg-clip-border bg-center bg-cover',
+        'bg-clip-border bg-center bg-cover bg-slate-900/30',
         sizeClasses[size]
       )}
     />

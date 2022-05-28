@@ -1,7 +1,12 @@
 import Avatar from '@components/Avatar';
 import classNames from 'classnames';
 import { Children } from 'react';
+import { MapLocation } from './types';
 
+/**
+ * ClusterMap component is used to display a cluster map with a table style
+ * like Paris maps.
+ */
 export const ClusterMap = ({
   children,
 }: {
@@ -16,16 +21,34 @@ export const ClusterMap = ({
   );
 };
 
+/**
+ * ClusterWorkspaceWithUser component is used to display a workspace with
+ * user avatar and interaction strategy when the user is actually connected to
+ * this workspace.
+ * and identifier in a `ClusterRow`
+ */
 export const ClusterWorkspaceWithUser = ({
   displayText,
   location,
+  onMouseEnter,
+  onMouseLeave,
+  onClick,
 }: {
   identifier: string;
   displayText?: string;
-  location: {
-    identifier: string;
-    user: { isFollowing: boolean; duoLogin: string };
-  };
+  location: MapLocation;
+  onMouseEnter?: (
+    e: React.MouseEvent<HTMLDivElement>,
+    location: MapLocation
+  ) => void;
+  onMouseLeave?: (
+    e: React.MouseEvent<HTMLDivElement>,
+    location: MapLocation
+  ) => void;
+  onClick?: (
+    e: React.MouseEvent<HTMLDivElement>,
+    location: MapLocation
+  ) => void;
 }) => {
   return (
     <div
@@ -35,6 +58,9 @@ export const ClusterWorkspaceWithUser = ({
           ? 'cursor-pointer bg-blue-300/30 dark:bg-blue-700/30 text-blue-500'
           : 'cursor-pointer bg-emerald-300/30 dark:bg-emerald-700/30 text-emerald-500'
       )}
+      onClick={(e) => onClick && onClick(e, location)}
+      onMouseEnter={(e) => onMouseEnter && onMouseEnter(e, location)}
+      onMouseLeave={(e) => onMouseLeave && onMouseLeave(e, location)}
     >
       <span className="mb-1">
         <Avatar login={location.user.duoLogin} rounded={false} size="md" />
@@ -43,30 +69,20 @@ export const ClusterWorkspaceWithUser = ({
     </div>
   );
 };
+
+/**
+ * ClusterWorkspace component is used to display a workspace with compouter icon
+ * and identifier in a `ClusterRow`
+ */
 export const ClusterWorkspace = ({
   identifier,
   displayText,
-  connected,
-  friend,
 }: {
   identifier: string;
   displayText?: string;
-  connected?: boolean;
-  friend?: boolean;
 }) => {
   return (
-    <div
-      className={classNames(
-        'flex flex-1 flex-col justify-center items-center m-0.5 rounded text-slate-500',
-        !connected && 'bg-slate-200/30 dark:bg-slate-900/30',
-        connected &&
-          !friend &&
-          'cursor-pointer bg-emerald-300/30 dark:bg-emerald-700/30 text-emerald-500',
-        connected &&
-          friend &&
-          'cursor-pointer bg-blue-300/30 dark:bg-blue-700/30 text-blue-500'
-      )}
-    >
+    <div className="flex flex-1 flex-col justify-center items-center m-0.5 rounded text-slate-500">
       <span className="opacity-50">
         <i className="fa-light fa-computer"></i>
       </span>
@@ -75,12 +91,20 @@ export const ClusterWorkspace = ({
   );
 };
 
+/**
+ * ClusterPillar component is used to display a simple pillar in a `ClusterRow`
+ * Principally used to display a pillar or something cannot be used as path.
+ */
 export const ClusterPillar = () => {
   return (
     <div className="flex flex-1 flex-col justify-center items-center m-0.5 rounded bg-slate-200 dark:bg-slate-900"></div>
   );
 };
 
+/**
+ * ClusterPillar component is used to display an empty space in a `ClusterRow`.
+ * Principally used to display a path in the cluster.
+ */
 export const ClusterEmpty = ({ displayText }: { displayText?: string }) => {
   return (
     <div className="flex flex-1 flex-col justify-center items-center m-0.5 rounded bg-transparent">
@@ -89,6 +113,10 @@ export const ClusterEmpty = ({ displayText }: { displayText?: string }) => {
   );
 };
 
+/**
+ * ClusterRow component is used to display a row in cluster map row with a table
+ * style like Paris maps.
+ */
 export const ClusterRow = ({
   displayText,
   children,

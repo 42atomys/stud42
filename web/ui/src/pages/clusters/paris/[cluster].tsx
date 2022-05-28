@@ -1,7 +1,5 @@
 import React from 'react';
-import { useSidebar } from '@components/Sidebar';
 import { GetStaticProps, NextPage } from 'next';
-import { ClusterSidebar } from '@containers/clusters/ClusterSidebar';
 import {
   ClusterEmpty,
   ClusterMap,
@@ -11,8 +9,7 @@ import {
   ClusterWorkspaceWithUser,
   extractNode,
 } from '@components/ClusterMap';
-import { useClusterViewQuery } from '@graphql.d';
-import Loader from '@components/Loader';
+import { ClusterContainer } from '@components/ClusterMap/ClusterContainer';
 
 type PageProps = {
   cluster: 'e1' | 'e2' | 'e3';
@@ -74,63 +71,53 @@ const clusters: Campus = {
 }
 
 export const IndexPage: NextPage<PageProps> = ({ cluster }) => {
-  const { SidebarProvider, PageContainer, PageContent } = useSidebar();
-
   const clusterRows = clusters[cluster];
-  const { data, loading, error } = useClusterViewQuery({
-    variables: { campusName: 'Paris', identifierPrefix: cluster },
-  });
 
   return (
-    <SidebarProvider>
-      <PageContainer>
-        <ClusterSidebar campus="paris" cluster={cluster as string} />
-        <PageContent
-          className={'p-2 flex-1 flex justify-center min-h-screen items-center'}
-        >
-          {loading && <Loader />}
-          {error && <div>Error!</div>}
-          {!loading && data && (
-            <ClusterMap>
-              {Object.keys(clusterRows).map((row) => (
-                <ClusterRow key={`cluster-row-${row}`} displayText={row}>
-                  {clusterRows[row].map((workspace) => {
-                    if (workspace === null) return <ClusterEmpty />;
-                    if (workspace === 'pillar') return <ClusterPillar />;
+    <ClusterContainer campus="Paris" cluster={cluster}>
+      {({ locations, showPopup }) => (
+        <ClusterMap>
+          {Object.keys(clusterRows).map((row) => (
+            <ClusterRow key={`cluster-row-${row}`} displayText={row}>
+              {clusterRows[row].map((workspace) => {
+                if (workspace === null) return <ClusterEmpty />;
+                if (workspace === 'pillar') return <ClusterPillar />;
 
-                    const identifier = `${cluster}${row}p${workspace}`;
-                    const key = `cluster-workspace-${row}-${workspace}`;
-                    const loc = extractNode(
-                      data.locationsByCluster,
-                      identifier
-                    );
+                const identifier = `${cluster}${row}p${workspace}`;
+                const key = `cluster-workspace-${row}-${workspace}`;
+                const loc = extractNode(locations, identifier);
 
-                    if (loc) {
-                      return (
-                        <ClusterWorkspaceWithUser
-                          key={key}
-                          identifier={identifier}
-                          displayText={workspace.toString()}
-                          location={loc}
-                        />
-                      );
-                    }
+                if (loc) {
+                  return (
+                    <ClusterWorkspaceWithUser
+                      key={key}
+                      identifier={identifier}
+                      displayText={workspace.toString()}
+                      location={loc}
+                      onClick={({ currentTarget }, location) => {
+                        showPopup({
+                          location: location,
+                          user: location.user,
+                          position: currentTarget.getBoundingClientRect(),
+                        });
+                      }}
+                    />
+                  );
+                }
 
-                    return (
-                      <ClusterWorkspace
-                        key={key}
-                        identifier={identifier}
-                        displayText={workspace.toString()}
-                      />
-                    );
-                  })}
-                </ClusterRow>
-              ))}
-            </ClusterMap>
-          )}
-        </PageContent>
-      </PageContainer>
-    </SidebarProvider>
+                return (
+                  <ClusterWorkspace
+                    key={key}
+                    identifier={identifier}
+                    displayText={workspace.toString()}
+                  />
+                );
+              })}
+            </ClusterRow>
+          ))}
+        </ClusterMap>
+      )}
+    </ClusterContainer>
   );
 };
 
