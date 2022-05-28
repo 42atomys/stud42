@@ -5,12 +5,12 @@ metadata:
 spec:
   # Each monday at 03:10
   schedule: "10 03 * * mon"
+  successfulJobsHistoryLimit: 2
+  failedJobsHistoryLimit: 5
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:
       ttlSecondsAfterFinished: 300
-      successfulJobsHistoryLimit: 2
-      failedJobsHistoryLimit: 5
       parallelism: 1
       template:
         spec:
