@@ -1,26 +1,71 @@
-import Avatar from '@components/Avatar';
-import { LocationBadge } from '@components/Badge';
-import Name from '@components/Name';
-import { Location } from 'types/globals';
-import DropdownMenu from './DropDownMenu';
-import { UserPopupProps } from './types';
+import UserCard from '@components/UserCard';
+import { ClusterViewDocument } from '@graphql.d';
+import classNames from 'classnames';
+import { createRef, useEffect } from 'react';
 
-export const UserPopup = ({ user }: UserPopupProps) => {
+const POPUP_WIDTH = 200;
+const POPUP_HEIGHT = 250;
+const MARGIN = 4;
+
+export const UserPopup = ({
+  user,
+  location,
+  position,
+  onClickOutside,
+}: {
+  user: any;
+  location: any;
+  position: DOMRectReadOnly | null;
+  onClickOutside: () => void;
+}) => {
+  const ref = createRef<HTMLDivElement>();
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (ref.current && !ref.current.contains(event.target as Node)) {
+      onClickOutside();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('click', handleClickOutside, true);
+    return () => {
+      document.removeEventListener('click', handleClickOutside, true);
+    };
+  });
+
+  if (!position) return null;
+
+  const top =
+    position.top + POPUP_HEIGHT > window.innerHeight
+      ? position.top - POPUP_HEIGHT + position.height
+      : position.top;
+
+  const left =
+    position.left + position.width + POPUP_WIDTH + MARGIN > window.innerWidth
+      ? position.left - POPUP_WIDTH - MARGIN
+      : position.left + position.width + MARGIN;
+
   return (
-    <div className="flex flex-col relative group items-center p-4 m-2 text-center grow-[1] min-w-[200px] max-w-[200px] transition-all rounded-lg border-2 border-transparent hover:cursor-pointer hover:scale-[102%] hover:border-indigo-500">
-      <Avatar
-        login={user.duoLogin}
-        size="xxxl"
-        rounded
-        className="mb-4 bg-slate-800"
+    <div
+      ref={ref}
+      className={classNames(
+        'bg-slate-200 dark:bg-slate-900 dark:to-slate-900 shadow-2xl shadow-slate-400/50 dark:shadow-black/50 rounded fixed left-0 top-0',
+        user?.isFollowing
+          ? 'border-blue-200 dark:border-blue-800'
+          : 'border-emerald-200 dark:border-emerald-800'
+      )}
+      style={{
+        top: `${top}px`,
+        left: `${left}px`,
+      }}
+    >
+      <UserCard
+        user={user}
+        location={location}
+        className="max-h-[250px] h-[250px]"
+        buttonAlwaysShow={true}
+        refetchQueries={[ClusterViewDocument]}
       />
-      <h2 className="font-bold uppercase">{user.duoLogin}</h2>
-      <Name className="font-light" user={user} />
-      {/* @ts-ignore */}
-      <LocationBadge {...(user.currentLocation as Location)} />
-      <DropdownMenu userID={user.id} />
     </div>
   );
 };
-
-export default UserPopup;
