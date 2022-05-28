@@ -8,3 +8,6 @@ images:
 - name: app
   newName: ghcr.io/42atomys/stud42
   newTag: latest
+
+patchesStrategicMerge:
+- ./use-live-primary-postgres.yaml
