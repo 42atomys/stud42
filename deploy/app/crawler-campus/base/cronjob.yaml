@@ -61,3 +61,7 @@ spec:
               limits:
                 memory: "42Mi"
                 cpu: "5m"
+          volumes:
+          - name: config
+            configMap:
+              name: stud42-config
