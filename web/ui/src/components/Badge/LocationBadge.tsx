@@ -3,7 +3,11 @@ import { Location } from '@graphql.d';
 import classNames from 'classnames';
 import { Badge } from './Badge';
 
-export const LocationBadge = ({ location }: { location: Partial<Location> | null | undefined }) => {
+export const LocationBadge = ({
+  location,
+}: {
+  location: Partial<Location> | null | undefined;
+}) => {
   const isConnected = location?.identifier ? true : false;
 
   return (

@@ -8,3 +8,5 @@ export {
 } from './ClusterMap';
 
 export { extractNode, extractandRemoveNode } from './utils';
+
+export type { MapLocation } from './types';

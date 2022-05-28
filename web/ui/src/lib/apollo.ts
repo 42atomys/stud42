@@ -5,10 +5,17 @@ import {
   InMemoryCache,
   QueryOptions,
   ApolloQueryResult,
+  NetworkStatus,
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import Cookies from 'js-cookie';
 import { NextApiRequestCookies } from 'next/dist/server/api-utils';
+
+export type ServerSideRequest = {
+  cookies: NextApiRequestCookies & {
+    '__s42.auth-token'?: string;
+  };
+};
 
 const httpLink = createHttpLink({
   uri: process.env.NEXT_PUBLIC_GRAPHQL_API,
@@ -23,15 +30,17 @@ const authLink = setContext((_, context) => {
     authToken = context.authToken;
   }
 
-  const modifiedHeader = {
+  return {
     headers: {
       ...context.headers,
       Authorization: authToken ? `Bearer ${authToken}` : '',
     },
   };
-  return modifiedHeader;
 });
 
+/**
+ * Definition of the Apollo client used in the application.
+ */
 export const apolloClient = new ApolloClient({
   link: from([authLink, httpLink]),
   version: process.env.NEXT_PUBLIC_VERSION,
@@ -55,12 +64,10 @@ export const apolloClient = new ApolloClient({
   },
 });
 
-export type ServerSideRequest = {
-  cookies: NextApiRequestCookies & {
-    '__s42.auth-token'?: string;
-  };
-};
-
+/**
+ * This function is used to authenticate a server-side request with the
+ * Apollo client and token located in the cookies.
+ */
 export const queryAuthenticatedSSR = async <T = any>(
   req: ServerSideRequest,
   opts: QueryOptions<T>
@@ -75,6 +82,28 @@ export const queryAuthenticatedSSR = async <T = any>(
     },
     ...rest,
   });
+};
+
+/**
+ * Retrieve if the current network status is a refetch event or not
+ * @param networkStatus - the network status of apollo query
+ */
+export const isRefetching = (networkStatus: NetworkStatus): boolean => {
+  return networkStatus === NetworkStatus.refetch;
+};
+
+/**
+ * Check if the current network status is the first loading event or not.
+ * Is very usefull to know if we need to show a loading indicator on the UI
+ * when a page is loading. And to know if is necessary to show a loading
+ * indicator when we just refetch a query (to prevent any blinking)
+ * @param networkStatus - the network status of apollo query
+ * @returns
+ */
+export const isFirstLoading = (networkStatus: NetworkStatus): boolean => {
+  return (
+    networkStatus === NetworkStatus.loading && !isRefetching(networkStatus)
+  );
 };
 
 export default apolloClient;

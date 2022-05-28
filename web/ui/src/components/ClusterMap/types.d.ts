@@ -1,19 +1,14 @@
-import type { Actions, PayloadOf } from "@components/UserPopup";
-import type { ClusterViewQuery } from "@graphql.d";
+import type { Actions, PayloadOf } from '@components/UserPopup';
+import type { ClusterViewQuery } from '@graphql.d';
+import { NonNullable } from 'types/utils';
 
-type MapLocation = {
-  identifier: string
-  user: {
-    duoLogin: string;
-    firstName: string;
-    usualFirstName?: string | null | undefined;
-    lastName: string;
-    isFollowing: boolean;
-  }
-}
+// ClusterMap.tsx
+export type MapLocation = NonNullable<
+  ClusterViewQuery['locationsByCluster']['edges'][number]['node']
+>;
 
 type Connection = {
-  edges: Array<{ node?: Pick<MapLocation, "identifier"> | null } | null>;
+  edges: Array<{ node?: Pick<MapLocation, 'identifier'> | null } | null>;
 };
 
 type NodeFinderFunc = <T extends Connection>(
@@ -26,18 +21,17 @@ type NodeIndexFinderFunc = <T extends Connection>(
   identifier: string
 ) => number | -1;
 
-// ClusterComponent.tsx 
-
+// ClusterContainer.tsx
 type ClusterContainerChildrenProps = {
-  locations: ClusterViewQuery['locationsByCluster']
-  showPopup: (s: PayloadOf<Actions, "SHOW_POPUP">) => void
-  hidePopup: () => void
-}
+  locations: ClusterViewQuery['locationsByCluster'];
+  showPopup: (s: PayloadOf<Actions, 'SHOW_POPUP'>) => void;
+  hidePopup: () => void;
+};
 
 type ClusterContainerProps = {
-  campus: 'Paris'
-  cluster: 'e1' | 'e2' | 'e3'
-  children: (props: ClusterContainerChildrenProps) => JSX.Element
-}
+  campus: 'Paris';
+  cluster: 'e1' | 'e2' | 'e3';
+  children: (props: ClusterContainerChildrenProps) => JSX.Element;
+};
 
-type ClusterContainerComponent = (props: ClusterContainerProps) => JSX.Element
+type ClusterContainerComponent = (props: ClusterContainerProps) => JSX.Element;
