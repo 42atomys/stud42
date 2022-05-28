@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: campus-crawler
+  name: crawler-campus
 spec:
   jobTemplate:
     spec:
