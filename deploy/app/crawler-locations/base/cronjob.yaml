@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: locations-crawler
+  name: crawler-locations
 spec:
   # Each minute
   schedule: "* * * * *"

@@ -2,7 +2,7 @@ resources:
 - cronjob.yaml
 
 commonLabels:
-  kubernetes.io/name: crawler
+  kubernetes.io/name: crawler-campus
   app.s42.crawler/type: campus
   app.kubernetes.io/version: '0.1'
   app.kubernetes.io/component: jobs
