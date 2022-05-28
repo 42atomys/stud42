@@ -1,0 +1,14 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: campus-crawler
+spec:
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: service
+            env:
+            - name: DATABASE_HOST
+              value: prod-primary-postgres

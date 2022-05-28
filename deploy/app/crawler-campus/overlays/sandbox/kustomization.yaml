@@ -9,6 +9,9 @@ images:
   newName: ghcr.io/42atomys/stud42
   newTag: main
 
+patchesStrategicMerge:
+- ./use-sandbox-primary-postgres.yaml
+
 patches:
 - target:
     kind: Deployment
