@@ -1,5 +1,7 @@
 import UserCard from '@components/UserCard';
+import { ClusterViewDocument } from '@graphql.d';
 import classNames from 'classnames';
+import { createRef, useEffect } from 'react';
 
 const POPUP_WIDTH = 200;
 const POPUP_HEIGHT = 250;
@@ -9,11 +11,28 @@ export const UserPopup = ({
   user,
   location,
   position,
+  onClickOutside,
 }: {
   user: any;
   location: any;
   position: DOMRectReadOnly | null;
+  onClickOutside: () => void;
 }) => {
+  const ref = createRef<HTMLDivElement>();
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (ref.current && !ref.current.contains(event.target as Node)) {
+      onClickOutside();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('click', handleClickOutside, true);
+    return () => {
+      document.removeEventListener('click', handleClickOutside, true);
+    };
+  });
+
   if (!position) return null;
 
   const top =
@@ -28,6 +47,7 @@ export const UserPopup = ({
 
   return (
     <div
+      ref={ref}
       className={classNames(
         'bg-slate-200 dark:bg-slate-900 dark:to-slate-900 shadow-2xl shadow-slate-400/50 dark:shadow-black/50 rounded fixed left-0 top-0',
         user?.isFollowing
@@ -43,6 +63,8 @@ export const UserPopup = ({
         user={user}
         location={location}
         className="max-h-[250px] h-[250px]"
+        buttonAlwaysShow={true}
+        refetchQueries={[ClusterViewDocument]}
       />
     </div>
   );

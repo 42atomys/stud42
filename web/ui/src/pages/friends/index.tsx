@@ -5,15 +5,16 @@ import Head from 'next/head';
 import { NextPage } from 'next';
 import UserCard from '@components/UserCard';
 import { Search } from '@components/Search';
-import { useMyFollowingsQuery, User } from '@graphql.d';
+import { MyFollowingsDocument, useMyFollowingsQuery, User } from '@graphql.d';
 import Loader from '@components/Loader';
+import { isFirstLoading } from '@lib/apollo';
 
 type PageProps = {};
 
 const IndexPage: NextPage<PageProps> = () => {
   const { SidebarProvider, Sidebar, PageContainer, PageContent } = useSidebar();
 
-  const { data, loading } = useMyFollowingsQuery();
+  const { data, networkStatus } = useMyFollowingsQuery();
   const { me } = data || {};
   const hasFollowing = (me?.following?.length || 0) > 0;
 
@@ -45,11 +46,11 @@ const IndexPage: NextPage<PageProps> = () => {
           className={classNames(
             `p-2 flex-1 flex flex-wrap justify-center`,
             hasFollowing ? 'h-fit' : 'min-h-screen items-center',
-            loading && 'min-h-screen items-center'
+            isFirstLoading(networkStatus) && 'min-h-screen items-center'
           )}
         >
-          {loading && <Loader />}
-          {!loading && data && !hasFollowing && (
+          {isFirstLoading(networkStatus) && <Loader />}
+          {!isFirstLoading(networkStatus) && data && !hasFollowing && (
             <div className="text-center">
               <h1 className="text-4xl font-light text-slate-500">
                 You are not following anyone
@@ -61,7 +62,12 @@ const IndexPage: NextPage<PageProps> = () => {
             </div>
           )}
           {me?.following.map((user) => (
-            <UserCard key={user?.duoLogin} user={user as User} className="m-2" />
+            <UserCard
+              key={user?.duoLogin}
+              user={user as User}
+              refetchQueries={[MyFollowingsDocument]}
+              className="m-2 hover:scale-[102%] hover:border-indigo-500"
+            />
           ))}
         </PageContent>
       </PageContainer>

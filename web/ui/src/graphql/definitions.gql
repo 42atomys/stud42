@@ -126,6 +126,7 @@ query myFollowings {
   me {
     following {
       id
+      isFollowing
       ...UserIdentyData
     }
   }
@@ -145,6 +146,7 @@ query clusterView($campusName: String!, $identifierPrefix: String!) {
       node {
         identifier
         user {
+          id
           duoLogin
           firstName
           usualFirstName

@@ -1,4 +1,4 @@
-export { PopupProvider, PopupConsumer } from './utils'
-export { UserPopup } from './UserPopup'
+export { PopupProvider, PopupConsumer } from './utils';
+export { UserPopup } from './UserPopup';
 
-export type { Actions, PayloadOf } from './types'
+export type { Actions, PayloadOf } from './types';

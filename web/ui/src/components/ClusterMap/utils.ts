@@ -1,4 +1,4 @@
-import { NodeFinderFunc, NodeIndexFinderFunc } from "./types";
+import { NodeFinderFunc, NodeIndexFinderFunc } from './types';
 
 /**
  * findIndexForNode will extract the index of the node object from a graphql

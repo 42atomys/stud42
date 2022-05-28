@@ -10,7 +10,6 @@ import {
   extractNode,
 } from '@components/ClusterMap';
 import { ClusterContainer } from '@components/ClusterMap/ClusterContainer';
-import { userInfo } from 'os';
 
 type PageProps = {
   cluster: 'e1' | 'e2' | 'e3';
@@ -76,7 +75,7 @@ export const IndexPage: NextPage<PageProps> = ({ cluster }) => {
 
   return (
     <ClusterContainer campus="Paris" cluster={cluster}>
-      {({ locations, showPopup, hidePopup }) => (
+      {({ locations, showPopup }) => (
         <ClusterMap>
           {Object.keys(clusterRows).map((row) => (
             <ClusterRow key={`cluster-row-${row}`} displayText={row}>
@@ -95,15 +94,12 @@ export const IndexPage: NextPage<PageProps> = ({ cluster }) => {
                       identifier={identifier}
                       displayText={workspace.toString()}
                       location={loc}
-                      onMouseEnter={({ currentTarget }, location) => {
+                      onClick={({ currentTarget }, location) => {
                         showPopup({
                           location: location,
                           user: location.user,
                           position: currentTarget.getBoundingClientRect(),
                         });
-                      }}
-                      onMouseLeave={() => {
-                        hidePopup();
                       }}
                     />
                   );
