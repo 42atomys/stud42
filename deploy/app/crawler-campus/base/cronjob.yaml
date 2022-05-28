@@ -14,7 +14,9 @@ spec:
       parallelism: 1
       template:
         spec:
-          restartPolicy: OnFailure
+          restartPolicy: Never
+          imagePullSecrets:
+          - name: ghcr-creds
           containers:
           - name: service
             image: app

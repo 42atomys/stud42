@@ -5,16 +5,18 @@ metadata:
 spec:
   # Each minute
   schedule: "* * * * *"
+  successfulJobsHistoryLimit: 2
+  failedJobsHistoryLimit: 5
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:
       ttlSecondsAfterFinished: 300
-      successfulJobsHistoryLimit: 2
-      failedJobsHistoryLimit: 5
       parallelism: 1
       template:
         spec:
           restartPolicy: Never
+          imagePullSecrets:
+          - name: ghcr-creds
           containers:
           - name: service
             image: app
@@ -61,3 +63,7 @@ spec:
               limits:
                 memory: "42Mi"
                 cpu: "5m"
+          volumes:
+          - name: config
+            configMap:
+              name: stud42-config
