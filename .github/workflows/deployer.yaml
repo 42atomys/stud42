@@ -77,6 +77,14 @@ jobs:
         kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.ref_name }}
         kustomize build . | kubectl apply -f -
 
+        cd ${{github.workspace }}/deploy/app/crawler-campus/overlays/sandbox
+        kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.ref_name }}
+        kustomize build . | kubectl apply -f -
+
+        cd ${{github.workspace }}/deploy/app/crawler-locations/overlays/sandbox
+        kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.ref_name }}
+        kustomize build . | kubectl apply -f -
+
   deploy_next:
     name: Deploy to next 🎉
     runs-on: ubuntu-latest
@@ -109,6 +117,14 @@ jobs:
         kustomize build . | kubectl apply -f -
 
         cd ${{github.workspace }}/deploy/app/interface/overlays/next
+        kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
+        kustomize build . | kubectl apply -f -
+
+        cd ${{github.workspace }}/deploy/app/crawler-campus/overlays/next
+        kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
+        kustomize build . | kubectl apply -f -
+
+        cd ${{github.workspace }}/deploy/app/crawler-locations/overlays/next
         kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
         kustomize build . | kubectl apply -f -
 
@@ -146,5 +162,13 @@ jobs:
         kustomize build . | kubectl apply -f -
 
         cd ${{github.workspace }}/deploy/app/interface/overlays/live
+        kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
+        kustomize build . | kubectl apply -f -
+
+        cd ${{github.workspace }}/deploy/app/crawler-campus/overlays/live
+        kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
+        kustomize build . | kubectl apply -f -
+
+        cd ${{github.workspace }}/deploy/app/crawler-locations/overlays/live
         kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
         kustomize build . | kubectl apply -f -
