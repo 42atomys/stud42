@@ -1,0 +1,63 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: campus-crawler
+spec:
+  # Each monday at 03:10
+  schedule: "10 03 * * mon"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: 300
+      successfulJobsHistoryLimit: 2
+      failedJobsHistoryLimit: 5
+      parallelism: 1
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: service
+            image: app
+            args: [ '--config', '/config/stud42.yaml', jobs, crawler, 'campus' ]
+            command: [ stud42cli ]
+            env:
+            - name: GO_ENV
+              value: production
+            - name: APP_VERSION
+              value: latest
+            - name: DATABASE_HOST
+              value: primary-postgres
+            - name: DATABASE_USERNAME
+              value: postgres
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: POSTGRES_PASSWORD
+                  name: primary-postgres-credentials
+            - name: DATABASE_NAME
+              value: s42
+            - name: DATABASE_URL
+              value: postgresql://$(DATABASE_USERNAME):$(DATABASE_PASSWORD)@$(DATABASE_HOST):5432/$(DATABASE_NAME)?sslmode=disable
+            - name: FORTY_TWO_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  key: FORTY_TWO_CLIENT_ID
+                  name: oauth2-providers
+            - name: FORTY_TWO_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: FORTY_TWO_CLIENT_SECRET
+                  name: oauth2-providers
+            - name: SENTRY_DSN
+              valueFrom:
+                secretKeyRef:
+                  key: 'API_DSN'
+                  name: 'sentry-dsns'
+            volumeMounts:
+              - name: config
+                mountPath: /config
+                readOnly: true
+            resources:
+              limits:
+                memory: "42Mi"
+                cpu: "5m"
