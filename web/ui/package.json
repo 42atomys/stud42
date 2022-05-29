@@ -77,7 +77,7 @@
     "babel-jest": "^28.1.0",
     "babel-loader": "^8.2.3",
     "babel-plugin-inline-react-svg": "^2.0.1",
-    "concurrently": "^7.1.0",
+    "concurrently": "^7.2.1",
     "cypress": "^9.5.4",
     "eslint": "^8.14.0",
     "eslint-config-airbnb-typescript": "^17.0.0",
