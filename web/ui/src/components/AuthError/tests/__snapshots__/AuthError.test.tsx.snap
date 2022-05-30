@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`snapshot: renders Tooltip unchanged 1`] = `
+<div>
+  <div
+    class="bg-red-400 px-6 py-4 text-white rounded mb-10"
+  >
+    <h1
+      class="text-lg mb-2"
+    >
+      An error occured
+    </h1>
+    <p
+      class="text-sm text-red-800 dark:text-red-100 mb-2"
+    >
+      An error occured, please try again later
+    </p>
+  </div>
+</div>
+`;

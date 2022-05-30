@@ -1,7 +1,7 @@
-export const Error = ({
+export const AuthError = ({
   error = 'default',
 }: {
-  error: ErrorType | 'null' | 'undefined';
+  error: ErrorType | null | undefined;
 }) => {
   const errors: Record<ErrorType, ErrorView> = {
     default: {
@@ -47,9 +47,9 @@ export const Error = ({
     },
   };
 
-  if (error === 'null' || error === 'undefined') error = 'default';
+  const { name, message } =
+    errors[(error?.toLowerCase() || 'default') as ErrorType] || errors.default;
 
-  const { name, message } = errors[error.toLowerCase() as ErrorType];
   return (
     <div className="bg-red-400 px-6 py-4 text-white rounded mb-10">
       <h1 className="text-lg mb-2">{name}</h1>
@@ -58,4 +58,4 @@ export const Error = ({
   );
 };
 
-export default Error;
+export default AuthError;
