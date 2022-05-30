@@ -12,6 +12,7 @@ images:
 patchesStrategicMerge:
 - ./use-next-primary-postgres.yaml
 - ./use-next-routing.yaml
+- ./use-next-resources.yaml
 
 replacements:
 - source:

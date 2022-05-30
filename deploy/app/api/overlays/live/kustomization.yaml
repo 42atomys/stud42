@@ -12,6 +12,7 @@ images:
 patchesStrategicMerge:
 - ./use-live-primary-postgres.yaml
 - ./use-live-routing.yaml
+- ./use-live-resources.yaml
 
 replacements:
 - source:
