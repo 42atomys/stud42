@@ -5636,10 +5636,10 @@ graphql-executor@0.0.23:
   resolved "https://registry.yarnpkg.com/graphql-executor/-/graphql-executor-0.0.23.tgz#205c1764b39ee0fcf611553865770f37b45851a2"
   integrity sha512-3Ivlyfjaw3BWmGtUSnMpP/a4dcXCp0mJtj0PiPG14OKUizaMKlSEX+LX2Qed0LrxwniIwvU6B4w/koVjEPyWJg==
 
-graphql-request@^4.0.0, graphql-request@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/graphql-request/-/graphql-request-4.2.0.tgz#063377bc2dd29cc46aed3fddcc65fe97b805ba81"
-  integrity sha512-uFeMyhhl8ss4LFgjlfPeAn2pqYw+CJto+cjj71uaBYIMMK2jPIqgHm5KEFxUk0YDD41A8Bq31a2b4G2WJBlp2Q==
+graphql-request@^4.0.0, graphql-request@^4.3.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/graphql-request/-/graphql-request-4.3.0.tgz#b934e08fcae764aa2cdc697d3c821f046cb5dbf2"
+  integrity sha512-2v6hQViJvSsifK606AliqiNiijb1uwWp6Re7o0RTyH+uRTv/u7Uqm2g4Fjq/LgZIzARB38RZEvVBFOQOVdlBow==
   dependencies:
     cross-fetch "^3.1.5"
     extract-files "^9.0.0"
