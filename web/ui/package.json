@@ -26,7 +26,7 @@
     "e2e:headless": "start-server-and-test start http://localhost:3000 cypress:headless"
   },
   "dependencies": {
-    "@apollo/client": "^3.6.1",
+    "@apollo/client": "^3.6.6",
     "@apollo/react-hooks": "^4.0.0",
     "@grpc/grpc-js": "^1.6.5",
     "@headlessui/react": "^1.6.4",
