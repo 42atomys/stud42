@@ -11,6 +11,3 @@ patches:
     - op: replace
       path: /spec/persistence/storage
       value: 5Gi
-    - op: replace
-      path: /spec/replicas
-      value: 3
