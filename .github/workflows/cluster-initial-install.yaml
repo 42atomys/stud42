@@ -38,6 +38,10 @@ on:
         type: boolean
         required: true
         description: (Re)set monitoring stack ?
+      install_rabbitmq:
+        type: boolean
+        required: true
+        description: (Re)Install RabbitMQ ?
 jobs:
   core_install:
     runs-on: ubuntu-latest
@@ -165,6 +169,9 @@ jobs:
     runs-on: ubuntu-latest
     name: Install storages
     needs: [ update_secrets ]
+    strategy:
+      matrix:
+        overlay: [ live, next, sandbox ]
     if: github.event.inputs.install_primary_postgres_storage == 'true'
     steps:
     - uses: actions/checkout@v3
@@ -175,6 +182,40 @@ jobs:
         kubeconfig: ${{ secrets.KUBECONFIG_ADMIN }}
         cluster-type: generic
     - run: |
-        kustomize build deploy/cluster/storages/primary-postgres/overlays/sandbox | kubectl apply -f -
-        kustomize build deploy/cluster/storages/primary-postgres/overlays/next | kubectl apply -f -
-        kustomize build deploy/cluster/storages/primary-postgres/overlays/live | kubectl apply -f -
+        kustomize build deploy/cluster/storages/primary-postgres/overlays/${{ matrix.overlay }} | kubectl apply -f -
+
+  operators_install:
+    runs-on: ubuntu-latest
+    name: Install operators
+    needs: [ update_secrets ]
+    steps:
+    - uses: actions/checkout@v3
+    - uses: azure/setup-kubectl@v2.1
+    - uses: azure/k8s-set-context@v2
+      with:
+        method: kubeconfig
+        kubeconfig: ${{ secrets.KUBECONFIG_ADMIN }}
+        cluster-type: generic
+    - if: github.event.inputs.install_rabbitmq == 'true'
+      run: |
+        kubectl apply -f "https://github.com/rabbitmq/cluster-operator/releases/latest/download/cluster-operator.yml"
+
+    
+  stuff_install:
+    runs-on: ubuntu-latest
+    name: Install application stuffs
+    needs: [ update_secrets ]
+    strategy:
+      matrix:
+        overlay: [ live, next, sandbox ]
+    steps:
+    - uses: actions/checkout@v3
+    - uses: azure/setup-kubectl@v2.1
+    - uses: azure/k8s-set-context@v2
+      with:
+        method: kubeconfig
+        kubeconfig: ${{ secrets.KUBECONFIG_ADMIN }}
+        cluster-type: generic
+    - if: github.event.inputs.install_rabbitmq == 'true'
+      run: |
+        kustomize build deploy/cluster/storages/rabbitmq/overlays/${{ matrix.overlay }} | kubectl apply -f -
