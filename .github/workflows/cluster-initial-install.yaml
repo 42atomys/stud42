@@ -204,7 +204,7 @@ jobs:
   stuff_install:
     runs-on: ubuntu-latest
     name: Install application stuffs
-    needs: [ update_secrets ]
+    needs: [ operators_install ]
     strategy:
       matrix:
         overlay: [ live, next, sandbox ]
