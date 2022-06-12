@@ -1,0 +1,13 @@
+resources:
+- ../../base
+namePrefix: sand-
+namespace: sandbox
+
+patches:
+- target:
+    kind: RabbitmqCluster
+    name: primary-rabbitmq
+  patch: |-
+    - op: replace
+      path: /spec/persistence/storage
+      value: 1Gi

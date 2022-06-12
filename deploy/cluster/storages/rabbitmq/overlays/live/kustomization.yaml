@@ -1,0 +1,13 @@
+resources:
+- ../../base
+namePrefix: prod-
+namespace: production
+
+patches:
+- target:
+    kind: RabbitmqCluster
+    name: primary-rabbitmq
+  patch: |-
+    - op: replace
+      path: /spec/persistence/storage
+      value: 5Gi
