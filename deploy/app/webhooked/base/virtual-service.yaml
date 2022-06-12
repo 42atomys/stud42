@@ -1,0 +1,21 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: webhooked
+spec:
+  hosts:
+  - s42.app/webhooks/
+  gateways:
+  - s42-app-live
+  http:
+  - name: webhooked-http
+    match:
+    - method:
+        exact: POST
+    rewrite:
+      uri: "/"
+    route:
+    - destination:
+        host: webhooked
+        port:
+          number: 8080

@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webhooked
+  labels:
+    app.kubernetes.io/name: webhooked
+    app.kubernetes.io/version: '0.6'
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: webhooked
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: webhooked
+    spec:
+      containers:
+      - name: webhooked
+        image: atomys/webhooked:0.6
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: WEBHOOK_SECRET_HEADER
+          valueFrom:
+            secretKeyRef:
+              key: WEBHOOK_SECRET_HEADER
+              name: s42-webhooked-secrets
+        resources:
+          requests:
+            memory: "10Mi"
+            cpu: "20m"
+          limits:
+            memory: "25Mi"
+            cpu: "30m"
+        ports:
+        - containerPort: 8080
+          name: http
+        volumeMounts:
+        - mountPath: /config/webhooks.yaml
+          name: configuration
+          subPath: webhooks.yaml
+      volumes:
+      - name: configuration
+        configMap:
+          name: webhooked
