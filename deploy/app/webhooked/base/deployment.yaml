@@ -6,6 +6,13 @@ metadata:
     app.kubernetes.io/name: webhooked
     app.kubernetes.io/version: '0.6'
 spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
   selector:
     matchLabels:
       app.kubernetes.io/name: webhooked
@@ -13,6 +20,10 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: webhooked
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/path: /metrics
+        prometheus.io/port: '8080'
     spec:
       containers:
       - name: webhooked
