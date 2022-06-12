@@ -8,6 +8,15 @@ kind: ConfigMap
 metadata:
   name: webhooked
 data:
+  template.tpl: |
+    {
+      "metadata": {
+        "model": "{{ .Request.Header | getHeader "X-Model" }}",
+        "event": "{{ .Request.Header | getHeader "X-Event" }}",
+        "deliveryID": "{{ .Request.Header | getHeader "X-Delivery" | default "unknown" }}"
+      },
+      "payload": {{ .Payload }}
+    }
   webhooks.yaml: |
     apiVersion: v1alpha1
     observability:
@@ -27,7 +36,16 @@ data:
           - name: second
             valueFrom:
               envRef: WEBHOOK_SECRET_HEADER
-      storage: []
+      formatting:
+        templatePath: /config/template.tpl
+      storage:
+      - type: rabbitmq
+        specs:
+          databaseUrl:
+            valueFrom:
+              envRef: RABBITMQ_DATABASE_URL
+          queueName: webhooks-deliveries
+          durable: true
     - name: users-update
       entrypointUrl: /users/update
       security:
@@ -42,7 +60,16 @@ data:
           - name: second
             valueFrom:
               envRef: WEBHOOK_SECRET_HEADER
-      storage: []
+      formatting:
+        templatePath: /config/template.tpl
+      storage:
+      - type: rabbitmq
+        specs:
+          databaseUrl:
+            valueFrom:
+              envRef: RABBITMQ_DATABASE_URL
+          queueName: webhooks-deliveries
+          durable: true
     - name: locations-create
       entrypointUrl: /locations/create
       security:
@@ -57,7 +84,16 @@ data:
           - name: second
             valueFrom:
               envRef: WEBHOOK_SECRET_HEADER
-      storage: []
+      formatting:
+        templatePath: /config/template.tpl
+      storage:
+      - type: rabbitmq
+        specs:
+          databaseUrl:
+            valueFrom:
+              envRef: RABBITMQ_DATABASE_URL
+          queueName: webhooks-deliveries
+          durable: true
     - name: locations-close
       entrypointUrl: /locations/close
       security:
@@ -72,7 +108,16 @@ data:
           - name: second
             valueFrom:
               envRef: WEBHOOK_SECRET_HEADER
-      storage: []
+      formatting:
+        templatePath: /config/template.tpl
+      storage:
+      - type: rabbitmq
+        specs:
+          databaseUrl:
+            valueFrom:
+              envRef: RABBITMQ_DATABASE_URL
+          queueName: webhooks-deliveries
+          durable: true
     - name: locations-destroy
       entrypointUrl: /locations/destroy
       security:
@@ -87,4 +132,13 @@ data:
           - name: second
             valueFrom:
               envRef: WEBHOOK_SECRET_HEADER
-      storage: []
+      formatting:
+        templatePath: /config/template.tpl
+      storage:
+      - type: rabbitmq
+        specs:
+          databaseUrl:
+            valueFrom:
+              envRef: RABBITMQ_DATABASE_URL
+          queueName: webhooks-deliveries
+          durable: true
