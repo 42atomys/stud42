@@ -45,6 +45,7 @@ data:
             valueFrom:
               envRef: RABBITMQ_DATABASE_URL
           queueName: webhooks-deliveries
+          contentType: application/json
           durable: true
     - name: users-update
       entrypointUrl: /users/update
@@ -69,6 +70,7 @@ data:
             valueFrom:
               envRef: RABBITMQ_DATABASE_URL
           queueName: webhooks-deliveries
+          contentType: application/json
           durable: true
     - name: locations-create
       entrypointUrl: /locations/create
@@ -93,6 +95,7 @@ data:
             valueFrom:
               envRef: RABBITMQ_DATABASE_URL
           queueName: webhooks-deliveries
+          contentType: application/json
           durable: true
     - name: locations-close
       entrypointUrl: /locations/close
@@ -117,6 +120,7 @@ data:
             valueFrom:
               envRef: RABBITMQ_DATABASE_URL
           queueName: webhooks-deliveries
+          contentType: application/json
           durable: true
     - name: locations-destroy
       entrypointUrl: /locations/destroy
@@ -141,4 +145,5 @@ data:
             valueFrom:
               envRef: RABBITMQ_DATABASE_URL
           queueName: webhooks-deliveries
+          contentType: application/json
           durable: true
