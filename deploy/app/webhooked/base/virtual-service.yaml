@@ -4,16 +4,18 @@ metadata:
   name: webhooked
 spec:
   hosts:
-  - s42.app/webhooks/
+  - s42.app
   gateways:
   - s42-app-live
   http:
-  - name: webhooked-http
+  - name: webhooked
     match:
     - method:
         exact: POST
+      uri:
+        prefix: "/webhooks/v1alpha1"
     rewrite:
-      uri: "/"
+      uri: "/v1alpha1"
     route:
     - destination:
         host: webhooked

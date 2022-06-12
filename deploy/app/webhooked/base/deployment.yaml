@@ -18,6 +18,14 @@ spec:
       - name: webhooked
         image: atomys/webhooked:0.6
         imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /metrics
+            port: 8080
+        readinessProbe:
+          httpGet:
+            path: /metrics
+            port: 8080
         env:
         - name: WEBHOOK_SECRET_HEADER
           valueFrom:

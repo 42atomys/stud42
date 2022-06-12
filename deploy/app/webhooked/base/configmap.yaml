@@ -10,6 +10,8 @@ metadata:
 data:
   webhooks.yaml: |
     apiVersion: v1alpha1
+    observability:
+      metricsEnabled: true
     specs:
     - name: users-create
       entrypointUrl: /users/create

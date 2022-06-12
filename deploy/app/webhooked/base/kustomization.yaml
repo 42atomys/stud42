@@ -5,6 +5,8 @@ resources:
 - virtual-service.yaml
 
 commonLabels:
+  app: webhooked
+  version: '0.6'
   kubernetes.io/name: webhooked
   app.kubernetes.io/version: '0.6'
   app.kubernetes.io/component: micro-service
