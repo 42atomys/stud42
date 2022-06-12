@@ -14,7 +14,7 @@ updates:
       - state/triage 🚦
     schedule:
       day: sunday
-      interval: weekly
+      interval: monthly
   - package-ecosystem: gomod
     directory: /
     labels:
@@ -24,7 +24,7 @@ updates:
       - state/triage 🚦
     schedule:
       day: sunday
-      interval: weekly
+      interval: monthly
   - package-ecosystem: npm
     directory: /web/ui
     labels:
@@ -33,5 +33,4 @@ updates:
       - domain/obvious 🟩
       - state/triage 🚦
     schedule:
-      day: sunday
-      interval: weekly
+      interval: monthly
