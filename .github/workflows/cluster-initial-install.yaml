@@ -111,6 +111,8 @@ jobs:
         method: kubeconfig
         kubeconfig: ${{ secrets.KUBECONFIG_ADMIN }}
         cluster-type: generic
+
+    # Safe
     - name: Create docker-registry secret for GitHub Packages on ${{ matrix.namespace }}
       run: |
         kubectl delete secret --namespace=${{ matrix.namespace }} ghcr-creds --ignore-not-found
@@ -119,18 +121,24 @@ jobs:
           --docker-username=${{ github.repository_owner }} \
           --docker-password=${{ secrets.SECRET__GHCR_TOKEN }} \
           --docker-server=ghcr.io
+
+    # Safe
     - name: Create github-token secret on ${{ matrix.namespace }}
       run: |
         kubectl delete secret --namespace=${{ matrix.namespace }} github-token --ignore-not-found
         kubectl create secret generic github-token \
           --namespace=${{ matrix.namespace }} \
           --from-literal=GITHUB_TOKEN=${{ secrets.SECRET__GITHUB_TOKEN }}
+
+    # Safe
     - name: Create discord-token secret on ${{ matrix.namespace }}
       run: |
         kubectl delete secret --namespace=${{ matrix.namespace }} discord-token --ignore-not-found
         kubectl create secret generic discord-token \
           --namespace=${{ matrix.namespace }} \
           --from-literal=DISCORD_TOKEN=${{ secrets.SECRET__DISCORD_TOKEN }}
+
+    # WARNING
     - name: Create primary-postgres-credentials secret on ${{ matrix.namespace }}
       if: ${{ github.actor == github.repository_owner	&& (github.event.inputs.install_postgres_secrets == 'true' || github.event.inputs.install_primary_postgres_storage == 'true') }} 
       run: |
@@ -138,12 +146,16 @@ jobs:
         kubectl create secret generic primary-postgres-credentials \
           --namespace=${{ matrix.namespace }} \
           --from-literal=POSTGRES_PASSWORD=$(openssl rand -base64 42 | sed "s/[\/\+]/42/g")
+
+    # WARNING
     - name: Create next-auth secret on ${{ matrix.namespace }}
       run: |
         kubectl delete secret --namespace=${{ matrix.namespace }} next-auth --ignore-not-found
         kubectl create secret generic next-auth \
           --namespace=${{ matrix.namespace }} \
           --from-literal=SECRET=$(openssl rand -base64 42 | sed "s/[\/\+]/42/g")
+
+    # Safe
     - name: Create oauth2-providers secret on ${{ matrix.namespace }}
       run: |
         kubectl delete secret --namespace=${{ matrix.namespace }} oauth2-providers --ignore-not-found
@@ -155,12 +167,23 @@ jobs:
           --from-literal=GITHUB_SECRET=${{ secrets.SECRET__GITHUB_SECRET }} \
           --from-literal=DISCORD_ID=${{ secrets.SECRET__DISCORD_ID }} \
           --from-literal=DISCORD_SECRET=${{ secrets.SECRET__DISCORD_SECRET }} \
+
+    # WARNING
     - name: Create s42-service-token secret on ${{ matrix.namespace }}
       run: |
         kubectl delete secret --namespace=${{ matrix.namespace }} s42-service-token --ignore-not-found
         kubectl create secret generic s42-service-token \
           --namespace=${{ matrix.namespace }} \
           --from-literal=TOKEN=$(openssl rand -base64 512 | sed "s/[\/\+]/42/g" | tr -d '\n')
+
+    # Safe
+    - name: Create WEBHOOK_SECRET_HEADER secret on ${{ matrix.namespace }}
+      run: |
+        kubectl delete secret --namespace=${{ matrix.namespace }} s42-webhooked-secrets --ignore-not-found
+        kubectl create secret generic s42-webhooked-secrets \
+          --namespace=${{ matrix.namespace }} \
+          --from-literal=WEBHOOK_SECRET_HEADER=${{ secrets.SECRET__WEBHOOK_SECRET_HEADER }}
+
   storages_install:
     runs-on: ubuntu-latest
     name: Install storages
