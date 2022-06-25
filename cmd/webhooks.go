@@ -22,13 +22,12 @@ THE SOFTWARE.
 package cmd
 
 import (
-	"context"
+	"os"
 
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
-	"github.com/streadway/amqp"
 
-	"atomys.codes/stud42/pkg/duoapi"
+	"atomys.codes/stud42/internal/webhooks"
 )
 
 // webhooksCmd represents the webhooks command
@@ -42,42 +41,14 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-
-		conn, err := amqp.Dial("amqp://rabbitmq:s42@localhost:5672/")
-		if err != nil {
-			log.Fatal().Err(err).Msg("Failed to connect to RabbitMQ")
-		}
-		defer conn.Close()
-
-		ch, err := conn.Channel()
-		if err != nil {
-			log.Fatal().Err(err).Msg("Failed to open a channel")
+		var amqpURL = os.Getenv("AMQP_URL")
+		if amqpURL == "" {
+			log.Fatal().Msg("AMQP_URL not set")
 		}
 
-		msgs, err := ch.Consume(
-			"webhooks_deliveries", // queue
-			"",                    // consumer
-			true,                  // auto-ack
-			false,                 // exclusive
-			false,                 // no-local
-			false,                 // no-wait
-			nil,                   // args
-		)
-		if err != nil {
-			log.Fatal().Err(err).Msg("Failed to register a channel")
+		if err := webhooks.New().Serve(amqpURL, "webhooks-deliveries"); err != nil {
+			log.Fatal().Err(err).Msg("failed to start rabbitmq consumer")
 		}
-
-		forever := make(chan bool)
-
-		go func() {
-			for d := range msgs {
-				log.Debug().Msgf("Received a message: %+v", string(d.Body))
-				duoapi.WebhookHandler(context.Background(), d.Body)
-			}
-		}()
-
-		log.Info().Msg(" [*] Waiting for messages. To exit press CTRL+C")
-		<-forever
 	},
 }
 
