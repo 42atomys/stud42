@@ -40,6 +40,8 @@ func (p *locationProcessor) Create(loc *duoapi.Location[duoapi.LocationUser], me
 		SetUser(user).
 		SetUserDuoID(loc.User.ID).
 		SetUserDuoLogin(user.DuoLogin).
+		OnConflictColumns(location.FieldDuoID).
+		UpdateNewValues().
 		Exec(p.ctx)
 }
 func (p *locationProcessor) Close(loc *duoapi.Location[duoapi.LocationUser], metadata *duoapi.WebhookMetadata) error {
