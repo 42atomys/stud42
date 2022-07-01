@@ -57,7 +57,7 @@ jobs:
     - uses: actions/checkout@v3
     - uses: azure/setup-kubectl@v2.1
     - uses: imranismail/setup-kustomize@v1
-    - uses: azure/k8s-set-context@v2
+    - uses: azure/k8s-set-context@v3
       with:
         method: kubeconfig
         kubeconfig: ${{ secrets.KUBECONFIG_ADMIN }}
@@ -100,7 +100,7 @@ jobs:
     - uses: actions/checkout@v3
     - uses: azure/setup-kubectl@v2.1
     - uses: imranismail/setup-kustomize@v1
-    - uses: azure/k8s-set-context@v2
+    - uses: azure/k8s-set-context@v3
       with:
         method: kubeconfig
         kubeconfig: ${{ secrets.KUBECONFIG_ADMIN }}
@@ -145,7 +145,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - uses: azure/setup-kubectl@v2.1
-    - uses: azure/k8s-set-context@v2
+    - uses: azure/k8s-set-context@v3
       with:
         method: kubeconfig
         kubeconfig: ${{ secrets.KUBECONFIG_ADMIN }}
