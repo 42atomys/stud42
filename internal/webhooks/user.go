@@ -17,6 +17,7 @@ type userProcessor struct {
 
 func (p *userProcessor) Create(u *duoapi.User, metadata *duoapi.WebhookMetadata) error {
 	accountID, err := p.db.Account.Create().
+		SetType(string(typesgen.AccountTypeOauth)).
 		SetProvider(string(typesgen.ProviderDuo)).
 		SetProviderAccountID(strconv.Itoa(u.ID)).
 		SetUsername(u.Login).
