@@ -24,8 +24,8 @@ export default NextAuth({
       scope: 'user,user:email,user:follow',
     }),
     DiscordProvider({
-      clientId: process.env.DISCORD_ID,
-      clientSecret: process.env.DISCORD_SECRET,
+      clientId: process.env.DISCORD_ID as string,
+      clientSecret: process.env.DISCORD_SECRET as string,
       authorization:
         'https://discord.com/api/oauth2/authorize?scope=identify+email+connections+guilds.join',
     }),
