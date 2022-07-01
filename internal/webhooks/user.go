@@ -1,10 +1,11 @@
 package webhooks
 
 import (
-	"fmt"
+	"strconv"
 
 	typesgen "atomys.codes/stud42/internal/api/generated/types"
 	modelgen "atomys.codes/stud42/internal/models/generated"
+	"atomys.codes/stud42/internal/models/generated/account"
 	"atomys.codes/stud42/internal/models/generated/user"
 	"atomys.codes/stud42/pkg/duoapi"
 )
@@ -15,12 +16,19 @@ type userProcessor struct {
 }
 
 func (p *userProcessor) Create(u *duoapi.User, metadata *duoapi.WebhookMetadata) error {
+	accountID, err := p.db.Account.Create().
+		SetProvider(string(typesgen.ProviderDuo)).
+		SetProviderAccountID(strconv.Itoa(u.ID)).
+		SetUsername(u.Login).
+		OnConflictColumns(account.FieldProvider, account.FieldProviderAccountID).
+		UpdateNewValues().
+		ID(p.ctx)
+	if err != nil {
+		return err
+	}
+
 	return p.db.User.Create().
-		AddAccounts(&modelgen.Account{
-			Provider:          string(typesgen.ProviderDuo),
-			ProviderAccountID: fmt.Sprint(u.ID),
-			Username:          u.Login,
-		}).
+		AddAccountIDs(accountID).
 		SetDuoID(u.ID).
 		SetDuoLogin(u.Login).
 		SetFirstName(u.FirstName).
