@@ -71,7 +71,10 @@ spec:
             secretKeyRef:
               key: FORTY_TWO_CLIENT_SECRET
               name: oauth2-providers
-
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
         volumeMounts:
           - name: config
             mountPath: /config

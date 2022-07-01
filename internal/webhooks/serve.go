@@ -71,10 +71,11 @@ func (p *processor) Serve(amqpUrl, channel string) error {
 		log.Debug().Msg("Received a message")
 		err := p.handler(d.Body)
 		if err != nil {
+			sentry.CaptureException(err)
 			if err = d.Nack(false, true); err != nil {
+				sentry.CaptureException(err)
 				log.Error().Err(err).Msg("Cannot nack the message")
 			}
-			sentry.CaptureException(err)
 			continue
 		}
 		if err := d.Ack(false); err != nil {
