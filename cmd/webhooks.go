@@ -24,6 +24,7 @@ package cmd
 import (
 	"os"
 
+	"github.com/getsentry/sentry-go"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 
@@ -47,6 +48,7 @@ to quickly create a Cobra application.`,
 		}
 
 		if err := webhooks.New().Serve(amqpURL, "webhooks-deliveries"); err != nil {
+			sentry.CaptureException(err)
 			log.Fatal().Err(err).Msg("failed to start rabbitmq consumer")
 		}
 	},
