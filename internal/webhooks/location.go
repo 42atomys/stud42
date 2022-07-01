@@ -21,7 +21,7 @@ func (p *locationProcessor) Create(loc *duoapi.Location[duoapi.LocationUser], me
 	campus, err := p.db.Campus.Query().Where(campus.DuoID(loc.CampusID)).Only(p.ctx)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			log.Fatal().Msgf("Campus %s not found", loc.CampusID)
+			log.Fatal().Msgf("Campus %d not found", loc.CampusID)
 		}
 		log.Fatal().Err(err).Msg("Failed to get campus")
 	}
