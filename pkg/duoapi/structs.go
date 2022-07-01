@@ -1,7 +1,5 @@
 package duoapi
 
-import "time"
-
 type HeaderLink map[string]string
 
 type Campus struct {
@@ -30,38 +28,63 @@ type Language struct {
 	Identifier string `json:"identifier"`
 }
 
-type Location struct {
+type Location[UserType ILocationUser] struct {
 	ID       int          `json:"id"`
-	BeginAt  time.Time    `json:"begin_at"`
-	EndAt    *time.Time   `json:"end_at"`
+	BeginAt  DuoTime      `json:"begin_at"`
+	EndAt    *DuoTime     `json:"end_at"`
 	Primary  bool         `json:"primary"`
 	Host     string       `json:"host"`
 	CampusID int          `json:"campus_id"`
-	User     LocationUser `json:"user"`
+	User     UserType `json:"user"`
+}
+
+type ILocationUser interface {
+	LocationUser | ComplexLocationUser
 }
 
 type LocationUser struct {
-	ID              int       `json:"id"`
-	Email           string    `json:"email"`
-	Login           string    `json:"login"`
-	FirstName       string    `json:"first_name"`
-	LastName        string    `json:"last_name"`
-	UsualFullName   string    `json:"usual_full_name"`
-	UsualFirstName  string    `json:"usual_first_name"`
-	URL             string    `json:"url"`
-	Phone           string    `json:"phone"`
-	Displayname     string    `json:"displayname"`
-	ImageURL        string    `json:"image_url"`
-	NewImageURL     string    `json:"new_image_url"`
-	Staff           bool      `json:"staff?"`
-	CorrectionPoint int       `json:"correction_point"`
-	PoolMonth       string    `json:"pool_month"`
-	PoolYear        string    `json:"pool_year"`
-	Location        string    `json:"location"`
-	Wallet          int       `json:"wallet"`
-	AnonymizeDate   time.Time `json:"anonymize_date"`
-	CreatedAt       time.Time `json:"created_at"`
-	UpdatedAt       time.Time `json:"updated_at"`
-	Alumni          bool      `json:"alumni"`
-	IsLaunched      bool      `json:"is_launched?"`
+	ID    int    `json:"id"`
+	Login string `json:"login"`
+	URL   string `json:"url"`
+}
+
+type ComplexLocationUser struct {
+	ID    int    `json:"id"`
+	Login string `json:"login"`
+	URL   string `json:"url"`
+	Email           string  `json:"email"`
+	FirstName       string  `json:"first_name"`
+	LastName        string  `json:"last_name"`
+	UsualFullName   string  `json:"usual_full_name"`
+	UsualFirstName  string  `json:"usual_first_name"`
+	Phone           string  `json:"phone"`
+	Displayname     string  `json:"displayname"`
+	ImageURL        string  `json:"image_url"`
+	NewImageURL     string  `json:"new_image_url"`
+	Staff           bool    `json:"staff?"`
+	CorrectionPoint int     `json:"correction_point"`
+	PoolMonth       string  `json:"pool_month"`
+	PoolYear        string  `json:"pool_year"`
+	Location        string  `json:"location"`
+	Wallet          int     `json:"wallet"`
+	AnonymizeDate   DuoTime `json:"anonymize_date"`
+	CreatedAt       DuoTime `json:"created_at"`
+	UpdatedAt       DuoTime `json:"updated_at"`
+	Alumni          bool    `json:"alumni"`
+	IsLaunched      bool    `json:"is_launched?"`
+}
+
+type User struct {
+	ID             int    `json:"id"`
+	Email          string `json:"email"`
+	Login          string `json:"login"`
+	FirstName      string `json:"first_name"`
+	LastName       string `json:"last_name"`
+	UsualFullName  string `json:"usual_full_name"`
+	UsualFirstName string `json:"usual_first_name"`
+	URL            string `json:"url"`
+	Staff          bool   `json:"staff?"`
+	Phone 				string `json:"phone"`
+	PoolMonth			string `json:"pool_month"`
+	PoolYear			string `json:"pool_year"`
 }
