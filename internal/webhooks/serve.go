@@ -40,11 +40,13 @@ func (p *processor) Serve(amqpUrl, channel string) error {
 	if err != nil {
 		return err
 	}
+	defer ch.Close()
 
+	ch.Qos(5, 0, false)
 	msgs, err := ch.Consume(
 		channel,              // queue
 		"webhooks-processor", // consumer
-		true,                 // auto-ack
+		false,                // auto-ack
 		false,                // exclusive
 		false,                // no-local
 		false,                // no-wait
@@ -56,12 +58,16 @@ func (p *processor) Serve(amqpUrl, channel string) error {
 
 	log.Info().Msg("Consumer ready. Waiting for messages...")
 	for d := range msgs {
+		log.Debug().Msg("Received a message")
 		err := p.handler(d.Body)
 		if err != nil {
-			log.Error().Err(err).Msg("Cannot process webhook")
-			if err = d.Reject(true); err != nil {
-				log.Error().Err(err).Msg("Cannot reject the message")
+			if err = d.Nack(false, true); err != nil {
+				log.Error().Err(err).Msg("Cannot nack the message")
 			}
+			continue
+		}
+		if err := d.Ack(false); err != nil {
+			log.Error().Err(err).Msg("Cannot ack the message")
 		}
 	}
 	return nil
@@ -82,5 +88,10 @@ func (p *processor) handler(data []byte) error {
 	case "user":
 		err = md.Payload.ProcessWebhook(p.ctx, md.Metadata, &userProcessor{processor: p})
 	}
-	return err
+	if err != nil {
+		log.Error().Err(err).Str("model", md.Metadata.Model).Str("event", md.Metadata.Event).Msg("Failed to process webhook")
+		return err
+	}
+
+	return nil
 }

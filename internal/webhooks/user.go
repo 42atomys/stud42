@@ -34,9 +34,27 @@ func (p *userProcessor) Create(u *duoapi.User, metadata *duoapi.WebhookMetadata)
 }
 
 func (p *userProcessor) Update(u *duoapi.User, metadata *duoapi.WebhookMetadata) error {
-	return p.Create(u, metadata)
+	err := p.db.User.Update().
+		SetDuoID(u.ID).
+		SetDuoLogin(u.Login).
+		SetFirstName(u.FirstName).
+		SetLastName(u.LastName).
+		SetEmail(u.Email).
+		SetIsStaff(u.Staff).
+		SetPhone(u.Phone).
+		SetPoolYear(u.PoolYear).
+		SetPoolMonth(u.PoolMonth).
+		SetNillableUsualFirstName(&u.UsualFirstName).
+		Where(user.DuoID(u.ID)).
+		Exec(p.ctx)
+
+	if modelgen.IsNotFound(err) {
+		return p.Create(u, metadata)
+	}
+
+	return err
 }
 
 func (p *userProcessor) Alumnize(u *duoapi.User, metadata *duoapi.WebhookMetadata) error {
-	return p.Create(u, metadata)
+	return p.Update(u, metadata)
 }
