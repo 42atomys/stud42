@@ -34,7 +34,6 @@ import (
 	modelgen "atomys.codes/stud42/internal/models/generated"
 	"atomys.codes/stud42/internal/models/generated/campus"
 	"atomys.codes/stud42/internal/models/generated/location"
-	"atomys.codes/stud42/internal/models/generated/user"
 	"atomys.codes/stud42/pkg/duoapi"
 )
 
@@ -71,42 +70,17 @@ For any closed locations, the location will be marked as inactive in the databas
 		client := modelsutils.Client()
 		bulk := []*modelgen.LocationCreate{}
 		for _, l := range locations {
-			u, err := client.User.Query().Where(user.DuoID(l.User.ID)).Only(cmd.Context())
+			u, err := modelsutils.UserFirstOrCreateFromComplexLocation(cmd.Context(), l)
 			if err != nil {
-				if modelgen.IsNotFound(err) {
-					err := client.User.Create().
-						SetEmail(l.User.Email).
-						SetDuoID(l.User.ID).
-						SetDuoLogin(l.User.Login).
-						SetFirstName(l.User.FirstName).
-						SetLastName(l.User.LastName).
-						SetUsualFirstName(l.User.UsualFirstName).
-						SetPhone(l.User.Phone).
-						SetPoolMonth(l.User.PoolMonth).
-						SetPoolYear(l.User.PoolYear).
-						SetIsStaff(l.User.Staff).
-						SetIsAUser(false).
-						OnConflictColumns(user.FieldDuoID).
-						DoNothing().
-						Exec(cmd.Context())
-					if err != nil {
-						log.Fatal().Err(err).Msg("Failed to create user")
-					}
-					u, err = client.User.Query().Where(user.DuoID(l.User.ID)).Only(cmd.Context())
-					if err != nil {
-						log.Fatal().Err(err).Msg("Failed to get user 1")
-					}
-				} else {
-					log.Fatal().Err(err).Msg("Failed to get user 2")
-				}
+				log.Fatal().Err(err).Msg("Failed to create user")
 			}
 
 			bulk = append(bulk, client.Location.Create().
 				SetCampus(campus).
 				SetUser(u).
 				SetDuoID(l.ID).
-				SetBeginAt(l.BeginAt).
-				SetNillableEndAt(l.EndAt).
+				SetBeginAt(l.BeginAt.Time()).
+				SetNillableEndAt(l.EndAt.NillableTime()).
 				SetIdentifier(l.Host).
 				SetUserDuoID(l.User.ID).
 				SetUserDuoLogin(l.User.Login))

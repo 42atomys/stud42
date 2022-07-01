@@ -172,3 +172,7 @@ jobs:
         cd ${{github.workspace }}/deploy/app/crawler-locations/overlays/live
         kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
         kustomize build . | kubectl apply -f -
+
+        cd ${{github.workspace }}/deploy/app/webhooks-processor/overlays/live
+        kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
+        kustomize build . | kubectl apply -f -

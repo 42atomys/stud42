@@ -7,4 +7,5 @@ var (
 
 	EndpointCampus    = EndpointBaseAPI + EndpointVersion + "/campus"
 	EndpointLocations = EndpointBaseAPI + EndpointVersion + "/locations"
+	EndpointUsers     = EndpointBaseAPI + EndpointVersion + "/users"
 )

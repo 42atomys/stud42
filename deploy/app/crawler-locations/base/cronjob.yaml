@@ -4,7 +4,7 @@ metadata:
   name: crawler-locations
 spec:
   # Each minute
-  schedule: "* * * * *"
+  schedule: "* */12 * * *"
   successfulJobsHistoryLimit: 2
   failedJobsHistoryLimit: 5
   concurrencyPolicy: Forbid
