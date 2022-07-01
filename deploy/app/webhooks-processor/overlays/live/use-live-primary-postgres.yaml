@@ -3,12 +3,10 @@ kind: Deployment
 metadata:
   name: webhooks-processor
 spec:
-  jobTemplate:
+  template:
     spec:
-      template:
-        spec:
-          containers:
-          - name: service
-            env:
-            - name: DATABASE_HOST
-              value: prod-primary-postgres
+      containers:
+      - name: service
+        env:
+        - name: DATABASE_HOST
+          value: prod-primary-postgres
