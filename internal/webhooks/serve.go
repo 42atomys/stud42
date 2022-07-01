@@ -3,6 +3,7 @@ package webhooks
 import (
 	"context"
 	"encoding/json"
+	"os"
 
 	"github.com/rs/zerolog/log"
 	"github.com/streadway/amqp"
@@ -46,14 +47,19 @@ func (p *processor) Serve(amqpUrl, channel string) error {
 		return err
 	}
 
+	consumerID := "webhooks-processor"
+	if os.Getenv("POD_IP") != "" {
+		consumerID = "webhooks-processor-" + os.Getenv("POD_IP")
+	}
+
 	msgs, err := ch.Consume(
-		channel,              // queue
-		"webhooks-processor", // consumer
-		false,                // auto-ack
-		false,                // exclusive
-		false,                // no-local
-		false,                // no-wait
-		nil,                  // args
+		channel,    // queue
+		consumerID, // consumer
+		false,      // auto-ack
+		false,      // exclusive
+		false,      // no-local
+		false,      // no-wait
+		nil,        // args
 	)
 	if err != nil {
 		return err
