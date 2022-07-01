@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"os"
 
+	"github.com/getsentry/sentry-go"
 	"github.com/rs/zerolog/log"
 	"github.com/streadway/amqp"
 
@@ -73,10 +74,12 @@ func (p *processor) Serve(amqpUrl, channel string) error {
 			if err = d.Nack(false, true); err != nil {
 				log.Error().Err(err).Msg("Cannot nack the message")
 			}
+			sentry.CaptureException(err)
 			continue
 		}
 		if err := d.Ack(false); err != nil {
 			log.Error().Err(err).Msg("Cannot ack the message")
+			sentry.CaptureException(err)
 		}
 	}
 	return nil
