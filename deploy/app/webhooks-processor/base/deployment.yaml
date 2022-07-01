@@ -15,6 +15,8 @@ spec:
         args: [ '--config', '/config/stud42.yaml', jobs, webhooks ]
         command: [ stud42cli ]
         env:
+        - name: DEBUG
+          value: "true"
         - name: GO_ENV
           value: production
         - name: APP_VERSION
@@ -24,8 +26,6 @@ spec:
             secretKeyRef:
               key: 'WEBHOOKS_PROCESSOR_DSN'
               name: 'sentry-dsns'
-        - name: DATABASE_URL
-          value: postgresql://$(DATABASE_USERNAME):$(DATABASE_PASSWORD)@$(DATABASE_HOST):5432/$(DATABASE_NAME)?sslmode=disable
         - name: DATABASE_HOST
           value: primary-postgres
         - name: DATABASE_USERNAME
@@ -37,8 +37,8 @@ spec:
               name: primary-postgres-credentials
         - name: DATABASE_NAME
           value: s42
-        - name: AMQP_URL
-          value: amqp://$(AMQP_USERNAME):$(AMQP_PASSWORD)@$(AMQP_HOST):$(AMQP_PORT)/
+        - name: DATABASE_URL
+          value: postgresql://$(DATABASE_USERNAME):$(DATABASE_PASSWORD)@$(DATABASE_HOST):5432/$(DATABASE_NAME)?sslmode=disable
         - name: AMQP_USERNAME
           valueFrom:
             secretKeyRef:
@@ -59,6 +59,19 @@ spec:
             secretKeyRef:
               key: port
               name: prod-primary-rabbitmq-default-user
+        - name: AMQP_URL
+          value: amqp://$(AMQP_USERNAME):$(AMQP_PASSWORD)@$(AMQP_HOST):$(AMQP_PORT)
+        - name: FORTY_TWO_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              key: FORTY_TWO_CLIENT_ID
+              name: oauth2-providers
+        - name: FORTY_TWO_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: FORTY_TWO_CLIENT_SECRET
+              name: oauth2-providers
+
         volumeMounts:
           - name: config
             mountPath: /config
