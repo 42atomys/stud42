@@ -77,9 +77,12 @@ spec:
             mountPath: /config
             readOnly: true
         resources:
+          requests:
+            cpu: 20m
+            memory: 10Mi
           limits:
-            memory: "42Mi"
-            cpu: "200m"
+            memory: "20Mi"
+            cpu: "30m"
       volumes:
       - name: config
         configMap:
