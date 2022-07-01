@@ -42,7 +42,10 @@ func (p *processor) Serve(amqpUrl, channel string) error {
 	}
 	defer ch.Close()
 
-	ch.Qos(5, 0, false)
+	if err := ch.Qos(5, 0, false); err != nil {
+		return err
+	}
+
 	msgs, err := ch.Consume(
 		channel,              // queue
 		"webhooks-processor", // consumer
