@@ -3,8 +3,10 @@ kind: Deployment
 metadata:
   name: webhooked
   labels:
+    app: webhooked
+    version: '0.6.1'
     app.kubernetes.io/name: webhooked
-    app.kubernetes.io/version: '0.6'
+    app.kubernetes.io/version: '0.6.1'
 spec:
   replicas: 1
   revisionHistoryLimit: 2
@@ -27,7 +29,7 @@ spec:
     spec:
       containers:
       - name: webhooked
-        image: atomys/webhooked:0.6
+        image: atomys/webhooked:0.6.1
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -38,6 +40,18 @@ spec:
             path: /metrics
             port: 8080
         env:
+        - name: RABBITMQ_USER
+          valueFrom:
+            secretKeyRef:
+              key: username
+              name: prod-primary-rabbitmq-default-user
+        - name: RABBITMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: prod-primary-rabbitmq-default-user
+        - name: RABBITMQ_DATABASE_URL
+          value: "amqp://$(RABBITMQ_USER):$(RABBITMQ_PASSWORD)@prod-primary-rabbitmq.production.svc.cluster.local:5672/"
         - name: WEBHOOK_SECRET_HEADER
           valueFrom:
             secretKeyRef:
@@ -57,6 +71,9 @@ spec:
         - mountPath: /config/webhooks.yaml
           name: configuration
           subPath: webhooks.yaml
+        - mountPath: /config/template.tpl
+          name: configuration
+          subPath: template.tpl
       volumes:
       - name: configuration
         configMap:

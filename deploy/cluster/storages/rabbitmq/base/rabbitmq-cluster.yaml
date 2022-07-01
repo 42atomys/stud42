@@ -1,0 +1,9 @@
+apiVersion: rabbitmq.com/v1beta1
+kind: RabbitmqCluster
+metadata:
+  name: primary-rabbitmq
+spec:
+  replicas: 1
+  persistence:
+    storageClassName: csi-cinder-high-speed
+    storage: 1Gi
