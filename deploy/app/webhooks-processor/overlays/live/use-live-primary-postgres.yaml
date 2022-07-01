@@ -1,0 +1,14 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webhooks-processor
+spec:
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: service
+            env:
+            - name: DATABASE_HOST
+              value: prod-primary-postgres

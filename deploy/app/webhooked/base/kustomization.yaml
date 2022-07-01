@@ -1,0 +1,15 @@
+resources:
+- configmap.yaml
+- deployment.yaml
+- service.yaml
+- virtual-service.yaml
+
+commonLabels:
+  app: webhooked
+  version: '0.6'
+  kubernetes.io/name: webhooked
+  app.kubernetes.io/version: '0.6'
+  app.kubernetes.io/component: micro-service
+  app.kubernetes.io/part-of: s42-app
+  app.kubernetes.io/managed-by: kustomize
+  app.kubernetes.io/created-by: github-actions

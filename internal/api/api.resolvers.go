@@ -7,6 +7,13 @@ import (
 	"context"
 	"os"
 
+	"github.com/bwmarrin/discordgo"
+	"github.com/google/uuid"
+	"github.com/rs/zerolog/log"
+	"github.com/shurcooL/githubv4"
+	"github.com/spf13/viper"
+	"golang.org/x/oauth2"
+
 	apigen "atomys.codes/stud42/internal/api/generated"
 	typesgen "atomys.codes/stud42/internal/api/generated/types"
 	"atomys.codes/stud42/internal/models/generated"
@@ -14,12 +21,6 @@ import (
 	"atomys.codes/stud42/internal/models/generated/campus"
 	"atomys.codes/stud42/internal/models/generated/location"
 	"atomys.codes/stud42/internal/models/generated/user"
-	"github.com/bwmarrin/discordgo"
-	"github.com/google/uuid"
-	"github.com/rs/zerolog/log"
-	"github.com/shurcooL/githubv4"
-	"github.com/spf13/viper"
-	"golang.org/x/oauth2"
 )
 
 func (r *mutationResolver) CreateFriendship(ctx context.Context, userID uuid.UUID) (bool, error) {

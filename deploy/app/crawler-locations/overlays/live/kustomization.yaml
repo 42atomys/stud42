@@ -4,6 +4,10 @@ namePrefix: prod-
 resources:
 - ../../base
 namespace: production
+
+commonAnnotations:
+  sidecar.istio.io/inject: "false"
+
 images:
 - name: app
   newName: ghcr.io/42atomys/stud42
