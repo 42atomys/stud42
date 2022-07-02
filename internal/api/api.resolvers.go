@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"os"
 
+	"entgo.io/ent/dialect/sql"
 	"github.com/bwmarrin/discordgo"
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
@@ -176,7 +177,16 @@ func (r *queryResolver) MyFollowing(ctx context.Context) ([]*generated.User, err
 		WithCurrentLocation(func(lq *generated.LocationQuery) {
 			lq.WithCampus()
 		}).
-		Order(generated.Asc(user.FieldCurrentLocationID), generated.Asc(user.FieldDuoLogin)).
+		// Unique is necessary because the query builder always add a DISTINCT clause
+		// and cannot order the query properly by location identifier
+		Unique(false).
+		Order(func(s *sql.Selector) {
+			//: Hack to order the friends as A -> Z over the connected status
+			t := sql.Table(location.Table)
+			s.LeftJoin(t).On(s.C(user.FieldCurrentLocationID), t.C(location.FieldID))
+			s.OrderBy(t.C(location.FieldUserDuoLogin), s.C(user.FieldDuoLogin))
+			//: Hack to order the friends as A -> Z over the connected status
+		}).
 		All(ctx)
 }
 
