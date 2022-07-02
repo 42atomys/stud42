@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/pkg/errors"
 	"github.com/rs/zerolog/log"
 
 	modelgen "atomys.codes/stud42/internal/models/generated"
@@ -31,18 +32,18 @@ func UserFirstOrCreateFromComplexLocation(ctx context.Context, l *duoapi.Locatio
 				DoNothing().
 				Exec(ctx)
 			if err != nil {
-				return nil, err
+				return nil, errors.Wrap(err, "failed to create user")
 			}
 			u, err = client.User.Query().Where(user.DuoID(l.User.ID)).Only(ctx)
 			if err != nil {
-				return nil, err
+				return nil, errors.Wrap(err, "failed to get user")
 			}
 		} else {
-			return nil, err
+			return nil, errors.Wrap(err, "unknown error")
 		}
 	}
 
-	return u, err
+	return u, nil
 }
 
 func UserFirstOrCreateFromLocation(ctx context.Context, l *duoapi.Location[duoapi.LocationUser]) (*modelgen.User, error) {

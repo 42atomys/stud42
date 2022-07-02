@@ -24,6 +24,7 @@ package cmd
 import (
 	"database/sql"
 	"errors"
+	"os"
 	"strconv"
 	"time"
 
@@ -38,6 +39,9 @@ import (
 )
 
 // locationsCmd represents the locations command
+//! DEPRECATED. This command is no longer used and replaced by the webhooks
+//! system. This command is kept for backwards compatibility. It will be removed
+//! in a future release. See the webhooks command for more information.
 var locationsCmd = &cobra.Command{
 	Use:   "locations",
 	Short: "Crawl all active locations of specific campus and update the database",
@@ -45,6 +49,11 @@ var locationsCmd = &cobra.Command{
 For any closed locations, the location will be marked as inactive in the database.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		var campusID = cmd.Flag("campus_id").Value.String()
+
+		if os.Getenv("GO_ENV") == "production" {
+			log.Fatal().Msg("This command is deprecated and will be removed in a future release. See the webhooks command for more information.")
+		}
+		log.Warn().Msg("This command is deprecated. Avoid using it in production.")
 
 		log.Info().Msgf("Start the crawling of active locations of campus %s", campusID)
 		if modelsutils.Connect() != nil {
@@ -85,25 +94,24 @@ For any closed locations, the location will be marked as inactive in the databas
 				SetUserDuoID(l.User.ID).
 				SetUserDuoLogin(l.User.Login))
 		}
-		err = modelsutils.Client().Location.CreateBulk(bulk...).OnConflictColumns(location.FieldDuoID).DoNothing().Exec(cmd.Context())
-		if err != nil {
-			log.Fatal().Err(err).Msg("Failed to create locations")
+		modelsutils.Client().Location.CreateBulk(bulk...).OnConflictColumns(location.FieldDuoID).DoNothing().ExecX(cmd.Context())
+
+		for _, duoLoc := range locations {
+			l := modelsutils.Client().Location.Query().Where(location.DuoID(duoLoc.ID)).FirstX(cmd.Context())
+
+			log.Debug().Interface("location", l).Str("duo_id", duoLoc.User.Login).Msg("Assign user to location")
+			modelsutils.Client().User.UpdateOneID(l.UserID).SetCurrentLocation(l).ExecX(cmd.Context())
 		}
 
 		log.Info().Msgf("Successfully import %d locations", len(locations))
 
 		log.Info().Msg("Start the closing of inactive locations")
-		locationsDuoIDs := []int{}
-		for _, l := range locations {
-			locationsDuoIDs = append(locationsDuoIDs, l.ID)
+		for _, duoLoc := range locations {
+			l := modelsutils.Client().Location.Query().Where(location.DuoID(duoLoc.ID)).FirstX(cmd.Context())
+			l.Update().SetEndAt(time.Now().UTC()).ExecX(cmd.Context())
+			modelsutils.Client().User.UpdateOneID(l.UserID).SetCurrentLocation(nil).Exec(cmd.Context())
 		}
 
-		err = client.Location.Update().
-			Where(location.DuoIDNotIn(locationsDuoIDs...)).
-			SetEndAt(time.Now().UTC()).Exec(cmd.Context())
-		if err != nil {
-			log.Fatal().Err(err).Msg("Failed to close inactive locations")
-		}
 		log.Info().Msgf("Successfully close inactive locations")
 	},
 }

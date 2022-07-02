@@ -4,7 +4,7 @@ import { ClassNameProps } from 'types/globals';
 
 type UserCardProps = {
   user: User;
-  location?: Location;
+  location?: Partial<Location>;
 };
 
 type UserCardComponent = (

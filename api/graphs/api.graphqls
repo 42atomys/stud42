@@ -46,6 +46,7 @@ type User {
   CoverURL: String
   accounts: [Account]
   features: [FEATURE!]!
+  currentLocation: Location
   isFollowing: Boolean!
   isFollower: Boolean!
   following: [User]!
@@ -74,6 +75,7 @@ type Campus {
   timeZone: String!
   languageCode: String!
   country: String
+  city: String
 }
 
 type Location {

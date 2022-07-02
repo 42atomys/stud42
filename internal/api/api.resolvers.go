@@ -112,8 +112,10 @@ func (r *queryResolver) Me(ctx context.Context) (*generated.User, error) {
 		return nil, err
 	}
 
-	return r.client.User.Query().WithFollowing(func(q *generated.UserQuery) {
-		q.Order(generated.Asc(user.FieldDuoLogin))
+	return r.client.User.Query().WithFollowing(func(uq *generated.UserQuery) {
+		uq.WithCurrentLocation(func(lq *generated.LocationQuery) {
+			lq.WithCampus()
+		}).Order(generated.Asc(user.FieldCurrentLocationID), generated.Asc(user.FieldDuoLogin))
 	}).Where(user.ID(cu.ID)).First(ctx)
 }
 

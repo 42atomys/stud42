@@ -65,6 +65,7 @@ const IndexPage: NextPage<PageProps> = () => {
             <UserCard
               key={user?.duoLogin}
               user={user as User}
+              location={user?.currentLocation}
               refetchQueries={[MyFollowingsDocument]}
               className="m-2 hover:scale-[102%] hover:border-indigo-500"
             />
