@@ -5,8 +5,10 @@ package api
 
 import (
 	"context"
+	"fmt"
 	"os"
 
+	"entgo.io/ent/dialect/sql"
 	"github.com/bwmarrin/discordgo"
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
@@ -107,14 +109,7 @@ func (r *mutationResolver) InviteOnDiscord(ctx context.Context) (bool, error) {
 }
 
 func (r *queryResolver) Me(ctx context.Context) (*generated.User, error) {
-	cu, err := CurrentUserFromContext(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	return r.client.User.Query().WithFollowing(func(q *generated.UserQuery) {
-		q.Order(generated.Asc(user.FieldDuoLogin))
-	}).Where(user.ID(cu.ID)).First(ctx)
+	return CurrentUserFromContext(ctx)
 }
 
 func (r *queryResolver) SearchUser(ctx context.Context, query string) ([]*generated.User, error) {
@@ -171,6 +166,28 @@ func (r *queryResolver) LocationsByCluster(ctx context.Context, page typesgen.Pa
 		WithUser().
 		Where(location.IdentifierHasPrefix(*identifierPrefix), location.EndAtIsNil()).
 		Paginate(ctx, page.After, &page.First, page.Before, page.Last)
+}
+
+func (r *queryResolver) MyFollowing(ctx context.Context) ([]*generated.User, error) {
+	cu, _ := CurrentUserFromContext(ctx)
+
+	return r.client.User.Query().
+		Where(user.ID(cu.ID)).
+		QueryFollowing().
+		WithCurrentLocation(func(lq *generated.LocationQuery) {
+			lq.WithCampus()
+		}).
+		// Unique is necessary because the query builder always add a DISTINCT clause
+		// and cannot order the query properly by location identifier
+		Unique(false).
+		Order(func(s *sql.Selector) {
+			//: Hack to order the friends as A -> Z over the connected status
+			t := sql.Table(location.Table)
+			s.LeftJoin(t).On(s.C(user.FieldCurrentLocationID), t.C(location.FieldID))
+			s.OrderBy(t.C(location.FieldUserDuoLogin), s.C(user.FieldDuoLogin))
+			//: Hack to order the friends as A -> Z over the connected status
+		}).
+		All(ctx)
 }
 
 func (r *queryResolver) InternalGetUserByAccount(ctx context.Context, provider typesgen.Provider, uid string) (*generated.User, error) {
@@ -283,3 +300,13 @@ func (r *Resolver) User() apigen.UserResolver { return &userResolver{r} }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type userResolver struct{ *Resolver }
+
+// !!! WARNING !!!
+// The code below was going to be deleted when updating resolvers. It has been copied here so you have
+// one last chance to move it out of harms way if you want. There are two reasons this happens:
+//  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
+//    it when you're done.
+//  - You have helper methods in this file. Move them out to keep these resolver files clean.
+func (r *queryResolver) MyFollowings(ctx context.Context) ([]*generated.User, error) {
+	panic(fmt.Errorf("not implemented"))
+}

@@ -14,6 +14,7 @@ require (
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/lestrrat-go/jwx/v2 v2.0.0-beta2
 	github.com/lib/pq v1.10.4
+	github.com/pkg/errors v0.9.1
 	github.com/rs/cors v1.6.0
 	github.com/rs/zerolog v1.26.1
 	github.com/shurcooL/githubv4 v0.0.0-20220115235240-a14260e6f8a2

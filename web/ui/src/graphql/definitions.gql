@@ -123,12 +123,18 @@ query meWithFeatures {
 }
 
 query myFollowings {
-  me {
-    following {
-      id
-      isFollowing
-      ...UserIdentyData
+  myFollowing {
+    id
+    isFollowing
+    currentLocation {
+      ...LocationBasicData
+      campus {
+        name
+        city
+        country
+      }
     }
+    ...UserIdentyData
   }
 }
 
@@ -190,4 +196,10 @@ fragment UserIdentyData on User {
   firstName
   usualFirstName
   lastName
+}
+
+fragment LocationBasicData on Location {
+  identifier
+  beginAt
+  endAt
 }

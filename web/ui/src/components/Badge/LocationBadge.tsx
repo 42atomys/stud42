@@ -1,12 +1,14 @@
 import Emoji from '@components/Emoji';
 import { Location } from '@graphql.d';
 import classNames from 'classnames';
+import { NestedPartial } from 'types/utils';
 import { Badge } from './Badge';
+import { countryNameToEmoji } from './countryMap';
 
 export const LocationBadge = ({
   location,
 }: {
-  location: Partial<Location> | null | undefined;
+  location: NestedPartial<Location> | null | undefined;
 }) => {
   const isConnected = location?.identifier ? true : false;
 
@@ -21,11 +23,14 @@ export const LocationBadge = ({
       <span className="flex flex-row justify-center items-center text-sm mx-1">
         {isConnected ? location?.identifier : 'Offline'}
       </span>
-      <Emoji
-        emoji="🇫🇷"
-        size={14}
-        className={classNames('mx-1', isConnected ? 'visible' : 'hidden')}
-      />
+      {isConnected && (
+        <Emoji
+          emoji={countryNameToEmoji[location?.campus?.country || '']}
+          size={14}
+          title={location?.campus?.name}
+          className={classNames('mx-1', isConnected ? 'visible' : 'hidden')}
+        />
+      )}
     </Badge>
   );
 };

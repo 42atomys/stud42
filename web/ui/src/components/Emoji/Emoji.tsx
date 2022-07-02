@@ -15,7 +15,7 @@ const codepoints = (char: string): string | undefined => {
  * @param {string} containerClassName - The class name to apply to the container
  */
 export const Emoji = ({
-  emoji,
+  emoji = '',
   size = 16,
   containerClassName,
   ...props

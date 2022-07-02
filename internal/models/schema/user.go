@@ -36,6 +36,7 @@ func (User) Fields() []ent.Field {
 		field.String("nickname").Optional().Nillable().Unique().MaxLen(255),
 		field.String("avatar_url").Optional().Nillable().MaxLen(255),
 		field.String("cover_url").Optional().Nillable().MaxLen(255),
+		field.UUID("current_location_id", uuid.UUID{}).Nillable().Optional(),
 		field.Bool("is_staff").Default(false),
 		field.Bool("is_a_user").Default(false),
 	}
@@ -46,6 +47,9 @@ func (User) Edges() []ent.Edge {
 		edge.To("accounts", Account.Type),
 		edge.To("following", User.Type).From("followers"),
 		edge.To("locations", Location.Type),
+		edge.To("current_location", Location.Type).
+			Unique().
+			Field("current_location_id"),
 	}
 }
 
