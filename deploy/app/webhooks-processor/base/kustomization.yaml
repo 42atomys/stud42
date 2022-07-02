@@ -1,5 +1,6 @@
 resources:
 - deployment.yaml
+- hpa.yaml
 
 commonLabels:
   kubernetes.io/name: webhooks-processor
