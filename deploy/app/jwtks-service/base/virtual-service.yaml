@@ -1,14 +1,14 @@
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: jwtks-service-http
+  name: http-jwtks-service
 spec:
   hosts:
   - s42.app
   gateways:
   - s42-app-live
   http:
-  - name: jwtks-service-http
+  - name: http-jwtks-service
     match:
     - method:
         exact: GET
@@ -18,6 +18,6 @@ spec:
       uri: "/jwks"
     route:
     - destination:
-        host: jwtks-service-http
+        host: http-jwtks-service
         port:
           number: 5500

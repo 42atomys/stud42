@@ -3,6 +3,7 @@ kind: Kustomization
 namePrefix: sand-
 resources:
 - ../../base
+- sandbox-grpc-virtual-service.yaml
 namespace: sandbox
 images:
 - name: app
@@ -23,7 +24,7 @@ patches:
 replacements:
 - source:
     kind: Service
-    name: jwtks-service-grpc
+    name: grpc-jwtks-service
     fieldPath: metadata.name
   targets:
   - select:
@@ -33,12 +34,12 @@ replacements:
     - spec.dnsNames.0
 - source:
     kind: Service
-    name: jwtks-service-http
+    name: http-jwtks-service
     fieldPath: metadata.name
   targets:
   - select:
       kind: VirtualService
-      name: jwtks-service-http
+      name: http-jwtks-service
     fieldPaths:
      - spec.http.*.name
      - spec.http.*.route.*.destination.host
