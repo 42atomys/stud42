@@ -21,14 +21,17 @@ func (p *locationProcessor) Create(loc *duoapi.Location[duoapi.LocationUser], me
 	campus, err := p.db.Campus.Query().Where(campus.DuoID(loc.CampusID)).Only(p.ctx)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			log.Fatal().Msgf("Campus %d not found", loc.CampusID)
+			log.Error().Msgf("Campus %d not found", loc.CampusID)
+			return err
 		}
-		log.Fatal().Err(err).Msg("Failed to get campus")
+		log.Error().Err(err).Msg("Failed to get campus")
+		return err
 	}
 
 	user, err := modelsutils.UserFirstOrCreateFromLocation(p.ctx, loc)
 	if err != nil {
 		log.Error().Err(err).Msg("Failed to create user")
+		return err
 	}
 
 	return p.db.Location.Create().
