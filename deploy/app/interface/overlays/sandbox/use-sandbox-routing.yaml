@@ -1,7 +1,7 @@
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: interface-http
+  name: http-interface
 spec:
   hosts:
   - sandbox.s42.dev

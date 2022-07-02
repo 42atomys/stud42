@@ -17,12 +17,12 @@ patchesStrategicMerge:
 replacements:
 - source:
     kind: Service
-    name: api-http
+    name: http-api
     fieldPath: metadata.name
   targets:
   - select:
       kind: VirtualService
-      name: api-http
+      name: http-api
     fieldPaths:
      - spec.http.*.name
      - spec.http.*.route.*.destination.host

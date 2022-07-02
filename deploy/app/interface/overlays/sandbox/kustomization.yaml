@@ -23,12 +23,12 @@ patches:
 replacements:
 - source:
     kind: Service
-    name: interface-http
+    name: http-interface
     fieldPath: metadata.name
   targets:
   - select:
       kind: VirtualService
-      name: interface-http
+      name: http-interface
     fieldPaths:
      - spec.http.*.name
      - spec.http.*.route.*.destination.host

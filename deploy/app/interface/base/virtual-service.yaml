@@ -1,19 +1,19 @@
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: interface-http
+  name: http-interface
 spec:
   hosts:
   - s42.app
   gateways:
   - s42-app-live
   http:
-  - name: interface-http
+  - name: http-interface
     match:
     - uri:
         prefix: "/"
     route:
     - destination:
-        host: interface-http
+        host: http-interface
         port:
           number: 3000
