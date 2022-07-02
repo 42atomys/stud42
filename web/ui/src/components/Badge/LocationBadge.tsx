@@ -23,7 +23,7 @@ export const LocationBadge = ({
       <span className="flex flex-row justify-center items-center text-sm mx-1">
         {isConnected ? location?.identifier : 'Offline'}
       </span>
-      { isConnected && (
+      {isConnected && (
         <Emoji
           emoji={countryNameToEmoji[location?.campus?.country || '']}
           size={14}
