@@ -1,8 +1,6 @@
 package schema
 
 import (
-	"net/mail"
-
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema/edge"
@@ -21,7 +19,10 @@ func (User) Fields() []ent.Field {
 			Default: "uuid_generate_v4()",
 		}),
 		field.String("email").Unique().NotEmpty().MaxLen(255).Validate(func(email string) (err error) {
-			_, err = mail.ParseAddress(email)
+			// TODO: ParseAddress return an error on Update
+			// generated: validator failed for field \"User.email\": mail: no angle-addr
+			// ( email failed : xx@42xxxxxx.xxx )
+			// _, err = mail.ParseAddress(email)
 			return
 		}),
 		field.String("duo_login").Unique().NotEmpty().MaxLen(255),
