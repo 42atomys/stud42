@@ -109,7 +109,7 @@ For any closed locations, the location will be marked as inactive in the databas
 		for _, duoLoc := range locations {
 			l := modelsutils.Client().Location.Query().Where(location.DuoID(duoLoc.ID)).FirstX(cmd.Context())
 			l.Update().SetEndAt(time.Now().UTC()).ExecX(cmd.Context())
-			modelsutils.Client().User.UpdateOneID(l.UserID).SetCurrentLocation(nil).Exec(cmd.Context())
+			modelsutils.Client().User.UpdateOneID(l.UserID).SetCurrentLocation(nil).ExecX(cmd.Context())
 		}
 
 		log.Info().Msgf("Successfully close inactive locations")
