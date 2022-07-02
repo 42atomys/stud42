@@ -14,7 +14,11 @@ func (dt *DuoTime) UnmarshalJSON(b []byte) error {
 	s := strings.Trim(string(b), "\"")
 	t, err := time.Parse(duoTimeFormat, s)
 	if err != nil {
-		return err
+		t2, err := time.Parse(time.RFC3339, s)
+		if err != nil {
+			return err
+		}
+		t = t2
 	}
 	*dt = DuoTime(t)
 	return nil
