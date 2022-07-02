@@ -116,6 +116,8 @@ type Query {
   locationsByCampusName(page: PageInput!, campusName: String!): LocationConnection! @authenticated
   locationsByCluster(page: PageInput!, campusName: String!, identifierPrefix: String): LocationConnection! @authenticated
 
+  myFollowing: [User!]! @authenticated
+
   internalGetUserByAccount(provider: PROVIDER!, uid: String!): User! @authzByPolicy(policy: SERVICE_TOKEN)
   internalGetUserByEmail(email: String!): User! @authzByPolicy(policy: SERVICE_TOKEN)
   internalGetUser(id: UUID!): User! @authzByPolicy(policy: SERVICE_TOKEN)

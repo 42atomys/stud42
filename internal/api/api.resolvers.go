@@ -5,6 +5,7 @@ package api
 
 import (
 	"context"
+	"fmt"
 	"os"
 
 	"github.com/bwmarrin/discordgo"
@@ -107,16 +108,7 @@ func (r *mutationResolver) InviteOnDiscord(ctx context.Context) (bool, error) {
 }
 
 func (r *queryResolver) Me(ctx context.Context) (*generated.User, error) {
-	cu, err := CurrentUserFromContext(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	return r.client.User.Query().WithFollowing(func(uq *generated.UserQuery) {
-		uq.WithCurrentLocation(func(lq *generated.LocationQuery) {
-			lq.WithCampus()
-		}).Order(generated.Asc(user.FieldCurrentLocationID), generated.Asc(user.FieldDuoLogin))
-	}).Where(user.ID(cu.ID)).First(ctx)
+	return CurrentUserFromContext(ctx)
 }
 
 func (r *queryResolver) SearchUser(ctx context.Context, query string) ([]*generated.User, error) {
@@ -173,6 +165,19 @@ func (r *queryResolver) LocationsByCluster(ctx context.Context, page typesgen.Pa
 		WithUser().
 		Where(location.IdentifierHasPrefix(*identifierPrefix), location.EndAtIsNil()).
 		Paginate(ctx, page.After, &page.First, page.Before, page.Last)
+}
+
+func (r *queryResolver) MyFollowing(ctx context.Context) ([]*generated.User, error) {
+	cu, _ := CurrentUserFromContext(ctx)
+
+	return r.client.User.Query().
+		Where(user.ID(cu.ID)).
+		QueryFollowing().
+		WithCurrentLocation(func(lq *generated.LocationQuery) {
+			lq.WithCampus()
+		}).
+		Order(generated.Asc(user.FieldCurrentLocationID), generated.Asc(user.FieldDuoLogin)).
+		All(ctx)
 }
 
 func (r *queryResolver) InternalGetUserByAccount(ctx context.Context, provider typesgen.Provider, uid string) (*generated.User, error) {
@@ -285,3 +290,13 @@ func (r *Resolver) User() apigen.UserResolver { return &userResolver{r} }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type userResolver struct{ *Resolver }
+
+// !!! WARNING !!!
+// The code below was going to be deleted when updating resolvers. It has been copied here so you have
+// one last chance to move it out of harms way if you want. There are two reasons this happens:
+//  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
+//    it when you're done.
+//  - You have helper methods in this file. Move them out to keep these resolver files clean.
+func (r *queryResolver) MyFollowings(ctx context.Context) ([]*generated.User, error) {
+	panic(fmt.Errorf("not implemented"))
+}

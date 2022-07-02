@@ -123,20 +123,18 @@ query meWithFeatures {
 }
 
 query myFollowings {
-  me {
-    following {
-      id
-      isFollowing
-      currentLocation {
-        ...LocationBasicData
-        campus {
-          name
-          city
-          country
-        }
+  myFollowing {
+    id
+    isFollowing
+    currentLocation {
+      ...LocationBasicData
+      campus {
+        name
+        city
+        country
       }
-      ...UserIdentyData
     }
+    ...UserIdentyData
   }
 }
 
