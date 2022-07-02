@@ -16,7 +16,7 @@ data:
       # a JWT Token
       endpoints:
         sets: https://sandbox.s42.dev/.well-known/jwks
-        sign: sand-jwtks-service-grpc:5000
+        sign: sand-grpc-jwtks-service:5000
       # Certs used to sign and validate the JWT
       # Also called : The JWK
       jwk:
@@ -24,7 +24,7 @@ data:
         certPublicKeyFile: /etc/certs/jwk/public.pem
       # Certs used to secure the GRPC Endpoint with SSL/TLS
       grpc:
-        insecure: false
+        insecure: true
         certRootCaFile: /etc/certs/grpc/ca.crt
         certPrivateKeyFile: /etc/certs/grpc/tls.key
         certPublicKeyFile: /etc/certs/grpc/tls.crt

@@ -16,7 +16,7 @@ data:
       # a JWT Token
       endpoints:
         sets: https://s42.app/.well-known/jwks
-        sign: prod-jwtks-service-grpc:5000
+        sign: prod-grpc-jwtks-service:5000
       # Certs used to sign and validate the JWT
       # Also called : The JWK
       jwk:

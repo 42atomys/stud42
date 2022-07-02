@@ -1,14 +1,14 @@
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: api-http
+  name: http-api
 spec:
   hosts:
   - s42.app
   gateways:
   - s42-app-live
   http:
-  - name: api-http-gql
+  - name: http-api-gql
     match:
     - method:
         exact: POST
@@ -18,10 +18,10 @@ spec:
       uri: "/graphql"
     route:
     - destination:
-        host: api-http
+        host: http-api
         port:
           number: 4000
-  - name: api-http-gqli
+  - name: http-api-gqli
     match:
     - method:
         exact: GET
@@ -31,6 +31,6 @@ spec:
       uri: "/"
     route:
     - destination:
-        host: api-http
+        host: http-api
         port:
           number: 4000

@@ -1,0 +1,15 @@
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: s42-dev-sandbox-grpc
+  namespace: sandbox
+spec:
+  selector:
+    istio: ingressgateway # use istio default controller
+  servers:
+    - port:
+        number: 51000
+        name: grpc
+        protocol: GRPC
+      hosts:
+      - "sandbox.s42.dev"
