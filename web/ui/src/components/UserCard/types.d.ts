@@ -1,10 +1,11 @@
 import { InternalRefetchQueriesInclude } from '@apollo/client';
 import { Location, User } from '@graphql.d';
 import { ClassNameProps } from 'types/globals';
+import { NestedPartial } from 'types/utils';
 
 type UserCardProps = {
   user: User;
-  location?: Location;
+  location?: NestedPartial<Location> | null;
 };
 
 type UserCardComponent = (

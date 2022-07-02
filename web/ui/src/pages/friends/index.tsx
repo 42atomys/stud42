@@ -15,8 +15,8 @@ const IndexPage: NextPage<PageProps> = () => {
   const { SidebarProvider, Sidebar, PageContainer, PageContent } = useSidebar();
 
   const { data, networkStatus } = useMyFollowingsQuery();
-  const { me } = data || {};
-  const hasFollowing = (me?.following?.length || 0) > 0;
+  const { myFollowing } = data || {};
+  const hasFollowing = (myFollowing?.length || 0) > 0;
 
   return (
     <SidebarProvider>
@@ -61,10 +61,11 @@ const IndexPage: NextPage<PageProps> = () => {
               </span>
             </div>
           )}
-          {me?.following.map((user) => (
+          {myFollowing?.map((user) => (
             <UserCard
               key={user?.duoLogin}
               user={user as User}
+              location={user?.currentLocation}
               refetchQueries={[MyFollowingsDocument]}
               className="m-2 hover:scale-[102%] hover:border-indigo-500"
             />
