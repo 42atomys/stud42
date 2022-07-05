@@ -57,23 +57,22 @@ func main() {
  */
 func initSentry() {
 	var tracesSampleRate = 0.0
+	var env = "development"
+	var release = "stud42@dev"
+
 	if os.Getenv("GO_ENV") == "production" {
 		tracesSampleRate = 0.2
-	}
-
-	var env = "development"
-	if os.Getenv("GO_ENV") == "production" {
 		env = "production"
-	}
-
-	var release = "stud42@dev"
-	if os.Getenv("GO_ENV") == "production" {
 		release = "stud42@" + os.Getenv("APP_VERSION")
+
+		if os.Getenv("SENTRY_DSN") == "" {
+			log.Fatal().Msg("SENTRY_DSN is not set")
+		}
 	}
 
 	err := sentry.Init(sentry.ClientOptions{
-		Dsn:         "https://645991d145f84e66a5bbfa98b09bf0d6@o217344.ingest.sentry.io/6324341",
-		Debug:       true,
+		Dsn:         os.Getenv("SENTRY_DSN"),
+		Debug:       os.Getenv("DEBUG") == "true",
 		Environment: env,
 		Release:     release,
 		BeforeSend: func(event *sentry.Event, hint *sentry.EventHint) *sentry.Event {
@@ -81,6 +80,7 @@ func initSentry() {
 		},
 		TracesSampleRate: tracesSampleRate,
 		SampleRate:       tracesSampleRate,
+		AttachStacktrace: true,
 	})
 	if err != nil {
 		log.Fatal().Err(err).Msg("failed to initialize sentry")

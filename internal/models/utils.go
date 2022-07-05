@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/getsentry/sentry-go"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog/log"
 
@@ -11,6 +12,34 @@ import (
 	"atomys.codes/stud42/internal/models/generated/user"
 	"atomys.codes/stud42/pkg/duoapi"
 )
+
+// WithTx is a helper function to wrap a function call with a transaction.
+// If the function returns an error, the transaction is rolled back.
+// If the function returns nil, the transaction is committed.
+// See https://entgo.io/docs/transactions/#best-practices
+func WithTx(ctx context.Context, client *modelgen.Client, fn func(tx *modelgen.Tx) error) error {
+	tx, err := client.Tx(ctx)
+	if err != nil {
+			return err
+	}
+	defer func() {
+			if v := recover(); v != nil {
+					tx.Rollback()
+					sentry.CaptureException(v.(error))
+					panic(v)
+			}
+	}()
+	if err := fn(tx); err != nil {
+			if rerr := tx.Rollback(); rerr != nil {
+					err = fmt.Errorf("rolling back transaction: %w", rerr)
+			}
+			return err
+	}
+	if err := tx.Commit(); err != nil {
+			return fmt.Errorf("committing transaction: %w", err)
+	}
+	return nil
+}
 
 func UserFirstOrCreateFromComplexLocation(ctx context.Context, l *duoapi.Location[duoapi.ComplexLocationUser]) (*modelgen.User, error) {
 	u, err := client.User.Query().Where(user.DuoID(l.User.ID)).Only(ctx)
