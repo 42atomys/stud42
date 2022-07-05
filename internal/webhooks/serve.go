@@ -31,7 +31,6 @@ func New() *processor {
 }
 
 func (p *processor) Serve(amqpUrl, channel string) error {
-
 	conn, err := amqp.Dial(amqpUrl)
 	if err != nil {
 		return err
@@ -68,7 +67,6 @@ func (p *processor) Serve(amqpUrl, channel string) error {
 
 	log.Info().Msg("Consumer ready. Waiting for messages...")
 	for d := range msgs {
-		log.Debug().Msg("Received a message")
 		err := p.handler(d.Body)
 		if err != nil {
 			sentry.CaptureException(err)
@@ -83,6 +81,7 @@ func (p *processor) Serve(amqpUrl, channel string) error {
 			sentry.CaptureException(err)
 		}
 	}
+
 	return nil
 }
 

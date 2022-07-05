@@ -7,6 +7,7 @@ import (
 	"github.com/rs/zerolog/log"
 
 	modelsutils "atomys.codes/stud42/internal/models"
+	"atomys.codes/stud42/internal/models/generated"
 	"atomys.codes/stud42/internal/models/generated/campus"
 	"atomys.codes/stud42/internal/models/generated/location"
 	"atomys.codes/stud42/internal/models/generated/user"
@@ -65,22 +66,35 @@ func (p *locationProcessor) Close(loc *duoapi.Location[duoapi.LocationUser], met
 		SetIdentifier(loc.Host).
 		Where(location.DuoID(loc.ID)).
 		Exec(p.ctx)
-	if err != nil {
+
+	if err != nil && !generated.IsNotFound(err) {
 		return err
 	}
 
 	// Unlink the user from the location in database if the location is closed 
 	// and the user is not assigned to another location anymore (i.e. the user
 	// is not assigned to any other location)
-	return p.db.User.UpdateOne(p.db.User.Query().Where(user.DuoID(loc.User.ID)).FirstX(p.ctx)).SetCurrentLocation(nil).Exec(p.ctx)
+	return p.unlinkLocation(loc)
 }
 func (p *locationProcessor) Destroy(loc *duoapi.Location[duoapi.LocationUser], metadata *duoapi.WebhookMetadata) error {
 	// Delete the location in database
 	_, err := p.db.Location.Delete().Where(location.DuoID(loc.ID)).Exec(p.ctx)
-	if err != nil {
+	if err != nil && !generated.IsNotFound(err) {
 		return err
 	}
 	
 	// Unlink the user from the location in database if the location is destroyed
-	return p.db.User.UpdateOne(p.db.User.Query().Where(user.DuoID(loc.User.ID)).FirstX(p.ctx)).SetCurrentLocation(nil).Exec(p.ctx)
+	return p.unlinkLocation(loc)
+}
+
+func (p *locationProcessor) unlinkLocation(duoLoc *duoapi.Location[duoapi.LocationUser]) error {
+	user, err := p.db.User.Query().Where(user.DuoID(duoLoc.User.ID)).First(p.ctx)
+	if err != nil {
+		if generated.IsNotFound(err) {
+			return nil
+		}
+		return err
+	}
+
+	return p.db.User.UpdateOne(user).ClearCurrentLocation().Exec(p.ctx)
 }
