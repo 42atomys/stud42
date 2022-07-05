@@ -29,16 +29,15 @@ type ClusterContainerChildrenProps = {
 };
 
 type CampusClusterMap = {
-  Paris: 'e1' | 'e2' | 'e3'
-  Helsinki: 'c1' | 'c2' | 'c3'
-}
+  Paris: 'e1' | 'e2' | 'e3';
+  Helsinki: 'c1' | 'c2' | 'c3';
+};
 
 export type ClusterContainerProps = {
   [Key in keyof CampusClusterMap]: {
     campus: Key;
     cluster: CampusClusterMap[Key];
     children: (props: ClusterContainerChildrenProps) => JSX.Element;
-
   };
 }[keyof CampusClusterMap];
 

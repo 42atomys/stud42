@@ -21,7 +21,7 @@ export const ClusterSidebar = ({
     <Sidebar>
       <div>
         <Menu>
-        <MenuCategory emoji="🇫🇷" name="Paris">
+          <MenuCategory emoji="🇫🇷" name="Paris">
             <Link href="/clusters/paris/e1" passHref={true}>
               <a>
                 <MenuItem
