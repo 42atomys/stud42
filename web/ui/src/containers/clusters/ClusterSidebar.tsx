@@ -21,7 +21,7 @@ export const ClusterSidebar = ({
     <Sidebar>
       <div>
         <Menu>
-          <MenuCategory emoji="🇫🇷" name="Paris">
+        <MenuCategory emoji="🇫🇷" name="Paris">
             <Link href="/clusters/paris/e1" passHref={true}>
               <a>
                 <MenuItem
@@ -46,6 +46,35 @@ export const ClusterSidebar = ({
                   active={campus == 'paris' && cluster == 'e3'}
                   name="Tatooine"
                   text="E3"
+                />
+              </a>
+            </Link>
+          </MenuCategory>
+          <MenuCategory emoji="🇫🇮" name="Helsinki">
+            <Link href="/clusters/helsinki/c1" passHref={true}>
+              <a>
+                <MenuItem
+                  active={campus == 'helsinki' && cluster == 'c1'}
+                  name=""
+                  text="C1"
+                />
+              </a>
+            </Link>
+            <Link href="/clusters/helsinki/c2" passHref={true}>
+              <a>
+                <MenuItem
+                  active={campus == 'helsinki' && cluster == 'c2'}
+                  name=""
+                  text="C2"
+                />
+              </a>
+            </Link>
+            <Link href="/clusters/helsinki/c3" passHref={true}>
+              <a>
+                <MenuItem
+                  active={campus == 'helsinki' && cluster == 'c3'}
+                  name=""
+                  text="C3"
                 />
               </a>
             </Link>
