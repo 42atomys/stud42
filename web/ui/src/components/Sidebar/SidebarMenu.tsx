@@ -110,7 +110,7 @@ export const MenuItem = ({
           <Emoji emoji={emoji} size={24} containerClassName="contents" />
         )}
         <span className="ml-2 flex items-baseline">
-          <span className="">{name}</span>
+          <span className="">{name || text}</span>
           {text && (
             <span
               className={classNames(

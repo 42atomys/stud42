@@ -24,7 +24,10 @@ func WithTx(ctx context.Context, client *modelgen.Client, fn func(tx *modelgen.T
 	}
 	defer func() {
 			if v := recover(); v != nil {
-					tx.Rollback()
+					if err := tx.Rollback(); err != nil {
+						log.Error().Err(err).Msg("failed to rollback transaction")
+						sentry.CaptureException(err)
+					}
 					sentry.CaptureException(v.(error))
 			}
 	}()

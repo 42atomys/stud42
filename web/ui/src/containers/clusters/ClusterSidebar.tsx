@@ -50,6 +50,35 @@ export const ClusterSidebar = ({
               </a>
             </Link>
           </MenuCategory>
+          <MenuCategory emoji="🇫🇮" name="Helsinki">
+            <Link href="/clusters/helsinki/c1" passHref={true}>
+              <a>
+                <MenuItem
+                  active={campus == 'helsinki' && cluster == 'c1'}
+                  name=""
+                  text="C1"
+                />
+              </a>
+            </Link>
+            <Link href="/clusters/helsinki/c2" passHref={true}>
+              <a>
+                <MenuItem
+                  active={campus == 'helsinki' && cluster == 'c2'}
+                  name=""
+                  text="C2"
+                />
+              </a>
+            </Link>
+            <Link href="/clusters/helsinki/c3" passHref={true}>
+              <a>
+                <MenuItem
+                  active={campus == 'helsinki' && cluster == 'c3'}
+                  name=""
+                  text="C3"
+                />
+              </a>
+            </Link>
+          </MenuCategory>
         </Menu>
         <span className="flex p-2 text-xs text-slate-400 dark:text-slate-600 italic">
           You don&apos;t see your campus ? Go on github and add it !
