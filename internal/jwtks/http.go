@@ -36,7 +36,7 @@ func ServeHTTP(port *string) error {
 	}).Handler)
 
 	sentryHandler := sentryhttp.New(sentryhttp.Options{
-		Repanic:         true,
+		Repanic:         false,
 		WaitForDelivery: true,
 	})
 
