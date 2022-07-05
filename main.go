@@ -19,7 +19,9 @@ THE SOFTWARE.
 package main
 
 import (
+	"errors"
 	"os"
+	"time"
 
 	"github.com/getsentry/sentry-go"
 	"github.com/rs/zerolog"
@@ -36,19 +38,23 @@ func init() {
 	} else {
 		zerolog.SetGlobalLevel(zerolog.InfoLevel)
 	}
-
-	if os.Getenv("GO_ENV") != "" &&
-		os.Getenv("GO_ENV") != "development" &&
-		os.Getenv("SENTRY_DSN") != "" {
-		initSentry()
-	}
 }
 
 func main() {
-	func() {
-		defer sentry.Recover()
-		cmd.Execute()
+	defer func() {
+		err := recover()
+
+		if err != nil {
+			sentry.CurrentHub().Recover(err)
+			sentry.Flush(time.Second * 5)
+		}
 	}()
+
+	// Sentry needs to be in main for obscur reason...
+	if os.Getenv("GO_ENV") != "development" || os.Getenv("SENTRY_DSN") != "" {
+		initSentry()
+	}
+	cmd.Execute()
 }
 
 /**
@@ -56,12 +62,14 @@ func main() {
  * https://docs.sentry.io/platforms/go/
  */
 func initSentry() {
-	var tracesSampleRate = 0.0
+	var tracesSampleRate, sampleSampleRate = 0.0, 1.0
 	var env = "development"
 	var release = "stud42@dev"
 
 	if os.Getenv("GO_ENV") == "production" {
 		tracesSampleRate = 0.2
+		sampleSampleRate = 1.0
+
 		env = "production"
 		release = "stud42@" + os.Getenv("APP_VERSION")
 
@@ -76,10 +84,14 @@ func initSentry() {
 		Environment: env,
 		Release:     release,
 		BeforeSend: func(event *sentry.Event, hint *sentry.EventHint) *sentry.Event {
+			for _, frame := range event.Exception {
+				log.Warn().Err(errors.New(frame.Value)).Str("eventID", string(event.EventID)).Msg("send exception to sentry")
+				event.Tags["eventID"] = string(event.EventID)
+			}
 			return event
 		},
 		TracesSampleRate: tracesSampleRate,
-		SampleRate:       tracesSampleRate,
+		SampleRate:       sampleSampleRate,
 		AttachStacktrace: true,
 	})
 	if err != nil {

@@ -3,6 +3,7 @@ package webhooks
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"os"
 
 	"github.com/getsentry/sentry-go"
@@ -19,6 +20,11 @@ type processor struct {
 	ctx context.Context
 }
 
+// ErrInvalidWebhook is returned when the webhook is invalid and cannot be processed
+// by the processor due to missing metadata key
+var ErrInvalidWebhook = errors.New("invalid webhook, metadata is empty")
+
+// New creates a new webhooks processor instance
 func New() *processor {
 	if err := modelsutils.Connect(); err != nil {
 		log.Fatal().Err(err).Msg("failed to connect to database")
@@ -30,6 +36,10 @@ func New() *processor {
 	}
 }
 
+// Serve starts the webhooks processor and listens for incoming message from
+// the RabbitMQ queue "webhooks-processor" filled by the webhooked project.
+//
+// See https://github.com/42Atomys/webhooked
 func (p *processor) Serve(amqpUrl, channel string) error {
 	conn, err := amqp.Dial(amqpUrl)
 	if err != nil {
@@ -70,12 +80,19 @@ func (p *processor) Serve(amqpUrl, channel string) error {
 		err := p.handler(d.Body)
 		if err != nil {
 			sentry.CaptureException(err)
+
+			if errors.Is(err, ErrInvalidWebhook) {
+				goto ACK
+			}
+
 			if err = d.Nack(false, true); err != nil {
 				sentry.CaptureException(err)
 				log.Error().Err(err).Msg("Cannot nack the message")
 			}
 			continue
 		}
+
+	ACK:
 		if err := d.Ack(false); err != nil {
 			log.Error().Err(err).Msg("Cannot ack the message")
 			sentry.CaptureException(err)
@@ -85,6 +102,9 @@ func (p *processor) Serve(amqpUrl, channel string) error {
 	return nil
 }
 
+// handler is the main function that processes the webhooks. It parses the
+// webhook metadata and calls the appropriate processor function.
+// This function is called by the Serve function on each incoming message.
 func (p *processor) handler(data []byte) error {
 	md := &duoapi.Webhook{}
 
@@ -92,7 +112,12 @@ func (p *processor) handler(data []byte) error {
 		log.Error().Err(err).Msg("Failed to unmarshal webhook metadata")
 	}
 
+	if md == nil || md.Metadata == nil {
+		log.Error().Str("payload", string(data)).Msg("Webhook metadata is nil")
+		return ErrInvalidWebhook
+	}
 	log.Debug().Msgf("Received a message(%s.%s): %+v", md.Metadata.Model, md.Metadata.Event, md.Payload)
+
 	var err error
 	switch md.Metadata.Model {
 	case "location":

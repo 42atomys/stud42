@@ -26,7 +26,6 @@ func WithTx(ctx context.Context, client *modelgen.Client, fn func(tx *modelgen.T
 			if v := recover(); v != nil {
 					tx.Rollback()
 					sentry.CaptureException(v.(error))
-					panic(v)
 			}
 	}()
 	if err := fn(tx); err != nil {

@@ -77,7 +77,7 @@ var apiCmd = &cobra.Command{
 		}
 
 		sentryHandler := sentryhttp.New(sentryhttp.Options{
-			Repanic:         true,
+			Repanic:         false,
 			WaitForDelivery: true,
 		})
 
