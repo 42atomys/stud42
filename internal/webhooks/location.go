@@ -7,6 +7,7 @@ import (
 	"github.com/rs/zerolog/log"
 
 	modelsutils "atomys.codes/stud42/internal/models"
+	"atomys.codes/stud42/internal/models/generated"
 	"atomys.codes/stud42/internal/models/generated/campus"
 	"atomys.codes/stud42/internal/models/generated/location"
 	"atomys.codes/stud42/internal/models/generated/user"
@@ -65,7 +66,7 @@ func (p *locationProcessor) Close(loc *duoapi.Location[duoapi.LocationUser], met
 		SetIdentifier(loc.Host).
 		Where(location.DuoID(loc.ID)).
 		Exec(p.ctx)
-	if err != nil {
+	if err != nil && !generated.IsNotFound(err) {
 		return err
 	}
 
@@ -77,7 +78,7 @@ func (p *locationProcessor) Close(loc *duoapi.Location[duoapi.LocationUser], met
 func (p *locationProcessor) Destroy(loc *duoapi.Location[duoapi.LocationUser], metadata *duoapi.WebhookMetadata) error {
 	// Delete the location in database
 	_, err := p.db.Location.Delete().Where(location.DuoID(loc.ID)).Exec(p.ctx)
-	if err != nil {
+	if err != nil && !generated.IsNotFound(err) {
 		return err
 	}
 	
