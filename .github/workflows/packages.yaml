@@ -1,0 +1,49 @@
+name: 'Images build 🐳'
+on:
+  workflow_dispatch:
+  push:
+    branches:
+    - main
+    paths:
+    - build/packages/*
+jobs:
+  rabbitmq:
+    name: 'Build rabbitmq image & push to ghcr.io 🐳'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_NAME: 42Atomys/s42-rabbitmq
+      IMAGE_TAG: 3.10.2-management
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Log in to the Container registry
+      uses: docker/login-action@v2
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Extract metadata (tags, labels) for Docker
+      id: meta
+      uses: docker/metadata-action@v4
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        github-token: ${{ github.token }}
+        tags: '3.10.2-management'
+        labels: |
+          org.opencontainers.image.title=s42-rabbitmq
+          org.opencontainers.image.description=RabbitMQ image for s42 project
+          org.opencontainers.image.source=https://github.com/42Atomys/stud42/tree/main/build/packages/rabbitmq
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v3
+      with:
+        context: .
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.labels.outputs.fixed }}
+        file: build/packages/rabbitmq/Dockerfile

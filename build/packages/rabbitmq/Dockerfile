@@ -1,0 +1,10 @@
+FROM rabbitmq:3.10.2-management
+
+ENV RABBITMQ_DELAYED_MESSAGE_PLUGIN_VERSION=3.10.2
+
+RUN apt-get update && \
+    apt-get install -y curl && \
+    curl -L https://github.com/rabbitmq/rabbitmq-delayed-message-exchange/releases/download/$RABBITMQ_DELAYED_MESSAGE_PLUGIN_VERSION/rabbitmq_delayed_message_exchange-$RABBITMQ_DELAYED_MESSAGE_PLUGIN_VERSION.ez > $RABBITMQ_HOME/plugins/rabbitmq_delayed_message_exchange-$RABBITMQ_DELAYED_MESSAGE_PLUGIN_VERSION.ez &&\
+    chown rabbitmq:rabbitmq $RABBITMQ_HOME/plugins/rabbitmq_delayed_message_exchange-$RABBITMQ_DELAYED_MESSAGE_PLUGIN_VERSION.ez &&\
+    rabbitmq-plugins enable --offline rabbitmq_delayed_message_exchange
+  
