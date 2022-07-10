@@ -3,7 +3,8 @@ kind: PodDisruptionBudget
 metadata:
   name: pdb-rabbitmq
 spec:
-  maxUnavailable: 1
+  maxUnavailable: 0
+  minAvailable: 1
   selector:
     matchLabels:
       app.kubernetes.io/name: primary-rabbitmq

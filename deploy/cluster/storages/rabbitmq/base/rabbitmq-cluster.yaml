@@ -4,6 +4,9 @@ metadata:
   name: primary-rabbitmq
 spec:
   replicas: 1
+  # Custom image available at build/packages/rabbitmq used to enable the custom 
+  # plugins on rabbitmq (rabbitmq_delayed_message_exchange)
+  image: ghcr.io/42atomys/s42-rabbitmq:3.10.2-management
   persistence:
     storageClassName: csi-cinder-high-speed
     storage: 1Gi
