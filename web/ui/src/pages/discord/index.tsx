@@ -178,9 +178,7 @@ interface PageProps {
 }
 
 export const IndexPage: NextPage<PageProps, {}> = ({ me }) => {
-  const hasDiscordAccess = me.flags?.some(
-    (f) => f === Flag.DISCORD
-  );
+  const hasDiscordAccess = me.flags?.some((f) => f === Flag.DISCORD);
 
   let currentStep =
     (me.accounts?.filter(
