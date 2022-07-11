@@ -17,10 +17,13 @@ enum POLICY {
   NONE
 }
 
-enum FEATURE {
-  DISCORD_ACCESS
-  ALPHA_ACCESS
-  BETA_ACCESS
+enum FLAG {
+  STAFF
+  COLLABORATOR
+  CONTRIBUTOR
+  SPONSOR
+  BETA
+  DISCORD
 }
 
 type PageInfo {
@@ -45,7 +48,7 @@ type User {
   AvatarURL: String
   CoverURL: String
   accounts: [Account]
-  features: [FEATURE!]!
+  flags: [FLAG!]!
   currentLocation: Location
   isFollowing: Boolean!
   isFollower: Boolean!

@@ -39,6 +39,7 @@ func (User) Fields() []ent.Field {
 		field.UUID("current_location_id", uuid.UUID{}).Nillable().Optional(),
 		field.Bool("is_staff").Default(false),
 		field.Bool("is_a_user").Default(false),
+		field.JSON("flags_list", []string{}).Default([]string{}).Optional(),
 	}
 }
 
