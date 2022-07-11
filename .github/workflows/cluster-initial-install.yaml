@@ -186,7 +186,8 @@ jobs:
         kubectl delete secret --namespace=${{ matrix.namespace }} s42-webhooked-secrets --ignore-not-found
         kubectl create secret generic s42-webhooked-secrets \
           --namespace=${{ matrix.namespace }} \
-          --from-literal=WEBHOOK_SECRET_HEADER=${{ secrets.SECRET__WEBHOOK_SECRET_HEADER }}
+          --from-literal=WEBHOOK_SECRET_HEADER=${{ secrets.SECRET__WEBHOOK_SECRET_HEADER }} \
+          --from-literal=GITHUB_WEBHOOK_SECRET=${{ secrets.SECRET__GITHUB_WEBHOOK_SECRET }}
 
   storages_install:
     runs-on: ubuntu-latest
