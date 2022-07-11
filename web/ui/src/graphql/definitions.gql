@@ -115,10 +115,10 @@ query me {
   }
 }
 
-query meWithFeatures {
+query meWithFlags {
   me {
     ...UserAccountsData
-    features
+    flags
   }
 }
 

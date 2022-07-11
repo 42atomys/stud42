@@ -18,6 +18,7 @@ import (
 	"atomys.codes/stud42/internal/models/generated/account"
 	"atomys.codes/stud42/internal/models/generated/user"
 	"atomys.codes/stud42/pkg/duoapi"
+	"atomys.codes/stud42/pkg/utils"
 )
 
 type processor struct {
@@ -159,7 +160,7 @@ func (p *processor) githubHandler(data []byte) error {
 		},
 	})
 
-	_, err := p.db.User.
+	user, err := p.db.User.
 		Query().
 		Where(
 			user.HasAccountsWith(
@@ -174,11 +175,22 @@ func (p *processor) githubHandler(data []byte) error {
 		return nil
 	}
 
+	var flagsList = user.FlagsList
 	switch webhookPayload.Action {
 	case "created":
 	case "edited":
+		if webhookPayload.Sponsorship.Tier.MonthlyPriceInDollars >= 5 {
+			flagsList = append(flagsList, typesgen.FlagBeta.String(), typesgen.FlagDiscord.String())
+		}
+		flagsList = append(flagsList, typesgen.FlagSponsor.String())
 	case "cancelled":
+		utils.Remove(
+			flagsList, typesgen.FlagSponsor.String(),
+			typesgen.FlagBeta.String(),
+			typesgen.FlagDiscord.String(),
+		)
 	}
 
-	return nil
+	_, err = p.db.User.UpdateOne(user).SetFlagsList(flagsList).Save(p.ctx)
+	return err
 }

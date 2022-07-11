@@ -7,21 +7,18 @@ import (
 	"context"
 	"os"
 
-	"entgo.io/ent/dialect/sql"
-	"github.com/bwmarrin/discordgo"
-	"github.com/google/uuid"
-	"github.com/rs/zerolog/log"
-	"github.com/shurcooL/githubv4"
-	"github.com/spf13/viper"
-	"golang.org/x/oauth2"
-
 	apigen "atomys.codes/stud42/internal/api/generated"
 	typesgen "atomys.codes/stud42/internal/api/generated/types"
+	modelsutils "atomys.codes/stud42/internal/models"
 	"atomys.codes/stud42/internal/models/generated"
 	"atomys.codes/stud42/internal/models/generated/account"
 	"atomys.codes/stud42/internal/models/generated/campus"
 	"atomys.codes/stud42/internal/models/generated/location"
 	"atomys.codes/stud42/internal/models/generated/user"
+	"entgo.io/ent/dialect/sql"
+	"github.com/bwmarrin/discordgo"
+	"github.com/google/uuid"
+	"github.com/spf13/viper"
 )
 
 func (r *mutationResolver) CreateFriendship(ctx context.Context, userID uuid.UUID) (bool, error) {
@@ -209,61 +206,8 @@ func (r *queryResolver) InternalGetUser(ctx context.Context, id uuid.UUID) (*gen
 	return r.client.User.Get(ctx, id)
 }
 
-func (r *userResolver) Features(ctx context.Context, obj *generated.User) ([]typesgen.Feature, error) {
-	var features = make([]typesgen.Feature, 0)
-
-	// TODO @42Atomys Remove hardcoded check
-	if obj.DuoLogin == "gdalmar" {
-		return typesgen.AllFeature, nil
-	}
-
-	acc, err := r.client.Account.Query().
-		Select("username").
-		Where(
-			account.UserID(obj.ID),
-			account.Provider(string(typesgen.ProviderGithub)),
-		).
-		Only(ctx)
-
-	if (err != nil) || (acc == nil) {
-		return features, nil
-	}
-
-	// TODO Move github utils outside of resolvers
-	httpClient := oauth2.NewClient(context.Background(), oauth2.StaticTokenSource(
-		&oauth2.Token{AccessToken: os.Getenv("GITHUB_TOKEN")},
-	))
-
-	client := githubv4.NewClient(httpClient)
-
-	var query struct {
-		User struct {
-			SponsorshipForViewerAsSponsorable struct {
-				Tier struct {
-					ID                    string
-					MonthlyPriceInDollars int
-				}
-			}
-		} `graphql:"user(login: $login)"`
-	}
-
-	err = client.Query(ctx, &query, map[string]interface{}{
-		"login": githubv4.String(acc.Username),
-	})
-	if err != nil {
-		log.Error().Err(err).Msg("failed to query github")
-		return nil, err
-	}
-
-	if query.User.SponsorshipForViewerAsSponsorable.Tier.MonthlyPriceInDollars >= 5 {
-		features = append(features, typesgen.FeatureDiscordAccess)
-	}
-
-	if query.User.SponsorshipForViewerAsSponsorable.Tier.MonthlyPriceInDollars >= 25 {
-		features = append(features, typesgen.FeatureBetaAccess)
-	}
-
-	return features, nil
+func (r *userResolver) Flags(ctx context.Context, obj *generated.User) ([]typesgen.Flag, error) {
+	return modelsutils.TranslateFlagFromORM(obj.FlagsList), nil
 }
 
 func (r *userResolver) IsFollowing(ctx context.Context, obj *generated.User) (bool, error) {

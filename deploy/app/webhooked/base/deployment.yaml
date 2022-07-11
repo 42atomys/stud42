@@ -57,6 +57,11 @@ spec:
             secretKeyRef:
               key: WEBHOOK_SECRET_HEADER
               name: s42-webhooked-secrets
+        - name: GITHUB_WEBHOOK_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: GITHUB_WEBHOOK_SECRET
+              name: s42-webhooked-secrets
         resources:
           requests:
             memory: "10Mi"

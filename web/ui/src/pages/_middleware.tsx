@@ -1,7 +1,7 @@
 import {
-  Feature,
-  MeWithFeaturesDocument,
-  MeWithFeaturesQuery,
+  Flag,
+  MeWithFlagsDocument,
+  MeWithFlagsQuery,
 } from '@graphql.d';
 import { queryAuthenticatedSSR } from '@lib/apollo';
 import { NextMiddleware, NextResponse } from 'next/server';
@@ -17,8 +17,8 @@ export const middleware: NextMiddleware = async (req) => {
     return NextResponse.next();
   }
 
-  const { data } = await queryAuthenticatedSSR<MeWithFeaturesQuery>(req, {
-    query: MeWithFeaturesDocument,
+  const { data } = await queryAuthenticatedSSR<MeWithFlagsQuery>(req, {
+    query: MeWithFlagsDocument,
   });
 
   if (pathname.startsWith('/auth')) {
@@ -35,10 +35,10 @@ export const middleware: NextMiddleware = async (req) => {
     );
   }
 
-  const { features = [] } = data?.me || {};
+  const { flags = [] } = data?.me || {};
   if (
-    features.includes(Feature.ALPHA_ACCESS) ||
-    features.includes(Feature.BETA_ACCESS)
+    flags.includes(Flag.STAFF) ||
+    flags.includes(Flag.BETA)
   ) {
     return NextResponse.next();
   }

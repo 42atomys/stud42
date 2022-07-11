@@ -1,8 +1,8 @@
 import { Emoji } from '@components/Emoji';
 import {
-  Feature,
-  MeWithFeaturesDocument,
-  MeWithFeaturesQuery,
+  Flag,
+  MeWithFlagsDocument,
+  MeWithFlagsQuery,
   Provider,
   useInviteOnDiscordMutation,
 } from '@graphql.d';
@@ -174,12 +174,12 @@ const Steps = ({ currentStep }: { currentStep: number }) => {
 };
 
 interface PageProps {
-  me: MeWithFeaturesQuery['me'];
+  me: MeWithFlagsQuery['me'];
 }
 
 export const IndexPage: NextPage<PageProps, {}> = ({ me }) => {
-  const hasDiscordAccess = me.features?.some(
-    (f) => f === Feature.DISCORD_ACCESS
+  const hasDiscordAccess = me.flags?.some(
+    (f) => f === Flag.DISCORD
   );
 
   let currentStep =
@@ -317,8 +317,8 @@ export const IndexPage: NextPage<PageProps, {}> = ({ me }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const { data } = await queryAuthenticatedSSR<MeWithFeaturesQuery>(req, {
-    query: MeWithFeaturesDocument,
+  const { data } = await queryAuthenticatedSSR<MeWithFlagsQuery>(req, {
+    query: MeWithFlagsDocument,
   });
 
   if (!data) {
