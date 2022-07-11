@@ -5,13 +5,18 @@ import (
 	"encoding/json"
 	"errors"
 	"os"
+	"strconv"
 
 	"github.com/getsentry/sentry-go"
 	"github.com/rs/zerolog/log"
 	"github.com/streadway/amqp"
 
+	typesgen "atomys.codes/stud42/internal/api/generated/types"
 	modelsutils "atomys.codes/stud42/internal/models"
+	"atomys.codes/stud42/internal/models/generated"
 	modelgen "atomys.codes/stud42/internal/models/generated"
+	"atomys.codes/stud42/internal/models/generated/account"
+	"atomys.codes/stud42/internal/models/generated/user"
 	"atomys.codes/stud42/pkg/duoapi"
 )
 
@@ -118,6 +123,12 @@ func (p *processor) handler(data []byte) error {
 	}
 	log.Debug().Msgf("Received a message(%s.%s): %+v", md.Metadata.Model, md.Metadata.Event, md.Payload)
 
+	// TODO: implement the processor for github and other webhooks
+	// Why: Bet need to be open and github sponsorship is a requirement to open it
+	if md.Metadata.SpecName == "github-sponsorships" {
+		return p.githubHandler(data)
+	}
+
 	var err error
 	switch md.Metadata.Model {
 	case "location":
@@ -128,6 +139,45 @@ func (p *processor) handler(data []byte) error {
 	if err != nil {
 		log.Error().Err(err).Str("model", md.Metadata.Model).Str("event", md.Metadata.Event).Msg("Failed to process webhook")
 		return err
+	}
+
+	return nil
+}
+
+func (p *processor) githubHandler(data []byte) error {
+	webhookPayload := &GithubSponsorshipWebhook{}
+	if err := json.Unmarshal(data, &webhookPayload); err != nil {
+		log.Error().Err(err).Msg("Failed to unmarshal webhook payload")
+		return err
+	}
+
+	sentry.CaptureEvent(&sentry.Event{
+		Level:   sentry.LevelInfo,
+		Message: "Received a message(github-sponsorships)",
+		Extra: map[string]interface{}{
+			"webhook": webhookPayload,
+		},
+	})
+
+	_, err := p.db.User.
+		Query().
+		Where(
+			user.HasAccountsWith(
+				account.Provider(typesgen.ProviderGithub.String()),
+				account.ProviderAccountID(strconv.Itoa(webhookPayload.Sender.ID)),
+			),
+		).
+		First(p.ctx)
+	if err != nil && !generated.IsNotFound(err) {
+		return err
+	} else if generated.IsNotFound(err) {
+		return nil
+	}
+
+	switch webhookPayload.Action {
+	case "created":
+	case "edited":
+	case "cancelled":
 	}
 
 	return nil
