@@ -42,6 +42,9 @@ type IWebhookPayload interface {
 // This informations is sended originally by the 42 API on the Header of the
 // webhook.
 type WebhookMetadata struct {
+	// SpecName represents the spec name on wehooked configuration.
+	// Internally usage only.
+	SpecName string `json:"specName"`
 	// Event is the event that triggered the webhook. (Header: X-Event)
 	// Possible values are listed on the interface {Model}WebhookProcessor.
 	Event string `json:"event"`

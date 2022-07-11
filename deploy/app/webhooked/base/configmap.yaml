@@ -11,6 +11,7 @@ data:
   template.tpl: |
     {
       "metadata": {
+        "specName": "{{ .Spec.Name }}",
         "model": "{{ .Request.Header | getHeader "X-Model" }}",
         "event": "{{ .Request.Header | getHeader "X-Event" }}",
         "deliveryID": "{{ .Request.Header | getHeader "X-Delivery" | default "unknown" }}"
@@ -147,3 +148,37 @@ data:
           queueName: webhooks-deliveries
           contentType: application/json
           durable: true
+    - name: github-sponsorships
+      entrypointUrl: /github/sponsors
+      security:
+      - generate_hmac_256:
+        id: signature
+        inputs:
+        - name: payload
+          value: '{{ .Inputs.payload }}'
+        - name: secret
+          valueFrom:
+            envRef: GITHUB_WEBHOOK_SECRET 
+      - header:
+          id: headerSignature
+          inputs:
+          - name: headerName
+            value: X-Hub-Signature-256
+      - compare:
+          inputs:
+          - name: first
+            value: '{{ .Outputs.headerSignature.value }}'
+          - name: second
+            value: 'sha256={{ .Outputs.signature.value }}'
+      formatting:
+        templatePath: /config/template.tpl
+      storage:
+      - type: rabbitmq
+        specs:
+          databaseUrl:
+            valueFrom:
+              envRef: RABBITMQ_DATABASE_URL
+          queueName: webhooks-deliveries
+          contentType: application/json
+          durable: true
+          exchange: delayed
