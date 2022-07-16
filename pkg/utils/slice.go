@@ -2,12 +2,14 @@ package utils
 
 // Remove an item from a slice
 func Remove[T comparable](slice []T, items ...T) []T {
-	for i, element := range slice {
+	var result = make([]T, 0)
+	for _, element := range slice {
 		if Contains(items, element) {
-			return append(slice[:i], slice[i+1:]...)
+			continue
 		}
+		result = append(result, element)
 	}
-	return slice
+	return result
 }
 
 // Contains returns true if the item is in the slice
@@ -22,7 +24,7 @@ func Contains[T comparable](slice []T, item T) bool {
 
 // Uniq returns a new slice with unique items from the given slice
 func Uniq[T comparable](slice []T) []T {
-	var unique []T
+	var unique []T = make([]T, 0)
 	for _, element := range slice {
 		if Contains(unique, element) {
 			continue

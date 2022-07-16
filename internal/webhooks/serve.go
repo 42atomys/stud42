@@ -195,8 +195,9 @@ func (p *processor) githubHandler(data []byte) error {
 		}
 		flagsList = append(flagsList, typesgen.FlagSponsor.String())
 	case "cancelled":
-		utils.Remove(
-			flagsList, typesgen.FlagSponsor.String(),
+		flagsList = utils.Remove(
+			flagsList,
+			typesgen.FlagSponsor.String(),
 			typesgen.FlagBeta.String(),
 			typesgen.FlagDiscord.String(),
 		)
