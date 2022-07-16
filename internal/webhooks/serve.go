@@ -177,8 +177,7 @@ func (p *processor) githubHandler(data []byte) error {
 
 	var flagsList = user.FlagsList
 	switch webhookPayload.Action {
-	case "created":
-	case "edited":
+	case "created", "edited":
 		if webhookPayload.Sponsorship.Tier.MonthlyPriceInDollars >= 5 {
 			flagsList = append(flagsList, typesgen.FlagBeta.String(), typesgen.FlagDiscord.String())
 		}
@@ -191,6 +190,6 @@ func (p *processor) githubHandler(data []byte) error {
 		)
 	}
 
-	_, err = p.db.User.UpdateOne(user).SetFlagsList(flagsList).Save(p.ctx)
+	_, err = p.db.User.UpdateOne(user).SetFlagsList(utils.Uniq(flagsList)).Save(p.ctx)
 	return err
 }

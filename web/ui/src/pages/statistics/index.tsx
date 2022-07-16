@@ -1,6 +1,7 @@
 import { ComponentWithAuthGuard } from '@components/AuthGuard';
 import React from 'react';
 import { useSidebar } from '@components/Sidebar';
+import Soon from '@components/Soon';
 
 type PageProps = {};
 
@@ -10,9 +11,9 @@ const IndexPage: ComponentWithAuthGuard<PageProps> = () => {
   return (
     <SidebarProvider>
       <PageContainer>
-        <Sidebar />
-        <PageContent className="p-2 flex-1">
-          <h1>Statistics Page</h1>
+        <Sidebar></Sidebar>
+        <PageContent className="flex-1 flex h-100vh justify-center items-center">
+          <Soon />
         </PageContent>
       </PageContainer>
     </SidebarProvider>

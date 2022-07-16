@@ -8,7 +8,7 @@ export const middleware: NextMiddleware = async (req) => {
   if (
     pathname.startsWith('/api') ||
     pathname.startsWith('/assets') ||
-    pathname.startsWith('/discord')
+    pathname.startsWith('/beta')
   ) {
     return NextResponse.next();
   }
@@ -32,9 +32,10 @@ export const middleware: NextMiddleware = async (req) => {
   }
 
   const { flags = [] } = data?.me || {};
+  console.log(flags);
   if (flags.includes(Flag.STAFF) || flags.includes(Flag.BETA)) {
     return NextResponse.next();
   }
 
-  return NextResponse.redirect(new URL('/discord', req.url));
+  return NextResponse.redirect(new URL('/beta', req.url));
 };

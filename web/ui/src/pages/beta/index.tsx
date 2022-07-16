@@ -13,11 +13,7 @@ import { signIn } from 'next-auth/react';
 import Image from 'next/image';
 import { useState } from 'react';
 
-const SponsorGithubPart = ({
-  hasDiscordAccess,
-}: {
-  hasDiscordAccess: boolean;
-}) => {
+const SponsorGithubPart = ({ hasSponsored }: { hasSponsored: boolean }) => {
   const [invited, setInvited] = useState(false);
   const [joinDiscordMutation] = useInviteOnDiscordMutation({
     onError: () => setInvited(false),
@@ -28,8 +24,8 @@ const SponsorGithubPart = ({
     setInvited(true);
   };
 
-  if (hasDiscordAccess) {
-    return (
+  return (
+    <div className="flex flex-col justify-center items-center mb-6 text-center">
       <div className="flex flex-col justify-center items-center mb-6 text-center">
         <h2 className="text-4xl font-display font-bold mb-4 mt-20 bg-clip-text text-transparent bg-gradient-to-l from-emerald-500 to-cyan-500 w-fit">
           You have unlocked a new feature!
@@ -56,30 +52,45 @@ const SponsorGithubPart = ({
           )}
         </button>
       </div>
-    );
-  }
 
-  return (
-    <div className="flex flex-col justify-center items-center mb-6 text-center">
-      <h2 className="text-4xl font-display font-bold mb-4 mt-20 bg-clip-text text-transparent bg-gradient-to-l from-indigo-500 to-fuchsia-500 w-fit">
+      <h2
+        className={classNames(
+          'text-4xl font-display font-bold mb-4 mt-4 bg-clip-text text-transparent bg-gradient-to-l  w-fit',
+          hasSponsored
+            ? 'from-emerald-500 to-cyan-500'
+            : 'from-indigo-500 to-fuchsia-500'
+        )}
+      >
         <span className="mr-2">
-          Get early-access to the Discord by becoming a sponsor
+          {(hasSponsored && 'You have the power !') ||
+            'Get early-access to the beta by becoming a sponsor'}
         </span>
-        <Emoji emoji="🎉" size={28} />
+        <Emoji emoji={hasSponsored ? '🚀' : '🎉'} size={28} />
       </h2>
       <small className="font-medium font-display text-xl text-slate-500">
-        Becoming a sponsor means access to the Discord, to the code, to the beta
+        Becoming a sponsor means access to the beta and the code
         <br />
         and to participate in new features before anyone else!
       </small>
-      <a
-        href="https://github.com/sponsors/42Atomys"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="my-10 py-4 px-6 rounded-lg text-white text-lg bg-black font-medium border-2 border-black hover:px-14 hover:bg-slate-900 hover:border-indigo-500 focus:px-14 focus:border-indigo-500 focus:bg-indigo-500 transition-all"
-      >
-        Sponsor on Github
-      </a>
+      {(hasSponsored && (
+        <a
+          href="/"
+          rel="noopener noreferrer"
+          className="my-10 py-4 px-6 rounded-lg text-white text-lg bg-black font-medium border-2 border-black hover:px-14 hover:bg-slate-900 hover:border-indigo-500 focus:px-14 focus:border-indigo-500 focus:bg-indigo-500 transition-all"
+        >
+          Go to the future
+        </a>
+      )) || (
+        <a
+          href="https://github.com/sponsors/42Atomys"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="my-10 py-4 px-6 rounded-lg text-white text-lg bg-black font-medium border-2 border-black hover:px-14 hover:bg-slate-900 hover:border-indigo-500 focus:px-14 focus:border-indigo-500 focus:bg-indigo-500 transition-all"
+        >
+          Sponsor on Github
+        </a>
+      )}
+
       <i className="block mt-2 text-sm">
         After sponsoring come back on this page, refresh and see
         <br />
@@ -178,14 +189,14 @@ interface PageProps {
 }
 
 export const IndexPage: NextPage<PageProps, {}> = ({ me }) => {
-  const hasDiscordAccess = me.flags?.some((f) => f === Flag.DISCORD);
+  const hasSponsored = me.flags?.some((f) => Flag.SPONSOR);
 
   let currentStep =
     (me.accounts?.filter(
       (a) => a?.provider === Provider.GITHUB || a?.provider === Provider.DISCORD
     ).length || 0) + 1;
 
-  if (currentStep == 3 && hasDiscordAccess) currentStep = 4;
+  if (currentStep == 3 && hasSponsored) currentStep = 4;
 
   if (!me) {
     return <>OUPS</>;
@@ -270,7 +281,7 @@ export const IndexPage: NextPage<PageProps, {}> = ({ me }) => {
               </small>
               <div className="flex flex-col justify-around mt-10">
                 <button
-                  onClick={() => signIn('discord', { callbackUrl: '/discord' })}
+                  onClick={() => signIn('discord', { callbackUrl: '/beta' })}
                   className="my-1 py-4 px-6 rounded-lg text-white text-lg bg-black font-medium border-2 border-black hover:px-14 hover:bg-slate-900 hover:border-indigo-500 focus:px-14 focus:border-indigo-500 focus:bg-indigo-500 transition-all"
                 >
                   <i className="fa-brands fa-discord" />
@@ -295,7 +306,7 @@ export const IndexPage: NextPage<PageProps, {}> = ({ me }) => {
               </small>
               <div className="flex flex-col justify-around mt-10">
                 <button
-                  onClick={() => signIn('github', { callbackUrl: '/discord' })}
+                  onClick={() => signIn('github', { callbackUrl: '/beta' })}
                   className="my-1 py-4 px-6 rounded-lg text-white text-lg bg-black font-medium border-2 border-black hover:px-14 hover:bg-slate-900 hover:border-indigo-500 focus:px-14 focus:border-indigo-500 focus:bg-indigo-500 transition-all"
                 >
                   <i className="fa-brands fa-github" />
@@ -306,7 +317,7 @@ export const IndexPage: NextPage<PageProps, {}> = ({ me }) => {
           )}
 
           {(currentStep == 3 || currentStep == 4) && (
-            <SponsorGithubPart hasDiscordAccess={hasDiscordAccess || false} />
+            <SponsorGithubPart hasSponsored={hasSponsored || false} />
           )}
         </div>
       </div>
@@ -323,7 +334,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     return {
       props: {},
       redirect: {
-        destination: '/auth/signin?callbackUrl=/discord',
+        destination: '/auth/signin?callbackUrl=/beta',
       },
     };
   }

@@ -113,6 +113,11 @@ export const Sidebar = ({
           <MenuItem href="/clusters" icon="fa-sitemap" name="Clusters" />
           <MenuItem href="/friends" icon="fa-user-group" name="Friends" />
           <MenuItem href="/statistics" icon="fa-chart-line" name="Statistics" />
+          <MenuItem
+            href="https://discord.gg/5f864c6hyj"
+            icon="fab fa-discord"
+            name="Discord"
+          />
         </nav>
         <div
           className={`${
