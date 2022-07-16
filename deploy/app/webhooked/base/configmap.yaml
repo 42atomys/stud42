@@ -179,4 +179,3 @@ data:
           queueName: webhooks-deliveries
           contentType: application/json
           durable: true
-          exchange: delayed
