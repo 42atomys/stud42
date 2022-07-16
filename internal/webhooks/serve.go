@@ -142,7 +142,15 @@ func (p *processor) handler(data []byte) error {
 	// TODO: implement the processor for github and other webhooks
 	// Why: Bet need to be open and github sponsorship is a requirement to open it
 	if md.Metadata.SpecName == "github-sponsorships" {
-		return p.githubHandler(data)
+		// Marshal the payload to the expected format for the github processor
+		// FUTURE: rework it
+		b, err := json.Marshal(md.Payload)
+    if err != nil {
+			log.Error().Err(err).Msg("Failed to marshal payload")
+      return err
+    }
+
+		return p.githubHandler(b)
 	}
 
 	return p.duoHandler(data)
