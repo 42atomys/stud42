@@ -19,3 +19,16 @@ func Contains[T comparable](slice []T, item T) bool {
 	}
 	return false
 }
+
+// Uniq returns a new slice with unique items from the given slice
+func Uniq[T comparable](slice []T) []T {
+	var unique []T
+	for _, element := range slice {
+		if Contains(unique, element) {
+			continue
+		}
+
+		unique = append(unique, element)
+	}
+	return unique
+}

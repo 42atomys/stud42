@@ -55,7 +55,7 @@ export const ClusterSidebar = ({
               <a>
                 <MenuItem
                   active={campus == 'helsinki' && cluster == 'c1'}
-                  name=""
+                  name="Cluster 1"
                   text="C1"
                 />
               </a>
@@ -64,7 +64,7 @@ export const ClusterSidebar = ({
               <a>
                 <MenuItem
                   active={campus == 'helsinki' && cluster == 'c2'}
-                  name=""
+                  name="Cluster 2"
                   text="C2"
                 />
               </a>
@@ -73,7 +73,7 @@ export const ClusterSidebar = ({
               <a>
                 <MenuItem
                   active={campus == 'helsinki' && cluster == 'c3'}
-                  name=""
+                  name="Cluster 3"
                   text="C3"
                 />
               </a>

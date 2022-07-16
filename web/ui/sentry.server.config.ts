@@ -13,6 +13,7 @@ if (process.env.NODE_ENV && process.env.NODE_ENV !== 'development') {
     integrations: [new BrowserTracing()],
     // Adjust this value in production, or use tracesSampler for greater control
     tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.2 : 0,
+    sampleRate: 1,
     // ...
     // Note: if you want to override the automatic release value, do not set a
     // `release` value here - use the environment variable `SENTRY_RELEASE`, so
