@@ -108,18 +108,33 @@ func (p *processor) Serve(amqpUrl, channel string) error {
 	return nil
 }
 
+// metadataWebhooked is the structure of the webhook metadata sent by the
+// webhooked project formatted following this schema:
+type metadataWebhooked struct {
+	Metadata struct {
+		// For duoapi webhooks the strcut is the type of the object with additionnal
+		// fields
+		duoapi.WebhookMetadata
+		// SpecName represents the spec name on wehooked configuration.
+		// Internally usage only.
+		SpecName string `json:"specName"`
+	} `json:"metadata"`
+	//Payload
+	Payload map[string]interface{} `json:"payload"`
+}
+
 // handler is the main function that processes the webhooks. It parses the
 // webhook metadata and calls the appropriate processor function.
 // This function is called by the Serve function on each incoming message.
 func (p *processor) handler(data []byte) error {
-	md := &duoapi.Webhook{}
+	md := &metadataWebhooked{}
 
 	if err := json.Unmarshal(data, &md); err != nil {
 		log.Error().Err(err).Msg("Failed to unmarshal webhook metadata")
 	}
 
-	if md == nil || md.Metadata == nil {
-		log.Error().Str("payload", string(data)).Msg("Webhook metadata is nil")
+	if md == nil || md.Metadata.SpecName == "" {
+		log.Error().Str("payload", string(data)).Msg("Webhook metadata is invalid")
 		return ErrInvalidWebhook
 	}
 	log.Debug().Msgf("Received a message(%s.%s): %+v", md.Metadata.Model, md.Metadata.Event, md.Payload)
@@ -130,21 +145,10 @@ func (p *processor) handler(data []byte) error {
 		return p.githubHandler(data)
 	}
 
-	var err error
-	switch md.Metadata.Model {
-	case "location":
-		err = md.Payload.ProcessWebhook(p.ctx, md.Metadata, &locationProcessor{processor: p})
-	case "user":
-		err = md.Payload.ProcessWebhook(p.ctx, md.Metadata, &userProcessor{processor: p})
-	}
-	if err != nil {
-		log.Error().Err(err).Str("model", md.Metadata.Model).Str("event", md.Metadata.Event).Msg("Failed to process webhook")
-		return err
-	}
-
-	return nil
+	return p.duoHandler(data)
 }
 
+// githubHandler is the processor for the github webhooks. 
 func (p *processor) githubHandler(data []byte) error {
 	webhookPayload := &GithubSponsorshipWebhook{}
 	if err := json.Unmarshal(data, &webhookPayload); err != nil {
@@ -192,4 +196,26 @@ func (p *processor) githubHandler(data []byte) error {
 
 	_, err = p.db.User.UpdateOne(user).SetFlagsList(utils.Uniq(flagsList)).Save(p.ctx)
 	return err
+}
+
+// duoHandler is the processor for the duo webhooks. 
+func (p *processor) duoHandler(data []byte) error {
+	mdDuo := &duoapi.Webhook{}
+	if err := json.Unmarshal(data, &mdDuo); err != nil {
+		log.Error().Err(err).Msg("Failed to unmarshal webhook metadata")
+	}
+
+	var err error
+	switch mdDuo.Metadata.Model {
+	case "location":
+		err = mdDuo.Payload.ProcessWebhook(p.ctx, mdDuo.Metadata, &locationProcessor{processor: p})
+	case "user":
+		err = mdDuo.Payload.ProcessWebhook(p.ctx, mdDuo.Metadata, &userProcessor{processor: p})
+	}
+	if err != nil {
+		log.Error().Err(err).Str("model", mdDuo.Metadata.Model).Str("event", mdDuo.Metadata.Event).Msg("Failed to process webhook")
+		return err
+	}
+
+	return nil
 }
