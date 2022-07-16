@@ -32,7 +32,6 @@ export const middleware: NextMiddleware = async (req) => {
   }
 
   const { flags = [] } = data?.me || {};
-  console.log(flags);
   if (flags.includes(Flag.STAFF) || flags.includes(Flag.BETA)) {
     return NextResponse.next();
   }

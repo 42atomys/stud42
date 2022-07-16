@@ -11,6 +11,7 @@ import classNames from 'classnames';
 import { GetServerSideProps, NextPage } from 'next';
 import { signIn } from 'next-auth/react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useState } from 'react';
 
 const SponsorGithubPart = ({ hasSponsored }: { hasSponsored: boolean }) => {
@@ -73,13 +74,11 @@ const SponsorGithubPart = ({ hasSponsored }: { hasSponsored: boolean }) => {
         and to participate in new features before anyone else!
       </small>
       {(hasSponsored && (
-        <a
-          href="/"
-          rel="noopener noreferrer"
-          className="my-10 py-4 px-6 rounded-lg text-white text-lg bg-black font-medium border-2 border-black hover:px-14 hover:bg-slate-900 hover:border-indigo-500 focus:px-14 focus:border-indigo-500 focus:bg-indigo-500 transition-all"
-        >
-          Go to the future
-        </a>
+        <Link href="/" rel="noopener noreferrer">
+          <a className="my-10 py-4 px-6 rounded-lg text-white text-lg bg-black font-medium border-2 border-black hover:px-14 hover:bg-slate-900 hover:border-indigo-500 focus:px-14 focus:border-indigo-500 focus:bg-indigo-500 transition-all">
+            Go to the future
+          </a>
+        </Link>
       )) || (
         <a
           href="https://github.com/sponsors/42Atomys"
@@ -189,7 +188,7 @@ interface PageProps {
 }
 
 export const IndexPage: NextPage<PageProps, {}> = ({ me }) => {
-  const hasSponsored = me.flags?.some((f) => Flag.SPONSOR);
+  const hasSponsored = me.flags?.some((f) => f === Flag.SPONSOR);
 
   let currentStep =
     (me.accounts?.filter(
