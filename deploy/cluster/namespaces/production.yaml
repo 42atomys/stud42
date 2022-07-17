@@ -6,6 +6,6 @@ metadata:
   name: production
   labels:
     kubernetes.io/name: live
-    pod-security.kubernetes.io/enforce: restricted
-    pod-security.kubernetes.io/enforce-version: '1.23'
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/warn-version: 'v1.23'
     app.kubernetes.io/created-by: github-actions
