@@ -1,4 +1,4 @@
-name: 'Images build 🐳'
+name: 'Package images build 🐳'
 on:
   workflow_dispatch:
   push:
@@ -7,16 +7,23 @@ on:
     paths:
     - build/packages/*
 jobs:
-  rabbitmq:
-    name: 'Build rabbitmq image & push to ghcr.io 🐳'
+  build_packages:
+    name: 'Build ${{ matrix.package }} image & push to ghcr.io 🐳'
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+        - package: postgres
+          version: 14.2-alpine3.15
+        - package: rabbitmq
+          version: 3.10.2-management
     permissions:
       contents: read
       packages: write
     env:
       REGISTRY: ghcr.io
-      IMAGE_NAME: 42Atomys/s42-rabbitmq
-      IMAGE_TAG: 3.10.2-management
+      IMAGE_NAME: 42Atomys/s42-${{ matrix.package }}
+      IMAGE_TAG: ${{ matrix.version }}
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
@@ -34,16 +41,18 @@ jobs:
       with:
         images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
         github-token: ${{ github.token }}
-        tags: '3.10.2-management'
+        tags: '${{ env.IMAGE_TAG }}'
         labels: |
-          org.opencontainers.image.title=s42-rabbitmq
-          org.opencontainers.image.description=RabbitMQ image for s42 project
-          org.opencontainers.image.source=https://github.com/42Atomys/stud42/tree/main/build/packages/rabbitmq
+          org.opencontainers.image.title=s42-${{ matrix.package }}
+          org.opencontainers.image.description=${{ matrix.package }} image for s42 project
+          org.opencontainers.image.source=https://github.com/42Atomys/stud42/tree/main/build/packages/${{ matrix.package }}
     - name: Build and push Docker image
       uses: docker/build-push-action@v3
       with:
-        context: .
+        context: build/packages/${{ matrix.package }}
         push: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.labels.outputs.fixed }}
-        file: build/packages/rabbitmq/Dockerfile
+        file: build/packages/${{ matrix.package }}/Dockerfile
+        build-args: |
+          PACKAGE_VERSION=${{ env.IMAGE_TAG }}
