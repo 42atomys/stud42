@@ -9,5 +9,5 @@ metadata:
   labels:
     kubernetes.io/name: review-apps
     pod-security.kubernetes.io/warn-enforce: restricted
-    pod-security.kubernetes.io/warn-enforce-version: '1.23'
+    pod-security.kubernetes.io/warn-enforce-version: 'v1.23'
     app.kubernetes.io/created-by: github-actions

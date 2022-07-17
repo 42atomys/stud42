@@ -16,7 +16,7 @@ jwtks:
     #
     # In production, the JWTKS endpoint is a HTTPS endpoint. Accessible
     # to the public.
-    sets: http://127.0.0.1:5500/jwks
+    sets: https://sandbox.s42.dev/.well-known/jwks
     # The endpoint used to retrieve the public key for the JWT token.
     # This endpoint is a gRPC endpoint. In order to use this endpoint,
     # the `jwtks-service` must be running. If you have access to the DEVENV
@@ -26,7 +26,7 @@ jwtks:
     # In production, the endpoint should be `secure` and use a TLS
     # certificate. The communication with the signing server is cluster
     # specific and cannot be called from outside the cluster.
-    sign: localhost:5000
+    sign: sandbox.s42.dev:51000
   # Certs used to sign and validate the JWT
   # Also called : The JWK
   jwk:
