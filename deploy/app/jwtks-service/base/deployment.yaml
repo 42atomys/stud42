@@ -44,8 +44,10 @@ spec:
             memory: "42Mi"
             cpu: "200m"
         ports:
-        - containerPort: 5000
-        - containerPort: 5500
+        - name: grpc
+          containerPort: 5000
+        - name: http
+          containerPort: 5500
       volumes:
       - name: certs-grpc
         secret:

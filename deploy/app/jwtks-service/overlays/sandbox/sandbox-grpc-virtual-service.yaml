@@ -5,14 +5,13 @@ metadata:
   namespace: sandbox
 spec:
   hosts:
-  - sandbox.s42.dev
+  - '*'
   gateways:
-  - s42-dev-sandbox
   - s42-dev-sandbox-grpc
   http:
-  - name: grpc-jwtks-service
-    match:
-    - port: 51000
+  - match:
+    - uri:
+        prefix: /
     route:
     - destination:
         host: sand-grpc-jwtks-service
