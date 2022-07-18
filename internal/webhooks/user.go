@@ -21,7 +21,7 @@ func (p *userProcessor) Create(u *duoapi.User, metadata *duoapi.WebhookMetadata)
 		SetEmail(u.Email).
 		SetIsStaff(u.Staff).
 		SetNillableUsualFirstName(&u.UsualFirstName).
-		OnConflictColumns(user.FieldDuoID).
+		OnConflictColumns(user.FieldDuoID, user.FieldDuoLogin, user.FieldEmail).
 		UpdateNewValues().
 		Exec(p.ctx)
 }
