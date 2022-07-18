@@ -21,13 +21,16 @@ const sizeClasses = {
 
 export const Avatar = ({
   login,
+  duoAvatarURL,
   size = 'sm',
   rounded = false,
   className,
 }: AvatarProps) => {
   return (
     <div
-      style={{ backgroundImage: `url(${CDN_URL.replace('{}', login)})` }}
+      style={{
+        backgroundImage: `url(${duoAvatarURL || CDN_URL.replace('{}', login)})`,
+      }}
       className={classNames(
         className,
         rounded ? 'rounded-full' : 'rounded',
