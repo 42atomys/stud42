@@ -12,6 +12,15 @@ type userProcessor struct {
 }
 
 func (p *userProcessor) Create(u *duoapi.User, metadata *duoapi.WebhookMetadata) error {
+	ok, err := p.db.User.Query().Where(user.DuoID(u.ID)).Exist(p.ctx)
+	if err != nil && !modelgen.IsNotFound(err) {
+		return err
+	}
+
+	if ok {
+		return p.Update(u, metadata)
+	}
+
 	return p.db.User.Create().
 		SetDuoID(u.ID).
 		SetDuoLogin(u.Login).
@@ -21,8 +30,6 @@ func (p *userProcessor) Create(u *duoapi.User, metadata *duoapi.WebhookMetadata)
 		SetEmail(u.Email).
 		SetIsStaff(u.Staff).
 		SetNillableUsualFirstName(&u.UsualFirstName).
-		OnConflictColumns(user.FieldDuoID).
-		UpdateNewValues().
 		Exec(p.ctx)
 }
 
