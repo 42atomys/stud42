@@ -23,11 +23,10 @@ certs:
 deps:
 	./build/install-dependencies.sh
 
-local-dev-setup: deps generate certs create-pg-extensions
-
-create-pg-extensions:
-	docker-compose -f docker-compose.local.yaml up -d
-	docker exec -it s42_postgres psql -c 'CREATE EXTENSION IF NOT EXISTS "uuid-ossp"; CREATE EXTENSION IF NOT EXISTS "pg_trgm";' -U postgres -d s42
+devcontainer-init: generate certs
+	go mod download
+	sudo yarn --cwd web/ui install
+	sudo yarn --cwd web/ui generate
 
 all:
 	deps
