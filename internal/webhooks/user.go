@@ -1,6 +1,8 @@
 package webhooks
 
 import (
+	"strings"
+
 	modelgen "atomys.codes/stud42/internal/models/generated"
 	"atomys.codes/stud42/internal/models/generated/user"
 	"atomys.codes/stud42/pkg/duoapi"
@@ -34,6 +36,14 @@ func (p *userProcessor) Create(u *duoapi.User, metadata *duoapi.WebhookMetadata)
 }
 
 func (p *userProcessor) Update(u *duoapi.User, metadata *duoapi.WebhookMetadata) error {
+	if strings.HasPrefix(u.Login, "3b3") {
+		_, err := p.db.User.Delete().Where(user.DuoID(u.ID)).Exec(p.ctx)
+		if modelgen.IsNotFound(err) {
+			return nil
+		}
+		return err
+	}
+
 	err := p.db.User.Update().
 		SetDuoID(u.ID).
 		SetDuoLogin(u.Login).
