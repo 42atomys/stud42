@@ -4,6 +4,7 @@ import (
 	modelgen "atomys.codes/stud42/internal/models/generated"
 	"atomys.codes/stud42/internal/models/generated/user"
 	"atomys.codes/stud42/pkg/duoapi"
+	"entgo.io/ent/dialect/sql"
 )
 
 type userProcessor struct {
@@ -21,7 +22,7 @@ func (p *userProcessor) Create(u *duoapi.User, metadata *duoapi.WebhookMetadata)
 		SetEmail(u.Email).
 		SetIsStaff(u.Staff).
 		SetNillableUsualFirstName(&u.UsualFirstName).
-		OnConflictColumns(user.FieldDuoID).
+		OnConflict(sql.ResolveWithNewValues()).
 		UpdateNewValues().
 		Exec(p.ctx)
 }
