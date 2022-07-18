@@ -1,6 +1,6 @@
-# 
+#
 # !!!! WARNING: NEVER IMPORT THIS MODULE DIRECTLY !!!!
-# 
+#
 # This file is used to define the documents (queries and mutations) that are
 # available in the GraphQL interface.
 # To use this module, you must generate the schema using the `generate` script
@@ -138,8 +138,12 @@ query myFollowings {
   }
 }
 
-query clusterView($campusName: String!, $identifierPrefix: String!) { 
-  locationsByCluster(campusName: $campusName, identifierPrefix: $identifierPrefix, page:{ first: 1000 }) {
+query clusterView($campusName: String!, $identifierPrefix: String!) {
+  locationsByCluster(
+    campusName: $campusName
+    identifierPrefix: $identifierPrefix
+    page: { first: 1000 }
+  ) {
     totalCount
     pageInfo {
       hasNextPage
@@ -157,6 +161,7 @@ query clusterView($campusName: String!, $identifierPrefix: String!) {
           firstName
           usualFirstName
           lastName
+          duoAvatarURL
           isFollowing
         }
       }
@@ -176,7 +181,10 @@ query internalGetUserByEmail($email: String!) {
   }
 }
 
-query internalGetUserByAccount($provider: PROVIDER!, $providerAccountId: String!) {
+query internalGetUserByAccount(
+  $provider: PROVIDER!
+  $providerAccountId: String!
+) {
   user: internalGetUserByAccount(provider: $provider, uid: $providerAccountId) {
     ...UserAccountsData
   }

@@ -29,12 +29,12 @@ type Language struct {
 }
 
 type Location[UserType ILocationUser] struct {
-	ID       int          `json:"id"`
-	BeginAt  DuoTime      `json:"begin_at"`
-	EndAt    *DuoTime     `json:"end_at"`
-	Primary  bool         `json:"primary"`
-	Host     string       `json:"host"`
-	CampusID int          `json:"campus_id"`
+	ID       int      `json:"id"`
+	BeginAt  DuoTime  `json:"begin_at"`
+	EndAt    *DuoTime `json:"end_at"`
+	Primary  bool     `json:"primary"`
+	Host     string   `json:"host"`
+	CampusID int      `json:"campus_id"`
 	User     UserType `json:"user"`
 }
 
@@ -49,9 +49,9 @@ type LocationUser struct {
 }
 
 type ComplexLocationUser struct {
-	ID    int    `json:"id"`
-	Login string `json:"login"`
-	URL   string `json:"url"`
+	ID              int     `json:"id"`
+	Login           string  `json:"login"`
+	URL             string  `json:"url"`
 	Email           string  `json:"email"`
 	FirstName       string  `json:"first_name"`
 	LastName        string  `json:"last_name"`
@@ -82,9 +82,11 @@ type User struct {
 	LastName       string `json:"last_name"`
 	UsualFullName  string `json:"usual_full_name"`
 	UsualFirstName string `json:"usual_first_name"`
+	ImageURL       string `json:"image_url"`
+	NewImageURL    string `json:"new_image_url"`
 	URL            string `json:"url"`
 	Staff          bool   `json:"staff?"`
-	Phone 				string `json:"phone"`
-	PoolMonth			string `json:"pool_month"`
-	PoolYear			string `json:"pool_year"`
+	Phone          string `json:"phone"`
+	PoolMonth      string `json:"pool_month"`
+	PoolYear       string `json:"pool_year"`
 }
