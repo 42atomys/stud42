@@ -85,7 +85,13 @@ func (p *processor) Serve(amqpUrl, channel string) error {
 	for d := range msgs {
 		err := p.handler(d.Body)
 		if err != nil {
-			sentry.CaptureException(err)
+			sentry.CaptureEvent(&sentry.Event{
+				Level: sentry.LevelError,
+				Contexts: map[string]interface{}{
+					"message": string(d.Body),
+				},
+				Message: err.Error(),
+			})
 
 			if errors.Is(err, ErrInvalidWebhook) {
 				goto ACK
@@ -145,10 +151,10 @@ func (p *processor) handler(data []byte) error {
 		// Marshal the payload to the expected format for the github processor
 		// FUTURE: rework it
 		b, err := json.Marshal(md.Payload)
-    if err != nil {
+		if err != nil {
 			log.Error().Err(err).Msg("Failed to marshal payload")
-      return err
-    }
+			return err
+		}
 
 		return p.githubHandler(b)
 	}
@@ -156,7 +162,7 @@ func (p *processor) handler(data []byte) error {
 	return p.duoHandler(data)
 }
 
-// githubHandler is the processor for the github webhooks. 
+// githubHandler is the processor for the github webhooks.
 func (p *processor) githubHandler(data []byte) error {
 	webhookPayload := &GithubSponsorshipWebhook{}
 	if err := json.Unmarshal(data, &webhookPayload); err != nil {
@@ -207,7 +213,7 @@ func (p *processor) githubHandler(data []byte) error {
 	return err
 }
 
-// duoHandler is the processor for the duo webhooks. 
+// duoHandler is the processor for the duo webhooks.
 func (p *processor) duoHandler(data []byte) error {
 	mdDuo := &duoapi.Webhook{}
 	if err := json.Unmarshal(data, &mdDuo); err != nil {

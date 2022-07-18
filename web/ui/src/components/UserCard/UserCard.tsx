@@ -23,6 +23,7 @@ export const UserCard: UserCardComponent = ({
     >
       <Avatar
         login={user.duoLogin}
+        duoAvatarURL={user.duoAvatarURL}
         size="xxxl"
         rounded
         className="mb-4 bg-slate-800"

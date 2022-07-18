@@ -38,6 +38,7 @@ type User {
   email: String!
   duoLogin: String!
   duoID: Int!
+  duoAvatarURL: String
   firstName: String!
   usualFirstName: String
   lastName: String!
@@ -115,14 +116,24 @@ type Query {
   user(id: UUID!): User @authenticated
   location(id: UUID!): Location @authenticated
 
-  locations(page: PageInput!, campusID: UUID!): LocationConnection! @authenticated
-  locationsByCampusName(page: PageInput!, campusName: String!): LocationConnection! @authenticated
-  locationsByCluster(page: PageInput!, campusName: String!, identifierPrefix: String): LocationConnection! @authenticated
+  locations(page: PageInput!, campusID: UUID!): LocationConnection!
+    @authenticated
+  locationsByCampusName(
+    page: PageInput!
+    campusName: String!
+  ): LocationConnection! @authenticated
+  locationsByCluster(
+    page: PageInput!
+    campusName: String!
+    identifierPrefix: String
+  ): LocationConnection! @authenticated
 
   myFollowing: [User!]! @authenticated
 
-  internalGetUserByAccount(provider: PROVIDER!, uid: String!): User! @authzByPolicy(policy: SERVICE_TOKEN)
-  internalGetUserByEmail(email: String!): User! @authzByPolicy(policy: SERVICE_TOKEN)
+  internalGetUserByAccount(provider: PROVIDER!, uid: String!): User!
+    @authzByPolicy(policy: SERVICE_TOKEN)
+  internalGetUserByEmail(email: String!): User!
+    @authzByPolicy(policy: SERVICE_TOKEN)
   internalGetUser(id: UUID!): User! @authzByPolicy(policy: SERVICE_TOKEN)
 }
 
@@ -130,8 +141,10 @@ type Mutation {
   createFriendship(userID: UUID!): Boolean! @authenticated
   deleteFriendship(userID: UUID!): Boolean! @authenticated
 
-  internalCreateUser(input: CreateUserInput!): UUID! @authzByPolicy(policy: SERVICE_TOKEN)
-  internalLinkAccount(input: LinkAccountInput!): Account! @authzByPolicy(policy: SERVICE_TOKEN)
+  internalCreateUser(input: CreateUserInput!): UUID!
+    @authzByPolicy(policy: SERVICE_TOKEN)
+  internalLinkAccount(input: LinkAccountInput!): Account!
+    @authzByPolicy(policy: SERVICE_TOKEN)
   inviteOnDiscord: Boolean! @authenticated
 }
 
@@ -151,6 +164,7 @@ input CreateUserInput {
   lastName: String!
   poolYear: String
   poolMonth: String
+  imageURL: String
   phone: String
   isStaff: Boolean!
 }
