@@ -20,25 +20,25 @@ import (
 func WithTx(ctx context.Context, client *modelgen.Client, fn func(tx *modelgen.Tx) error) error {
 	tx, err := client.Tx(ctx)
 	if err != nil {
-			return err
+		return err
 	}
 	defer func() {
-			if v := recover(); v != nil {
-					if err := tx.Rollback(); err != nil {
-						log.Error().Err(err).Msg("failed to rollback transaction")
-						sentry.CaptureException(err)
-					}
-					sentry.CaptureException(v.(error))
+		if v := recover(); v != nil {
+			if err := tx.Rollback(); err != nil {
+				log.Error().Err(err).Msg("failed to rollback transaction")
+				sentry.CaptureException(err)
 			}
+			sentry.CaptureException(v.(error))
+		}
 	}()
 	if err := fn(tx); err != nil {
-			if rerr := tx.Rollback(); rerr != nil {
-					err = fmt.Errorf("rolling back transaction: %w", rerr)
-			}
-			return err
+		if rerr := tx.Rollback(); rerr != nil {
+			err = fmt.Errorf("rolling back transaction: %w", rerr)
+		}
+		return err
 	}
 	if err := tx.Commit(); err != nil {
-			return fmt.Errorf("committing transaction: %w", err)
+		return fmt.Errorf("committing transaction: %w", err)
 	}
 	return nil
 }
@@ -57,6 +57,7 @@ func UserFirstOrCreateFromComplexLocation(ctx context.Context, l *duoapi.Locatio
 				SetPhone(l.User.Phone).
 				SetPoolMonth(l.User.PoolMonth).
 				SetPoolYear(l.User.PoolYear).
+				SetDuoAvatarURL(l.User.ImageURL).
 				SetIsStaff(l.User.Staff).
 				SetIsAUser(false).
 				OnConflictColumns(user.FieldDuoID).
@@ -97,6 +98,7 @@ func UserFirstOrCreateFromLocation(ctx context.Context, l *duoapi.Location[duoap
 				SetPhone(duoUser.Phone).
 				SetPoolMonth(duoUser.PoolMonth).
 				SetPoolYear(duoUser.PoolYear).
+				SetDuoAvatarURL(duoUser.ImageURL).
 				SetIsStaff(duoUser.Staff).
 				SetIsAUser(false).
 				OnConflictColumns(user.FieldDuoID).

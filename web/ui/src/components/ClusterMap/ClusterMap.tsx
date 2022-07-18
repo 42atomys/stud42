@@ -63,7 +63,12 @@ export const ClusterWorkspaceWithUser = ({
       onMouseLeave={(e) => onMouseLeave && onMouseLeave(e, location)}
     >
       <span className="mb-1">
-        <Avatar login={location.user.duoLogin} rounded={false} size="md" />
+        <Avatar
+          login={location.user.duoLogin}
+          duoAvatarURL={location.user.duoAvatarURL}
+          rounded={false}
+          size="md"
+        />
       </span>
       <span className="text-xs">{displayText || location.identifier}</span>
     </div>
