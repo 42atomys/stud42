@@ -55,3 +55,9 @@ Due to the yarn implementation and no-root user on the container, yarn dont have
 The workarround is to run yarn install and update operations under `sudo`.
 
 yarn scripts can be done without sudo it.
+
+### ssh and gitconfig forward
+
+Actually gitconfig and ssh key is not forwarded to your devcontainer.
+You need to redefine it on container or perform all git commands outside of the
+container (on your machine).
