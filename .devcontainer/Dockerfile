@@ -11,10 +11,8 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
   iputils-ping dnsutils vim htop nano sudo curl build-essential zsh wget \
   fonts-powerline
 
-RUN git config --global pull.rebase true && \
-  git config --global core.hooksPath /workspace/githooks && \
-  # Install global node packages.
-  npm install --location=global tslint-to-eslint-config typescript \
+# Install global node packages.
+RUN npm install --location=global tslint-to-eslint-config typescript \
   @commitlint/cli @commitlint/config-conventional && \
   # Install dependencies
   wget -qO /tmp/protoc.zip $(curl -s https://api.github.com/repos/protocolbuffers/protobuf/releases/latest | \
@@ -26,3 +24,8 @@ RUN git config --global pull.rebase true && \
   ln -s "$NVM_DIR/versions/node/$(nvm version)/bin/npm" "/usr/local/bin/npm"
 
 USER vscode
+
+# Configure git
+RUN git config --global pull.rebase true && \
+  git config --global core.hooksPath /workspace/githooks && \
+  git config --global commit.gpgsign true
