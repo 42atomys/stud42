@@ -32,7 +32,9 @@ services:
       NEXTAUTH_URL: http://localhost:3000
       NEXTAUTH_SECRET: private-secret-for-dev-only
     volumes:
-      - ..:/workspace:cached  
+      - ..:/workspace:cached
+      - $HOME/.gitconfig:/home/vscode/.gitconfig:ro
+      - $HOME/.ssh:/home/vscode/.ssh:ro
 
     # Overrides default command so things don't shut down after the process ends.
     command: sleep infinity

@@ -9,7 +9,7 @@ RUN if [ "${NODE_VERSION}" != "none" ]; then su vscode -c "umask 0002 && . /usr/
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
   && apt-get -y install --no-install-recommends gnupg2 postgresql-client \
   iputils-ping dnsutils vim htop nano sudo curl build-essential zsh wget \
-  fonts-powerline
+  fonts-powerline tig
 
 # Install global node packages.
 RUN npm install --location=global tslint-to-eslint-config typescript \
@@ -24,8 +24,3 @@ RUN npm install --location=global tslint-to-eslint-config typescript \
   ln -s "$NVM_DIR/versions/node/$(nvm version)/bin/npm" "/usr/local/bin/npm"
 
 USER vscode
-
-# Configure git
-RUN git config --global pull.rebase true && \
-  git config --global core.hooksPath /workspace/githooks && \
-  git config --global commit.gpgsign true

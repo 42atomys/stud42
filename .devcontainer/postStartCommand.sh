@@ -17,4 +17,13 @@ cat << EOF
     `-.._____..-'           
 EOF
 
+git config pull.rebase true
+git config core.hooksPath /workspace/githooks
+git config commit.gpgsign true
+git config alias.s 'status'
+git config alias.ll 'log --oneline'
+git config alias.last 'log -1 HEAD --stat'
+git config alias.cm 'commit -s -m'
+git config alias.p 'push'
+
 make -f build/Makefile devcontainer-init
