@@ -17,6 +17,7 @@ func (p *userProcessor) Create(u *duoapi.User, metadata *duoapi.WebhookMetadata)
 		SetDuoLogin(u.Login).
 		SetFirstName(u.FirstName).
 		SetLastName(u.LastName).
+		SetDuoAvatarURL(u.ImageURL).
 		SetEmail(u.Email).
 		SetIsStaff(u.Staff).
 		SetNillableUsualFirstName(&u.UsualFirstName).
@@ -36,6 +37,7 @@ func (p *userProcessor) Update(u *duoapi.User, metadata *duoapi.WebhookMetadata)
 		SetPhone(u.Phone).
 		SetPoolYear(u.PoolYear).
 		SetPoolMonth(u.PoolMonth).
+		SetDuoAvatarURL(u.ImageURL).
 		SetNillableUsualFirstName(&u.UsualFirstName).
 		Where(user.DuoID(u.ID)).
 		Exec(p.ctx)
