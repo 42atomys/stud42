@@ -1,21 +1,18 @@
 import {
   ApolloClient,
-  from,
-  createHttpLink,
-  InMemoryCache,
-  QueryOptions,
   ApolloQueryResult,
+  createHttpLink,
+  from,
+  InMemoryCache,
   NetworkStatus,
+  QueryOptions,
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import Cookies from 'js-cookie';
-import { NextApiRequestCookies } from 'next/dist/server/api-utils';
+import { GetServerSidePropsContext } from 'next';
+import { NextRequest } from 'next/server'; // eslint-disable-line
 
-export type ServerSideRequest = {
-  cookies: NextApiRequestCookies & {
-    '__s42.auth-token'?: string;
-  };
-};
+export type ServerSideRequest = NextRequest | GetServerSidePropsContext['req'];
 
 const httpLink = createHttpLink({
   uri: process.env.NEXT_PUBLIC_GRAPHQL_API,
@@ -74,10 +71,14 @@ export const queryAuthenticatedSSR = async <T = any>(
 ): Promise<ApolloQueryResult<T>> => {
   const { query, context, ...rest } = opts;
 
+  const token: string | undefined =
+    (req as GetServerSidePropsContext['req']).cookies?.['__s42.auth-token'] ||
+    (req as NextRequest).cookies.get('__s42.auth-token');
+
   return apolloClient.query<T>({
     query,
     context: {
-      authToken: req.cookies['__s42.auth-token'],
+      authToken: token,
       ...context,
     },
     ...rest,

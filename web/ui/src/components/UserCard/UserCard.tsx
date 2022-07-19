@@ -31,12 +31,14 @@ export const UserCard: UserCardComponent = ({
       <h2 className="font-bold uppercase">{user.duoLogin}</h2>
       <Name className="font-light" user={user} />
       <LocationBadge location={location} />
-      <DropdownMenu
-        userID={user.id}
-        isFriend={user.isFollowing}
-        buttonAlwaysShow={buttonAlwaysShow}
-        refetchQueries={refetchQueries}
-      />
+      {!user.isMe && (
+        <DropdownMenu
+          userID={user.id}
+          isFriend={user.isFollowing}
+          buttonAlwaysShow={buttonAlwaysShow}
+          refetchQueries={refetchQueries}
+        />
+      )}
     </div>
   );
 };

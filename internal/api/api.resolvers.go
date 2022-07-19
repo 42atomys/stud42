@@ -6,6 +6,9 @@ package api
 import (
 	"context"
 	"os"
+	"strconv"
+	"strings"
+	"time"
 
 	apigen "atomys.codes/stud42/internal/api/generated"
 	typesgen "atomys.codes/stud42/internal/api/generated/types"
@@ -163,7 +166,9 @@ func (r *queryResolver) LocationsByCluster(ctx context.Context, page typesgen.Pa
 		Where(campus.Name(campusName)).
 		QueryLocations().
 		WithCampus().
-		WithUser().
+		WithUser(func(uq *generated.UserQuery) {
+			uq.WithFollowing()
+		}).
 		Where(location.IdentifierHasPrefix(*identifierPrefix), location.EndAtIsNil()).
 		Paginate(ctx, page.After, &page.First, page.Before, page.Last)
 }
@@ -205,6 +210,22 @@ func (r *queryResolver) InternalGetUserByEmail(ctx context.Context, email string
 
 func (r *queryResolver) InternalGetUser(ctx context.Context, id uuid.UUID) (*generated.User, error) {
 	return r.client.User.Get(ctx, id)
+}
+
+func (r *userResolver) IsSwimmer(ctx context.Context, obj *generated.User) (bool, error) {
+	if obj.PoolYear == nil || obj.PoolMonth == nil {
+		return false, nil
+	}
+
+	now := time.Now()
+	return (*obj.PoolYear == strconv.Itoa(now.Year()) &&
+		strings.EqualFold(*obj.PoolMonth, now.Format("January"))), nil
+}
+
+func (r *userResolver) IsMe(ctx context.Context, obj *generated.User) (bool, error) {
+	cu, _ := CurrentUserFromContext(ctx)
+
+	return cu.ID == obj.ID, nil
 }
 
 func (r *userResolver) Flags(ctx context.Context, obj *generated.User) ([]typesgen.Flag, error) {

@@ -70,6 +70,7 @@ var apiCmd = &cobra.Command{
 		}).Handler)
 		router.Use(api.AuthzByPolicyMiddleware)
 		router.Use(api.AuthenticationMiddleware)
+		router.Use(api.LoggingMiddleware)
 
 		if *playgroudActive {
 			router.Handle("/", playground.Handler("GraphQL playground", "/graphql"))

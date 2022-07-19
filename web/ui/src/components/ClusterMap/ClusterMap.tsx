@@ -54,8 +54,12 @@ export const ClusterWorkspaceWithUser = ({
     <div
       className={classNames(
         'flex flex-1 flex-col justify-center items-center m-0.5 rounded text-slate-500',
-        location.user.isFollowing
-          ? 'cursor-pointer bg-blue-300/30 dark:bg-blue-700/30 text-blue-500'
+        location.user.isMe
+          ? 'cursor-pointer bg-cyan-300/60 dark:bg-cyan-700/60 text-cyan-500'
+          : location.user.isFollowing
+          ? 'cursor-pointer bg-blue-300/60 dark:bg-blue-700/60 text-blue-500'
+          : location.user.isSwimmer
+          ? 'cursor-pointer bg-yellow-300/30 dark:bg-yellow-700/30 text-yellow-500'
           : 'cursor-pointer bg-emerald-300/30 dark:bg-emerald-700/30 text-emerald-500'
       )}
       onClick={(e) => onClick && onClick(e, location)}
