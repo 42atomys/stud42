@@ -73,7 +73,7 @@ export const queryAuthenticatedSSR = async <T = any>(
 
   const token: string | undefined =
     (req as GetServerSidePropsContext['req']).cookies?.['__s42.auth-token'] ||
-    (req as NextRequest).cookies.get('__s42.auth-token');
+    (req as NextRequest).cookies?.get('__s42.auth-token');
 
   return apolloClient.query<T>({
     query,
