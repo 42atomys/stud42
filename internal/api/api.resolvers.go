@@ -166,9 +166,7 @@ func (r *queryResolver) LocationsByCluster(ctx context.Context, page typesgen.Pa
 		Where(campus.Name(campusName)).
 		QueryLocations().
 		WithCampus().
-		WithUser(func(uq *generated.UserQuery) {
-			uq.WithFollowing()
-		}).
+		WithUser().
 		Where(location.IdentifierHasPrefix(*identifierPrefix), location.EndAtIsNil()).
 		Paginate(ctx, page.After, &page.First, page.Before, page.Last)
 }
