@@ -2,43 +2,35 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namePrefix: prod-
 resources:
-- ../../base
+  - ../../base
 namespace: production
 images:
-- name: app
-  newName: ghcr.io/42atomys/stud42
-  newTag: latest
+  - name: app
+    newName: ghcr.io/42atomys/stud42
+    newTag: latest
 
 patchesStrategicMerge:
-- ./use-live-routing.yaml
+  - ./use-live-routing.yaml
 
 replacements:
-- source:
-    kind: Service
-    name: grpc-jwtks-service
-    fieldPath: metadata.name
-  targets:
-  - select:
-      kind: Certificate
-      name: jwtks-service
-    fieldPaths:
-    - spec.dnsNames.0
-- source:
-    kind: Service
-    name: http-jwtks-service
-    fieldPath: metadata.name
-  targets:
-  - select:
-      kind: VirtualService
+  - source:
+      kind: Service
+      name: grpc-jwtks-service
+      fieldPath: metadata.name
+    targets:
+      - select:
+          kind: Certificate
+          name: jwtks-service
+        fieldPaths:
+          - spec.dnsNames.0
+  - source:
+      kind: Service
       name: http-jwtks-service
-    fieldPaths:
-     - spec.http.*.name
-     - spec.http.*.route.*.destination.host
-- source:
-    kind: Deployment
-    fieldPath: metadata.labels.[app.kubernetes.io/version]
-  targets:
-  - select:
-      kind: Deployment
-    fieldPaths:
-     - spec.template.spec.containers.[name=service].env.[name=APP_VERSION].value
+      fieldPath: metadata.name
+    targets:
+      - select:
+          kind: VirtualService
+          name: http-jwtks-service
+        fieldPaths:
+          - spec.http.*.name
+          - spec.http.*.route.*.destination.host

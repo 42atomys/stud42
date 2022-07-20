@@ -8,85 +8,83 @@ spec:
   template:
     spec:
       imagePullSecrets:
-      - name: ghcr-creds
+        - name: ghcr-creds
       containers:
-      - name: service
-        image: app
-        args: [ '--config', '/config/stud42.yaml', jobs, webhooks ]
-        command: [ stud42cli ]
-        env:
-        - name: DEBUG
-          value: "true"
-        - name: GO_ENV
-          value: production
-        - name: APP_VERSION
-          value: latest
-        - name: SENTRY_DSN
-          valueFrom:
-            secretKeyRef:
-              key: 'WEBHOOKS_PROCESSOR_DSN'
-              name: 'sentry-dsns'
-        - name: DATABASE_HOST
-          value: primary-postgres
-        - name: DATABASE_USERNAME
-          value: postgres
-        - name: DATABASE_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              key: POSTGRES_PASSWORD
-              name: primary-postgres-credentials
-        - name: DATABASE_NAME
-          value: s42
-        - name: DATABASE_URL
-          value: postgresql://$(DATABASE_USERNAME):$(DATABASE_PASSWORD)@$(DATABASE_HOST):5432/$(DATABASE_NAME)?sslmode=disable
-        - name: AMQP_USERNAME
-          valueFrom:
-            secretKeyRef:
-              key: username
-              name: prod-primary-rabbitmq-default-user
-        - name: AMQP_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              key: password
-              name: prod-primary-rabbitmq-default-user
-        - name: AMQP_HOST
-          valueFrom:
-            secretKeyRef:
-              key: host
-              name: prod-primary-rabbitmq-default-user
-        - name: AMQP_PORT
-          valueFrom:
-            secretKeyRef:
-              key: port
-              name: prod-primary-rabbitmq-default-user
-        - name: AMQP_URL
-          value: amqp://$(AMQP_USERNAME):$(AMQP_PASSWORD)@$(AMQP_HOST):$(AMQP_PORT)
-        - name: FORTY_TWO_CLIENT_ID
-          valueFrom:
-            secretKeyRef:
-              key: FORTY_TWO_CLIENT_ID
-              name: oauth2-providers
-        - name: FORTY_TWO_CLIENT_SECRET
-          valueFrom:
-            secretKeyRef:
-              key: FORTY_TWO_CLIENT_SECRET
-              name: oauth2-providers
-        - name: POD_IP
-          valueFrom:
-            fieldRef:
-              fieldPath: status.podIP
-        volumeMounts:
-          - name: config
-            mountPath: /config
-            readOnly: true
-        resources:
-          requests:
-            cpu: 20m
-            memory: 10Mi
-          limits:
-            memory: "20Mi"
-            cpu: "30m"
+        - name: service
+          image: app
+          args: ["--config", "/config/stud42.yaml", jobs, webhooks]
+          command: [stud42cli]
+          env:
+            - name: DEBUG
+              value: "true"
+            - name: GO_ENV
+              value: production
+            - name: SENTRY_DSN
+              valueFrom:
+                secretKeyRef:
+                  key: "WEBHOOKS_PROCESSOR_DSN"
+                  name: "sentry-dsns"
+            - name: DATABASE_HOST
+              value: primary-postgres
+            - name: DATABASE_USERNAME
+              value: postgres
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: POSTGRES_PASSWORD
+                  name: primary-postgres-credentials
+            - name: DATABASE_NAME
+              value: s42
+            - name: DATABASE_URL
+              value: postgresql://$(DATABASE_USERNAME):$(DATABASE_PASSWORD)@$(DATABASE_HOST):5432/$(DATABASE_NAME)?sslmode=disable
+            - name: AMQP_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: username
+                  name: prod-primary-rabbitmq-default-user
+            - name: AMQP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: prod-primary-rabbitmq-default-user
+            - name: AMQP_HOST
+              valueFrom:
+                secretKeyRef:
+                  key: host
+                  name: prod-primary-rabbitmq-default-user
+            - name: AMQP_PORT
+              valueFrom:
+                secretKeyRef:
+                  key: port
+                  name: prod-primary-rabbitmq-default-user
+            - name: AMQP_URL
+              value: amqp://$(AMQP_USERNAME):$(AMQP_PASSWORD)@$(AMQP_HOST):$(AMQP_PORT)
+            - name: FORTY_TWO_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  key: FORTY_TWO_CLIENT_ID
+                  name: oauth2-providers
+            - name: FORTY_TWO_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: FORTY_TWO_CLIENT_SECRET
+                  name: oauth2-providers
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+          volumeMounts:
+            - name: config
+              mountPath: /config
+              readOnly: true
+          resources:
+            requests:
+              cpu: 20m
+              memory: 10Mi
+            limits:
+              memory: "20Mi"
+              cpu: "30m"
       volumes:
-      - name: config
-        configMap:
-          name: stud42-config
+        - name: config
+          configMap:
+            name: stud42-config

@@ -8,84 +8,82 @@ spec:
   template:
     spec:
       imagePullSecrets:
-      - name: ghcr-creds
+        - name: ghcr-creds
       containers:
-      - name: interface
-        image: app
-        args: [ server.js ]
-        env:
-        - name: NODE_ENV
-          value: production
-        - name: APP_VERSION
-          value: latest
-        - name: NEXT_PUBLIC_GRAPHQL_API
-          value: http://localhost:4000/graphql
-        - name: FORTY_TWO_CLIENT_ID
-          valueFrom:
-            secretKeyRef:
-              key: FORTY_TWO_CLIENT_ID
-              name: oauth2-providers
-        - name: FORTY_TWO_CLIENT_SECRET
-          valueFrom:
-            secretKeyRef:
-              key: FORTY_TWO_CLIENT_SECRET
-              name: oauth2-providers
-        - name: GITHUB_ID
-          valueFrom:
-            secretKeyRef:
-              key: GITHUB_ID
-              name: oauth2-providers
-        - name: GITHUB_SECRET
-          valueFrom:
-            secretKeyRef:
-              key: GITHUB_SECRET
-              name: oauth2-providers
-        - name: DISCORD_ID
-          valueFrom:
-            secretKeyRef:
-              key: DISCORD_ID
-              name: oauth2-providers
-        - name: DISCORD_SECRET
-          valueFrom:
-            secretKeyRef:
-              key: DISCORD_SECRET
-              name: oauth2-providers
-        - name: NEXTAUTH_URL
-          value: http://localhost:3000
-        - name: NEXTAUTH_SECRET
-          valueFrom:
-            secretKeyRef:
-              key: SECRET
-              name: next-auth
-        - name: NEXT_PUBLIC_SENTRY_DSN
-          valueFrom:
-            secretKeyRef:
-              key: 'INTERFACE_DSN'
-              name: 'sentry-dsns'
-        - name: CONFIG_PATH
-          value: /config/stud42.yaml
-        - name: S42_SERVICE_TOKEN
-          valueFrom:
-            secretKeyRef:
-              key: TOKEN
-              name: s42-service-token
-        volumeMounts:
-        - name: config
-          mountPath: /config
-          readOnly: true
-        - name: certs-grpc
-          mountPath: '/etc/certs/grpc'
-          readOnly: true
-        resources:
-          limits:
-            memory: "1000Mi"
-            cpu: "1"
-        ports:
-        - containerPort: 3000
+        - name: interface
+          image: app
+          args: [server.js]
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: NEXT_PUBLIC_GRAPHQL_API
+              value: http://localhost:4000/graphql
+            - name: FORTY_TWO_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  key: FORTY_TWO_CLIENT_ID
+                  name: oauth2-providers
+            - name: FORTY_TWO_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: FORTY_TWO_CLIENT_SECRET
+                  name: oauth2-providers
+            - name: GITHUB_ID
+              valueFrom:
+                secretKeyRef:
+                  key: GITHUB_ID
+                  name: oauth2-providers
+            - name: GITHUB_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: GITHUB_SECRET
+                  name: oauth2-providers
+            - name: DISCORD_ID
+              valueFrom:
+                secretKeyRef:
+                  key: DISCORD_ID
+                  name: oauth2-providers
+            - name: DISCORD_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: DISCORD_SECRET
+                  name: oauth2-providers
+            - name: NEXTAUTH_URL
+              value: http://localhost:3000
+            - name: NEXTAUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: SECRET
+                  name: next-auth
+            - name: NEXT_PUBLIC_SENTRY_DSN
+              valueFrom:
+                secretKeyRef:
+                  key: "INTERFACE_DSN"
+                  name: "sentry-dsns"
+            - name: CONFIG_PATH
+              value: /config/stud42.yaml
+            - name: S42_SERVICE_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  key: TOKEN
+                  name: s42-service-token
+          volumeMounts:
+            - name: config
+              mountPath: /config
+              readOnly: true
+            - name: certs-grpc
+              mountPath: "/etc/certs/grpc"
+              readOnly: true
+          resources:
+            limits:
+              memory: "1000Mi"
+              cpu: "1"
+          ports:
+            - containerPort: 3000
       volumes:
-      - name: certs-grpc
-        secret:
-          secretName: jwtks-service-tls
-      - name: config
-        configMap:
-          name: stud42-config
+        - name: certs-grpc
+          secret:
+            secretName: jwtks-service-tls
+        - name: config
+          configMap:
+            name: stud42-config

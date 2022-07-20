@@ -1,11 +1,11 @@
+import Tooltip from '@components/Tooltip/Tooltip';
+import { Contribute, Star } from '@lib/github';
+import classNames from 'classnames';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useContext } from 'react';
 import { SidebarContext } from './SidebarContext';
-import Image from 'next/image';
-import { Contribute, Star } from '@lib/github';
-import classNames from 'classnames';
-import Tooltip from '@components/Tooltip/Tooltip';
 
 /**
  * Menu item component. This is used to create the menu items in the sidebar
@@ -135,7 +135,7 @@ export const Sidebar = ({
             <MenuItem href="/auth/signout" icon="fa-sign-out" name="Logout" />
           </span>
           <span className="text-sm text-slate-400 dark:text-slate-600">
-            3.0+alpha.1
+            {process.env.APP_VERSION}
           </span>
         </div>
       </div>
