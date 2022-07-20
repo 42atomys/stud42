@@ -178,3 +178,10 @@ jobs:
           cd ${{github.workspace }}/deploy/app/webhooks-processor/overlays/live
           kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
           kustomize build . | kubectl apply -f -
+      - name: Update Discord channel
+        run: |
+          curl --request PATCH \
+            --url https://discord.com/api/v9/channels/954496570362044466 \
+            --header 'Authorization: Bot ${{ secrets.DISCORD_BOT_TOKEN }}' \
+            --header 'Content-Type: application/json' \
+            --data '{"name": "🔖 ${{ github.event.release.tag_name }}+beta"}'
