@@ -162,6 +162,8 @@ query clusterView($campusName: String!, $identifierPrefix: String!) {
           usualFirstName
           lastName
           duoAvatarURL
+          isMe
+          isSwimmer
           isFollowing
         }
       }

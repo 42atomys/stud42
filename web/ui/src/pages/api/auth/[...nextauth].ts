@@ -1,9 +1,9 @@
 import GraphQLAdapter from '@lib/GraphqlAdapter';
+import { decodeJWT, encodeJWT } from '@lib/jwt';
 import NextAuth, { Account, Profile, User } from 'next-auth';
 import FortyTwoProvider from 'next-auth/providers/42-school';
-import GithubProvider from 'next-auth/providers/github';
 import DiscordProvider from 'next-auth/providers/discord';
-import { decodeJWT, encodeJWT } from '@lib/jwt';
+import GithubProvider from 'next-auth/providers/github';
 
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
@@ -17,8 +17,8 @@ export default NextAuth({
       clientSecret: process.env.FORTY_TWO_CLIENT_SECRET as string,
     }),
     GithubProvider({
-      clientId: process.env.GITHUB_ID,
-      clientSecret: process.env.GITHUB_SECRET,
+      clientId: process.env.GITHUB_ID as string,
+      clientSecret: process.env.GITHUB_SECRET as string,
       // https://docs.github.com/en/developers/apps/building-oauth-apps/scopes-for-oauth-apps
       // @ts-ignore
       scope: 'user,user:email,user:follow',
