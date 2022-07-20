@@ -32,6 +32,10 @@ func (r *mutationResolver) CreateFriendship(ctx context.Context, userID uuid.UUI
 		return false, err
 	}
 
+	if userID == cu.ID {
+		return false, fmt.Errorf("cannot befriend yourself")
+	}
+
 	if _, err := r.client.User.UpdateOne(cu).AddFollowingIDs(userID).Save(ctx); err != nil {
 		return false, err
 	}
@@ -136,7 +140,10 @@ func (r *queryResolver) SearchUser(ctx context.Context, query string) ([]*genera
 					sql.Select(t.Columns(user.Columns...)...).
 						From(t).
 						Where(
-							sql.ExprP("CONCAT(COALESCE(NULLIF(TRIM(usual_first_name), ''), first_name), ' ', last_name) ILIKE $3", fmt.Sprintf("%%%s%%", utils.StringLimiter(query, 20))),
+							sql.And(
+								sql.NEQ(t.C(user.FieldID), cu.ID),
+								sql.ExprP("CONCAT(COALESCE(NULLIF(TRIM(usual_first_name), ''), first_name), ' ', last_name) ILIKE $4", fmt.Sprintf("%%%s%%", utils.StringLimiter(query, 20))),
+							),
 						),
 				)
 		}).
