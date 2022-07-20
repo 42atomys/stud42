@@ -2,42 +2,34 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namePrefix: sand-
 resources:
-- ../../base
+  - ../../base
 namespace: sandbox
 images:
-- name: app
-  newName: ghcr.io/42atomys/stud42
-  newTag: main
+  - name: app
+    newName: ghcr.io/42atomys/stud42
+    newTag: main
 
 patchesStrategicMerge:
-- ./use-sandbox-primary-postgres.yaml
-- ./use-sandbox-routing.yaml
+  - ./use-sandbox-primary-postgres.yaml
+  - ./use-sandbox-routing.yaml
 
 patches:
-- target:
-    kind: Deployment
-  patch: |-
-    - op: replace
-      path: "/spec/template/spec/containers/0/imagePullPolicy"
-      value: Always
+  - target:
+      kind: Deployment
+    patch: |-
+      - op: replace
+        path: "/spec/template/spec/containers/0/imagePullPolicy"
+        value: Always
 
 replacements:
-- source:
-    kind: Service
-    name: http-api
-    fieldPath: metadata.name
-  targets:
-  - select:
-      kind: VirtualService
+  - source:
+      kind: Service
       name: http-api
-    fieldPaths:
-     - spec.http.*.name
-     - spec.http.*.route.*.destination.host
-- source:
-    kind: Deployment
-    fieldPath: metadata.labels.[app.kubernetes.io/version]
-  targets:
-  - select:
-      kind: Deployment
-    fieldPaths:
-     - spec.template.spec.containers.[name=service].env.[name=APP_VERSION].value
+      fieldPath: metadata.name
+    targets:
+      - select:
+          kind: VirtualService
+          name: http-api
+        fieldPaths:
+          - spec.http.*.name
+          - spec.http.*.route.*.destination.host
