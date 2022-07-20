@@ -21,7 +21,7 @@ import (
 // authTokenContextKey is the context key to store the JWT Token from the
 // Authorization header.
 const authTokenContextKey contextKey = "auth_token"
-const currentUsreContextKey contextKey = "auth_current_user"
+const currentUserContextKey contextKey = "auth_current_user"
 
 // errUnauthenticated is the error returned by the directiveAuthorization
 // when the request is not authenticated.
@@ -80,17 +80,19 @@ func directiveAuthorization(client *modelgen.Client) func(ctx context.Context, o
 			return nil, errors.New("token expired")
 		}
 
-		user, err := client.User.Query().
-			Where(user.ID(uuid.MustParse(tok.Subject()))).
-			WithFollowing().
-			WithFollowers().
-			WithCurrentLocation().
-			Only(ctx)
-		if err != nil {
-			return nil, errUnauthenticated
-		}
+		if ctx.Value(currentUserContextKey) == nil {
+			user, err := client.User.Query().
+				Where(user.ID(uuid.MustParse(tok.Subject()))).
+				WithFollowing().
+				WithFollowers().
+				WithCurrentLocation().
+				Only(ctx)
+			if err != nil {
+				return nil, errUnauthenticated
+			}
 
-		ctx = context.WithValue(ctx, currentUsreContextKey, user)
+			ctx = context.WithValue(ctx, currentUserContextKey, user)
+		}
 
 		return next(ctx)
 	}
@@ -98,7 +100,7 @@ func directiveAuthorization(client *modelgen.Client) func(ctx context.Context, o
 
 // CurrentUserFromContext will retrieve the current user from the context.
 func CurrentUserFromContext(ctx context.Context) (*modelgen.User, error) {
-	user, ok := ctx.Value(currentUsreContextKey).(*modelgen.User)
+	user, ok := ctx.Value(currentUserContextKey).(*modelgen.User)
 	if !ok {
 		return nil, errUnauthenticated
 	}
