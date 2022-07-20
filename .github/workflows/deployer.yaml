@@ -1,19 +1,19 @@
-name: 'Deployer 🔧'
+name: "Deployer 🔧"
 on:
   # Disabled due to the private repository and no review-apps currently supported
-  # pull_request: 
+  # pull_request:
   #   branches:
   #   - main
   push:
     branches:
-    - main
+      - main
   release:
     types:
-    - prereleased
-    - released
+      - prereleased
+      - released
 jobs:
   build_and_push:
-    name: 'Build & push to ghcr.io 🔧'
+    name: "Build & push to ghcr.io 🔧"
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -22,73 +22,75 @@ jobs:
       REGISTRY: ghcr.io
       IMAGE_NAME: ${{ github.repository }}
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Log in to the Container registry
-      uses: docker/login-action@v2
-      with:
-        registry: ${{ env.REGISTRY }}
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Log in to the Container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Extract metadata (tags, labels) for Docker
-      id: meta
-      uses: docker/metadata-action@v4
-      with:
-        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-        github-token: ${{ github.token }}
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          github-token: ${{ github.token }}
 
-    - name: Build and push Docker image
-      uses: docker/build-push-action@v3
-      with:
-        context: .
-        push: true
-        tags: ${{ steps.meta.outputs.tags }}
-        labels: ${{ steps.meta.outputs.labels }}
-        file: build/Dockerfile
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          file: build/Dockerfile
+          build-args: |
+            APP_VERSION=${{ steps.meta.outputs.version }}
 
   deploy_sandbox:
     name: Deploy to sandbox 🏖
     runs-on: ubuntu-latest
-    needs: [ build_and_push ]
+    needs: [build_and_push]
     if: ${{ contains('refs/heads/main', github.ref) }}
     steps:
-    - uses: actions/checkout@v3
-    - uses: azure/setup-kubectl@v3.0
-    - uses: imranismail/setup-kustomize@v1
-    - uses: azure/k8s-set-context@v3
-      with:
-        method: kubeconfig
-        kubeconfig: ${{ secrets.KUBECONFIG_ADMIN }}
-        cluster-type: generic
-    - run: |
-        kustomize build deploy/app/config/overlays/sandbox | kubectl apply -f -
+      - uses: actions/checkout@v3
+      - uses: azure/setup-kubectl@v3.0
+      - uses: imranismail/setup-kustomize@v1
+      - uses: azure/k8s-set-context@v3
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBECONFIG_ADMIN }}
+          cluster-type: generic
+      - run: |
+          kustomize build deploy/app/config/overlays/sandbox | kubectl apply -f -
 
-        cd ${{github.workspace }}/deploy/app/jwtks-service/overlays/sandbox
-        kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.ref_name }}
-        kustomize build . | kubectl apply -f -
+          cd ${{github.workspace }}/deploy/app/jwtks-service/overlays/sandbox
+          kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.ref_name }}
+          kustomize build . | kubectl apply -f -
 
-        cd ${{github.workspace }}/deploy/app/api/overlays/sandbox
-        kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.ref_name }}
-        kustomize build . | kubectl apply -f -
+          cd ${{github.workspace }}/deploy/app/api/overlays/sandbox
+          kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.ref_name }}
+          kustomize build . | kubectl apply -f -
 
-        cd ${{github.workspace }}/deploy/app/interface/overlays/sandbox
-        kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.ref_name }}
-        kustomize build . | kubectl apply -f -
+          cd ${{github.workspace }}/deploy/app/interface/overlays/sandbox
+          kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.ref_name }}
+          kustomize build . | kubectl apply -f -
 
-        cd ${{github.workspace }}/deploy/app/crawler-campus/overlays/sandbox
-        kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.ref_name }}
-        kustomize build . | kubectl apply -f -
+          cd ${{github.workspace }}/deploy/app/crawler-campus/overlays/sandbox
+          kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.ref_name }}
+          kustomize build . | kubectl apply -f -
 
-        cd ${{github.workspace }}/deploy/app/crawler-locations/overlays/sandbox
-        kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.ref_name }}
-        kustomize build . | kubectl apply -f -
+          cd ${{github.workspace }}/deploy/app/crawler-locations/overlays/sandbox
+          kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.ref_name }}
+          kustomize build . | kubectl apply -f -
 
   deploy_next:
     name: Deploy to next 🎉
     runs-on: ubuntu-latest
-    needs: [ build_and_push ]
+    needs: [build_and_push]
     if: |
       github.event.action == 'prereleased' ||
       (
@@ -97,41 +99,41 @@ jobs:
         github.event.release.prerelease == true
       )
     steps:
-    - uses: actions/checkout@v3
-    - uses: azure/setup-kubectl@v3.0
-    - uses: imranismail/setup-kustomize@v1
-    - uses: azure/k8s-set-context@v3
-      with:
-        method: kubeconfig
-        kubeconfig: ${{ secrets.KUBECONFIG_ADMIN }}
-        cluster-type: generic
-    - run: |
-        kustomize build deploy/app/config/overlays/next | kubectl apply -f -
+      - uses: actions/checkout@v3
+      - uses: azure/setup-kubectl@v3.0
+      - uses: imranismail/setup-kustomize@v1
+      - uses: azure/k8s-set-context@v3
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBECONFIG_ADMIN }}
+          cluster-type: generic
+      - run: |
+          kustomize build deploy/app/config/overlays/next | kubectl apply -f -
 
-        cd ${{github.workspace }}/deploy/app/jwtks-service/overlays/next
-        kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
-        kustomize build . | kubectl apply -f -
+          cd ${{github.workspace }}/deploy/app/jwtks-service/overlays/next
+          kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
+          kustomize build . | kubectl apply -f -
 
-        cd ${{github.workspace }}/deploy/app/api/overlays/next
-        kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
-        kustomize build . | kubectl apply -f -
+          cd ${{github.workspace }}/deploy/app/api/overlays/next
+          kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
+          kustomize build . | kubectl apply -f -
 
-        cd ${{github.workspace }}/deploy/app/interface/overlays/next
-        kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
-        kustomize build . | kubectl apply -f -
+          cd ${{github.workspace }}/deploy/app/interface/overlays/next
+          kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
+          kustomize build . | kubectl apply -f -
 
-        cd ${{github.workspace }}/deploy/app/crawler-campus/overlays/next
-        kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
-        kustomize build . | kubectl apply -f -
+          cd ${{github.workspace }}/deploy/app/crawler-campus/overlays/next
+          kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
+          kustomize build . | kubectl apply -f -
 
-        cd ${{github.workspace }}/deploy/app/crawler-locations/overlays/next
-        kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
-        kustomize build . | kubectl apply -f -
+          cd ${{github.workspace }}/deploy/app/crawler-locations/overlays/next
+          kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
+          kustomize build . | kubectl apply -f -
 
   deploy_live:
     name: Deploy to live 🚀
     runs-on: ubuntu-latest
-    needs: [ build_and_push, deploy_next ]
+    needs: [build_and_push, deploy_next]
     if: |
       always() &&
       (needs.build_and_push.result == 'success') &&
@@ -143,36 +145,36 @@ jobs:
         github.event.release.prerelease == false
       )
     steps:
-    - uses: actions/checkout@v3
-    - uses: azure/setup-kubectl@v3.0
-    - uses: azure/k8s-set-context@v3
-      with:
-        method: kubeconfig
-        kubeconfig: ${{ secrets.KUBECONFIG_ADMIN }}
-        cluster-type: generic
-    - run: |
-        kustomize build deploy/app/config/overlays/live | kubectl apply -f -
+      - uses: actions/checkout@v3
+      - uses: azure/setup-kubectl@v3.0
+      - uses: azure/k8s-set-context@v3
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBECONFIG_ADMIN }}
+          cluster-type: generic
+      - run: |
+          kustomize build deploy/app/config/overlays/live | kubectl apply -f -
 
-        cd ${{github.workspace }}/deploy/app/jwtks-service/overlays/live
-        kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
-        kustomize build . | kubectl apply -f -
+          cd ${{github.workspace }}/deploy/app/jwtks-service/overlays/live
+          kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
+          kustomize build . | kubectl apply -f -
 
-        cd ${{github.workspace }}/deploy/app/api/overlays/live
-        kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
-        kustomize build . | kubectl apply -f -
+          cd ${{github.workspace }}/deploy/app/api/overlays/live
+          kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
+          kustomize build . | kubectl apply -f -
 
-        cd ${{github.workspace }}/deploy/app/interface/overlays/live
-        kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
-        kustomize build . | kubectl apply -f -
+          cd ${{github.workspace }}/deploy/app/interface/overlays/live
+          kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
+          kustomize build . | kubectl apply -f -
 
-        cd ${{github.workspace }}/deploy/app/crawler-campus/overlays/live
-        kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
-        kustomize build . | kubectl apply -f -
+          cd ${{github.workspace }}/deploy/app/crawler-campus/overlays/live
+          kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
+          kustomize build . | kubectl apply -f -
 
-        # cd ${{github.workspace }}/deploy/app/crawler-locations/overlays/live
-        # kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
-        # kustomize build . | kubectl apply -f -
+          # cd ${{github.workspace }}/deploy/app/crawler-locations/overlays/live
+          # kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
+          # kustomize build . | kubectl apply -f -
 
-        cd ${{github.workspace }}/deploy/app/webhooks-processor/overlays/live
-        kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
-        kustomize build . | kubectl apply -f -
+          cd ${{github.workspace }}/deploy/app/webhooks-processor/overlays/live
+          kustomize edit set image app=ghcr.io/42atomys/stud42:${{ github.event.release.tag_name }}
+          kustomize build . | kubectl apply -f -
