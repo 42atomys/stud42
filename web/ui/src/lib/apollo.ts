@@ -14,14 +14,15 @@ import { NextRequest } from 'next/server'; // eslint-disable-line
 
 export type ServerSideRequest = NextRequest | GetServerSidePropsContext['req'];
 
+const tokenCookieName = '__s42.auth-token';
+
 const httpLink = createHttpLink({
   uri: process.env.NEXT_PUBLIC_GRAPHQL_API,
   credentials: 'include',
 });
 
 const authLink = setContext((_, context) => {
-  const COOKIE_NAME = '__s42.auth-token';
-  let authToken = Cookies.get(COOKIE_NAME);
+  let authToken = Cookies.get(tokenCookieName);
 
   if (!authToken) {
     authToken = context.authToken;
@@ -71,14 +72,15 @@ export const queryAuthenticatedSSR = async <T = any>(
 ): Promise<ApolloQueryResult<T>> => {
   const { query, context, ...rest } = opts;
 
-  const token: string | undefined =
-    (req as GetServerSidePropsContext['req']).cookies?.['__s42.auth-token'] ||
-    (req as NextRequest).cookies?.get('__s42.auth-token');
+  const serverSideToken = (req as GetServerSidePropsContext['req'])?.cookies?.[
+    tokenCookieName
+  ];
+  const nextRequestToken = (req as NextRequest)?.cookies?.get(tokenCookieName);
 
   return apolloClient.query<T>({
     query,
     context: {
-      authToken: token,
+      authToken: serverSideToken || nextRequestToken,
       ...context,
     },
     ...rest,
