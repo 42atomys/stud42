@@ -118,12 +118,16 @@ func (r *queryResolver) Me(ctx context.Context) (*generated.User, error) {
 func (r *queryResolver) SearchUser(ctx context.Context, query string) ([]*generated.User, error) {
 	cu, _ := CurrentUserFromContext(ctx)
 	return r.client.User.Query().
-		Where(user.Or(
-			user.DuoLoginContainsFold(query),
-			user.FirstNameContainsFold(query),
-			user.LastNameContainsFold(query),
-			user.UsualFirstNameContainsFold(query),
-		),
+		Where(
+			user.Or(
+				user.DuoLoginEqualFold(query),
+				user.Or(
+					user.DuoLoginHasPrefix(query),
+					user.FirstNameContainsFold(query),
+					user.LastNameContainsFold(query),
+					user.UsualFirstNameContainsFold(query),
+				),
+			),
 			user.IDNEQ(cu.ID),
 		).
 		Limit(10).
