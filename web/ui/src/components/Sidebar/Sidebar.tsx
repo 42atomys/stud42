@@ -1,11 +1,11 @@
+import Tooltip from '@components/Tooltip/Tooltip';
+import { Contribute, Star } from '@lib/github';
+import classNames from 'classnames';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useContext } from 'react';
 import { SidebarContext } from './SidebarContext';
-import Image from 'next/image';
-import { Contribute, Star } from '@lib/github';
-import classNames from 'classnames';
-import Tooltip from '@components/Tooltip/Tooltip';
 
 /**
  * Menu item component. This is used to create the menu items in the sidebar
@@ -34,11 +34,10 @@ const MenuItem = ({
           className={`duration-100 transition-all flex items-center justify-center my-3 text-xl`}
         >
           <div
-            className={`group relative flex items-center justify-center text-xl rounded-full w-[50px] h-[50px] ${
-              activeRoute
-                ? 'text-white bg-indigo-200 dark:bg-indigo-500/20 border-2 border-indigo-500'
-                : 'border-transparent hover:border-slate-600 dark:hover:border-slate-400 hover:bg-slate-900/10 dark:hover:bg-slate-100/10'
-            } border-2 outline-none shadow-outline`}
+            className={`group relative flex items-center justify-center text-xl rounded-full w-[50px] h-[50px] ${activeRoute
+              ? 'text-white bg-indigo-200 dark:bg-indigo-500/20 border-2 border-indigo-500'
+              : 'border-transparent hover:border-slate-600 dark:hover:border-slate-400 hover:bg-slate-900/10 dark:hover:bg-slate-100/10'
+              } border-2 outline-none shadow-outline`}
           >
             <i
               className={classNames(
@@ -105,9 +104,8 @@ export const Sidebar = ({
           </button>
         </div>
         <nav
-          className={`${
-            open ? 'block' : 'hidden'
-          } flex-grow md:block px-4 pb-4 md:pb-0`}
+          className={`${open ? 'block' : 'hidden'
+            } flex-grow md:block px-4 pb-4 md:pb-0`}
         >
           <MenuItem href="/feed" icon="fa-seedling" name="Feed" />
           <MenuItem href="/clusters" icon="fa-sitemap" name="Clusters" />
@@ -120,9 +118,8 @@ export const Sidebar = ({
           />
         </nav>
         <div
-          className={`${
-            open ? 'block' : 'hidden'
-          } flex flex-col justify-center items-center text-center py-2`}
+          className={`${open ? 'block' : 'hidden'
+            } flex flex-col justify-center items-center text-center py-2`}
         >
           <span className="text-sm text-slate-400 dark:text-slate-600">
             {!subSidebar && (
@@ -135,15 +132,14 @@ export const Sidebar = ({
             <MenuItem href="/auth/signout" icon="fa-sign-out" name="Logout" />
           </span>
           <span className="text-sm text-slate-400 dark:text-slate-600">
-            3.0+alpha.1
+            {process.env.APP_VERSION}
           </span>
         </div>
       </div>
       {subSidebar && (
         <div
-          className={`${
-            open ? 'block' : 'hidden'
-          } flex flex-col w-full md:w-72 text-slate-600 dark:text-slate-400 bg-slate-200 dark:bg-slate-900/80 flex-shrink-0`}
+          className={`${open ? 'block' : 'hidden'
+            } flex flex-col w-full md:w-72 text-slate-600 dark:text-slate-400 bg-slate-200 dark:bg-slate-900/80 flex-shrink-0`}
         >
           <div className="flex my-6 w-full justify-evenly">
             <Star />
