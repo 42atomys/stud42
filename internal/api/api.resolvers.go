@@ -5,6 +5,7 @@ package api
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"strconv"
 	"strings"
@@ -18,6 +19,7 @@ import (
 	"atomys.codes/stud42/internal/models/generated/campus"
 	"atomys.codes/stud42/internal/models/generated/location"
 	"atomys.codes/stud42/internal/models/generated/user"
+	"atomys.codes/stud42/pkg/utils"
 	"entgo.io/ent/dialect/sql"
 	"github.com/bwmarrin/discordgo"
 	"github.com/google/uuid"
@@ -117,21 +119,28 @@ func (r *queryResolver) Me(ctx context.Context) (*generated.User, error) {
 
 func (r *queryResolver) SearchUser(ctx context.Context, query string) ([]*generated.User, error) {
 	cu, _ := CurrentUserFromContext(ctx)
+
 	return r.client.User.Query().
-		Where(
-			user.Or(
-				user.DuoLoginEqualFold(query),
-				user.Or(
-					user.DuoLoginHasPrefix(query),
-					user.FirstNameContainsFold(query),
-					user.LastNameContainsFold(query),
-					user.UsualFirstNameContainsFold(query),
-				),
-			),
-			user.IDNEQ(cu.ID),
-		).
-		Limit(10).
-		All(ctx)
+		Where(func(s *sql.Selector) {
+			t := sql.Table(user.Table)
+
+			s.Select(t.Columns(user.Columns...)...).
+				From(t).
+				Where(
+					sql.And(
+						sql.NEQ(t.C(user.FieldID), cu.ID),
+						sql.Like(t.C(user.FieldDuoLogin), query),
+					),
+				).
+				UnionAll(
+					sql.Select(t.Columns(user.Columns...)...).
+						From(t).
+						Where(
+							sql.ExprP("CONCAT(COALESCE(NULLIF(TRIM(usual_first_name), ''), first_name), ' ', last_name) ILIKE $3", fmt.Sprintf("%%%s%%", utils.StringLimiter(query, 20))),
+						),
+				)
+		}).
+		Limit(10).All(ctx)
 }
 
 func (r *queryResolver) Campus(ctx context.Context, id uuid.UUID) (*generated.Campus, error) {
