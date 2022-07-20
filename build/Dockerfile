@@ -4,7 +4,7 @@ FROM golang:1.18 AS go-build
 
 WORKDIR /build
 COPY . /build
-ENV APP_VERSION=${APP_VERSION}
+ENV APP_VERSION=$APP_VERSION
 
 RUN apt-get update && \
   apt-get install -y unzip jq && \
@@ -22,8 +22,8 @@ WORKDIR /build
 COPY --from=node-deps /build/node_modules ./node_modules
 COPY . .
 
-ENV NEXT_TELEMETRY_DISABLED 1 \
-  APP_VERSION=${APP_VERSION}
+ENV NEXT_TELEMETRY_DISABLED 1
+ENV APP_VERSION=$APP_VERSION
 
 RUN apt-get update -y && \
   apt-get install -y jq && \
@@ -41,8 +41,8 @@ LABEL repository "https://github.com/42Atomys/stud42"
 
 WORKDIR /app
 
-ENV NEXT_TELEMETRY_DISABLED 1 \
-  APP_VERSION=${APP_VERSION}
+ENV NEXT_TELEMETRY_DISABLED 1
+ENV APP_VERSION=$APP_VERSION
 
 COPY --from=node-builder /build/web/ui/next.config.js ./
 COPY --from=node-builder /build/web/ui/public ./public
