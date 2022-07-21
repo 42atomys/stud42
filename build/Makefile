@@ -25,8 +25,8 @@ deps:
 
 devcontainer-init: generate certs
 	go mod download
-	sudo yarn --cwd web/ui install
-	sudo yarn --cwd web/ui generate
+	yarn --cwd web/ui install
+	yarn --cwd web/ui generate
 
 all:
 	deps
