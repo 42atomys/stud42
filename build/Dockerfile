@@ -1,12 +1,14 @@
+ARG APP_VERSION
 # GOLANG BUILD - BUILD
 FROM golang:1.18 AS go-build
 
 WORKDIR /build
 COPY . /build
+ENV APP_VERSION=$APP_VERSION
 
 RUN apt-get update && \
-    apt-get install -y unzip jq && \
-    make -f build/Makefile deps generate build
+  apt-get install -y unzip jq && \
+  make -f build/Makefile deps generate build
 
 # INTERFACE BUILD - DEPS
 FROM node:16 AS node-deps
@@ -21,13 +23,14 @@ COPY --from=node-deps /build/node_modules ./node_modules
 COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED 1
+ENV APP_VERSION=$APP_VERSION
 
 RUN apt-get update -y && \
-    apt-get install -y jq && \
-    make -f build/Makefile deps && \
-    cd web/ui && \
-    yarn add -D @graphql-codegen/cli && \
-    yarn generate && yarn build
+  apt-get install -y jq && \
+  make -f build/Makefile deps && \
+  cd web/ui && \
+  yarn add -D @graphql-codegen/cli && \
+  yarn generate && yarn build
 
 
 # RUNNER 
@@ -39,6 +42,7 @@ LABEL repository "https://github.com/42Atomys/stud42"
 WORKDIR /app
 
 ENV NEXT_TELEMETRY_DISABLED 1
+ENV APP_VERSION=$APP_VERSION
 
 COPY --from=node-builder /build/web/ui/next.config.js ./
 COPY --from=node-builder /build/web/ui/public ./public

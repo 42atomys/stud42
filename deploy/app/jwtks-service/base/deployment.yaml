@@ -20,8 +20,6 @@ spec:
           env:
             - name: GO_ENV
               value: production
-            - name: APP_VERSION
-              value: latest
             - name: SENTRY_DSN
               valueFrom:
                 secretKeyRef:

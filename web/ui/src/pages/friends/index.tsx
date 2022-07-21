@@ -1,13 +1,12 @@
-import React from 'react';
-import { Menu, MenuCategory, MenuItem, useSidebar } from '@components/Sidebar';
-import classNames from 'classnames';
-import Head from 'next/head';
-import { NextPage } from 'next';
-import UserCard from '@components/UserCard';
-import { Search } from '@components/Search';
-import { MyFollowingsDocument, useMyFollowingsQuery, User } from '@graphql.d';
 import Loader from '@components/Loader';
+import { Search } from '@components/Search';
+import { Menu, MenuCategory, MenuItem, useSidebar } from '@components/Sidebar';
+import UserCard from '@components/UserCard';
+import { MyFollowingsDocument, useMyFollowingsQuery, User } from '@graphql.d';
 import { isFirstLoading } from '@lib/apollo';
+import classNames from 'classnames';
+import { NextPage } from 'next';
+import Head from 'next/head';
 
 type PageProps = {};
 

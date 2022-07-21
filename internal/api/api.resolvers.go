@@ -5,7 +5,11 @@ package api
 
 import (
 	"context"
+	"fmt"
 	"os"
+	"strconv"
+	"strings"
+	"time"
 
 	apigen "atomys.codes/stud42/internal/api/generated"
 	typesgen "atomys.codes/stud42/internal/api/generated/types"
@@ -15,6 +19,7 @@ import (
 	"atomys.codes/stud42/internal/models/generated/campus"
 	"atomys.codes/stud42/internal/models/generated/location"
 	"atomys.codes/stud42/internal/models/generated/user"
+	"atomys.codes/stud42/pkg/utils"
 	"entgo.io/ent/dialect/sql"
 	"github.com/bwmarrin/discordgo"
 	"github.com/google/uuid"
@@ -25,6 +30,10 @@ func (r *mutationResolver) CreateFriendship(ctx context.Context, userID uuid.UUI
 	cu, err := CurrentUserFromContext(ctx)
 	if err != nil {
 		return false, err
+	}
+
+	if userID == cu.ID {
+		return false, fmt.Errorf("cannot befriend yourself")
 	}
 
 	if _, err := r.client.User.UpdateOne(cu).AddFollowingIDs(userID).Save(ctx); err != nil {
@@ -114,17 +123,31 @@ func (r *queryResolver) Me(ctx context.Context) (*generated.User, error) {
 
 func (r *queryResolver) SearchUser(ctx context.Context, query string) ([]*generated.User, error) {
 	cu, _ := CurrentUserFromContext(ctx)
+
 	return r.client.User.Query().
-		Where(user.Or(
-			user.DuoLoginContainsFold(query),
-			user.FirstNameContainsFold(query),
-			user.LastNameContainsFold(query),
-			user.UsualFirstNameContainsFold(query),
-		),
-			user.IDNEQ(cu.ID),
-		).
-		Limit(10).
-		All(ctx)
+		Where(func(s *sql.Selector) {
+			t := sql.Table(user.Table)
+
+			s.Select(t.Columns(user.Columns...)...).
+				From(t).
+				Where(
+					sql.And(
+						sql.NEQ(t.C(user.FieldID), cu.ID),
+						sql.Like(t.C(user.FieldDuoLogin), query),
+					),
+				).
+				UnionAll(
+					sql.Select(t.Columns(user.Columns...)...).
+						From(t).
+						Where(
+							sql.And(
+								sql.NEQ(t.C(user.FieldID), cu.ID),
+								sql.ExprP("CONCAT(COALESCE(NULLIF(TRIM(usual_first_name), ''), first_name), ' ', last_name) ILIKE $4", fmt.Sprintf("%%%s%%", utils.StringLimiter(query, 20))),
+							),
+						),
+				)
+		}).
+		Limit(10).All(ctx)
 }
 
 func (r *queryResolver) Campus(ctx context.Context, id uuid.UUID) (*generated.Campus, error) {
@@ -205,6 +228,22 @@ func (r *queryResolver) InternalGetUserByEmail(ctx context.Context, email string
 
 func (r *queryResolver) InternalGetUser(ctx context.Context, id uuid.UUID) (*generated.User, error) {
 	return r.client.User.Get(ctx, id)
+}
+
+func (r *userResolver) IsSwimmer(ctx context.Context, obj *generated.User) (bool, error) {
+	if obj.PoolYear == nil || obj.PoolMonth == nil {
+		return false, nil
+	}
+
+	now := time.Now()
+	return (*obj.PoolYear == strconv.Itoa(now.Year()) &&
+		strings.EqualFold(*obj.PoolMonth, now.Format("January"))), nil
+}
+
+func (r *userResolver) IsMe(ctx context.Context, obj *generated.User) (bool, error) {
+	cu, _ := CurrentUserFromContext(ctx)
+
+	return cu.ID == obj.ID, nil
 }
 
 func (r *userResolver) Flags(ctx context.Context, obj *generated.User) ([]typesgen.Flag, error) {

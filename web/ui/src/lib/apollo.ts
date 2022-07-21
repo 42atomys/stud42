@@ -14,14 +14,15 @@ import { NextRequest } from 'next/server'; // eslint-disable-line
 
 export type ServerSideRequest = NextRequest | GetServerSidePropsContext['req'];
 
+const tokenCookieName = '__s42.auth-token';
+
 const httpLink = createHttpLink({
   uri: process.env.NEXT_PUBLIC_GRAPHQL_API,
   credentials: 'include',
 });
 
 const authLink = setContext((_, context) => {
-  const COOKIE_NAME = '__s42.auth-token';
-  let authToken = Cookies.get(COOKIE_NAME);
+  let authToken = Cookies.get(tokenCookieName);
 
   if (!authToken) {
     authToken = context.authToken;
@@ -78,7 +79,10 @@ export const queryAuthenticatedSSR = async <T = any>(
   return apolloClient.query<T>({
     query,
     context: {
-      authToken: token,
+      // @ts-ignore this will works anytime. a NextJS update breaks this rules
+      // on NextMiddleware due to the implementation of NextCookies. Wait the
+      // resolution of typescript type
+      authToken: req.cookies[tokenCookieName],
       ...context,
     },
     ...rest,

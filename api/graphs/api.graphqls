@@ -45,6 +45,8 @@ type User {
   Phone: String
   PoolYear: String
   PoolMonth: String
+  isSwimmer: Boolean!
+  isMe: Boolean!
   Nickname: String
   AvatarURL: String
   CoverURL: String

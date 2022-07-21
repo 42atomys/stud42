@@ -12,7 +12,7 @@ import { useState } from 'react';
 
 export const Search = () => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [query, setQuery] = useDebounce('', 200);
+  const [query, setQuery] = useDebounce('', 400);
 
   const [createFriendship] = useCreateFriendshipMutation();
   const { data } = useSearchUserQuery({
@@ -47,7 +47,7 @@ export const Search = () => {
                 type="text"
                 className="bg-transparent flex-1 focus:outline-none peer placeholder:text-slate-400 dark:placeholder:text-slate-600"
                 placeholder="Add a friend"
-                maxLength={10}
+                maxLength={20}
               />
               <div
                 className={classNames(
