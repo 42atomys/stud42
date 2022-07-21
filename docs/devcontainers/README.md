@@ -46,18 +46,8 @@ All services except the interface actually can be run separately without depende
 
 For interface, run the api on your terminal and start the interface with the debugger do the coffee for you. _In the future, the interface fetch data from the sandbox like jwtks-service._
 
-## Knows Issues
+## Tasks
 
-### yarn and sudo permissions
+VSCode have incredible feature called [Tasks](https://code.visualstudio.com/docs/editor/tasks). Any mendatory operation of the project can be performed with tasks (start api, lint, code, generata code, ...).
 
-Due to the yarn implementation and no-root user on the container, yarn dont have permission to write on `node_modules`.
-
-The workarround is to run yarn install and update operations under `sudo`.
-
-yarn scripts can be done without sudo it.
-
-### ssh and gitconfig forward
-
-Actually gitconfig and ssh key is not forwarded to your devcontainer.
-You need to redefine it on container or perform all git commands outside of the
-container (on your machine).
+To execute task : [Command Palette](https://code.visualstudio.com/docs/getstarted/userinterface#_command-palette) (⇧⌘P) and execute `Tasks: Run Task`, select which one you want to run and a dedicated terminal will open soon
