@@ -1,0 +1,20 @@
+#!/bin/bash
+# git config core.hooksPath githooks
+
+RED="\033[1;31m"
+GREEN="\033[1;32m"
+NC="\033[0m"
+
+if ! npm list --location=global '@commitlint/cli' &> /dev/null
+then
+    echo "commitlint could not be found. Installing from https://github.com/conventional-changelog/commitlint"
+    npm install --location=global @commitlint/cli
+fi
+
+if ! npm list --location=global '@commitlint/config-conventional' &> /dev/null
+then
+    echo "commitlint/config-conventional could not be found. Installing from https://github.com/conventional-changelog/commitlint/tree/master/%40commitlint/config-conventional"
+    npm install --location=global @commitlint/config-conventional
+fi
+
+commitlint -g $(git config core.hooksPath)/commitlint.config.js -x $(npm root -g)/@commitlint/config-conventional -V --edit "$1"

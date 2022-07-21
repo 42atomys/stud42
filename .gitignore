@@ -10,7 +10,6 @@
 # Configuration Files
 config/*
 !config/*example.yaml
-web/ui/stud42.config.yaml
 
 # =================================================
 # Backend ignores 💻
