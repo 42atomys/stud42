@@ -1,0 +1,131 @@
+{
+  "name": "s42.app",
+  "dockerComposeFile": "docker-compose.yaml",
+  "service": "workspace",
+  "workspaceFolder": "/workspace",
+
+  // Configure tool-specific properties.
+  "customizations": {
+    // Configure properties specific to VS Code.
+    "vscode": {
+      // Set *default* container specific settings.json values on container create.
+      "settings": {
+        "go.toolsManagement.checkForUpdates": "local",
+        "go.useLanguageServer": true,
+        "go.gopath": "/go",
+        "go.autocompleteUnimportedPackages": true,
+        "go.coverMode": "atomic",
+        "go.coverOnSave": true,
+        "go.disableConcurrentTests": true,
+        "go.enableCodeLens": {
+          "references": true
+        },
+        "editor.formatOnSave": true,
+        "go.formatTool": "goimports",
+        "go.lintTool": "golangci-lint",
+        "terminal.integrated.fontFamily": "'DejaVu Sans Mono for Powerline', monospace",
+        "editor.tabSize": 2,
+        "editor.renderWhitespace": "all",
+        "gopls": {
+          "ui.completion.usePlaceholders": true,
+          "build.experimentalWorkspaceModule": true,
+
+          // Experimental settings
+          "completeUnimported": true, // autocomplete unimported packages
+          "deepCompletion": true, // enable deep completion
+          "staticcheck": true
+        },
+        "editor.codeActionsOnSave": {
+          "source.organizeImports": true,
+          "source.fixAll": true
+        },
+        "editor.bracketPairColorization.enabled": true,
+        "editor.guides.bracketPairs": "active",
+        "editor.suggestSelection": "first",
+        "git.autofetch": true,
+        "typescript.updateImportsOnFileMove.enabled": "always",
+        "files.autoGuessEncoding": true,
+        "files.encoding": "utf8",
+        "workbench.editor.decorations.badges": true,
+        "workbench.editor.decorations.colors": true,
+        "go.delveConfig": {
+          "apiVersion": 2,
+          "showGlobalVariables": false
+        },
+        "editor.inlineSuggest.enabled": true,
+        "editor.rulers": [80],
+        "search.useGlobalIgnoreFiles": true,
+        "search.useParentIgnoreFiles": true,
+        "workbench.productIconTheme": "fluent-icons",
+        "[yaml]": {
+          "editor.defaultFormatter": "redhat.vscode-yaml"
+        },
+        "[proto3]": {
+          "editor.defaultFormatter": "zxh404.vscode-proto3"
+        },
+        "[markdown]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[json]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[jsonc]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[typescript]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        }
+      },
+
+      // Add the IDs of extensions you want installed when the container is created.
+      "extensions": [
+        "golang.Go",
+        "aaron-bond.better-comments",
+        "miguelsolorio.fluent-icons",
+        "peterj.proto",
+        "jasonnutter.vscode-codeowners",
+        "ms-azuretools.vscode-docker",
+        "ms-kubernetes-tools.vscode-kubernetes-tools",
+        "cschleiden.vscode-github-actions",
+        "eamodio.gitlens",
+        "jinliming2.vscode-go-template",
+        "graphql.vscode-graphql",
+        "yzhang.markdown-all-in-one",
+        "bierner.markdown-mermaid",
+        "quicktype.quicktype",
+        "esbenp.prettier-vscode",
+        "bradlc.vscode-tailwindcss",
+        "zxh404.vscode-proto3",
+        "redhat.vscode-yaml"
+      ]
+    }
+  },
+
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
+  "forwardPorts": [
+    3000, // web-ui port
+    4000, // api port
+    5000, // jwtks-service grpc port
+    5500 // jwtks-service http port
+  ],
+
+  // Use 'postCreateCommand' to run commands after the container is created.
+  "postCreateCommand": ".devcontainer/postStartCommand.sh",
+
+  // Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+  // "remoteUser": "vscode",
+  "portsAttributes": {
+    "3000": {
+      "label": "Interface"
+    },
+    "4000": {
+      "label": "API"
+    },
+    "5000": {
+      "label": "JWTKS Service GRPC"
+    },
+    "5500": {
+      "label": "JWTKS Service HTTP"
+    }
+  }
+}

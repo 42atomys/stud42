@@ -21,7 +21,7 @@ export default NextAuth({
       clientSecret: process.env.GITHUB_SECRET as string,
       // https://docs.github.com/en/developers/apps/building-oauth-apps/scopes-for-oauth-apps
       // @ts-ignore
-      scope: 'user,user:email,user:follow',
+      scope: 'user user:email user:follow',
     }),
     DiscordProvider({
       clientId: process.env.DISCORD_ID as string,

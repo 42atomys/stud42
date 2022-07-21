@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  workspace:
+    hostname: s42-dev-workspace
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+      args:
+        # Update 'VARIANT' to pick a version of Python: 3, 3.10, 3.9, 3.8, 3.7, 3.6
+        # Append -bullseye or -buster to pin to an OS version.
+        # Use -bullseye variants on local arm64/Apple Silicon.
+        VARIANT: 1-bullseye
+        # Optional Node.js version to install
+        NODE_VERSION: "lts/*"
+    tty: true
+    env_file:
+      - .env
+    environment:
+      # Cross service
+      DEBUG: 'true'
+      S42_SERVICE_TOKEN: private-cross-service-token-for-dev-only
+      CONFIG_PATH: /workspace/config/stud42.yaml
+      # Backend
+      GO_ENV: development
+      APP_VERSION: indev
+      DATABASE_URL: postgresql://postgres:postgres@database:5432/s42?sslmode=disable
+      AMQP_URL: amqp://rabbitmq:rabbitmq@rabbitmq:5672
+      CORS_ORIGIN: http://localhost:3000
+      # Interface
+      NEXT_PUBLIC_GRAPHQL_API: http://localhost:4000/graphql
+      NEXTAUTH_URL: http://localhost:3000
+      NEXTAUTH_SECRET: private-secret-for-dev-only
+    volumes:
+      - ..:/workspace:cached
+      - $HOME/.gitconfig:/root/.gitconfig:ro
+      - $HOME/.ssh:/root/.ssh:ro
+
+    # Overrides default command so things don't shut down after the process ends.
+    command: sleep infinity
+
+    # Uncomment the next line to use a non-root user for all processes.
+    # user: vscode
+
+    # Use "forwardPorts" in **devcontainer.json** to forward an workspace port locally.
+    # (Adding the "ports" property to this file will not forward from a Codespace.)
+
+  database:
+    hostname: s42-database
+    image: ghcr.io/42atomys/s42-postgres:14.2-alpine3.15
+    restart: unless-stopped
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: s42
+
+    # Add "forwardPorts": ["5432"] to **devcontainer.json** to forward PostgreSQL locally.
+    # (Adding the "ports" property to this file will not forward from a Codespace.)
+
+  rabbitmq:
+    hostname: s42-rabbitmq
+    image: ghcr.io/42atomys/s42-rabbitmq:3.10.2-management
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: rabbitmq
+      RABBITMQ_DEFAULT_PASS: rabbitmq
+
+    # Add "forwardPorts": ["5432"] to **devcontainer.json** to forward PostgreSQL locally.
+    # (Adding the "ports" property to this file will not forward from a Codespace.)
+
+volumes:
+  postgres-data:
+
+networks:
+  s42-dev-network:
