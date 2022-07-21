@@ -33,8 +33,10 @@ services:
       NEXTAUTH_SECRET: private-secret-for-dev-only
     volumes:
       - ..:/workspace:cached
-      - $HOME/.gitconfig:/root/.gitconfig:ro
-      - $HOME/.ssh:/root/.ssh:ro
+      # Fallback to workarround to prevent crash during mounting on codespaces
+      # or missing configuration files.
+      - ${HOME:-.devcontainers/codespace_workaround}/.gitconfig:/root/.gitconfig:ro
+      - ${HOME:-.devcontainers/codespace_workaround}/.ssh:/root/.ssh:ro
 
     # Overrides default command so things don't shut down after the process ends.
     command: sleep infinity
