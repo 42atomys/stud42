@@ -72,13 +72,16 @@ export const queryAuthenticatedSSR = async <T = any>(
 ): Promise<ApolloQueryResult<T>> => {
   const { query, context, ...rest } = opts;
 
+  const token =
+    typeof req.cookies?.get === 'function'
+      ? req.cookies.get(tokenCookieName)
+      : // @ts-ignore
+        req.cookies[tokenCookieName];
+
   return apolloClient.query<T>({
     query,
     context: {
-      // @ts-ignore this will works anytime. a NextJS update breaks this rules
-      // on NextMiddleware due to the implementation of NextCookies. Wait the
-      // resolution of typescript type
-      authToken: req.cookies[tokenCookieName],
+      authToken: token,
       ...context,
     },
     ...rest,

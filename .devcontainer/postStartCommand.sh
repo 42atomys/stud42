@@ -20,5 +20,6 @@ EOF
 git config pull.rebase true
 git config core.hooksPath /workspace/githooks
 git config commit.gpgsign true
+git update-index --assume-unchanged .devcontainer/.env
 
 make -f build/Makefile devcontainer-init
