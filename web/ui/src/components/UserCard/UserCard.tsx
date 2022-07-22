@@ -33,7 +33,7 @@ export const UserCard: UserCardComponent = ({
       <LocationBadge location={location} />
       {!user.isMe && (
         <DropdownMenu
-          userID={user.id}
+          user={user}
           isFriend={user.isFollowing}
           buttonAlwaysShow={buttonAlwaysShow}
           refetchQueries={refetchQueries}

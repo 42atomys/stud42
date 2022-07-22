@@ -15,7 +15,7 @@ type UserCardComponent = (
 ) => JSX.Element | null;
 
 type DropdownMenuProps = {
-  userID: User['id'];
+  user: Pick<User, 'id', 'duoLogin'>;
   isFriend: bool = false;
   buttonAlwaysShow?: boolean = false;
   refetchQueries?: InternalRefetchQueriesInclude;

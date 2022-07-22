@@ -8,14 +8,16 @@ export const middleware: NextMiddleware = async (req) => {
   if (
     pathname.startsWith('/api') ||
     pathname.startsWith('/assets') ||
-    pathname.startsWith('/beta')
+    pathname.startsWith('/beta') ||
+    pathname.startsWith('/_next')
   ) {
     return NextResponse.next();
   }
 
-  const { data } = await queryAuthenticatedSSR<MeWithFlagsQuery>(req, {
-    query: MeWithFlagsDocument,
-  });
+  const { data, error, errors, networkStatus } =
+    await queryAuthenticatedSSR<MeWithFlagsQuery>(req, {
+      query: MeWithFlagsDocument,
+    });
 
   if (pathname.startsWith('/auth')) {
     if (data) return NextResponse.redirect(new URL('/', req.url));
