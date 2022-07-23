@@ -60,10 +60,10 @@ export const ClusterWorkspaceWithUser = ({
             location.user.isMe
               ? 'bg-cyan-300/60 dark:bg-cyan-700/60 text-cyan-500'
               : location.user.isFollowing
-                ? 'bg-blue-300/60 dark:bg-blue-700/60 text-blue-500'
-                : location.user.isSwimmer
-                  ? 'bg-yellow-300/30 dark:bg-yellow-700/30 text-yellow-500'
-                  : 'bg-emerald-300/30 dark:bg-emerald-700/30 text-emerald-500',
+              ? 'bg-blue-300/60 dark:bg-blue-700/60 text-blue-500'
+              : location.user.isSwimmer
+              ? 'bg-yellow-300/30 dark:bg-yellow-700/30 text-yellow-500'
+              : 'bg-emerald-300/30 dark:bg-emerald-700/30 text-emerald-500',
             highlight &&
               hightlightVisibility(location.identifier) == 'HIGHLIGHT'
               ? '!bg-indigo-500 shadow-sm shadow-indigo-500/50 !text-slate-100'

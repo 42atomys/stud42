@@ -1,8 +1,11 @@
 import {
-  ClusterEmpty, ClusterPillar,
-  ClusterRow, ClusterTableMap, ClusterWorkspace,
+  ClusterEmpty,
+  ClusterPillar,
+  ClusterRow,
+  ClusterTableMap,
+  ClusterWorkspace,
   ClusterWorkspaceWithUser,
-  extractNode
+  extractNode,
 } from '@components/ClusterMap';
 import { ClusterContainer } from '@components/ClusterMap/ClusterContainer';
 import { GetStaticProps, NextPage } from 'next';

@@ -1,6 +1,7 @@
 import ConditionalWrapper from '@components/ConditionalWrapper';
 import Emoji from '@components/Emoji';
 import { Location } from '@graphql.d';
+import { clusterURL } from '@lib/searchEngine';
 import classNames from 'classnames';
 import Link from 'next/link';
 import { NestedPartial } from 'types/utils';
@@ -18,14 +19,21 @@ export const LocationBadge = ({
     <ConditionalWrapper
       // `? true : false` mysterious workaround to prevent ts error
       condition={location?.campus?.name && location?.identifier ? true : false}
-      trueWrapper={(children) => (
-        <Link
-          href={`/clusters?campus=${location?.campus?.name?.toLowerCase()}&identifier=${location?.identifier
-            }`}
-        >
-          <a>{children}</a>
-        </Link>
-      )}
+      trueWrapper={(children) => {
+        const url = clusterURL(
+          location?.campus?.name as string,
+          location?.identifier as string
+        );
+        if (!url) {
+          return <></>;
+        }
+
+        return (
+          <Link href={url}>
+            <a>{children}</a>
+          </Link>
+        );
+      }}
     >
       <Badge color={isConnected ? 'green' : 'gray'}>
         <span

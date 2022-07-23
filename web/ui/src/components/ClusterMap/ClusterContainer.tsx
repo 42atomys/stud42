@@ -15,7 +15,7 @@ import { ClusterContainerComponent, ClusterContextInterface } from './types';
  */
 export const ClusterContext = createContext<ClusterContextInterface>({
   highlight: false,
-  hightlightVisibility: (_) => 'DIMMED',
+  hightlightVisibility: () => 'DIMMED',
 });
 
 /**
@@ -64,7 +64,7 @@ export const ClusterContainer: ClusterContainerComponent = ({
 
       return () => clearTimeout(timer);
     }
-  }, [highlightedIdentifier]);
+  }, [replace, asPath, highlightedIdentifier]);
 
   return (
     <SidebarProvider>

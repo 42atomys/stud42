@@ -1,3 +1,4 @@
+import { clusterURL } from '@lib/searchEngine';
 import type { GetServerSideProps, NextPage } from 'next';
 
 type PageProps = {};
@@ -5,17 +6,15 @@ type PageProps = {};
 const Home: NextPage<PageProps> = () => <></>;
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const { campus: campusQuery, identifier: identifierQuery } = query;
-  const campus = campusQuery?.toString().toLowerCase();
-  const identifier = identifierQuery?.toString().toLowerCase();
+  const { campus, identifier } = query;
 
   if (campus && identifier) {
-    const [_, cluster] = identifier.match(identifierValidator[campus]) || [];
+    const url = clusterURL(campus.toString(), identifier.toString());
 
-    if (Object.keys(identifierValidator).includes(campus) && cluster) {
+    if (url) {
       return {
         redirect: {
-          destination: `/clusters/${campus}/${cluster}?identifier=${identifier}`,
+          destination: url,
           permanent: false,
         },
         props: {},
@@ -33,8 +32,3 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 };
 
 export default Home;
-
-const identifierValidator: { [key: string]: RegExp } = {
-  paris: /(e(?:1|2|3)).{4,5}/i,
-  helsinki: /(c(?:1|2|3)).{4,5}/i,
-};
