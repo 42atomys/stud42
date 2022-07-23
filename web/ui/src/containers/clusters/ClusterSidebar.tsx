@@ -1,5 +1,8 @@
+import Search from '@components/Search';
 import useSidebar, { Menu, MenuCategory, MenuItem } from '@components/Sidebar';
+import { clusterURL } from '@lib/searchEngine';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 /**
  * ClusterSidebar is the sidebar for the cluster page. It contains the cluster
@@ -16,9 +19,28 @@ export const ClusterSidebar = ({
   cluster: string;
 }) => {
   const { Sidebar } = useSidebar();
+  const router = useRouter();
 
   return (
     <Sidebar>
+      <Search
+        placeholder="Locate a student"
+        icon="fa-magnifying-glass"
+        searchVariables={{
+          onlyOnline: true,
+        }}
+        action={async (user) => {
+          const url = clusterURL(
+            user?.currentLocation?.campus?.name as string,
+            user?.currentLocation?.identifier as string
+          );
+
+          if (url) {
+            router.replace(url);
+            return new Promise(() => {});
+          }
+        }}
+      />
       <div>
         <Menu>
           <MenuCategory emoji="🇫🇷" name="Paris">
