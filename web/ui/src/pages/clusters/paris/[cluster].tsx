@@ -1,15 +1,11 @@
-import React from 'react';
-import { GetStaticProps, NextPage } from 'next';
 import {
-  ClusterEmpty,
-  ClusterMap,
-  ClusterPillar,
-  ClusterRow,
-  ClusterWorkspace,
+  ClusterEmpty, ClusterPillar,
+  ClusterRow, ClusterTableMap, ClusterWorkspace,
   ClusterWorkspaceWithUser,
-  extractNode,
+  extractNode
 } from '@components/ClusterMap';
 import { ClusterContainer } from '@components/ClusterMap/ClusterContainer';
+import { GetStaticProps, NextPage } from 'next';
 
 type PageProps = {
   cluster: 'e1' | 'e2' | 'e3';
@@ -76,15 +72,16 @@ export const IndexPage: NextPage<PageProps> = ({ cluster }) => {
   return (
     <ClusterContainer campus="Paris" cluster={cluster}>
       {({ locations, showPopup }) => (
-        <ClusterMap>
+        <ClusterTableMap>
           {Object.keys(clusterRows).map((row) => (
             <ClusterRow key={`cluster-row-${row}`} displayText={row}>
-              {clusterRows[row].map((workspace) => {
-                if (workspace === null) return <ClusterEmpty />;
-                if (workspace === 'pillar') return <ClusterPillar />;
+              {clusterRows[row].map((workspace, i) => {
+                const key = `cluster-workspace-${row}-${workspace}-${i}`;
+
+                if (workspace === null) return <ClusterEmpty key={key} />;
+                if (workspace === 'pillar') return <ClusterPillar key={key} />;
 
                 const identifier = `${cluster}${row}p${workspace}`;
-                const key = `cluster-workspace-${row}-${workspace}`;
                 const loc = extractNode(locations, identifier);
 
                 if (loc) {
@@ -115,7 +112,7 @@ export const IndexPage: NextPage<PageProps> = ({ cluster }) => {
               })}
             </ClusterRow>
           ))}
-        </ClusterMap>
+        </ClusterTableMap>
       )}
     </ClusterContainer>
   );

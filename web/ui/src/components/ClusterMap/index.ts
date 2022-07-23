@@ -1,12 +1,10 @@
 export {
-  ClusterMap,
+  ClusterEmpty,
+  ClusterPillar,
   ClusterRow,
+  ClusterTableMap,
   ClusterWorkspace,
   ClusterWorkspaceWithUser,
-  ClusterPillar,
-  ClusterEmpty,
-} from './ClusterMap';
-
-export { extractNode, extractandRemoveNode } from './utils';
-
+} from './ClusterTableMap';
 export type { MapLocation } from './types';
+export { extractandRemoveNode, extractNode } from './utils';
