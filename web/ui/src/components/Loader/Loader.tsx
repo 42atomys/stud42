@@ -19,12 +19,16 @@ const funPicks: Array<string> = [
 export const Loader = () => {
   const pickRandomHint = () =>
     funPicks[Math.floor(Math.random() * funPicks.length)];
-  const [hint, setHint] = useState<string | null>(pickRandomHint());
+  const [hint, setHint] = useState<string | null>(null);
 
   useEffect(() => {
-    setInterval(() => {
+    setHint(pickRandomHint());
+    const interval = setInterval(() => {
       setHint(pickRandomHint());
     }, 3000);
+    return () => {
+      clearInterval(interval);
+    };
   }, [setHint]);
 
   return (
