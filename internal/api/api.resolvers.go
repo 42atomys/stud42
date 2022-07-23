@@ -121,33 +121,49 @@ func (r *queryResolver) Me(ctx context.Context) (*generated.User, error) {
 	return CurrentUserFromContext(ctx)
 }
 
-func (r *queryResolver) SearchUser(ctx context.Context, query string) ([]*generated.User, error) {
+func (r *queryResolver) SearchUser(ctx context.Context, query string, onlyOnline *bool) ([]*generated.User, error) {
 	cu, _ := CurrentUserFromContext(ctx)
 
-	return r.client.User.Query().
-		Where(func(s *sql.Selector) {
-			t := sql.Table(user.Table)
+	sqlQuery := r.client.User.Query()
 
-			s.Select(t.Columns(user.Columns...)...).
-				From(t).
-				Where(
-					sql.And(
-						sql.NEQ(t.C(user.FieldID), cu.ID),
-						sql.Like(t.C(user.FieldDuoLogin), query),
-					),
-				).
-				UnionAll(
-					sql.Select(t.Columns(user.Columns...)...).
-						From(t).
-						Where(
-							sql.And(
-								sql.NEQ(t.C(user.FieldID), cu.ID),
-								sql.ExprP("CONCAT(COALESCE(NULLIF(TRIM(usual_first_name), ''), first_name), ' ', last_name) ILIKE $4", fmt.Sprintf("%%%s%%", utils.StringLimiter(query, 20))),
-							),
+	if onlyOnline != nil && *onlyOnline {
+		sqlQuery = sqlQuery.WithCurrentLocation(func(lq *generated.LocationQuery) {
+			lq.WithCampus()
+		})
+	}
+
+	return sqlQuery.Where(func(s *sql.Selector) {
+		t := sql.Table(user.Table)
+
+		// predicates to know if the user is online
+		var onlinePredicate *sql.Predicate
+		if onlyOnline != nil && *onlyOnline {
+			onlinePredicate = sql.NotNull(t.C(user.FieldCurrentLocationID))
+		} else {
+			onlinePredicate = sql.IsNull(t.C(user.FieldCurrentLocationID))
+		}
+
+		s.Select(t.Columns(user.Columns...)...).
+			From(t).
+			Where(
+				sql.And(
+					sql.NEQ(t.C(user.FieldID), cu.ID),
+					sql.Like(t.C(user.FieldDuoLogin), query),
+					onlinePredicate,
+				),
+			).
+			UnionAll(
+				sql.Select(t.Columns(user.Columns...)...).
+					From(t).
+					Where(
+						sql.And(
+							sql.NEQ(t.C(user.FieldID), cu.ID),
+							onlinePredicate,
+							sql.ExprP("CONCAT(COALESCE(NULLIF(TRIM(usual_first_name), ''), first_name), ' ', last_name) ILIKE $4", fmt.Sprintf("%%%s%%", utils.StringLimiter(query, 20))),
 						),
-				)
-		}).
-		Limit(10).All(ctx)
+					),
+			)
+	}).Limit(10).All(ctx)
 }
 
 func (r *queryResolver) Campus(ctx context.Context, id uuid.UUID) (*generated.Campus, error) {
