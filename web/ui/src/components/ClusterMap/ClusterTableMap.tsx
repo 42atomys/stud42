@@ -1,13 +1,14 @@
 import Avatar from '@components/Avatar';
 import classNames from 'classnames';
 import { Children } from 'react';
+import { ClusterContext } from './ClusterContainer';
 import { MapLocation } from './types';
 
 /**
- * ClusterMap component is used to display a cluster map with a table style
+ * ClusterTableMap component is used to display a cluster map with a table style
  * like Paris maps.
  */
-export const ClusterMap = ({
+export const ClusterTableMap = ({
   children,
 }: {
   children: React.ReactNode[] | React.ReactNode;
@@ -51,31 +52,42 @@ export const ClusterWorkspaceWithUser = ({
   ) => void;
 }) => {
   return (
-    <div
-      className={classNames(
-        'flex flex-1 flex-col justify-center items-center m-0.5 rounded text-slate-500',
-        location.user.isMe
-          ? 'cursor-pointer bg-cyan-300/60 dark:bg-cyan-700/60 text-cyan-500'
-          : location.user.isFollowing
-          ? 'cursor-pointer bg-blue-300/60 dark:bg-blue-700/60 text-blue-500'
-          : location.user.isSwimmer
-          ? 'cursor-pointer bg-yellow-300/30 dark:bg-yellow-700/30 text-yellow-500'
-          : 'cursor-pointer bg-emerald-300/30 dark:bg-emerald-700/30 text-emerald-500'
+    <ClusterContext.Consumer>
+      {({ highlight, hightlightVisibility }) => (
+        <div
+          className={classNames(
+            'flex flex-1 flex-col justify-center items-center m-0.5 rounded text-slate-500 cursor-pointer transition ease-in-out duration-200',
+            location.user.isMe
+              ? 'bg-cyan-300/60 dark:bg-cyan-700/60 text-cyan-500'
+              : location.user.isFollowing
+              ? 'bg-blue-300/60 dark:bg-blue-700/60 text-blue-500'
+              : location.user.isSwimmer
+              ? 'bg-yellow-300/30 dark:bg-yellow-700/30 text-yellow-500'
+              : 'bg-emerald-300/30 dark:bg-emerald-700/30 text-emerald-500',
+            highlight &&
+              hightlightVisibility(location.identifier) == 'HIGHLIGHT'
+              ? '!bg-indigo-500 shadow-sm shadow-indigo-500/50 !text-slate-100'
+              : '',
+            highlight && hightlightVisibility(location.identifier) == 'DIMMED'
+              ? 'opacity-30'
+              : 'opacity-100'
+          )}
+          onClick={(e) => onClick && onClick(e, location)}
+          onMouseEnter={(e) => onMouseEnter && onMouseEnter(e, location)}
+          onMouseLeave={(e) => onMouseLeave && onMouseLeave(e, location)}
+        >
+          <span className="mb-1">
+            <Avatar
+              login={location.user.duoLogin}
+              duoAvatarURL={location.user.duoAvatarURL}
+              rounded={false}
+              size="md"
+            />
+          </span>
+          <span className="text-xs">{displayText || location.identifier}</span>
+        </div>
       )}
-      onClick={(e) => onClick && onClick(e, location)}
-      onMouseEnter={(e) => onMouseEnter && onMouseEnter(e, location)}
-      onMouseLeave={(e) => onMouseLeave && onMouseLeave(e, location)}
-    >
-      <span className="mb-1">
-        <Avatar
-          login={location.user.duoLogin}
-          duoAvatarURL={location.user.duoAvatarURL}
-          rounded={false}
-          size="md"
-        />
-      </span>
-      <span className="text-xs">{displayText || location.identifier}</span>
-    </div>
+    </ClusterContext.Consumer>
   );
 };
 

@@ -1,40 +1,46 @@
+import { LoaderSpinner } from '@components/Loader';
 import Name from '@components/Name';
-import {
-  MyFollowingsDocument,
-  useCreateFriendshipMutation,
-  User,
-  useSearchUserQuery,
-} from '@graphql.d';
+import { User, useSearchUserQuery } from '@graphql.d';
 import { Combobox } from '@headlessui/react';
 import useDebounce from '@lib/useDebounce';
 import classNames from 'classnames';
 import { useState } from 'react';
+import { SearchComponent } from './types';
 
-export const Search = () => {
+export const Search: SearchComponent = ({
+  placeholder,
+  action,
+  searchVariables,
+  icon,
+}) => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [query, setQuery] = useDebounce('', 400);
+  const [loader, setLoader] = useState(false);
+  const [query, setQuery] = useDebounce('', 600);
 
-  const [createFriendship] = useCreateFriendshipMutation();
   const { data } = useSearchUserQuery({
+    skip: !query,
     variables: {
       query: query,
+      ...searchVariables,
     },
   });
   const { searchUser: users = [] } = data || {};
 
   return (
     <div className="mb-2">
-      <div className="relative flex focus-within:border-indigo-500 border-2 border-transparent transition-all flex-row items-center bg-slate-200 dark:bg-slate-900 p-2 rounded">
+      <div
+        key="search-engine-container"
+        className="relative flex focus-within:border-indigo-500 border-2 border-transparent transition-all flex-row items-center bg-slate-200 dark:bg-slate-900 p-2 rounded"
+      >
         <Combobox
           value={selectedUser}
           nullable
           onChange={(user) => {
             if (!user) return;
+            setLoader(true);
             setSelectedUser(user);
-            createFriendship({
-              variables: { userID: user?.id },
-              refetchQueries: [MyFollowingsDocument],
-            });
+
+            action(user);
           }}
         >
           {({ open }) => (
@@ -46,7 +52,7 @@ export const Search = () => {
                 onFocus={() => {}}
                 type="text"
                 className="bg-transparent flex-1 focus:outline-none peer placeholder:text-slate-400 dark:placeholder:text-slate-600"
-                placeholder="Add a friend"
+                placeholder={placeholder}
                 maxLength={20}
               />
               <div
@@ -93,8 +99,27 @@ export const Search = () => {
             </>
           )}
         </Combobox>
-        <i className="fa-light fa-user-plus px-2 cursor-pointer transition-all fixed right-5 opacity-100 peer-focus:opacity-0 peer-focus:scale-125 peer-focus:text-indigo-500" />
-        <i className="fa-regular fa-arrow-turn-down-left px-[0.6rem] pt-[0.1rem] cursor-pointer transition-all fixed right-5 opacity-0 peer-focus:opacity-100 peer-focus:scale-125 peer-focus:text-indigo-500" />
+        <i
+          className={classNames(
+            loader
+              ? 'hidden'
+              : `${icon} fa-light px-2 cursor-pointer transition-all fixed right-5 opacity-100 peer-focus:opacity-0 peer-focus:scale-125 peer-focus:text-indigo-500`
+          )}
+        />
+        <i
+          className={classNames(
+            loader
+              ? 'hidden'
+              : 'fa-regular fa-arrow-turn-down-left px-[0.6rem] pt-[0.1rem] cursor-pointer transition-all fixed right-5 opacity-0 peer-focus:opacity-100 peer-focus:scale-125 peer-focus:text-indigo-500'
+          )}
+        />
+        <span
+          className={
+            loader ? 'bg-white dark:bg-slate-900 px-2 fixed right-5 z-10' : ''
+          }
+        >
+          {loader && <LoaderSpinner />}
+        </span>
       </div>
     </div>
   );

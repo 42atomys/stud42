@@ -112,7 +112,8 @@ type LocationEdge {
 
 type Query {
   me: User! @authenticated
-  searchUser(query: String!): [User!]! @authenticated
+  searchUser(query: String!, onlyOnline: Boolean = false): [User!]!
+    @authenticated
 
   campus(id: UUID!): Campus @authenticated
   user(id: UUID!): User @authenticated

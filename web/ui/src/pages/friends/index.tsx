@@ -2,7 +2,12 @@ import Loader from '@components/Loader';
 import { Search } from '@components/Search';
 import { Menu, MenuCategory, MenuItem, useSidebar } from '@components/Sidebar';
 import UserCard from '@components/UserCard';
-import { MyFollowingsDocument, useMyFollowingsQuery, User } from '@graphql.d';
+import {
+  MyFollowingsDocument,
+  useCreateFriendshipMutation,
+  useMyFollowingsQuery,
+  User,
+} from '@graphql.d';
 import { isFirstLoading } from '@lib/apollo';
 import classNames from 'classnames';
 import { NextPage } from 'next';
@@ -13,7 +18,8 @@ type PageProps = {};
 const IndexPage: NextPage<PageProps> = () => {
   const { SidebarProvider, Sidebar, PageContainer, PageContent } = useSidebar();
 
-  const { data, networkStatus } = useMyFollowingsQuery();
+  const [createFriendship] = useCreateFriendshipMutation();
+  const { data, networkStatus, refetch } = useMyFollowingsQuery();
   const { myFollowing } = data || {};
   const hasFollowing = (myFollowing?.length || 0) > 0;
 
@@ -24,7 +30,16 @@ const IndexPage: NextPage<PageProps> = () => {
       </Head>
       <PageContainer>
         <Sidebar>
-          <Search />
+          <Search
+            placeholder="Add a friend"
+            icon="fa-user-plus"
+            action={async (user) => {
+              return createFriendship({
+                variables: { userID: user?.id },
+                onCompleted: () => refetch(),
+              });
+            }}
+          />
           <div>
             <Menu>
               <MenuCategory name="Friends lists">

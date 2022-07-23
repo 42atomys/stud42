@@ -42,3 +42,12 @@ export type ClusterContainerProps = {
 }[keyof CampusClusterMap];
 
 type ClusterContainerComponent = (props: ClusterContainerProps) => JSX.Element;
+
+// Represents that state made available via this reducer
+type ClusterState = {
+  highlight: boolean;
+  hightlightVisibility: (identifier: string) => 'HIGHLIGHT' | 'DIMMED';
+};
+
+// This is what our PopupContext will be expecting as its value prop.
+type ClusterContextInterface = readonly ClusterState;

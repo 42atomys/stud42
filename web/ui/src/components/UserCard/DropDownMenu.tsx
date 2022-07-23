@@ -1,6 +1,6 @@
 import {
   useCreateFriendshipMutation,
-  useDeleteFriendshipMutation
+  useDeleteFriendshipMutation,
 } from '@graphql.d';
 import { Menu, Transition } from '@headlessui/react';
 import classNames from 'classnames';

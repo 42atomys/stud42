@@ -91,13 +91,16 @@ mutation inviteOnDiscord {
   inviteOnDiscord
 }
 
-query searchUser($query: String!) {
-  searchUser(query: $query) {
+query searchUser($query: String!, $onlyOnline: Boolean) {
+  searchUser(query: $query, onlyOnline: $onlyOnline) {
     id
     duoLogin
     firstName
     usualFirstName
     lastName
+    currentLocation {
+      ...PreciseLocationData
+    }
   }
 }
 
@@ -213,4 +216,11 @@ fragment LocationBasicData on Location {
   identifier
   beginAt
   endAt
+}
+
+fragment PreciseLocationData on Location {
+  identifier
+  campus {
+    name
+  }
 }
