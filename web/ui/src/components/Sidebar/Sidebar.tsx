@@ -1,6 +1,7 @@
 import Tooltip from '@components/Tooltip/Tooltip';
 import { Contribute, Star } from '@lib/github';
 import classNames from 'classnames';
+import getConfig from 'next/config';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -70,6 +71,7 @@ export const Sidebar = ({
   children?: React.ReactNode[] | React.ReactNode;
 }) => {
   const { open, setOpen } = useContext(SidebarContext);
+  const { publicRuntimeConfig } = getConfig();
 
   return (
     <div className="md:flex flex-row md:flex-row md:min-h-screen w-full md:w-auto drop-shadow-xl md:drop-shadow-none">
@@ -135,7 +137,7 @@ export const Sidebar = ({
             <MenuItem href="/auth/signout" icon="fa-sign-out" name="Logout" />
           </span>
           <span className="text-sm text-slate-400 dark:text-slate-600">
-            {process.env.APP_VERSION}
+            {publicRuntimeConfig.app_version}
           </span>
         </div>
       </div>

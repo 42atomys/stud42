@@ -9,6 +9,9 @@ const nextConfig = {
   },
   reactStrictMode: true,
   poweredByHeader: false,
+  publicRuntimeConfig: {
+    app_version: process.env.APP_VERSION,
+  },
 
   output: 'standalone',
   sassOptions: {
