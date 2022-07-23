@@ -14,6 +14,24 @@ const funPicks: Array<string> = [
 ];
 
 /**
+ * LoaderSpinner is a component that displays a spinner while the data is
+ * loading.
+ */
+export const LoaderSpinner = () => (
+  <i
+    key={'loader-spinner'}
+    className="fa-duotone fa-spinner-third fa-spin"
+    style={
+      {
+        '--fa-animation-duration': '500ms',
+        '--fa-primary-color': '#6366f1',
+        '--fa-secondary-color': '#6366f1',
+      } as React.CSSProperties
+    }
+  ></i>
+);
+
+/**
  * Loader is a component that shows a loading animation with some fun hints
  */
 export const Loader = () => {
@@ -34,16 +52,7 @@ export const Loader = () => {
   return (
     <div className="text-4xl flex flex-col justify-center items-center">
       <h1 className="flex font-extrabold justify-center items-center mb-2">
-        <i
-          className="fa-duotone fa-spinner-third fa-spin"
-          style={
-            {
-              '--fa-animation-duration': '500ms',
-              '--fa-primary-color': '#6366f1',
-              '--fa-secondary-color': '#6366f1',
-            } as React.CSSProperties
-          }
-        ></i>
+        <LoaderSpinner />
         <span className="ml-4 text-indigo-500/50">Loading</span>
       </h1>
       {hint && <small className="text-sm text-slate-500/50">{hint}</small>}
