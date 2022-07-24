@@ -1,0 +1,120 @@
+name: Relese Note to Discord 🎮
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      DISCORD_CHANNEL: "954504327949582429"
+    steps:
+      # To check the github context
+      - name: Dump Github context
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: echo "$GITHUB_CONTEXT"
+      - name: Push pre-release note to Discord
+        run: |
+          echo << EOF | jq -sR . | curl --request POST \
+            --url 'https://discord.com/api/v9/channels/${{ env.DISCORD_CHANNEL }}/messages' \
+            --header 'Authorization: Bot ${{ secrets.DISCORD_BOT_TOKEN }}' \
+            --header 'Content-Type: application/json' \
+            --data @-
+            {
+              "content": "",
+              "tts": false,
+              "components": [
+                {
+                  "type": 1,
+                  "components": [
+                    {
+                      "style": 5,
+                      "label": "Next",
+                      "url": "https://next.s42.app",
+                      "disabled": false,
+                      "emoji": {
+                        "id": "1000046992250126376",
+                        "name": "s42next",
+                        "animated": false
+                      },
+                      "type": 2
+                    }
+                  ]
+                },
+                {
+                  "type": 1,
+                  "components": [
+                    {
+                      "style": 5,
+                      "label": "Show Release",
+                      "url": "${{ github.event.release.url }}",
+                      "disabled": false,
+                      "type": 2
+                    }
+                  ]
+                }
+              ],
+              "embeds": [
+                {
+                  "type": "rich",
+                  "title": "Changelog ${{ github.event.release.name }} [pre-release]",
+                  "description": "${{ github.event.release.body }}",
+                  "color": 1479452,
+                  "author": {
+                    "name": "${{ github.event.release.author.login }}"
+                  }
+                }
+              ]
+            }
+          EOF
+      - name: Push release note to Discord
+        if: ${{ github.event.release.prerelease == false }}
+        run: |
+          echo << EOF | jq -sR . | curl --request POST \
+            --url 'https://discord.com/api/v9/channels/${{ env.DISCORD_CHANNEL }}/messages' \
+            --header 'Authorization: Bot ${{ secrets.DISCORD_BOT_TOKEN }}' \
+            --header 'Content-Type: application/json' \
+            --data @-
+            {
+              "content": "",
+              "tts": false,
+              "components": [
+                {
+                  "type": 1,
+                  "components": [
+                    {
+                      "style": 5,
+                      "label": "Next",
+                      "url": "https://next.s42.app",
+                      "disabled": false,
+                      "emoji": {
+                        "id": "1000046992250126376",
+                        "name": "s42next",
+                        "animated": false
+                      },
+                      "type": 2
+                    },
+                    {
+                      "style": 5,
+                      "label": "Show Release",
+                      "url": "${{ github.event.release.url }}",
+                      "disabled": false,
+                      "type": 2
+                    }
+                  ]
+                }
+              ],
+              "embeds": [
+                {
+                  "type": "rich",
+                  "title": "Changelog ${{ github.event.release.name }}",
+                  "description": "${{ github.event.release.body }}",
+                  "color": 476204,
+                  "author": {
+                    "name": "${{ github.event.release.author.login }}"
+                  }
+                }
+              ]
+            }
+          EOF
