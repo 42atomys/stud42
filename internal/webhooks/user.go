@@ -23,6 +23,17 @@ func (p *userProcessor) Create(u *duoapi.User, metadata *duoapi.WebhookMetadata)
 		return p.Update(u, metadata)
 	}
 
+	// Prevent duplication of user email and data leak
+	// Due to the way the Duo API works, some webhooks is not received and user
+	// update when user is anonymized or deleted is not received.
+	existedUser, err := p.db.User.Query().Where(user.Email(u.Email)).First(p.ctx)
+	if err != nil && !modelgen.IsNotFound(err) {
+		return err
+	}
+	if existedUser != nil {
+		return p.db.User.DeleteOne(existedUser).Exec(p.ctx)
+	}
+
 	return p.db.User.Create().
 		SetDuoID(u.ID).
 		SetDuoLogin(u.Login).
