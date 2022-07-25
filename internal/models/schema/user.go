@@ -46,12 +46,13 @@ func (User) Fields() []ent.Field {
 
 func (User) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("accounts", Account.Type),
-		edge.To("following", User.Type).From("followers"),
-		edge.To("locations", Location.Type),
+		edge.To("accounts", Account.Type).Annotations(entsql.Annotation{OnDelete: entsql.Cascade}),
+		edge.To("following", User.Type).From("followers").Annotations(entsql.Annotation{OnDelete: entsql.Cascade}),
+		edge.To("locations", Location.Type).Annotations(entsql.Annotation{OnDelete: entsql.Cascade}),
 		edge.To("current_location", Location.Type).
 			Unique().
-			Field("current_location_id"),
+			Field("current_location_id").
+			Annotations(entsql.Annotation{OnDelete: entsql.Cascade}),
 	}
 }
 
