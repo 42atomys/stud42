@@ -22,7 +22,6 @@ import (
 	"github.com/spf13/cobra"
 
 	"atomys.codes/stud42/internal/api"
-	"atomys.codes/stud42/internal/config"
 	modelsutils "atomys.codes/stud42/internal/models"
 	_ "atomys.codes/stud42/internal/models/generated/runtime"
 )
@@ -38,10 +37,6 @@ var apiCmd = &cobra.Command{
 	Short: "Serve the API in production",
 
 	Run: func(cmd *cobra.Command, args []string) {
-		if err := config.Load(); err != nil {
-			log.Fatal().Err(err).Msg("invalid configuration")
-		}
-
 		if err := modelsutils.Connect(); err != nil {
 			log.Fatal().Err(err).Msg("failed to connect to database")
 		}
