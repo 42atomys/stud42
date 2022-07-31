@@ -24,7 +24,6 @@ package cmd
 import (
 	"database/sql"
 	"errors"
-	"os"
 	"strconv"
 	"time"
 
@@ -35,13 +34,11 @@ import (
 	modelgen "atomys.codes/stud42/internal/models/generated"
 	"atomys.codes/stud42/internal/models/generated/campus"
 	"atomys.codes/stud42/internal/models/generated/location"
+	"atomys.codes/stud42/internal/models/generated/user"
 	"atomys.codes/stud42/pkg/duoapi"
 )
 
 // locationsCmd represents the locations command
-//! DEPRECATED. This command is no longer used and replaced by the webhooks
-//! system. This command is kept for backwards compatibility. It will be removed
-//! in a future release. See the webhooks command for more information.
 var locationsCmd = &cobra.Command{
 	Use:   "locations",
 	Short: "Crawl all active locations of specific campus and update the database",
@@ -50,25 +47,23 @@ For any closed locations, the location will be marked as inactive in the databas
 	Run: func(cmd *cobra.Command, args []string) {
 		var campusID = cmd.Flag("campus_id").Value.String()
 
-		if os.Getenv("GO_ENV") == "production" {
-			log.Fatal().Msg("This command is deprecated and will be removed in a future release. See the webhooks command for more information.")
-		}
-		log.Warn().Msg("This command is deprecated. Avoid using it in production.")
-
-		log.Info().Msgf("Start the crawling of active locations of campus %s", campusID)
 		if modelsutils.Connect() != nil {
 			log.Fatal().Msg("Failed to connect to database")
 		}
+		db := modelsutils.Client()
 
+		// Retrieve the campus
 		cID, _ := strconv.Atoi(campusID)
-		campus, err := modelsutils.Client().Campus.Query().Where(campus.DuoID(cID)).Only(cmd.Context())
+		campus, err := db.Campus.Query().Where(campus.DuoID(cID)).Only(cmd.Context())
 		if err != nil {
 			if errors.Is(err, sql.ErrNoRows) {
 				log.Fatal().Msgf("Campus %s not found", campusID)
 			}
 			log.Fatal().Err(err).Msg("Failed to get campus")
 		}
+		log.Info().Msgf("Start the crawling of active locations of campus %s (%s)", campus.Name, campusID)
 
+		// Fetch all active locations of the campus
 		locations, err := duoapi.LocationsActive(cmd.Context(), "1")
 		if err != nil {
 			log.Fatal().Err(err).Msg("Failed to get duoapi response")
@@ -76,15 +71,18 @@ For any closed locations, the location will be marked as inactive in the databas
 
 		log.Debug().Msgf("Found %d locations", len(locations))
 
-		client := modelsutils.Client()
+		// Create the new locations in the database
 		bulk := []*modelgen.LocationCreate{}
+		duoLocationIDs := []int{}
 		for _, l := range locations {
+			duoLocationIDs = append(duoLocationIDs, l.ID)
+
 			u, err := modelsutils.UserFirstOrCreateFromComplexLocation(cmd.Context(), l)
 			if err != nil {
 				log.Fatal().Err(err).Msg("Failed to create user")
 			}
 
-			bulk = append(bulk, client.Location.Create().
+			bulk = append(bulk, db.Location.Create().
 				SetCampus(campus).
 				SetUser(u).
 				SetDuoID(l.ID).
@@ -94,25 +92,43 @@ For any closed locations, the location will be marked as inactive in the databas
 				SetUserDuoID(l.User.ID).
 				SetUserDuoLogin(l.User.Login))
 		}
-		modelsutils.Client().Location.CreateBulk(bulk...).OnConflictColumns(location.FieldDuoID).DoNothing().ExecX(cmd.Context())
+		db.Location.CreateBulk(bulk...).OnConflictColumns(location.FieldDuoID).DoNothing().ExecX(cmd.Context())
 
-		for _, duoLoc := range locations {
-			l := modelsutils.Client().Location.Query().Where(location.DuoID(duoLoc.ID)).FirstX(cmd.Context())
+		// Mark all locations as inactive that are not in the list anymore
+		err = modelsutils.WithTx(cmd.Context(), db, func(tx *modelgen.Tx) error {
+			locationUUIDsToClose, err := db.Location.Query().Where(
+				location.DuoIDNotIn(duoLocationIDs...),
+				location.CampusID(campus.ID),
+				location.EndAtIsNil(),
+			).IDs(cmd.Context())
+			if err != nil {
+				return err
+			}
 
-			log.Debug().Interface("location", l).Str("duo_id", duoLoc.User.Login).Msg("Assign user to location")
-			modelsutils.Client().User.UpdateOneID(l.UserID).SetCurrentLocation(l).ExecX(cmd.Context())
+			// Close location
+			if err := db.Location.Update().
+				Where(location.IDIn(locationUUIDsToClose...)).
+				SetEndAt(time.Now().UTC()).
+				Exec(cmd.Context()); err != nil {
+				return err
+			}
+
+			// Unassign current location from user
+			if err := db.User.Update().
+				Where(user.CurrentLocationIDIn(locationUUIDsToClose...)).
+				ClearCurrentLocation().
+				Exec(cmd.Context()); err != nil {
+				return err
+			}
+			log.Info().Msgf("Successfully close %d inactive locations", len(locationUUIDsToClose))
+			return nil
+		})
+
+		if err != nil {
+			log.Fatal().Err(err).Msg("Failed to close inactive locations")
 		}
 
-		log.Info().Msgf("Successfully import %d locations", len(locations))
-
-		log.Info().Msg("Start the closing of inactive locations")
-		for _, duoLoc := range locations {
-			l := modelsutils.Client().Location.Query().Where(location.DuoID(duoLoc.ID)).FirstX(cmd.Context())
-			l.Update().SetEndAt(time.Now().UTC()).ExecX(cmd.Context())
-			modelsutils.Client().User.UpdateOneID(l.UserID).SetCurrentLocation(nil).ExecX(cmd.Context())
-		}
-
-		log.Info().Msgf("Successfully close inactive locations")
+		log.Info().Msgf("Successfully sync the campus of %s with %d locations active", campus.Name, len(locations))
 	},
 }
 

@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/rs/zerolog/log"
 	"golang.org/x/oauth2"
@@ -51,7 +52,14 @@ func request[T any](ctx context.Context, endpoint string, query map[string]strin
 		return err
 	}
 	defer resp.Body.Close()
-	
+
+	// TooManyRequests is a special case, we need to retry
+	// the request after a while if we get a TooManyRequests
+	if resp.StatusCode == http.StatusTooManyRequests {
+		time.Sleep(1 * time.Second)
+		return request(ctx, endpoint, query, data)
+	}
+
 	err = json.NewDecoder(resp.Body).Decode(&data)
 	if err != nil {
 		return err
@@ -62,7 +70,7 @@ func request[T any](ctx context.Context, endpoint string, query map[string]strin
 // requestCollection is the generic request function used to get the response
 // from the endpoint and unmarshal the response into the given interface
 // When a Link header is present, it will fetch all pages until there are no more
-// pages. 
+// pages.
 // BE CARREFUL WHEN USING THIS FUNCTION, IT WILL BE LOOPED FOR A LONG TIME IF
 // THERE ARE MANY PAGES. PREFER USE THE request FUNCTION
 func requestCollection[T any](ctx context.Context, endpoint string, query map[string]string, data *[]T) error {
@@ -85,7 +93,14 @@ func requestCollection[T any](ctx context.Context, endpoint string, query map[st
 		return err
 	}
 	defer resp.Body.Close()
-	
+
+	// TooManyRequests is a special case, we need to retry
+	// the request after a while if we get a TooManyRequests
+	if resp.StatusCode == http.StatusTooManyRequests {
+		time.Sleep(1 * time.Second)
+		return requestCollection(ctx, endpoint, query, data)
+	}
+
 	err = json.NewDecoder(resp.Body).Decode(&data)
 	if err != nil {
 		return err
@@ -108,7 +123,7 @@ func requestCollection[T any](ctx context.Context, endpoint string, query map[st
 
 // linksInHeaders extract links present in the header. It returns a map
 // with the key being the rel and the value being the link itself
-// 
+//
 // @see https://datatracker.ietf.org/doc/html/rfc8288#section-3
 func linksInHeaders(headerLinkValue string) HeaderLink {
 	linksStr := strings.Split(headerLinkValue, ",")
