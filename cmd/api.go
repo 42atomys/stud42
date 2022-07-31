@@ -66,7 +66,7 @@ var apiCmd = &cobra.Command{
 			AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 			AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token", "Sentry-Trace"},
 			AllowCredentials: true,
-			Debug:            true,
+			Debug:            os.Getenv("DEBUG") == "true",
 		}).Handler)
 		router.Use(api.AuthzByPolicyMiddleware)
 		router.Use(api.AuthenticationMiddleware)
