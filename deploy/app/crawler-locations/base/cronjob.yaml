@@ -3,8 +3,9 @@ kind: CronJob
 metadata:
   name: crawler-locations
 spec:
-  # Each minute
-  schedule: "* */12 * * *"
+  # Each two minute due to webhooks is not correctly triggered on 42API
+  # THIS IS USED AS WORKAROUND FOR THIS BUG.
+  schedule: "*/2 * * * *"
   successfulJobsHistoryLimit: 2
   failedJobsHistoryLimit: 5
   concurrencyPolicy: Forbid
