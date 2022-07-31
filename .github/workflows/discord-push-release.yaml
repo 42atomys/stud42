@@ -1,83 +1,28 @@
-name: Relese Note to Discord 🎮
+name: Discord Publish Release Notes 🎮
 on:
   release:
     types: [published]
-  workflow_dispatch:
 jobs:
   build:
     runs-on: ubuntu-latest
     env:
       DISCORD_CHANNEL: "954504327949582429"
+      GITHUB_CONTEXT: ${{ toJSON(github) }}
     steps:
       # To check the github context
       - name: Dump Github context
-        env:
-          GITHUB_CONTEXT: ${{ toJSON(github) }}
         run: echo "$GITHUB_CONTEXT"
+      # Push next release notes to Discord
       - name: Push pre-release note to Discord
+        if: ${{ github.event.release.prerelease == true }}
         run: |
-          echo << EOF | jq -sR . | curl --request POST \
+          jq -r '.content = "<:s42next:1000046992250126376> **CHANGELOG ${{ github.event.release.name }}** \n\n" + .content[0:1800]' << EOF | jq -sRr . | curl --request POST \
             --url 'https://discord.com/api/v9/channels/${{ env.DISCORD_CHANNEL }}/messages' \
             --header 'Authorization: Bot ${{ secrets.DISCORD_BOT_TOKEN }}' \
             --header 'Content-Type: application/json' \
             --data @-
             {
-              "content": "",
-              "tts": false,
-              "components": [
-                {
-                  "type": 1,
-                  "components": [
-                    {
-                      "style": 5,
-                      "label": "Next",
-                      "url": "https://next.s42.app",
-                      "disabled": false,
-                      "emoji": {
-                        "id": "1000046992250126376",
-                        "name": "s42next",
-                        "animated": false
-                      },
-                      "type": 2
-                    }
-                  ]
-                },
-                {
-                  "type": 1,
-                  "components": [
-                    {
-                      "style": 5,
-                      "label": "Show Release",
-                      "url": "${{ github.event.release.url }}",
-                      "disabled": false,
-                      "type": 2
-                    }
-                  ]
-                }
-              ],
-              "embeds": [
-                {
-                  "type": "rich",
-                  "title": "Changelog ${{ github.event.release.name }} [pre-release]",
-                  "description": "${{ github.event.release.body }}",
-                  "color": 1479452,
-                  "author": {
-                    "name": "${{ github.event.release.author.login }}"
-                  }
-                }
-              ]
-            }
-          EOF
-      - name: Push release note to Discord
-        if: ${{ github.event.release.prerelease == false }}
-        run: |
-          echo << EOF | jq -sR . | curl --request POST \
-            --url 'https://discord.com/api/v9/channels/${{ env.DISCORD_CHANNEL }}/messages' \
-            --header 'Authorization: Bot ${{ secrets.DISCORD_BOT_TOKEN }}' \
-            --header 'Content-Type: application/json' \
-            --data @-
-            {
-              "content": "",
+              "content": ${{ toJSON(fromJSON(env.GITHUB_CONTEXT).event.release.body) }},
               "tts": false,
               "components": [
                 {
@@ -97,23 +42,52 @@ jobs:
                     },
                     {
                       "style": 5,
-                      "label": "Show Release",
-                      "url": "${{ github.event.release.url }}",
+                      "label": "Show Full Release",
+                      "url": "https://api.github.com/repos/42Atomys/stud42/releases/72738031",
                       "disabled": false,
                       "type": 2
                     }
                   ]
                 }
-              ],
-              "embeds": [
+              ]
+            }
+          EOF
+      # Push live release notes to Discord
+      - name: Push release note to Discord
+        if: ${{ github.event.release.prerelease == false }}
+        run: |
+          jq -r '.content = "<:s42:972976005604081744> **CHANGELOG ${{ github.event.release.name }}** \n\n" + .content[0:1800]' << EOF | jq -sRr . | curl --request POST \
+            --url 'https://discord.com/api/v9/channels/${{ env.DISCORD_CHANNEL }}/messages' \
+            --header 'Authorization: Bot ${{ secrets.DISCORD_BOT_TOKEN }}' \
+            --header 'Content-Type: application/json' \
+            --data @-
+            {
+              "content": ${{ toJSON(fromJSON(env.GITHUB_CONTEXT).event.release.body) }},
+              "tts": false,
+              "components": [
                 {
-                  "type": "rich",
-                  "title": "Changelog ${{ github.event.release.name }}",
-                  "description": "${{ github.event.release.body }}",
-                  "color": 476204,
-                  "author": {
-                    "name": "${{ github.event.release.author.login }}"
-                  }
+                  "type": 1,
+                  "components": [
+                    {
+                      "style": 5,
+                      "label": "Live",
+                      "url": "https://s42.app",
+                      "disabled": false,
+                      "emoji": {
+                        "id": "972976005604081744",
+                        "name": "s42",
+                        "animated": false
+                      },
+                      "type": 2
+                    },
+                    {
+                      "style": 5,
+                      "label": "Show Full Release",
+                      "url": "${{ github.event.release.url }}",
+                      "disabled": false,
+                      "type": 2
+                    }
+                  ]
                 }
               ]
             }
