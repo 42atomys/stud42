@@ -13,7 +13,6 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"atomys.codes/stud42/internal/config"
 	"atomys.codes/stud42/internal/jwtks"
 	_ "atomys.codes/stud42/internal/models/generated/runtime"
 )
@@ -29,10 +28,6 @@ var jwtksCmd = &cobra.Command{
 	Short: "Serve the JWTKS Service",
 
 	Run: func(cmd *cobra.Command, args []string) {
-		if err := config.Load(); err != nil {
-			log.Fatal().Err(err).Msg("invalid configuration")
-		}
-
 		if err := jwtks.SetCertificates(viper.GetString("jwtks.jwk.certPrivateKeyFile"), viper.GetString("jwtks.jwk.certPublicKeyFile")); err != nil {
 			log.Fatal().Err(err).Msg("failed to set jwtks keys")
 		}
