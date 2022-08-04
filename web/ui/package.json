@@ -46,7 +46,7 @@
     "jsonwebtoken": "^8.5.1",
     "jwks-rsa": "^2.1.4",
     "next": "^12.2.1",
-    "next-auth": "^4.9.0",
+    "next-auth": "^4.10.3",
     "protoc-gen-ts": "^0.8.2",
     "react": "17",
     "react-burger-menu": "^3.0.6",
