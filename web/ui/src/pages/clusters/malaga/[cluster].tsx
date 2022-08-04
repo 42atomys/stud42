@@ -23,27 +23,45 @@ type Campus = {
 // prettier-ignore
 const clusters: Campus = {
   c1: {
-    r6: [1, 2, 3, 4, 5, 6, 7, 8, 9, null, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
-    r5: [1, 2, 3, 4, 5, 6, 7, 8, 9, null, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
-    r4: [null, null, null, null, null, 1, 2, 3, 4, 5, 6, 7, 8, null, 9, 10, 11, null, null, null, null, null, null, null],
-    r3: [null, null, null, null, null, 1, 2, 3, null, 4, null, 5, null, 6, 7, 8, 9, null, null, null, null, null, null, null],
-    r2: [null, null, null, null, null, 1, 2, null, null, null, null, null, null, 3, 4, 5, 6, null, null, null, null, null, null, null],
-    r1: [null, null, null, null, null, 1, 2, 3, 4, 5, 6, 7, 8, null, 9, 10, 11, null, null, null, null, null, null, null],
+    r15: [null, 1, 2, 3, 4, 5, 6, null],
+    r14: [null, 1, 2, 3, 4, 5, 6, null],
+    r13: [null, 1, 2, 3, 4, 5, 6, null],
+    r12: [null, 1, 2, 3, 4, 5, 6, null],
+    r11: [null, 1, 2, 3, 4, 5, 6, null],
+    r10: [null, 1, 2, 3, 4, 5, 6, null],
+    r9: [null, 1, 2, 3, 4, 5, 6, null],
+    r8: [null, 1, 2, 3, 4, 5, 6, null],
+    r7: [null, 1, 2, 3, 4, 5, 6, null],
+    r6: [null, 1, 2, 3, 4, 5, 6, null],
+    r5: [null, 1, 2, 3, 4, 5, 6, null],
+    r4: [null, 1, 2, 3, 4, 5, 6, null],
+    r3: [null, 1, 2, 3, 4, 5, 6, null],
+    r2: [null, 1, 2, 3, 4, 5, 6, null],
+    r1: [null, 1, 2, 3, 4, 5, 6, null],
   },
   c2: {
-    r6: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
-    r5: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
-    r4: [1, 2, 3, 4, 5, 6, 7, 8, null, 9, 10, 11, 12],
-    r3: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
-    r2: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
-    r1: [1, 2, 3, 4, 5, 6, 7, 8, null, 9, 10, 11, 12],
+    r10: [null, 1, 2, 3, 4, 5, 6, null],
+    r9: [null, 1, 2, 3, 4, 5, 6, null],
+    r8: [null, 1, 2, 3, 4, 5, 6, null],
+    r7: [null, 1, 2, 3, 4, 5, 6, null],
+    r6: [null, 1, 2, 3, 4, 5, 6, null],
+    r5: [null, 1, 2, 3, 4, 5, 6, null],
+    r4: [null, 1, 2, 3, 4, 5, 6, null],
+    r3: [null, 1, 2, 3, 4, 5, 6, null],
+    r2: [null, 1, 2, 3, 4, 5, 6, null],
+    r1: [null, 1, 2, 3, 4, 5, 6, null],
   },
   c3: {
-    r5: [null, null, 1, 2, 3, 4, 5, 6, null, null],
-    r4: [null, null, 1, 2, 3, 4, 5, 6, null, null],
-    r3: [null, null, 1, 2, 3, 4, 5, 6, null, null],
-    r2: [null, 1, 2, 3, 4, 5, 6, 7, null],
-    r1: [null, 1, 2, 3, 4, 5, 6, 7, null],
+    r10: [null, 6, 5, 4, 3, 2, 1, null],
+    r9: [null, 6, 5, 4, 3, 2, 1, null],
+    r8: [null, 6, 5, 4, 3, 2, 1, null],
+    r7: [null, 6, 5, 4, 3, 2, 1, null],
+    r6: [null, 6, 5, 4, 3, 2, 1, null],
+    r5: [null, 6, 5, 4, 3, 2, 1, null],
+    r4: [null, 6, 5, 4, 3, 2, 1, null],
+    r3: [null, 6, 5, 4, 3, 2, 1, null],
+    r2: [null, 6, 5, 4, 3, 2, 1, null],
+    r1: [null, 6, 5, 4, 3, 2, 1, null],
   },
 }
 
@@ -51,7 +69,7 @@ export const IndexPage: NextPage<PageProps> = ({ cluster }) => {
   const clusterRows = clusters[cluster];
 
   return (
-    <ClusterContainer campus="Helsinki" cluster={cluster}>
+    <ClusterContainer campus="Malaga" cluster={cluster}>
       {({ locations, showPopup }) => (
         <ClusterTableMap>
           {Object.keys(clusterRows).map((row) => (
@@ -62,7 +80,7 @@ export const IndexPage: NextPage<PageProps> = ({ cluster }) => {
                 if (workspace === null) return <ClusterEmpty key={key} />;
                 if (workspace === 'pillar') return <ClusterPillar key={key} />;
 
-                const identifier = `${cluster}${row}p${workspace}`;
+                const identifier = `${cluster}${row}s${workspace}`;
                 const loc = extractNode(locations, identifier);
 
                 if (loc) {
