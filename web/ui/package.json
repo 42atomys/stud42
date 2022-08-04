@@ -28,7 +28,7 @@
   "dependencies": {
     "@apollo/client": "^3.6.6",
     "@apollo/react-hooks": "^4.0.0",
-    "@grpc/grpc-js": "^1.6.7",
+    "@grpc/grpc-js": "^1.6.8",
     "@headlessui/react": "^1.6.4",
     "@sentry/nextjs": "^7.7.0",
     "@sentry/tracing": "^7.7.0",
