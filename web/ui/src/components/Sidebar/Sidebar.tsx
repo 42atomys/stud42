@@ -74,7 +74,7 @@ export const Sidebar = ({
   const { publicRuntimeConfig } = getConfig();
 
   return (
-    <div className="md:flex flex-row md:flex-row md:min-h-screen w-full md:w-auto drop-shadow-xl md:drop-shadow-none">
+    <div className="md:flex flex-row md:flex-row md:min-h-screen w-full md:w-auto drop-shadow-xl md:drop-shadow-none md:sticky md:top-0 md:h-screen">
       <div className="flex flex-col text-slate-600 dark:text-slate-400 bg-slate-200 dark:bg-slate-900/80 flex-shrink-0">
         <div className="flex-shrink-0 p-4 flex flex-row justify-between">
           <span className="text-lg font-display antialiased font-black tracking-widest text-gray-900 uppercase rounded-lg dark:text-white focus:outline-none focus:shadow-outline">
@@ -108,7 +108,7 @@ export const Sidebar = ({
         </div>
         <nav
           className={`${
-            open ? 'block' : 'hidden'
+            open ? 'block' : 'hidden md:block'
           } flex-grow md:block px-4 pb-4 md:pb-0`}
         >
           <MenuItem href="/feed" icon="fa-seedling" name="Feed" />
@@ -123,19 +123,17 @@ export const Sidebar = ({
         </nav>
         <div
           className={`${
-            open ? 'block' : 'hidden'
-          } flex flex-col justify-center items-center text-center py-2`}
+            open ? 'block' : 'hidden md:block'
+          } flex flex-col justify-center items-center text-center py-2 md:px-4 md:pb-4 `}
         >
-          <span className="text-sm text-slate-400 dark:text-slate-600">
-            {!subSidebar && (
-              <MenuItem
-                href="https://github.com/42Atomys/stud42"
-                icon="fa-brands fa-github"
-                name="Github"
-              />
-            )}
-            <MenuItem href="/auth/signout" icon="fa-sign-out" name="Logout" />
-          </span>
+          {!subSidebar && (
+            <MenuItem
+              href="https://github.com/42Atomys/stud42"
+              icon="fa-brands fa-github"
+              name="Github"
+            />
+          )}
+          <MenuItem href="/auth/signout" icon="fa-sign-out" name="Logout" />
           <span className="text-sm text-slate-400 dark:text-slate-600">
             {publicRuntimeConfig.app_version}
           </span>
@@ -144,7 +142,7 @@ export const Sidebar = ({
       {subSidebar && (
         <div
           className={`${
-            open ? 'block' : 'hidden'
+            open ? 'block' : 'hidden md:block'
           } flex flex-col w-full md:w-72 text-slate-600 dark:text-slate-400 bg-slate-200 dark:bg-slate-900/80 flex-shrink-0`}
         >
           <div className="flex my-6 w-full justify-evenly">
