@@ -10,7 +10,11 @@ const SENTRY_DSN = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
 if (process.env.NODE_ENV && process.env.NODE_ENV !== 'development') {
   Sentry.init({
     dsn: SENTRY_DSN,
-    integrations: [new BrowserTracing()],
+    integrations: [
+      new BrowserTracing({
+        tracingOrigins: ['localhost:3000', 'next.s42.app', 's42.app'],
+      }),
+    ],
     // Adjust this value in production, or use tracesSampler for greater control
     tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.2 : 0,
     sampleRate: 1,
