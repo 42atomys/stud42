@@ -60,10 +60,7 @@ const nextConfig = {
       loader: 'graphql-tag/loader',
     });
     return config;
-  },
-  webpackDevMiddleware: (config) => {
-    return config;
-  },
+  }
 };
 
 const sentryWebpackPluginOptions = {

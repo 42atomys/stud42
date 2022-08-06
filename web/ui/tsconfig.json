@@ -17,30 +17,14 @@
     "incremental": true,
     "baseUrl": "./src/",
     "paths": {
-      "@components/*": [
-        "components/*"
-      ],
-      "@containers/*": [
-        "containers/*"
-      ],
-      "@styles/*": [
-        "styles/*"
-      ],
-      "@pages/*": [
-        "pages/*"
-      ],
-      "@lib/*": [
-        "lib/*"
-      ],
-      "@graphql.d": [
-        "graphql/generated.ts"
-      ],
-      "@grpc.d": [
-        "grpc/"
-      ],
-      "@assets/*": [
-        "../public/assets/*"
-      ]
+      "@components/*": ["components/*"],
+      "@containers/*": ["containers/*"],
+      "@styles/*": ["styles/*"],
+      "@pages/*": ["pages/*"],
+      "@lib/*": ["lib/*"],
+      "@graphql.d": ["graphql/generated.ts"],
+      "@grpc.d": ["grpc/"],
+      "@assets/*": ["../public/assets/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "next.config.js"],
