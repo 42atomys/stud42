@@ -14,10 +14,9 @@ export const middleware: NextMiddleware = async (req) => {
     return NextResponse.next();
   }
 
-  const { data, error, errors, networkStatus } =
-    await queryAuthenticatedSSR<MeWithFlagsQuery>(req, {
-      query: MeWithFlagsDocument,
-    });
+  const { data } = await queryAuthenticatedSSR<MeWithFlagsQuery>(req, {
+    query: MeWithFlagsDocument,
+  });
 
   if (pathname.startsWith('/auth')) {
     if (data) return NextResponse.redirect(new URL('/', req.url));
