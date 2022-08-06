@@ -9,7 +9,7 @@ export const SidebarProvider = ({
 }: {
   children: React.ReactNode;
 }): JSX.Element => {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   return (
     <SidebarContext.Provider value={{ open, setOpen }}>
