@@ -1,11 +1,11 @@
 import { ApolloProvider } from '@apollo/client';
-import { SessionProvider, SessionProviderProps } from 'next-auth/react';
-
-import '../styles/globals.css';
-import { AppProps } from 'next/app';
-import { NextComponentType, NextPageContext } from 'next';
+import useNotification from '@components/Notification';
 import apolloClient from '@lib/apollo';
+import { NextComponentType, NextPageContext } from 'next';
+import { SessionProvider, SessionProviderProps } from 'next-auth/react';
+import { AppProps } from 'next/app';
 import Script from 'next/script';
+import '../styles/globals.css';
 
 const Interface = ({
   Component,
@@ -14,6 +14,8 @@ const Interface = ({
 }: AppProps & {
   Component: NextComponentType<NextPageContext, any, {}>;
 } & SessionProviderProps) => {
+  const { NotificationProvider, NotificationContainer } = useNotification();
+
   return (
     <SessionProvider
       session={session}
@@ -21,7 +23,10 @@ const Interface = ({
       refetchInterval={60}
     >
       <ApolloProvider client={apolloClient}>
-        <Component {...pageProps} />
+        <NotificationProvider>
+          <Component {...pageProps} />
+          <NotificationContainer />
+        </NotificationProvider>
       </ApolloProvider>
       <Script
         src="https://kit.fontawesome.com/a8d6f88c41.js"

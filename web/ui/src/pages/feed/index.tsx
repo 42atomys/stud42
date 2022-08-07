@@ -1,5 +1,4 @@
 import { ComponentWithAuthGuard } from '@components/AuthGuard';
-import React from 'react';
 import { useSidebar } from '@components/Sidebar';
 import Soon from '@components/Soon';
 
