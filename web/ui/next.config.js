@@ -6,6 +6,7 @@ const { withSentryConfig } = require('@sentry/nextjs');
 const nextConfig = {
   images: {
     domains: ['cdn.intra.42.fr', 'twemoji.maxcdn.com'],
+    minimumCacheTTL: 300,
   },
   reactStrictMode: true,
   poweredByHeader: false,
@@ -60,7 +61,7 @@ const nextConfig = {
       loader: 'graphql-tag/loader',
     });
     return config;
-  }
+  },
 };
 
 const sentryWebpackPluginOptions = {

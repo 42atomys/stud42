@@ -8,6 +8,7 @@ import {
   QueryOptions,
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
+import { onError } from '@apollo/client/link/error';
 import Cookies from 'js-cookie';
 import { GetServerSidePropsContext } from 'next';
 import { NextRequest } from 'next/server'; // eslint-disable-line
@@ -15,6 +16,16 @@ import { NextRequest } from 'next/server'; // eslint-disable-line
 export type ServerSideRequest = NextRequest | GetServerSidePropsContext['req'];
 
 const tokenCookieName = '__s42.auth-token';
+
+const errorLink = onError(({ graphQLErrors }) => {
+  if (graphQLErrors)
+    graphQLErrors.forEach(
+      ({ message, locations, path }) =>
+        new Error(
+          `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+        )
+    );
+});
 
 const httpLink = createHttpLink({
   uri: process.env.NEXT_PUBLIC_GRAPHQL_API,
@@ -40,7 +51,7 @@ const authLink = setContext((_, context) => {
  * Definition of the Apollo client used in the application.
  */
 export const apolloClient = new ApolloClient({
-  link: from([authLink, httpLink]),
+  link: from([authLink, errorLink, httpLink]),
   version: process.env.NEXT_PUBLIC_VERSION,
   ssrMode: typeof window === 'undefined',
   connectToDevTools: process.env.NODE_ENV === 'development',
