@@ -27,6 +27,6 @@
       "@assets/*": ["../public/assets/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "next.config.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "next.config.js", "tracer.js"],
   "exclude": ["node_modules"]
 }
