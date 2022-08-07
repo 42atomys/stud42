@@ -17,6 +17,14 @@ export const Notification: NotificationComponent = (notification) => {
   const { removeNotification } = useNotification();
   const { type = 'default', title, message, children } = notification;
 
+  // hide the notification after the user click on the close button
+  const hideNotification = () => {
+    setVisible(false);
+    setTimeout(() => {
+      removeNotification(notification);
+    }, 400);
+  };
+
   // Useeffect to let appear the notification from right to left in 400 ms
   useEffect(() => {
     setTimeout(() => {
@@ -28,15 +36,7 @@ export const Notification: NotificationComponent = (notification) => {
         hideNotification();
       }, Math.max(notification.duration, 4000));
     }
-  }, []);
-
-  // hide the notification after the user click on the close button
-  const hideNotification = () => {
-    setVisible(false);
-    setTimeout(() => {
-      removeNotification(notification);
-    }, 400);
-  };
+  }, [hideNotification, notification.duration]);
 
   const containesClasses = classNames({
     'from-teal-500/20 to-teal-700/20 border-teal-700 hover:ring-teal-700/75 [&_button]:bg-teal-700 [&_button:hover]:ring-teal-500 [&_a]:text-teal-500 [&_a:hover]:text-teal-400':
@@ -121,7 +121,7 @@ export const NotificationContainer = () => {
 
   return (
     <div className="fixed bottom-0 right-0 p-4 min-w-min w-1/4 max-w-[400px]">
-      {notifications.map((notification, index) => (
+      {notifications.map((notification) => (
         <Notification
           key={`notification-${notification.id}`}
           {...notification}
