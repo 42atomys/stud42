@@ -227,7 +227,7 @@ func (p *processor) duoHandler(data []byte) error {
 	case "location":
 		err = mdDuo.Payload.ProcessWebhook(p.ctx, mdDuo.Metadata, &locationProcessor{processor: p})
 	case "user":
-		err = mdDuo.Payload.ProcessWebhook(p.ctx, mdDuo.Metadata, &campusUserProcessor{processor: p})
+		err = mdDuo.Payload.ProcessWebhook(p.ctx, mdDuo.Metadata, &userProcessor{processor: p})
 	}
 	if err != nil {
 		log.Error().Err(err).Str("model", mdDuo.Metadata.Model).Str("event", mdDuo.Metadata.Event).Msg("Failed to process webhook")
