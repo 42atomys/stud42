@@ -7,14 +7,18 @@ exports[`snapshot: renders Tooltip unchanged 1`] = `
     data-testid="hover-target"
   >
     <div
-      class="-z-10 opacity-0 ml-1 hidden md:flex left-full absolute whitespace-no-wrap bg-gradient-to-r from-indigo-600 to-indigo-500 text-slate-100 dark:text-slate-300 px-4 py-2 rounded items-center transition-all duration-150"
+      class="-z-10 opacity-0 ml-1 hidden md:flex absolute left-full bg-gradient-to-r from-indigo-600 to-indigo-500 text-slate-100 dark:text-slate-300 px-4 py-2 rounded transition-all duration-150 max-w-[250px] flex-col w-max items-start"
       data-testid="tooltip"
     >
       <div
-        class="bg-indigo-600 h-3 w-3 absolute"
+        class="bg-indigo-600 absolute w-3 h-3 whitespace-nowrap"
         style="left: -6px; transform: rotate(45deg);"
       />
-      tooltip-test
+      <span
+        class=""
+      >
+        tooltip-test
+      </span>
     </div>
     Test
   </div>
