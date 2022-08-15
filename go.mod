@@ -23,7 +23,6 @@ require (
 	github.com/stretchr/testify v1.7.1
 	github.com/vektah/gqlparser/v2 v2.4.1
 	github.com/vmihailenco/msgpack/v5 v5.0.0-beta.9
-	go.opentelemetry.io/contrib v1.9.0
 	go.opentelemetry.io/otel v1.9.0
 	go.opentelemetry.io/otel/exporters/jaeger v1.9.0
 	go.opentelemetry.io/otel/sdk v1.9.0

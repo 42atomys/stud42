@@ -22,6 +22,13 @@ type Campus struct {
 	Endpoint           interface{} `json:"endpoint"`
 }
 
+type CampusUser struct {
+	ID        int  `json:"id"`
+	UserID    int  `json:"user_id"`
+	CampusUD  int  `json:"campus_id"`
+	IsPrimary bool `json:"is_primary"`
+}
+
 type Language struct {
 	ID         int    `json:"id"`
 	Name       string `json:"name"`

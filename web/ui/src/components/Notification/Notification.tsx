@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import useNotification from './hooks';
 import { NotificationComponent } from './types';
 
@@ -18,12 +18,12 @@ export const Notification: NotificationComponent = (notification) => {
   const { type = 'default', title, message, children } = notification;
 
   // hide the notification after the user click on the close button
-  const hideNotification = () => {
+  const hideNotification = useCallback(() => {
     setVisible(false);
     setTimeout(() => {
       removeNotification(notification);
     }, 400);
-  };
+  }, [removeNotification, notification]);
 
   // Useeffect to let appear the notification from right to left in 400 ms
   useEffect(() => {

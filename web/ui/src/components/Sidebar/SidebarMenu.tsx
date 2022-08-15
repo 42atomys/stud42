@@ -1,4 +1,5 @@
 import Emoji from '@components/Emoji';
+import NewFeaturePing from '@components/NewFeaturePing';
 import classNames from 'classnames';
 import React from 'react';
 
@@ -44,26 +45,42 @@ export const Menu = ({
 export const MenuCategory = ({
   emoji,
   name,
+  text,
   children,
 }: {
   // The emoji to display before the category name.
   emoji?: string;
   // The category name.
   name: string;
+  // The additional text to display
+  text?: string;
   // The list of MenuItem.
   children: React.ReactNode[] | React.ReactNode;
 }) => {
   return (
     <li>
-      <span className="font-bold my-2 ml-2 flex items-center flex-row-reverse justify-end">
+      <span className="font-bold my-2 ml-2 flex items-center flex-row justify-end">
         {emoji && (
           <Emoji
             emoji={emoji}
             size={20}
-            containerClassName="flex items-center mx-2"
+            containerClassName="flex items-center mr-2"
           />
         )}
-        <span>{name}</span>
+        <span className="flex grow items-baseline">
+          <span className="grow first-letter:capitalize">{name}</span>
+          {text && (
+            <span
+              className={classNames(
+                'text-slate-400 dark:text-slate-600',
+                'items-stretch ml-2 text-xs group-hover:text-indigo-500'
+              )}
+            >
+              <span>{text}</span>
+              <NewFeaturePing featureName="dynamic-campus-assignment" />
+            </span>
+          )}
+        </span>
       </span>
       <ul>
         {React.Children.map(children, (c) => (
@@ -87,7 +104,8 @@ export const MenuItem = ({
   active = false,
   emoji,
   name,
-  text,
+  leftText,
+  rightText,
 }: {
   // Whether the menu item is active or not
   active?: boolean;
@@ -95,8 +113,10 @@ export const MenuItem = ({
   emoji?: string;
   // The name of the menu item
   name: string;
-  // The additional text to display
-  text?: string;
+  // The additional text to display on the left
+  leftText?: string;
+  // The additional text to display on the right
+  rightText?: string;
 }) => {
   return (
     <li
@@ -109,9 +129,23 @@ export const MenuItem = ({
         {emoji && (
           <Emoji emoji={emoji} size={24} containerClassName="contents" />
         )}
-        <span className="ml-2 flex items-baseline">
-          <span className="">{name || text}</span>
-          {text && (
+        <span className="ml-2 flex items-baseline flex-1 justify-between">
+          <span>
+            <span>{name}</span>
+            {leftText && (
+              <span
+                className={classNames(
+                  active
+                    ? 'text-indigo-500'
+                    : 'text-slate-400 dark:text-slate-600',
+                  'ml-2 text-xs group-hover:text-indigo-500'
+                )}
+              >
+                {leftText}
+              </span>
+            )}
+          </span>
+          {rightText && (
             <span
               className={classNames(
                 active
@@ -120,7 +154,7 @@ export const MenuItem = ({
                 'ml-2 text-xs group-hover:text-indigo-500'
               )}
             >
-              {text}
+              {rightText}
             </span>
           )}
         </span>

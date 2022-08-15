@@ -150,7 +150,7 @@ export const Sidebar = ({
             <Contribute />
           </div>
 
-          <div className="p-4 flex flex-col h-full bg-slate-100/60 dark:bg-slate-800/40 rounded-tl-md">
+          <div className="p-4 flex flex-col h-full bg-slate-100/60 dark:bg-slate-800/40 rounded-tl-md relative">
             {React.Children.map(subSidebar, (c) => (
               <>{c}</>
             ))}

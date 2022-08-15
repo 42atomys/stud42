@@ -148,6 +148,81 @@ data:
           queueName: webhooks-deliveries
           contentType: application/json
           durable: true
+    - name: campus-users-create
+      entrypointUrl: /campus_users/create
+      security:
+      - header:
+          inputs:
+          - name: headerName
+            value: X-Secret
+      - compare:
+          inputs:
+          - name: first
+            value: '{{ .Outputs.header.value }}'
+          - name: second
+            valueFrom:
+              envRef: WEBHOOK_SECRET_HEADER
+      formatting:
+        templatePath: /config/template.tpl
+      storage:
+      - type: rabbitmq
+        specs:
+          databaseUrl:
+            valueFrom:
+              envRef: RABBITMQ_DATABASE_URL
+          queueName: webhooks-deliveries
+          contentType: application/json
+          durable: true
+    - name: campus-users-update
+      entrypointUrl: /campus_users/update
+      security:
+      - header:
+          inputs:
+          - name: headerName
+            value: X-Secret
+      - compare:
+          inputs:
+          - name: first
+            value: '{{ .Outputs.header.value }}'
+          - name: second
+            valueFrom:
+              envRef: WEBHOOK_SECRET_HEADER
+      formatting:
+        templatePath: /config/template.tpl
+      storage:
+      - type: rabbitmq
+        specs:
+          databaseUrl:
+            valueFrom:
+              envRef: RABBITMQ_DATABASE_URL
+          queueName: webhooks-deliveries
+          contentType: application/json
+          durable: true
+    - name: campus-users-destroy
+      entrypointUrl: /campus_users/destroy
+      security:
+      - header:
+          inputs:
+          - name: headerName
+            value: X-Secret
+      - compare:
+          inputs:
+          - name: first
+            value: '{{ .Outputs.header.value }}'
+          - name: second
+            valueFrom:
+              envRef: WEBHOOK_SECRET_HEADER
+      formatting:
+        templatePath: /config/template.tpl
+      storage:
+      - type: rabbitmq
+        specs:
+          databaseUrl:
+            valueFrom:
+              envRef: RABBITMQ_DATABASE_URL
+          queueName: webhooks-deliveries
+          contentType: application/json
+          durable: true
     - name: github-sponsorships
       entrypointUrl: /github/sponsors
       security:
