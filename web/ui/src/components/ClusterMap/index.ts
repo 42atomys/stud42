@@ -6,5 +6,6 @@ export {
   ClusterWorkspace,
   ClusterWorkspaceWithUser,
 } from './ClusterTableMap';
-export type { MapLocation } from './types';
+export { CampusClusterMapData } from './data';
+export type { CampusNames, ClusterContainerProps, MapLocation } from './types';
 export { extractandRemoveNode, extractNode } from './utils';

@@ -112,16 +112,19 @@ mutation deleteFriendship($userID: UUID!) {
   deleteFriendship(userID: $userID)
 }
 
-query me {
-  me {
-    ...UserAccountsData
-  }
-}
+# query me {
+#   me {
+#     ...UserAccountsData
+#   }
+# }
 
 query meWithFlags {
   me {
     ...UserAccountsData
     flags
+    currentCampus {
+      ...CampusBasicData
+    }
   }
 }
 
@@ -132,9 +135,7 @@ query myFollowings {
     currentLocation {
       ...LocationBasicData
       campus {
-        name
-        city
-        country
+        ...CampusBasicData
       }
     }
     ...UserIdentyData
@@ -223,4 +224,10 @@ fragment PreciseLocationData on Location {
   campus {
     name
   }
+}
+
+fragment CampusBasicData on Campus {
+  name
+  city
+  country
 }

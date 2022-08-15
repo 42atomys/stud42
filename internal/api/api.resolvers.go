@@ -199,7 +199,7 @@ func (r *queryResolver) LocationsByCampusName(ctx context.Context, page typesgen
 
 func (r *queryResolver) LocationsByCluster(ctx context.Context, page typesgen.PageInput, campusName string, identifierPrefix *string) (*generated.LocationConnection, error) {
 	return r.client.Campus.Query().
-		Where(campus.Name(campusName)).
+		Where(campus.NameEqualFold(campusName)).
 		QueryLocations().
 		WithCampus().
 		WithUser().
