@@ -69,7 +69,7 @@ type WebhookProcessor interface {
 // the requested model. To know which methods are valid for a model, please
 // refer to the implementation of {Model}WebhookProcessor.
 //
-// Example: for `Location` refers to `LocationWebhookProcessor``
+// Example: for `Location` refers to `LocationWebhookProcessor“
 var ErrInvalidWebhookProcessor = errors.New("invalid webhook processor for current type")
 
 // UnmarshalJSON unmarshals the JSON FORMATTED payload into a Webhook struct.
@@ -87,6 +87,8 @@ func (w *Webhook) UnmarshalJSON(data []byte) error {
 	}
 
 	switch typ.Metadata.Model {
+	case "campus_user":
+		w.Payload = new(CampusUser)
 	case "location":
 		w.Payload = new(Location[LocationUser])
 	case "user":

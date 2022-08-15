@@ -34,8 +34,8 @@
       "detail": "Start API in background",
       "type": "process",
       "isBackground": true,
-      "command": "go",
-      "args": ["run", "main.go", "serve", "api", "-g"],
+      "command": "env",
+      "args": ["APP_NAME=api", "go", "run", "main.go", "serve", "api", "-g"],
       "problemMatcher": [],
       "presentation": {
         "focus": true,

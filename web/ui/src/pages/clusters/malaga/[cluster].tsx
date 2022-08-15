@@ -1,4 +1,6 @@
 import {
+  CampusClusterMapData,
+  ClusterContainerProps,
   ClusterEmpty,
   ClusterPillar,
   ClusterRow,
@@ -10,66 +12,13 @@ import {
 import { ClusterContainer } from '@components/ClusterMap/ClusterContainer';
 import { GetStaticProps, NextPage } from 'next';
 
-type PageProps = {
-  cluster: 'c1' | 'c2' | 'c3';
-};
-
-type Campus = {
-  [key: string]: {
-    [key: string]: (number | 'pillar' | null)[];
-  };
-};
-
-// prettier-ignore
-const clusters: Campus = {
-  c1: {
-    r15: [null, 1, 2, 3, 4, 5, 6, null],
-    r14: [null, 1, 2, 3, 4, 5, 6, null],
-    r13: [null, 1, 2, 3, 4, 5, 6, null],
-    r12: [null, 1, 2, 3, 4, 5, 6, null],
-    r11: [null, 1, 2, 3, 4, 5, 6, null],
-    r10: [null, 1, 2, 3, 4, 5, 6, null],
-    r9: [null, 1, 2, 3, 4, 5, 6, null],
-    r8: [null, 1, 2, 3, 4, 5, 6, null],
-    r7: [null, 1, 2, 3, 4, 5, 6, null],
-    r6: [null, 1, 2, 3, 4, 5, 6, null],
-    r5: [null, 1, 2, 3, 4, 5, 6, null],
-    r4: [null, 1, 2, 3, 4, 5, 6, null],
-    r3: [null, 1, 2, 3, 4, 5, 6, null],
-    r2: [null, 1, 2, 3, 4, 5, 6, null],
-    r1: [null, 1, 2, 3, 4, 5, 6, null],
-  },
-  c2: {
-    r10: [null, 1, 2, 3, 4, 5, 6, null],
-    r9: [null, 1, 2, 3, 4, 5, 6, null],
-    r8: [null, 1, 2, 3, 4, 5, 6, null],
-    r7: [null, 1, 2, 3, 4, 5, 6, null],
-    r6: [null, 1, 2, 3, 4, 5, 6, null],
-    r5: [null, 1, 2, 3, 4, 5, 6, null],
-    r4: [null, 1, 2, 3, 4, 5, 6, null],
-    r3: [null, 1, 2, 3, 4, 5, 6, null],
-    r2: [null, 1, 2, 3, 4, 5, 6, null],
-    r1: [null, 1, 2, 3, 4, 5, 6, null],
-  },
-  c3: {
-    r10: [null, 6, 5, 4, 3, 2, 1, null],
-    r9: [null, 6, 5, 4, 3, 2, 1, null],
-    r8: [null, 6, 5, 4, 3, 2, 1, null],
-    r7: [null, 6, 5, 4, 3, 2, 1, null],
-    r6: [null, 6, 5, 4, 3, 2, 1, null],
-    r5: [null, 6, 5, 4, 3, 2, 1, null],
-    r4: [null, 6, 5, 4, 3, 2, 1, null],
-    r3: [null, 6, 5, 4, 3, 2, 1, null],
-    r2: [null, 6, 5, 4, 3, 2, 1, null],
-    r1: [null, 6, 5, 4, 3, 2, 1, null],
-  },
-}
-
-export const IndexPage: NextPage<PageProps> = ({ cluster }) => {
-  const clusterRows = clusters[cluster];
+export const IndexPage: NextPage<
+  ClusterContainerProps & { campus: 'malaga' }
+> = ({ cluster }) => {
+  const clusterRows = CampusClusterMapData.malaga[cluster];
 
   return (
-    <ClusterContainer campus="Malaga" cluster={cluster}>
+    <ClusterContainer campus="malaga" cluster={cluster}>
       {({ locations, showPopup }) => (
         <ClusterTableMap>
           {Object.keys(clusterRows).map((row) => (

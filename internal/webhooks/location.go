@@ -58,9 +58,9 @@ func (p *locationProcessor) Create(loc *duoapi.Location[duoapi.LocationUser], me
 		}
 		// Assign the current location to the user if it's not already assigned
 		// to the user.
-		return tx.User.UpdateOneID(user.ID).SetCurrentLocationID(locationID).Exec(p.ctx)
+		return tx.User.UpdateOneID(user.ID).SetCurrentLocationID(locationID).SetCurrentCampus(campus).Exec(p.ctx)
 	})
-	
+
 	return err
 }
 func (p *locationProcessor) Close(loc *duoapi.Location[duoapi.LocationUser], metadata *duoapi.WebhookMetadata) error {
@@ -76,7 +76,7 @@ func (p *locationProcessor) Close(loc *duoapi.Location[duoapi.LocationUser], met
 			return err
 		}
 
-		// Unlink the user from the location in database if the location is closed 
+		// Unlink the user from the location in database if the location is closed
 		// and the user is not assigned to another location anymore (i.e. the user
 		// is not assigned to any other location)
 		return p.unlinkLocation(loc)
@@ -88,7 +88,7 @@ func (p *locationProcessor) Destroy(loc *duoapi.Location[duoapi.LocationUser], m
 	if err != nil && !generated.IsNotFound(err) {
 		return err
 	}
-	
+
 	// Unlink the user from the location in database if the location is destroyed
 	return p.unlinkLocation(loc)
 }

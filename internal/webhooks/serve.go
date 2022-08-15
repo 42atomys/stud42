@@ -222,6 +222,8 @@ func (p *processor) duoHandler(data []byte) error {
 
 	var err error
 	switch mdDuo.Metadata.Model {
+	case "campus_user":
+		err = mdDuo.Payload.ProcessWebhook(p.ctx, mdDuo.Metadata, &campusUserProcessor{processor: p})
 	case "location":
 		err = mdDuo.Payload.ProcessWebhook(p.ctx, mdDuo.Metadata, &locationProcessor{processor: p})
 	case "user":

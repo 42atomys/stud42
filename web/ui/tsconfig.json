@@ -27,6 +27,12 @@
       "@assets/*": ["../public/assets/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "next.config.js"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "next.config.ts",
+    "src/lib/prototypes/string.js"
+  ],
   "exclude": ["node_modules"]
 }
