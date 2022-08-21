@@ -75,7 +75,8 @@
       "presentation": {
         "focus": true,
         "panel": "dedicated"
-      }
+      },
+      "problemMatcher": ["$tsc"]
     },
     {
       "label": "[FORMAT] Format Interface",
@@ -86,13 +87,15 @@
       "presentation": {
         "focus": true,
         "panel": "dedicated"
-      }
+      },
+      "problemMatcher": ["$tsc"]
     },
     {
       "label": "[LINT] Lint the Interface (autofix)",
       "detail": "Format the Interface",
       "dependsOrder": "sequence",
-      "dependsOn": ["[FORMAT] Format Interface", "[LINT] Lint Interface"]
+      "dependsOn": ["[FORMAT] Format Interface", "[LINT] Lint Interface"],
+      "problemMatcher": ["$tsc"]
     },
     {
       "label": "[DEV] Run postgresql cli (psql)",
