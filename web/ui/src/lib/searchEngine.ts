@@ -1,12 +1,4 @@
-/**
- * clusterIdentifierValidator is a map of campus to regex that validates
- * the cluster identifier. The regex is used to extract the cluster from the
- * identifier.
- */
-const clusterIdentifierValidator: { [key: string]: RegExp } = {
-  paris: /(e(?:1|2|3)).{4,5}/i,
-  helsinki: /(c(?:1|2|3)).{4,5}/i,
-};
+import { CampusClusterMapData, CampusNames } from '@components/ClusterMap';
 
 /**
  * retrieve the cluster url for the given campus and identifier
@@ -18,14 +10,18 @@ export const clusterURL = (
   const campusLower = campus.toLowerCase();
   const identifierLower = identifier.toLowerCase();
 
+  if (!Object.keys(CampusClusterMapData).includes(campusLower)) {
+    return null;
+  }
+
   if (campusLower && identifierLower) {
     const [, cluster] =
-      identifierLower.match(clusterIdentifierValidator[campusLower]) || [];
+      identifierLower.match(
+        CampusClusterMapData[campusLower as CampusNames]._data
+          .identifierValidator
+      ) || [];
 
-    if (
-      Object.keys(clusterIdentifierValidator).includes(campusLower) &&
-      cluster
-    ) {
+    if (cluster) {
       return `/clusters/${campusLower}/${cluster}?identifier=${identifierLower}`;
     }
   }

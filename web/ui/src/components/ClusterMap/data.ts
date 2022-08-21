@@ -5,11 +5,20 @@ export const CampusClusterMapData = {
   paris: {
     _data: {
       emoji: '🇫🇷',
+      /**
+       * clusterNames allow you to override the name of the cluster.
+       */
       clusterNames: {
         e1: 'Metropolis',
         e2: 'Westeros',
         e3: 'Tatooine',
-      }
+      },
+      /**
+       * clusterIdentifierValidator is a regex that validates
+       * the cluster identifier. The regex is used to extract the cluster
+       * from the identifier.
+       */
+      identifierValidator: /(e(?:1|2|3)).{4,5}/i
     },
     e1: {
       r13: [1, 2, 3, 4, 5, 6, 7, null, null, null, null, null, null, null, null, null, null, null, 8, 9, 10, 11, 12, 13, 14],
@@ -60,11 +69,20 @@ export const CampusClusterMapData = {
   helsinki: {
     _data: {
       emoji: '🇫🇮',
+      /**
+       * clusterNames allow you to override the name of the cluster.
+       */
       clusterNames: {
         c1: 'Cluster 1',
         c2: 'Cluster 2',
         c3: 'Cluster 3',
-      }
+      },
+      /**
+       * clusterIdentifierValidator is a regex that validates
+       * the cluster identifier. The regex is used to extract the cluster
+       * from the identifier.
+       */
+      identifierValidator: /(c(?:1|2|3)).{4,5}/i
     },
     c1: {
       r6: [1, 2, 3, 4, 5, 6, 7, 8, 9, null, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
@@ -93,11 +111,20 @@ export const CampusClusterMapData = {
   malaga: {
     _data: {
       emoji: '🇪🇸',
+      /**
+       * clusterNames allow you to override the name of the cluster.
+       */
       clusterNames: {
         c1: 'Cluster 1',
         c2: 'Cluster 2',
         c3: 'Cluster 3',
-      }
+      },
+      /**
+       * clusterIdentifierValidator is a regex that validates
+       * the cluster identifier. The regex is used to extract the cluster
+       * from the identifier.
+       */
+      identifierValidator: /(c(?:1|2|3)).{4,5}/i
     },
     c1: {
       r15: [null, 1, 2, 3, 4, 5, 6, null],

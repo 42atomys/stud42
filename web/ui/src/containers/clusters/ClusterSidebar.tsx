@@ -29,7 +29,6 @@ export const ClusterSidebar = ({
   const campusKeys = Object.keys(CampusClusterMapData) as Array<CampusNames>;
 
   const { data: { me } = {}, loading } = useMeWithFlagsQuery();
-  // Default to paris in case of any error during the beta and migration of data
   const myCampusNameLowerFromAPI = me?.currentCampus?.name?.toLowerCase() || '';
 
   const [myCampusNameCached, setMyCampusName] = useLocalStorage(

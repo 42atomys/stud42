@@ -1,15 +1,15 @@
+import classNames from 'classnames';
 import type { ClassNameProps } from 'types/globals';
-import type { NameProps, NameUserProps } from './types';
+import type { NameProps } from './types';
 
-export const Name = (
-  props: NameProps | NameUserProps | ClassNameProps = {}
-): JSX.Element => {
-  const { firstName, lastName, usualFirstName, duoLogin } =
-    (props as NameUserProps).user || props;
-  const { displayLogin } = props as NameProps;
-  // TODO implement the nickname feature
-  const hasNickname = false;
-  const nickname = '';
+export const Name = (props: NameProps & ClassNameProps): JSX.Element => {
+  const {
+    user: { firstName, lastName, usualFirstName, duoLogin, nickname } = {},
+    displayLogin,
+    className,
+    ...rProps
+  } = props;
+  const hasNickname = nickname && nickname !== '';
 
   if (hasNickname || (firstName === null && lastName === null)) {
     return <span {...props}>{nickname || duoLogin}</span>;
@@ -17,14 +17,14 @@ export const Name = (
 
   if (displayLogin) {
     return (
-      <span {...props}>
+      <span className={classNames('truncate', className)} {...rProps}>
         {usualFirstName || firstName} ({duoLogin}) {lastName}
       </span>
     );
   }
 
   return (
-    <span {...props}>
+    <span className={classNames('truncate', className)} {...rProps}>
       {usualFirstName || firstName} {lastName}
     </span>
   );
