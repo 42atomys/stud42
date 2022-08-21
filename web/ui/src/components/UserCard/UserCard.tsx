@@ -29,7 +29,7 @@ export const UserCard: UserCardComponent = ({
         className="mb-4 bg-slate-800"
       />
       <h2 className="font-bold uppercase">{user.duoLogin}</h2>
-      <Name className="font-light" user={user} />
+      <Name className="font-light min-w-0 w-full" user={user} />
       <LocationBadge location={location} />
       {!user.isMe && (
         <DropdownMenu

@@ -42,14 +42,14 @@ type User {
   firstName: String!
   usualFirstName: String
   lastName: String!
-  Phone: String
-  PoolYear: String
-  PoolMonth: String
+  phone: String
+  poolYear: String
+  poolMonth: String
   isSwimmer: Boolean!
   isMe: Boolean!
-  Nickname: String
-  AvatarURL: String
-  CoverURL: String
+  nickname: String
+  avatarURL: String
+  coverURL: String
   accounts: [Account]
   flags: [FLAG!]!
   currentLocation: Location
