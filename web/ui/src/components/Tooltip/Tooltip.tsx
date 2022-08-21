@@ -36,14 +36,14 @@ export const Tooltip = ({
           visible
             ? 'opacity-100 z-10 ml-4 md:flex'
             : 'hidden -z-10 opacity-0 ml-1',
-          'absolute left-full bg-gradient-to-r from-indigo-600 to-indigo-500 text-slate-100 dark:text-slate-300 px-4 py-2 rounded transition-all duration-150',
+          'absolute left-full bg-gradient-to-l dark:bg-gradient-to-r from-indigo-400 dark:from-indigo-600 to-indigo-500 text-slate-100 dark:text-slate-300 px-4 py-2 rounded transition-all duration-150',
           'max-w-[250px] flex-col w-max items-start'
         )}
         data-testid="tooltip"
       >
         {showArrow && (
           <div
-            className="bg-indigo-600 absolute w-3 h-3 top-1/3 whitespace-nowrap"
+            className="bg-indigo-500 dark:bg-indigo-600 absolute w-3 h-3 top-1/3 whitespace-nowrap"
             style={{ left: '-6px', transform: 'rotate(45deg)' }}
           />
         )}
