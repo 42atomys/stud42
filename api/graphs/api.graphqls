@@ -111,8 +111,13 @@ type LocationEdge {
   cursor: Cursor!
 }
 
+type Settings {
+  theme: THEME!
+}
+
 type Query {
   me: User! @authenticated
+  mySettings: Settings! @authenticated
   searchUser(query: String!, onlyOnline: Boolean = false): [User!]!
     @authenticated
 
@@ -144,6 +149,8 @@ type Query {
 type Mutation {
   createFriendship(userID: UUID!): Boolean! @authenticated
   deleteFriendship(userID: UUID!): Boolean! @authenticated
+
+  updateSettings(input: SettingsInput!): Settings! @authenticated
 
   internalCreateUser(input: CreateUserInput!): UUID!
     @authzByPolicy(policy: SERVICE_TOKEN)
@@ -186,6 +193,10 @@ input LinkAccountInput {
   userID: String!
 }
 
+input SettingsInput {
+  theme: THEME!
+}
+
 enum PROVIDER {
   GITHUB
   DUO
@@ -194,4 +205,10 @@ enum PROVIDER {
 
 enum ACCOUNT_TYPE {
   OAUTH
+}
+
+enum THEME {
+  AUTO
+  DARK
+  LIGHT
 }

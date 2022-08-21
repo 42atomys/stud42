@@ -27,7 +27,8 @@
       "label": "[GEN] Generate all",
       "detail": "Generate the code on API and on the Interface",
       "dependsOrder": "sequence",
-      "dependsOn": ["[GEN] Generate API code", "[GEN] Generate Interface code"]
+      "dependsOn": ["[GEN] Generate API code", "[GEN] Generate Interface code"],
+      "problemMatcher": []
     },
     {
       "label": "[PROCESS] Start API",
