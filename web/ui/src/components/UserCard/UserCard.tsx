@@ -17,7 +17,9 @@ export const UserCard: UserCardComponent = ({
   return (
     <div
       className={classNames(
-        'flex flex-col relative group items-center justify-center p-4 text-center grow-[1] min-w-[200px] max-w-[200px] transition-all rounded-lg border-2 border-transparent hover:cursor-pointer',
+        'flex flex-col relative group items-center justify-center p-4',
+        'text-center grow-[1] min-w-[200px] max-w-[200px] transition-all',
+        'rounded-lg border-2 border-transparent hover:cursor-pointer',
         className
       )}
     >
