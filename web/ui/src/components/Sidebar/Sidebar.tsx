@@ -1,3 +1,4 @@
+import { TooltipProps } from '@components/Tooltip';
 import Tooltip from '@components/Tooltip/Tooltip';
 import { Contribute, Star } from '@lib/github';
 import classNames from 'classnames';
@@ -20,16 +21,18 @@ const MenuItem = ({
   href,
   icon,
   name,
+  tooltipColor: tooltipType = 'info',
 }: {
   href: string;
   icon: string;
   name: string;
+  tooltipColor?: TooltipProps['color'];
 }) => {
   const { pathname } = useRouter();
   const activeRoute = pathname.split('/')[1] == href.split('/')[1];
 
   return (
-    <Tooltip text={name}>
+    <Tooltip text={name} size="md" color={tooltipType} direction="right">
       <Link href={href}>
         <a
           className={`duration-100 transition-all flex items-center justify-center my-3 text-xl`}
@@ -133,7 +136,12 @@ export const Sidebar = ({
               name="Github"
             />
           )}
-          <MenuItem href="/auth/signout" icon="fa-sign-out" name="Logout" />
+          <MenuItem
+            href="/auth/signout"
+            icon="fa-sign-out"
+            name="Logout"
+            tooltipColor="red"
+          />
           <span className="text-sm text-slate-400 dark:text-slate-600">
             {publicRuntimeConfig.app_version}
           </span>
