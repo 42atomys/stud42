@@ -1,27 +1,25 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import TooltipDefault, { Tooltip } from '@components/Tooltip';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 it('snapshot: renders Tooltip unchanged', () => {
   const { container } = render(
-    <TooltipDefault text="tooltip-test">Test</TooltipDefault>
+    <TooltipDefault color="tooltip-test">Test</TooltipDefault>
   );
   expect(container).toMatchSnapshot();
 });
 
 it('state: hover changes', async () => {
-  render(<Tooltip text="test-tooltip">Test</Tooltip>);
+  render(<Tooltip color="test-tooltip">Test</Tooltip>);
 
   fireEvent.mouseEnter(screen.getByTestId('hover-target'));
   await waitFor(() => screen.getByTestId('tooltip'));
 
-  expect(screen.getByTestId('tooltip')).toHaveClass('opacity-100 z-10 ml-4');
-  expect(screen.getByTestId('tooltip')).not.toHaveClass('opacity-0 ml-1');
+  expect(screen.getByTestId('tooltip')).toHaveClass('visible z-10');
+  expect(screen.getByTestId('tooltip')).not.toHaveClass('invisible');
 
   fireEvent.mouseLeave(screen.getByTestId('hover-target'));
   await waitFor(() => screen.getByTestId('tooltip'));
 
-  expect(screen.getByTestId('tooltip')).toHaveClass('opacity-0 ml-1');
-  expect(screen.getByTestId('tooltip')).not.toHaveClass(
-    'opacity-100 z-10 ml-4'
-  );
+  expect(screen.getByTestId('tooltip')).toHaveClass('invisible');
+  expect(screen.getByTestId('tooltip')).not.toHaveClass('visible z-10');
 });

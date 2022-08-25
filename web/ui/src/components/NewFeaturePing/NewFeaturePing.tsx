@@ -21,6 +21,8 @@ export const NewFeaturePing = ({ featureName }: { featureName: string }) => {
       subText="Your primary campus is now always at the top of the list!"
       showArrow={false}
       className="-top-5 -right-1"
+      direction="right"
+      color="info"
     >
       <span
         className="absolute flex -top-1 -right-1 w-[10px] h-[10px] cursor-pointer"
