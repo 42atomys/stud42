@@ -3,13 +3,13 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 it('snapshot: renders Tooltip unchanged', () => {
   const { container } = render(
-    <TooltipDefault color="tooltip-test">Test</TooltipDefault>
+    <TooltipDefault text="tooltip-test">Test</TooltipDefault>
   );
   expect(container).toMatchSnapshot();
 });
 
 it('state: hover changes', async () => {
-  render(<Tooltip color="test-tooltip">Test</Tooltip>);
+  render(<Tooltip text="test-tooltip">Test</Tooltip>);
 
   fireEvent.mouseEnter(screen.getByTestId('hover-target'));
   await waitFor(() => screen.getByTestId('tooltip'));

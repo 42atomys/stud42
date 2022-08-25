@@ -7,15 +7,17 @@ exports[`snapshot: renders Tooltip unchanged 1`] = `
     data-testid="hover-target"
   >
     <div
-      class="invisible -z-10 md:flex absolute rounded transition-all duration-150 text-slate-100 opacity-0 pointer-events-none max-w-[250px] flex-col w-max items-start m-1 group-hover:pointer-events-auto group-hover:opacity-100 group-hover:ml-[var(--tooltip-ml)] group-hover:mr-[var(--tooltip-mr)] group-hover:mt-[var(--tooltip-mt)] group-hover:mb-[var(--tooltip-mb)] px-4 py-2"
+      class="invisible -z-10 md:flex absolute rounded transition-all duration-150 text-slate-100 opacity-0 pointer-events-none max-w-[250px] flex-col w-max items-start m-1 group-hover:pointer-events-auto group-hover:opacity-100 group-hover:ml-[var(--tooltip-ml)] group-hover:mr-[var(--tooltip-mr)] group-hover:mt-[var(--tooltip-mt)] group-hover:mb-[var(--tooltip-mb)] bg-black px-4 py-2"
       data-testid="tooltip"
     >
       <div
-        class="absolute whitespace-nowrap rotate-45 w-[var(--tooltip-size)] h-[var(--tooltip-size)] [--tooltip-size:0.75rem]"
+        class="absolute whitespace-nowrap rotate-45 w-[var(--tooltip-size)] h-[var(--tooltip-size)] bg-black text-slate-100 dark:text-slate-300 [--tooltip-size:0.75rem]"
       />
       <span
         class=""
-      />
+      >
+        tooltip-test
+      </span>
     </div>
     Test
   </div>
