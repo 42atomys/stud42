@@ -17,7 +17,9 @@ export const UserCard: UserCardComponent = ({
   return (
     <div
       className={classNames(
-        'flex flex-col relative group items-center justify-center p-4 text-center grow-[1] min-w-[200px] max-w-[200px] transition-all rounded-lg border-2 border-transparent hover:cursor-pointer',
+        'flex flex-col relative group items-center justify-center p-4',
+        'text-center grow-[1] min-w-[200px] max-w-[200px] transition-all',
+        'rounded-lg border-2 border-transparent hover:cursor-pointer',
         className
       )}
     >
@@ -29,7 +31,7 @@ export const UserCard: UserCardComponent = ({
         className="mb-4 bg-slate-800"
       />
       <h2 className="font-bold uppercase">{user.duoLogin}</h2>
-      <Name className="font-light" user={user} />
+      <Name className="font-light min-w-0 w-full" user={user} />
       <LocationBadge location={location} />
       {!user.isMe && (
         <DropdownMenu

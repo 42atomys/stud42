@@ -7,6 +7,7 @@ export type TooltipProps = {
   size?: 'xs' | 'sm' | 'md' = 'md';
   color?: 'red' | 'orange' | 'green' | 'info' | 'black' = 'black';
   direction?: 'top' | 'bottom' | 'left' | 'right';
+  allowInteractions?: boolean = false;
 };
 
 type TooltipComponent = (props: TooltipProps) => JSX.Element;

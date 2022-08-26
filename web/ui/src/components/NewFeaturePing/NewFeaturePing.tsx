@@ -23,6 +23,7 @@ export const NewFeaturePing = ({ featureName }: { featureName: string }) => {
       className="-top-5 -right-1"
       direction="right"
       color="info"
+      allowInteractions={true}
     >
       <span
         className="absolute flex -top-1 -right-1 w-[10px] h-[10px] cursor-pointer"
