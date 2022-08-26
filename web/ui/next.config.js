@@ -11,7 +11,7 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   publicRuntimeConfig: {
-    app_version: process.env.APP_VERSION,
+    appVersion: process.env.APP_VERSION || 'indev',
   },
 
   output: 'standalone',
