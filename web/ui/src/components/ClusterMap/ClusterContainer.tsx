@@ -58,9 +58,11 @@ export const ClusterContainer: ClusterContainerComponent = ({
 
   useEffect(() => {
     if (highlightedIdentifier) {
-      replace(asPath.split('?')[0], undefined, { shallow: true });
       setHighlight(true);
-      const timer = setTimeout(() => setHighlight(false), 5000);
+      const timer = setTimeout(() => {
+        replace(asPath.split('?')[0], undefined, { shallow: true });
+        setHighlight(false);
+      }, 5000);
 
       return () => clearTimeout(timer);
     }

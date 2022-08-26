@@ -1,15 +1,15 @@
 import { User } from '@graphql.d';
+import { ClassNameProps } from 'types/globals';
 
 export type NameProps = {
-  firstName: string;
-  lastName: string;
-  usualFirstName?: string;
-  login: string;
   hasNickname?: boolean = false;
-  nickname?: string;
   displayLogin?: boolean = false;
+  displayNickname?: boolean = false;
+  tooltipClassName?: string;
+  user: Pick<
+    User,
+    'firstName' | 'usualFirstName' | 'lastName' | 'duoLogin' | 'nickname'
+  >;
 };
 
-export type NameUserProps = {
-  user: Pick<User, 'firstName' | 'usualFirstName' | 'lastName' | 'duoLogin'>;
-};
+type NameComponent = (props: NameProps & ClassNameProps) => JSX.Element;
