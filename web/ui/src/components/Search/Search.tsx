@@ -83,7 +83,7 @@ export const Search: SearchComponent = ({
                         value={user}
                       >
                         <span className={`flex truncate font-normal`}>
-                          <span className="text-slate-700 dark:text-slate-300 font-bold flex-1">
+                          <span className="text-slate-700 dark:text-slate-300 font-bold flex-1 mr-2">
                             {user.duoLogin}
                           </span>
                           <Name

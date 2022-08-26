@@ -7,7 +7,7 @@ exports[`snapshot: renders Tooltip unchanged 1`] = `
     data-testid="hover-target"
   >
     <div
-      class="invisible -z-10 md:flex absolute rounded transition-all duration-150 text-slate-100 opacity-0 pointer-events-none max-w-[250px] flex-col w-max items-start m-1 group-hover:pointer-events-auto group-hover:opacity-100 group-hover:ml-[var(--tooltip-ml)] group-hover:mr-[var(--tooltip-mr)] group-hover:mt-[var(--tooltip-mt)] group-hover:mb-[var(--tooltip-mb)] bg-black px-4 py-2"
+      class="invisible md:flex absolute rounded transition-all duration-150 text-slate-100 opacity-0 max-w-[250px] flex-col w-max items-start m-1 z-10 group-hover:pointer-events-auto group-hover:opacity-100 group-hover:ml-[var(--tooltip-ml)] group-hover:mr-[var(--tooltip-mr)] group-hover:mt-[var(--tooltip-mt)] group-hover:mb-[var(--tooltip-mb)] bg-black px-4 py-2 pointer-events-none"
       data-testid="tooltip"
     >
       <div

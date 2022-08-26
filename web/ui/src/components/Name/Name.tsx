@@ -1,32 +1,47 @@
-import type { ClassNameProps } from 'types/globals';
-import type { NameProps, NameUserProps } from './types';
+import ConditionalWrapper from '@components/ConditionalWrapper';
+import Tooltip from '@components/Tooltip';
+import classNames from 'classnames';
+import type { NameComponent } from './types';
 
-export const Name = (
-  props: NameProps | NameUserProps | ClassNameProps = {}
-): JSX.Element => {
-  const { firstName, lastName, usualFirstName, duoLogin } =
-    (props as NameUserProps).user || props;
-  const { displayLogin } = props as NameProps;
-  // TODO implement the nickname feature
-  const hasNickname = false;
-  const nickname = '';
+export const Name: NameComponent = (props) => {
+  const {
+    user: { firstName, lastName, usualFirstName, duoLogin, nickname } = {},
+    displayLogin,
+    displayNickname,
+    className,
+    tooltipClassName,
+    ...rProps
+  } = props;
 
-  if (hasNickname || (firstName === null && lastName === null)) {
-    return <span {...props}>{nickname || duoLogin}</span>;
-  }
-
-  if (displayLogin) {
-    return (
-      <span {...props}>
-        {usualFirstName || firstName} ({duoLogin}) {lastName}
-      </span>
-    );
-  }
+  const hasNickname = nickname && nickname !== '';
+  const formattedName = [
+    displayNickname && hasNickname ? `@${nickname} |` : null,
+    usualFirstName || firstName,
+    displayLogin ? `(${duoLogin})` : null,
+    lastName,
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
-    <span {...props}>
-      {usualFirstName || firstName} {lastName}
-    </span>
+    <ConditionalWrapper
+      condition={formattedName.length > 20}
+      trueWrapper={(children) => (
+        <Tooltip
+          className={classNames('w-full', tooltipClassName)}
+          text={formattedName}
+          color="black"
+          size="xs"
+          direction="top"
+        >
+          {children}
+        </Tooltip>
+      )}
+    >
+      <span className={classNames('truncate', className)} {...rProps}>
+        {formattedName}
+      </span>
+    </ConditionalWrapper>
   );
 };
 
