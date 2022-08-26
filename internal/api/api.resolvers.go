@@ -6,13 +6,13 @@ package api
 import (
 	"context"
 	"fmt"
-	"os"
 	"strconv"
 	"strings"
 	"time"
 
 	apigen "atomys.codes/stud42/internal/api/generated"
 	typesgen "atomys.codes/stud42/internal/api/generated/types"
+	"atomys.codes/stud42/internal/discord"
 	modelsutils "atomys.codes/stud42/internal/models"
 	"atomys.codes/stud42/internal/models/generated"
 	"atomys.codes/stud42/internal/models/generated/account"
@@ -22,9 +22,7 @@ import (
 	"atomys.codes/stud42/internal/models/gotype"
 	"atomys.codes/stud42/pkg/utils"
 	"entgo.io/ent/dialect/sql"
-	"github.com/bwmarrin/discordgo"
 	"github.com/google/uuid"
-	"github.com/spf13/viper"
 )
 
 func (r *mutationResolver) CreateFriendship(ctx context.Context, userID uuid.UUID) (bool, error) {
@@ -105,19 +103,23 @@ func (r *mutationResolver) InternalLinkAccount(ctx context.Context, input typesg
 		OnConflictColumns(account.FieldProvider, account.FieldProviderAccountID).
 		UpdateNewValues().
 		ID(ctx)
+
 	if err != nil {
 		return nil, err
 	}
 
-	return r.client.Account.Get(ctx, id)
+	account, err := r.client.Account.Get(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	go accountLinkCallback(ctx, account)
+
+	return account, nil
 }
 
 func (r *mutationResolver) InviteOnDiscord(ctx context.Context) (bool, error) {
 	cu, err := CurrentUserFromContext(ctx)
-	if err != nil {
-		return false, err
-	}
-	s, err := discordgo.New("Bot " + os.Getenv("DISCORD_TOKEN"))
 	if err != nil {
 		return false, err
 	}
@@ -127,7 +129,7 @@ func (r *mutationResolver) InviteOnDiscord(ctx context.Context) (bool, error) {
 		return false, err
 	}
 
-	err = s.GuildMemberAdd(acc.AccessToken, viper.GetString("discord.guildID"), acc.ProviderAccountID, "", []string{}, false, false)
+	err = discord.DefaultClient().InviteOnOurDiscord(ctx, acc.AccessToken, acc.ProviderAccountID)
 	if err != nil {
 		return false, err
 	}

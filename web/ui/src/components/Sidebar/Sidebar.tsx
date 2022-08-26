@@ -143,7 +143,7 @@ export const Sidebar = ({
             tooltipColor="red"
           />
           <span className="text-sm text-slate-400 dark:text-slate-600">
-            {publicRuntimeConfig.app_version}
+            {publicRuntimeConfig.appVersion}
           </span>
         </div>
       </div>

@@ -1,32 +1,47 @@
+import ConditionalWrapper from '@components/ConditionalWrapper';
+import Tooltip from '@components/Tooltip';
 import classNames from 'classnames';
-import type { ClassNameProps } from 'types/globals';
-import type { NameProps } from './types';
+import type { NameComponent } from './types';
 
-export const Name = (props: NameProps & ClassNameProps): JSX.Element => {
+export const Name: NameComponent = (props) => {
   const {
     user: { firstName, lastName, usualFirstName, duoLogin, nickname } = {},
     displayLogin,
+    displayNickname,
     className,
+    tooltipClassName,
     ...rProps
   } = props;
+
   const hasNickname = nickname && nickname !== '';
-
-  if (hasNickname || (firstName === null && lastName === null)) {
-    return <span {...props}>{nickname || duoLogin}</span>;
-  }
-
-  if (displayLogin) {
-    return (
-      <span className={classNames('truncate', className)} {...rProps}>
-        {usualFirstName || firstName} ({duoLogin}) {lastName}
-      </span>
-    );
-  }
+  const formattedName = [
+    displayNickname && hasNickname ? `@${nickname} |` : null,
+    usualFirstName || firstName,
+    displayLogin ? `(${duoLogin})` : null,
+    lastName,
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
-    <span className={classNames('truncate', className)} {...rProps}>
-      {usualFirstName || firstName} {lastName}
-    </span>
+    <ConditionalWrapper
+      condition={formattedName.length > 20}
+      trueWrapper={(children) => (
+        <Tooltip
+          className={classNames('w-full', tooltipClassName)}
+          text={formattedName}
+          color="black"
+          size="xs"
+          direction="top"
+        >
+          {children}
+        </Tooltip>
+      )}
+    >
+      <span className={classNames('truncate', className)} {...rProps}>
+        {formattedName}
+      </span>
+    </ConditionalWrapper>
   );
 };
 
