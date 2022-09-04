@@ -5,6 +5,7 @@ import {
   SetStateAction,
   useCallback,
   useEffect,
+  useRef,
   useState,
 } from 'react';
 import { parseJSONSafely } from './jsonParser';
@@ -19,7 +20,11 @@ declare global {
 
 type SetValue<T> = Dispatch<SetStateAction<T>>;
 
-function useLocalStorage<T>(key: string, initialValue: T): [T, SetValue<T>] {
+function useLocalStorage<T>(
+  key: string,
+  initialValue: T
+): [T, SetValue<T>, boolean] {
+  const alreadyPresentOnLocalStorage = useRef(true);
   // Get from local storage then
   // parse stored json or return initialValue
   const readValue = useCallback((): T => {
@@ -32,6 +37,7 @@ function useLocalStorage<T>(key: string, initialValue: T): [T, SetValue<T>] {
       const item = window.localStorage.getItem(key);
       return item ? (parseJSONSafely(item) as T) : initialValue;
     } catch (error) {
+      alreadyPresentOnLocalStorage.current = false;
       return initialValue;
     }
   }, [initialValue, key]);
@@ -61,6 +67,7 @@ function useLocalStorage<T>(key: string, initialValue: T): [T, SetValue<T>] {
       // We dispatch a custom event so every useLocalStorage hook are notified
       window.dispatchEvent(new Event('local-storage'));
     } catch (error) {
+      alreadyPresentOnLocalStorage.current = false;
       return initialValue;
     }
   });
@@ -87,7 +94,7 @@ function useLocalStorage<T>(key: string, initialValue: T): [T, SetValue<T>] {
   // See: useLocalStorage()
   useEventListener('local-storage', handleStorageChange);
 
-  return [storedValue, setValue];
+  return [storedValue, setValue, alreadyPresentOnLocalStorage.current];
 }
 
 export default useLocalStorage;

@@ -1,5 +1,6 @@
 export const LocalStorageKeys = {
-  MyCurrentCampusName: 'my-current-campus-name',
+  MyCurrentCampusName: 's42.my-current-campus-name',
   NewFeatureReadStatus: (feature: string) =>
-    `new-feature-read-status-${feature}`,
+    `s42.new-feature-read-status-${feature}`,
+  Settings: 's42.your-settings',
 } as const;
