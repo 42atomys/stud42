@@ -1,0 +1,4 @@
+scalar UUID
+scalar Any
+scalar Time
+scalar Cursor

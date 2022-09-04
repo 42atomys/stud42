@@ -1,0 +1,3 @@
+directive @authzByPolicy(policy: POLICY) on FIELD_DEFINITION
+directive @authenticated on FIELD_DEFINITION
+directive @extraStructTag on FIELD_DEFINITION

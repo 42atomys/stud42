@@ -1,17 +1,3 @@
-scalar UUID
-
-scalar Any
-
-scalar Time
-
-scalar Cursor
-
-directive @authzByPolicy(policy: POLICY) on FIELD_DEFINITION
-
-directive @authenticated on FIELD_DEFINITION
-
-directive @extraStructTag on FIELD_DEFINITION
-
 enum POLICY {
   SERVICE_TOKEN
   NONE
@@ -24,6 +10,28 @@ enum FLAG {
   SPONSOR
   BETA
   DISCORD
+}
+
+enum PROVIDER {
+  GITHUB
+  DUO
+  DISCORD
+}
+
+enum ACCOUNT_TYPE {
+  OAUTH
+}
+
+enum Theme {
+  AUTO
+  DARK
+  LIGHT
+}
+
+enum ClusterMapAvatarSize {
+  AUTO
+  MEDIUM
+  LARGE
 }
 
 type PageInfo {
@@ -58,6 +66,7 @@ type User {
   isFollower: Boolean!
   following: [User]!
   followers: [User]!
+  settings: Settings! @authenticated
 }
 
 type Account {
@@ -112,12 +121,12 @@ type LocationEdge {
 }
 
 type Settings {
-  theme: THEME!
+  theme: Theme!
+  clusterMapAvatarSize: ClusterMapAvatarSize!
 }
 
 type Query {
   me: User! @authenticated
-  mySettings: Settings! @authenticated
   searchUser(query: String!, onlyOnline: Boolean = false): [User!]!
     @authenticated
 
@@ -194,21 +203,6 @@ input LinkAccountInput {
 }
 
 input SettingsInput {
-  theme: THEME!
-}
-
-enum PROVIDER {
-  GITHUB
-  DUO
-  DISCORD
-}
-
-enum ACCOUNT_TYPE {
-  OAUTH
-}
-
-enum THEME {
-  AUTO
-  DARK
-  LIGHT
+  theme: Theme!
+  clusterMapAvatarSize: ClusterMapAvatarSize!
 }
