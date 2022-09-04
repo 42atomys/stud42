@@ -4,9 +4,13 @@
     {
       "type": "shell",
       "command": "make -f build/Makefile generate",
-      "problemMatcher": [],
-      "label": "[GEN] Generate API code",
+      "problemMatcher": ["$go"],
+      "label": "Generate API code",
       "detail": "Generate code on API",
+      "icon": {
+        "id": "rocket",
+        "color": "terminal.ansiYellow"
+      },
       "presentation": {
         "focus": true,
         "panel": "dedicated"
@@ -15,41 +19,57 @@
     {
       "type": "shell",
       "command": "yarn --cwd web/ui generate",
-      "problemMatcher": [],
-      "label": "[GEN] Generate Interface code",
+      "problemMatcher": ["$tsc"],
+      "label": "Generate Interface code",
       "detail": "Generate code on Interface",
+      "icon": {
+        "id": "rocket",
+        "color": "terminal.ansiYellow"
+      },
       "presentation": {
         "focus": true,
         "panel": "dedicated"
       }
     },
     {
-      "label": "[GEN] Generate all",
+      "label": "Generate all",
       "detail": "Generate the code on API and on the Interface",
       "dependsOrder": "sequence",
-      "dependsOn": ["[GEN] Generate API code", "[GEN] Generate Interface code"],
-      "problemMatcher": []
+      "dependsOn": ["Generate API code", "Generate Interface code"],
+      "icon": {
+        "id": "rocket",
+        "color": "terminal.ansiYellow"
+      },
+      "problemMatcher": ["$go"]
     },
     {
-      "label": "[PROCESS] Start API",
+      "label": "Start API",
       "detail": "Start API in background",
       "type": "process",
       "isBackground": true,
       "command": "env",
       "args": ["APP_NAME=api", "go", "run", "main.go", "serve", "api", "-g"],
-      "problemMatcher": [],
+      "problemMatcher": ["$go"],
+      "icon": {
+        "id": "symbol-event",
+        "color": "terminal.ansiCyan"
+      },
       "presentation": {
         "focus": true,
         "panel": "dedicated"
       }
     },
     {
-      "label": "[PROCESS] Start Interface",
+      "label": "Start Interface",
       "detail": "Start Interface in background",
       "type": "process",
       "isBackground": true,
       "command": "yarn",
       "args": ["--cwd", "web/ui", "dev"],
+      "icon": {
+        "id": "symbol-event",
+        "color": "terminal.ansiCyan"
+      },
       "presentation": {
         "focus": true,
         "panel": "dedicated"
@@ -57,22 +77,33 @@
       "problemMatcher": ["$tsc"]
     },
     {
-      "label": "[LINT] Lint API",
+      "label": "Lint API",
       "detail": "Lint the API with golangci-lint",
       "type": "shell",
       "command": "golangci-lint",
       "args": ["run"],
+      "problemMatcher": ["$go"],
+      "icon": {
+        "id": "symbol-customcolor",
+        "color": "terminal.ansiMagenta"
+      },
       "presentation": {
         "focus": true,
         "panel": "dedicated"
       }
     },
     {
-      "label": "[LINT] Lint Interface",
-      "detail": "Autofix and lint the Interface",
+      "label": "Lint Interface",
+      "detail": "Lint (autofix with make-pretty) the Interface with tslint, nextjs lint and prettier",
       "type": "shell",
+      "dependsOrder": "sequence",
+      "dependsOn": ["Format Interface"],
       "command": "yarn",
       "args": ["--cwd", "web/ui", "style:all"],
+      "icon": {
+        "id": "symbol-customcolor",
+        "color": "terminal.ansiMagenta"
+      },
       "presentation": {
         "focus": true,
         "panel": "dedicated"
@@ -80,11 +111,15 @@
       "problemMatcher": ["$tsc"]
     },
     {
-      "label": "[FORMAT] Format Interface",
+      "label": "Format Interface",
       "detail": "Format the Interface",
       "type": "shell",
       "command": "yarn",
       "args": ["--cwd", "web/ui", "make-pretty"],
+      "icon": {
+        "id": "circuit-board",
+        "color": "terminal.ansiGreen"
+      },
       "presentation": {
         "focus": true,
         "panel": "dedicated"
@@ -92,18 +127,16 @@
       "problemMatcher": ["$tsc"]
     },
     {
-      "label": "[LINT] Lint the Interface (autofix)",
-      "detail": "Format the Interface",
-      "dependsOrder": "sequence",
-      "dependsOn": ["[FORMAT] Format Interface", "[LINT] Lint Interface"],
-      "problemMatcher": ["$tsc"]
-    },
-    {
-      "label": "[DEV] Run postgresql cli (psql)",
+      "label": "Run postgresql cli (psql)",
       "detail": "Execute psql on container",
       "type": "process",
       "isBackground": true,
       "command": "psql",
+      "icon": {
+        "id": "debug-start",
+        "color": "terminal.ansiRed"
+      },
+      "problemMatcher": [],
       "args": ["-h", "database", "-U", "postgres", "-d", "s42"],
       "presentation": {
         "focus": true,
