@@ -53,20 +53,17 @@ func (r *mutationResolver) DeleteFriendship(ctx context.Context, userID uuid.UUI
 	return true, nil
 }
 
-func (r *mutationResolver) UpdateSettings(ctx context.Context, input typesgen.SettingsInput) (*typesgen.Settings, error) {
+func (r *mutationResolver) UpdateSettings(ctx context.Context, input typesgen.SettingsInput) (*gotype.Settings, error) {
 	cu, err := CurrentUserFromContext(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	cu.Settings = gotype.Settings{
-		Theme: gotype.Theme(input.Theme),
-	}
-
-	if _, err := r.client.User.UpdateOne(cu).Save(ctx); err != nil {
+	updatedUser, err := r.client.User.UpdateOne(cu).SetSettings(gotype.Settings(input)).Save(ctx)
+	if err != nil {
 		return nil, err
 	}
-	return r.Query().MySettings(ctx)
+	return &updatedUser.Settings, nil
 }
 
 func (r *mutationResolver) InternalCreateUser(ctx context.Context, input typesgen.CreateUserInput) (uuid.UUID, error) {
@@ -138,17 +135,6 @@ func (r *mutationResolver) InviteOnDiscord(ctx context.Context) (bool, error) {
 
 func (r *queryResolver) Me(ctx context.Context) (*generated.User, error) {
 	return CurrentUserFromContext(ctx)
-}
-
-func (r *queryResolver) MySettings(ctx context.Context) (*typesgen.Settings, error) {
-	cu, err := CurrentUserFromContext(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	return &typesgen.Settings{
-		Theme: typesgen.Theme(cu.Settings.Theme),
-	}, nil
 }
 
 func (r *queryResolver) SearchUser(ctx context.Context, query string, onlyOnline *bool) ([]*generated.User, error) {
