@@ -23,8 +23,8 @@ const AwesomenessSettingPage: NextPage<PageProps> = () => {
             Really? You thought you could hack the system like that? I saw you
             coming, kid!
             <br />
-            It will be ready soon but for now don't try, I've already thought
-            about it
+            It will be ready soon but for now don&apos;t try, I&apos;ve already
+            thought about it
           </p>
         </div>
       </SettingsCategory>
