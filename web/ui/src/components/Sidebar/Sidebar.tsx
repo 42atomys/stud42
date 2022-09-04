@@ -136,12 +136,7 @@ export const Sidebar = ({
               name="Github"
             />
           )}
-          <MenuItem
-            href="/auth/signout"
-            icon="fa-sign-out"
-            name="Logout"
-            tooltipColor="red"
-          />
+          <MenuItem href="/settings" icon="fa-cog" name="Settings" />
           <span className="text-sm text-slate-400 dark:text-slate-600">
             {publicRuntimeConfig.appVersion}
           </span>
