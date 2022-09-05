@@ -31,7 +31,7 @@
     "@grpc/grpc-js": "^1.6.12",
     "@headlessui/react": "^1.6.4",
     "@sentry/nextjs": "^7.11.1",
-    "@sentry/tracing": "^7.11.1",
+    "@sentry/tracing": "^7.12.1",
     "@types/uuid": "^8.3.4",
     "axios": "^0.27.2",
     "classnames": "^2.3.1",
