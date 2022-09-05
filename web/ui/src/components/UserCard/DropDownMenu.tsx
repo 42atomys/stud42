@@ -38,7 +38,7 @@ const DropdownMenu: DropdownMenuComponent = ({
         >
           <Menu.Items
             className={classNames(
-              'absolute right-0 w-56 mt-2 origin-top-right bg-white dark:bg-slate-900 divide-y divide-gray-100 dark:divide-slate-800/75 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none',
+              'absolute right-0 w-56 mt-2 origin-top-right bg-slate-50 dark:bg-slate-900 divide-y divide-gray-100 dark:divide-slate-800/75 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none',
               buttonAlwaysShow ? 'visible' : 'invisible group-hover:visible'
             )}
           >

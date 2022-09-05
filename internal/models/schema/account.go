@@ -28,6 +28,7 @@ func (Account) Fields() []ent.Field {
 		field.String("access_token").Unique().NotEmpty(),
 		field.String("scope").NotEmpty().MaxLen(255),
 		field.UUID("user_id", uuid.UUID{}),
+		field.Bool("public").Default(true),
 	}
 }
 

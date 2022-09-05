@@ -34,6 +34,8 @@ export const Tooltip: TooltipComponent = ({
       color === 'green',
     'from-red-400 dark:from-red-600 to-red-500 dark:to-red-500':
       color === 'red',
+    'from-fuchsia-400 dark:from-fuchsia-600 to-fuchsia-500 dark:to-fuchsia-500':
+      color === 'fuchsia',
     'from-orange-400 dark:from-orange-700 to-orange-500 dark:to-orange-600':
       color === 'orange',
     'bg-black': color === 'black',
@@ -59,6 +61,7 @@ export const Tooltip: TooltipComponent = ({
     'bg-indigo-500 dark:bg-indigo-600': color === 'info',
     'bg-green-500 dark:bg-green-600': color === 'green',
     'bg-red-500 dark:bg-red-600': color === 'red',
+    'bg-fuchsia-500 dark:bg-fuchsia-600': color === 'fuchsia',
     'bg-orange-500 dark:bg-orange-700': color === 'orange',
     'bg-black text-slate-100 dark:text-slate-300': color === 'black',
     // Sizes

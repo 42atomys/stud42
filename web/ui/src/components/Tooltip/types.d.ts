@@ -5,7 +5,7 @@ export type TooltipProps = {
   subText?: string | React.ReactNode;
   showArrow?: boolean = true;
   size?: 'xs' | 'sm' | 'md' = 'md';
-  color?: 'red' | 'orange' | 'green' | 'info' | 'black' = 'black';
+  color?: 'red' | 'orange' | 'green' | 'info' | 'black' | 'fuchsia' = 'black';
   direction?: 'top' | 'bottom' | 'left' | 'right';
   allowInteractions?: boolean = false;
 };

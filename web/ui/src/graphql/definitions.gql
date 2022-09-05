@@ -112,11 +112,20 @@ mutation deleteFriendship($userID: UUID!) {
   deleteFriendship(userID: $userID)
 }
 
-# query me {
-#   me {
-#     ...UserAccountsData
-#   }
-# }
+mutation updateSettings($input: SettingsInput!) {
+  updateSettings(input: $input) {
+    ...ApparenceSettings
+  }
+}
+
+query myApparenceSettings {
+  me {
+    id
+    settings {
+      ...ApparenceSettings
+    }
+  }
+}
 
 query meWithFlags {
   me {
@@ -230,4 +239,9 @@ fragment CampusBasicData on Campus {
   name
   city
   country
+}
+
+fragment ApparenceSettings on Settings {
+  theme
+  clusterMapAvatarSize
 }

@@ -2,7 +2,7 @@ import { Head, Html, Main, NextScript } from 'next/document';
 
 export default function Document() {
   return (
-    <Html className="bg-white dark:bg-slate-900">
+    <Html>
       <Head>
         <link
           rel="apple-touch-icon"

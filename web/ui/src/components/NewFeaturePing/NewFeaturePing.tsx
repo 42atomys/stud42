@@ -30,7 +30,7 @@ export const NewFeaturePing = ({ featureName }: { featureName: string }) => {
         onClick={() => setVisible(false)}
       >
         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
-        <span className="relative inline-flex rounded-full w-[10px] h-[10px] bg-indigo-500"></span>
+        <span className="relative inline-flex rounded-full w-[10px] h-[10px] bg-indigo-400 dark:bg-indigo-500"></span>
       </span>
     </Tooltip>
   );
