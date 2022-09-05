@@ -19,6 +19,7 @@ import (
 	"atomys.codes/stud42/internal/models/generated/campus"
 	"atomys.codes/stud42/internal/models/generated/location"
 	"atomys.codes/stud42/internal/models/generated/user"
+	"atomys.codes/stud42/internal/models/gotype"
 	"atomys.codes/stud42/pkg/utils"
 	"entgo.io/ent/dialect/sql"
 	"github.com/google/uuid"
@@ -50,6 +51,19 @@ func (r *mutationResolver) DeleteFriendship(ctx context.Context, userID uuid.UUI
 		return false, err
 	}
 	return true, nil
+}
+
+func (r *mutationResolver) UpdateSettings(ctx context.Context, input typesgen.SettingsInput) (*gotype.Settings, error) {
+	cu, err := CurrentUserFromContext(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	updatedUser, err := r.client.User.UpdateOne(cu).SetSettings(gotype.Settings(input)).Save(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return &updatedUser.Settings, nil
 }
 
 func (r *mutationResolver) InternalCreateUser(ctx context.Context, input typesgen.CreateUserInput) (uuid.UUID, error) {

@@ -1,17 +1,3 @@
-scalar UUID
-
-scalar Any
-
-scalar Time
-
-scalar Cursor
-
-directive @authzByPolicy(policy: POLICY) on FIELD_DEFINITION
-
-directive @authenticated on FIELD_DEFINITION
-
-directive @extraStructTag on FIELD_DEFINITION
-
 enum POLICY {
   SERVICE_TOKEN
   NONE
@@ -24,6 +10,28 @@ enum FLAG {
   SPONSOR
   BETA
   DISCORD
+}
+
+enum PROVIDER {
+  GITHUB
+  DUO
+  DISCORD
+}
+
+enum ACCOUNT_TYPE {
+  OAUTH
+}
+
+enum Theme {
+  AUTO
+  DARK
+  LIGHT
+}
+
+enum ClusterMapAvatarSize {
+  AUTO
+  MEDIUM
+  LARGE
 }
 
 type PageInfo {
@@ -58,6 +66,7 @@ type User {
   isFollower: Boolean!
   following: [User]!
   followers: [User]!
+  settings: Settings! @authenticated
 }
 
 type Account {
@@ -111,6 +120,11 @@ type LocationEdge {
   cursor: Cursor!
 }
 
+type Settings {
+  theme: Theme!
+  clusterMapAvatarSize: ClusterMapAvatarSize!
+}
+
 type Query {
   me: User! @authenticated
   searchUser(query: String!, onlyOnline: Boolean = false): [User!]!
@@ -144,6 +158,8 @@ type Query {
 type Mutation {
   createFriendship(userID: UUID!): Boolean! @authenticated
   deleteFriendship(userID: UUID!): Boolean! @authenticated
+
+  updateSettings(input: SettingsInput!): Settings! @authenticated
 
   internalCreateUser(input: CreateUserInput!): UUID!
     @authzByPolicy(policy: SERVICE_TOKEN)
@@ -186,12 +202,7 @@ input LinkAccountInput {
   userID: String!
 }
 
-enum PROVIDER {
-  GITHUB
-  DUO
-  DISCORD
-}
-
-enum ACCOUNT_TYPE {
-  OAUTH
+input SettingsInput {
+  theme: Theme!
+  clusterMapAvatarSize: ClusterMapAvatarSize!
 }

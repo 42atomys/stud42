@@ -40,7 +40,7 @@ directives:
 # if they match it will use them, otherwise it will generate them.
 autobind:
   - "atomys.codes/stud42/internal/models/generated"
-
+  - "atomys.codes/stud42/internal/models/gotype"
 
 # This section declares type mapping between the GraphQL and go type systems
 #
@@ -50,4 +50,4 @@ autobind:
 models:
   UUID:
     model:
-    - atomys.codes/stud42/internal/models.UUID
+      - atomys.codes/stud42/internal/models.UUID

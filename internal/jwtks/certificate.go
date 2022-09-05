@@ -5,7 +5,6 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"errors"
-	"io/ioutil"
 	"os"
 
 	"github.com/rs/zerolog/log"
@@ -34,14 +33,14 @@ func SetCertificates(privateKeyPath, publicKeyPath string) error {
 		return errors.New("no certificates given. At least one is required")
 	}
 
-	privateBytes, err := ioutil.ReadFile(privateKeyPath)
+	privateBytes, err := os.ReadFile(privateKeyPath)
 	if err != nil && !errors.Is(err, os.ErrNotExist) {
 		return err
 	} else if err != nil && errors.Is(err, os.ErrNotExist) {
 		log.Warn().Msg("No private key given, no tokens can be generated")
 	}
 
-	publicBytes, err := ioutil.ReadFile(publicKeyPath)
+	publicBytes, err := os.ReadFile(publicKeyPath)
 	if err != nil && !errors.Is(err, os.ErrNotExist) {
 		return err
 	}

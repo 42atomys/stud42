@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { SidebarContext } from './SidebarContext';
 
 /**
@@ -10,10 +10,9 @@ export const SidebarProvider = ({
   children: React.ReactNode;
 }): JSX.Element => {
   const [open, setOpen] = useState(false);
+  const store = useMemo(() => ({ open, setOpen }), [open]);
 
   return (
-    <SidebarContext.Provider value={{ open, setOpen }}>
-      {children}
-    </SidebarContext.Provider>
+    <SidebarContext.Provider value={store}>{children}</SidebarContext.Provider>
   );
 };

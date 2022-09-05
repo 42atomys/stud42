@@ -11,12 +11,15 @@ const CDN_URL = 'https://cdn.intra.42.fr/users/{}.jpg';
  * Size classes to define the size of avatar from simplified props
  */
 const sizeClasses = {
-  xs: 'w-[16px] h-[16px]',
-  sm: 'w-[24px] h-[24px]',
-  md: 'w-[32px] h-[32px]',
-  xl: 'w-[42px] h-[42px]',
-  xxl: 'w-[56px] h-[56px]',
-  xxxl: 'w-[96px] h-[96px]',
+  xs: '[--avatar-size:16px]',
+  sm: '[--avatar-size:24px]',
+  md: '[--avatar-size:32px]',
+  xl: '[--avatar-size:42px]',
+  xxl: '[--avatar-size:56px]',
+  xxxl: '[--avatar-size:96px]',
+  'auto-based-on-witdth': '[--avatar-size:calc(1rem+1.3vw-(370px/100))]',
+  'auto-based-on-steps':
+    '[--avatar-size:16px] lg:[--avatar-size:32px] 2xl:[--avatar-size:42px] 4xl:[--avatar-size:56px]',
 };
 
 export const Avatar = ({
@@ -34,7 +37,7 @@ export const Avatar = ({
       className={classNames(
         className,
         rounded ? 'rounded-full' : 'rounded',
-        'bg-clip-border bg-center bg-cover bg-slate-900/30',
+        'bg-clip-border bg-center bg-cover bg-slate-900/30 w-[var(--avatar-size)] h-[var(--avatar-size)]',
         sizeClasses[size]
       )}
     />
