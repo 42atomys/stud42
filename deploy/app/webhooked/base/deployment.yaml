@@ -4,9 +4,9 @@ metadata:
   name: webhooked
   labels:
     app: webhooked
-    version: '0.6.3'
+    version: '0.6.4'
     app.kubernetes.io/name: webhooked
-    app.kubernetes.io/version: '0.6.3'
+    app.kubernetes.io/version: '0.6.4'
 spec:
   replicas: 1
   revisionHistoryLimit: 2
@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
       - name: webhooked
-        image: atomys/webhooked:0.6.3
+        image: atomys/webhooked:0.6.4
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
