@@ -85,6 +85,7 @@ export const ClusterWorkspaceWithUser = ({
               login={location.user.duoLogin}
               duoAvatarURL={location.user.duoAvatarURL}
               rounded={false}
+              flags={location.user.flags}
               size={
                 settings.clusterMapAvatarSize === ClusterMapAvatarSize.LARGE
                   ? 'xl'

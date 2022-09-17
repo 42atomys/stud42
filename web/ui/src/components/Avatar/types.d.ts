@@ -1,3 +1,5 @@
+import { User } from '@graphql.d';
+
 type AvatarSize =
   | 'xs'
   | 'sm'
@@ -18,4 +20,5 @@ export type AvatarProps = {
   size?: AvatarSize;
   rounded?: boolean;
   className?: string;
+  flags?: User['flags'];
 };
