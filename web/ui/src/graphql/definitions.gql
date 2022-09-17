@@ -171,10 +171,7 @@ query clusterView($campusName: String!, $identifierPrefix: String!) {
         identifier
         user {
           id
-          duoLogin
-          firstName
-          usualFirstName
-          lastName
+          ...UserIdentyData
           duoAvatarURL
           isMe
           isSwimmer
@@ -220,6 +217,7 @@ fragment UserIdentyData on User {
   firstName
   usualFirstName
   lastName
+  flags
 }
 
 fragment LocationBasicData on Location {

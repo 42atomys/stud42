@@ -1,3 +1,4 @@
+import { Flag } from '@graphql.d';
 import classNames from 'classnames';
 import type { AvatarProps } from './types';
 
@@ -25,6 +26,7 @@ const sizeClasses = {
 export const Avatar = ({
   login,
   duoAvatarURL,
+  flags,
   size = 'sm',
   rounded = false,
   className,
@@ -38,7 +40,11 @@ export const Avatar = ({
         className,
         rounded ? 'rounded-full' : 'rounded',
         'bg-clip-border bg-center bg-cover bg-slate-900/30 w-[var(--avatar-size)] h-[var(--avatar-size)]',
-        sizeClasses[size]
+        'outline-offset-2 outline-2',
+        sizeClasses[size],
+        {
+          'outline outline-fuchsia-500': flags?.includes(Flag.SPONSOR),
+        }
       )}
     />
   );

@@ -59,7 +59,7 @@ export const SettingsLayout: NextPage<PageProps> = ({
                   <Tooltip
                     text="Sponsors Only"
                     subText="This feature is only accessible for Github Sponsors."
-                    direction="right"
+                    direction="left"
                     size="sm"
                     color="fuchsia"
                   >
@@ -84,24 +84,28 @@ export const SettingsLayout: NextPage<PageProps> = ({
                 // href="/settings/about"
                 icon="fa-info-circle"
                 name="About"
+                rightText="Soon"
               />
               <MenuItem
                 active={page === 'help'}
                 // href="/settings/help"
                 icon="fa-question-circle"
                 name="Help"
+                rightText="Soon"
               />
               <MenuItem
                 active={page === 'terms'}
                 // href="/settings/terms"
                 icon="fa-file-alt"
                 name="Terms"
+                rightText="Soon"
               />
               <MenuItem
                 active={page === 'privacy'}
                 // href="/settings/privacy"
                 icon="fa-file-alt"
                 name="Privacy"
+                rightText="Soon"
               />
             </MenuCategory>
             <hr className="my-2 border-slate-200 dark:border-slate-800" />
