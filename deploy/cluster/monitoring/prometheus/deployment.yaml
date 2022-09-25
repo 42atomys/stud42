@@ -28,9 +28,17 @@ spec:
         runAsUser: 1000
         runAsNonRoot: true
       serviceAccountName: prometheus
+      initContainers:
+      - name: "init-chown-data"
+        image: "busybox"
+        # 1000 is the user that prometheus uses.
+        command: ["chown", "-R", "1000:2000", /prometheus]
+        volumeMounts:
+        - name: prometheus-storage-volume
+          mountPath: /prometheus
       containers:
       - name: prometheus
-        image: prom/prometheus
+        image: prom/prometheus:v2.37.1
         args:
           - '--storage.tsdb.path=/prometheus'
           - '--config.file=/etc/prometheus/prometheus.yml'
