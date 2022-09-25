@@ -23,6 +23,10 @@ spec:
         prometheus.io/scrape: "true"
         prometheus.io/port: "9090"
     spec:
+      securityContext:
+        fsGroup: 2000
+        runAsUser: 1000
+        runAsNonRoot: true
       serviceAccountName: prometheus
       containers:
       - name: prometheus
@@ -37,8 +41,8 @@ spec:
         volumeMounts:
         - name: prometheus-config-volume
           mountPath: /etc/prometheus
-        # - name: prometheus-storage-volume
-        #   mountPath: /prometheus
+        - name: prometheus-storage-volume
+          mountPath: /prometheus
         resources:
           requests:
             cpu: 100m
@@ -52,6 +56,6 @@ spec:
         configMap:
             defaultMode: 420
             name: prometheus-config
-      # - name: prometheus-storage-volume
-      #   persistentVolumeClaim:
-      #       claimName: prometheus-pvc
+      - name: prometheus-storage-volume
+        persistentVolumeClaim:
+            claimName: prometheus-pvc
