@@ -27,12 +27,31 @@ spec:
         - mountPath: /var/lib/grafana
           name: grafana-pv
       containers:
+        # - name: renderer
+        #   image: grafana/grafana-image-renderer:3.6.1
+        #   resources:
+        #     requests:
+        #       cpu: 700m
+        #       memory: 1Gi
+        #     limits:
+        #       cpu: 800m
+        #       memory: 1500Mi
         - name: grafana
-          image: grafana/grafana:8.5.2
+          image: grafana/grafana:9.1.6
           imagePullPolicy: IfNotPresent
           env:
             - name: GF_SERVER_ROOT_URL
               value: https://dashboard.s42.app
+            # - name: GF_RENDERING_SERVER_URL
+            #   value: http://127.0.0.1:8081/render
+            # - name: GF_RENDERING_CALLBACK_URL
+            #   value: http://grafana:3000/
+            # - name: GF_UNIFIED_ALERTING_SCREENSHOTS_CAPTURE
+            #   value: "true"
+            # - name: GF_UNIFIED_ALERTING_ENABLED
+            #   value: "true"
+            # - name: GF_LOG_FILTERS
+            #   value: rendering:debug
           ports:
             - containerPort: 3000
               name: http-grafana
