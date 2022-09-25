@@ -8,16 +8,7 @@ metadata:
   namespace: monitoring
 data:
   prometheus.rules: |-
-    groups:
-    - name: test alert pod memory
-      rules:
-      - alert: High Pod Memory
-        expr: sum(container_memory_usage_bytes) > 1
-        for: 1m
-        labels:
-          severity: slack
-        annotations:
-          summary: High Memory Usage
+
   prometheus.yml: |-
     global:
       scrape_interval: 5s
