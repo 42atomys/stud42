@@ -53,11 +53,11 @@ spec:
           mountPath: /prometheus
         resources:
           requests:
-            cpu: 100m
-            memory: 500Mi
+            cpu: 400m
+            memory: 800Mi
           limits:
-            cpu: 250m
-            memory: 750Mi
+            cpu: 500m
+            memory: 1Gi
       restartPolicy: Always
       volumes:
       - name: prometheus-config-volume
