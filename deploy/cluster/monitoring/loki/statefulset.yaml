@@ -5,7 +5,7 @@ metadata:
   namespace: monitoring
   labels:
     app: loki
-    version: '2.6.1'
+    version: "2.6.1"
 spec:
   podManagementPolicy: OrderedReady
   replicas: 1
@@ -13,7 +13,7 @@ spec:
   selector:
     matchLabels:
       app: loki
-      version: '2.6.1'
+      version: "2.6.1"
   serviceName: loki-headless
   updateStrategy:
     type: RollingUpdate
@@ -21,65 +21,65 @@ spec:
     metadata:
       labels:
         app: loki
-        version: '2.6.1'
+        version: "2.6.1"
       annotations:
         prometheus.io/port: http-metrics
         prometheus.io/scrape: "true"
       creationTimestamp: null
     spec:
       containers:
-      - name: loki
-        args:
-        - -config.file=/etc/loki/loki.yaml
-        image: grafana/loki:2.6.1
-        imagePullPolicy: IfNotPresent
-        livenessProbe:
-          failureThreshold: 3
-          httpGet:
-            path: /ready
-            port: http-metrics
-            scheme: HTTP
-          initialDelaySeconds: 45
-          periodSeconds: 10
-          successThreshold: 1
-          timeoutSeconds: 1
-        ports:
-        - containerPort: 3100
-          name: http-metrics
-          protocol: TCP
-        - containerPort: 9095
-          name: grpc
-          protocol: TCP
-        - containerPort: 7946
-          name: memberlist-port
-          protocol: TCP
-        readinessProbe:
-          failureThreshold: 3
-          httpGet:
-            path: /ready
-            port: http-metrics
-            scheme: HTTP
-          initialDelaySeconds: 45
-          periodSeconds: 10
-          successThreshold: 1
-          timeoutSeconds: 1
-        resources:
-          requests:
-            cpu: 100m
-            memory: 250Mi
-          limits:
-            memory: 250m
-        securityContext:
-          readOnlyRootFilesystem: true
-        terminationMessagePath: /dev/termination-log
-        terminationMessagePolicy: File
-        volumeMounts:
-        - mountPath: /tmp
-          name: tmp
-        - mountPath: /etc/loki
-          name: config
-        - mountPath: /data
-          name: storage
+        - name: loki
+          args:
+            - -config.file=/etc/loki/loki.yaml
+          image: grafana/loki:2.6.1
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /ready
+              port: http-metrics
+              scheme: HTTP
+            initialDelaySeconds: 45
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          ports:
+            - containerPort: 3100
+              name: http-metrics
+              protocol: TCP
+            - containerPort: 9095
+              name: grpc
+              protocol: TCP
+            - containerPort: 7946
+              name: memberlist-port
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /ready
+              port: http-metrics
+              scheme: HTTP
+            initialDelaySeconds: 45
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            requests:
+              cpu: 100m
+              memory: 250Mi
+            limits:
+              memory: 300Gi
+          securityContext:
+            readOnlyRootFilesystem: true
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+            - mountPath: /tmp
+              name: tmp
+            - mountPath: /etc/loki
+              name: config
+            - mountPath: /data
+              name: storage
       restartPolicy: Always
       securityContext:
         fsGroup: 10001
@@ -88,12 +88,12 @@ spec:
         runAsUser: 10001
       terminationGracePeriodSeconds: 4800
       volumes:
-      - emptyDir: {}
-        name: tmp
-      - name: config
-        configMap:
+        - name: tmp
+          emptyDir: {}
+        - name: config
+          configMap:
             defaultMode: 420
             name: loki-config
-      - name: storage
-        persistentVolumeClaim:
+        - name: storage
+          persistentVolumeClaim:
             claimName: loki-pvc
