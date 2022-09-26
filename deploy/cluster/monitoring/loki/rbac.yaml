@@ -1,0 +1,49 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: loki
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/instance: loki
+    app.kubernetes.io/name: loki
+    app.kubernetes.io/version: "2.6.1"
+rules:
+  - apiGroups:
+      - extensions
+    resourceNames:
+      - loki
+    resources:
+      - podsecuritypolicies
+    verbs:
+      - use
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: loki
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/instance: loki
+    app.kubernetes.io/name: loki
+    app.kubernetes.io/version: "2.6.1"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: loki
+subjects:
+  - kind: ServiceAccount
+    name: loki
+
+---
+apiVersion: v1
+automountServiceAccountToken: true
+kind: ServiceAccount
+metadata:
+  name: loki
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/instance: loki
+    app.kubernetes.io/name: loki
+    app.kubernetes.io/version: "2.6.1"

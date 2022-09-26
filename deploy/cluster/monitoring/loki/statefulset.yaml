@@ -25,14 +25,27 @@ spec:
       annotations:
         prometheus.io/port: http-metrics
         prometheus.io/scrape: "true"
-      creationTimestamp: null
     spec:
+      serviceAccountName: loki
+      initContainers:
+        - name: "init-chown-data"
+          image: "busybox"
+          # 1000 is the user that loki uses.
+          command: ["chown", "-R", "10001:10001", /data]
+          volumeMounts:
+            - name: storage
+              mountPath: /data
       containers:
         - name: loki
           args:
             - -config.file=/etc/loki/loki.yaml
           image: grafana/loki:2.6.1
           imagePullPolicy: IfNotPresent
+          securityContext:
+            runAsUser: 10001
+            runAsGroup: 10001
+            runAsNonRoot: true
+            readOnlyRootFilesystem: true
           livenessProbe:
             failureThreshold: 3
             httpGet:
@@ -69,8 +82,7 @@ spec:
               memory: 250Mi
             limits:
               memory: 300Gi
-          securityContext:
-            readOnlyRootFilesystem: true
+
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
           volumeMounts:
@@ -81,11 +93,6 @@ spec:
             - mountPath: /data
               name: storage
       restartPolicy: Always
-      securityContext:
-        fsGroup: 10001
-        runAsGroup: 10001
-        runAsNonRoot: true
-        runAsUser: 10001
       terminationGracePeriodSeconds: 4800
       volumes:
         - name: tmp
