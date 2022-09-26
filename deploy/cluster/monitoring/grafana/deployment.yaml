@@ -20,12 +20,12 @@ spec:
         supplementalGroups:
           - 0
       initContainers:
-      - name: volume-mount-hack
-        image: busybox
-        command: ["sh", "-c", "chown -R 472:472 /var/lib/grafana"]
-        volumeMounts:
-        - mountPath: /var/lib/grafana
-          name: grafana-pv
+        - name: volume-mount-hack
+          image: busybox
+          command: ["sh", "-c", "chown -R 472:472 /var/lib/grafana"]
+          volumeMounts:
+            - mountPath: /var/lib/grafana
+              name: grafana-pv
       containers:
         # - name: renderer
         #   image: grafana/grafana-image-renderer:3.6.1
@@ -41,7 +41,7 @@ spec:
           imagePullPolicy: IfNotPresent
           env:
             - name: GF_SERVER_ROOT_URL
-              value: https://dashboard.s42.app
+              value: https://dashboards.s42.app
             # - name: GF_RENDERING_SERVER_URL
             #   value: http://127.0.0.1:8081/render
             # - name: GF_RENDERING_CALLBACK_URL
