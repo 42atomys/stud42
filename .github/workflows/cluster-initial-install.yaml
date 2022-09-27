@@ -1,5 +1,5 @@
-name: 'K8S Cluster - (Re)Install 🤖'
-on: 
+name: "K8S Cluster - (Re)Install 🤖"
+on:
   workflow_dispatch:
     inputs:
       install_istio:
@@ -47,199 +47,198 @@ jobs:
     runs-on: ubuntu-latest
     name: Install the core of the cluster
     steps:
-    - uses: actions/checkout@v3
-    - uses: azure/setup-kubectl@v3.0
-    - uses: azure/setup-helm@v3.3
-    - uses: azure/k8s-set-context@v3
-      with:
-        method: kubeconfig
-        kubeconfig: ${{ secrets.KUBECONFIG_ADMIN }}
-        cluster-type: generic
-    - uses: kobtea/setup-jsonnet-action@v1
-    - run: kubectl apply -f deploy/cluster/namespaces
-      if: ${{ github.event.inputs.install_namespaces == 'true' }} 
-    - run: ls -1 deploy/cluster/rbac/deployer*.yaml | xargs -l kubectl apply -f
-      if: ${{ github.event.inputs.install_deployer == 'true' }} 
-    - name: Install istio
-      if: ${{ github.event.inputs.install_istio == 'true' }} 
-      run: |
-        curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.13.3 sh -
-        mv istio-1.13.3/bin/istioctl /usr/local/bin/istioctl
-        /usr/local/bin/istioctl install -y \
-          --set components.pilot.k8s.strategy.rollingUpdate.maxUnavailable=0 \
-          --set components.pilot.k8s.strategy.rollingUpdate.maxSurge=1 \
-          --set components.pilot.k8s.resources.requests.cpu="500m" \
-          --set components.pilot.k8s.resources.requests.memory="1Gi" \
-          --set components.pilot.k8s.resources.limits.cpu="500m" \
-          --set components.pilot.k8s.resources.limits.memory="2Gi" \
-          --set meshConfig.defaultConfig.gatewayTopology.numTrustedProxies=2
-    - name: Install cert-manager
-      if: ${{ github.event.inputs.install_cert_manager == 'true' }} 
-      run: |
-        kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.8.0/cert-manager.yaml
-    - name: Install cert-manager-webhook-ovh
-      if: ${{ github.event.inputs.install_cert_manager == 'true' }} 
-      run: |
-        git clone https://github.com/baarde/cert-manager-webhook-ovh.git
-        cd cert-manager-webhook-ovh
-        helm upgrade -n cert-manager --install cert-manager-webhook-ovh ./deploy/cert-manager-webhook-ovh --set groupName='acme.s42.app'
-    - name: Create ovh-credentials secrets for cert-manager
-      if: ${{ github.event.inputs.install_cert_manager == 'true' }} 
-      run: |
-        kubectl delete secret -n cert-manager ovh-credentials --ignore-not-found
-        kubectl create secret -n cert-manager generic ovh-credentials --from-literal=OVH_APPLICATION_KEY=${{ secrets.SECRET__OVH_CREDENTIALS_SECRET_KEY }}
-    - name: Deploy cert-manager issuers & certificates
-      if: ${{ github.event.inputs.install_issuers_and_certificates == 'true' }} 
-      run: |
-        kubectl apply -f deploy/cluster/cert-manager/issuers
-        kubectl apply -f deploy/cluster/cert-manager/certificates
-        kubectl apply -f deploy/cluster/istio/gateways
-    - name: Install Prometheus Operator
-      if: ${{ github.event.inputs.install_monitoring == 'true' }} 
-      run: |
-        find deploy/cluster/monitoring/. -type f -name '*.yaml' | xargs -l kubectl apply -f
+      - uses: actions/checkout@v3
+      - uses: azure/setup-kubectl@v3.0
+      - uses: azure/setup-helm@v3.3
+      - uses: azure/k8s-set-context@v3
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBECONFIG_ADMIN }}
+          cluster-type: generic
+      - uses: kobtea/setup-jsonnet-action@v1
+      - run: kubectl apply -f deploy/cluster/namespaces
+        if: ${{ github.event.inputs.install_namespaces == 'true' }}
+      - run: ls -1 deploy/cluster/rbac/deployer*.yaml | xargs -l kubectl apply -f
+        if: ${{ github.event.inputs.install_deployer == 'true' }}
+      - name: Install istio
+        if: ${{ github.event.inputs.install_istio == 'true' }}
+        run: |
+          curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.13.3 sh -
+          mv istio-1.13.3/bin/istioctl /usr/local/bin/istioctl
+          /usr/local/bin/istioctl install -y \
+            --set components.pilot.k8s.strategy.rollingUpdate.maxUnavailable=0 \
+            --set components.pilot.k8s.strategy.rollingUpdate.maxSurge=1 \
+            --set components.pilot.k8s.resources.requests.cpu="500m" \
+            --set components.pilot.k8s.resources.requests.memory="1Gi" \
+            --set components.pilot.k8s.resources.limits.cpu="500m" \
+            --set components.pilot.k8s.resources.limits.memory="2Gi" \
+            --set meshConfig.defaultConfig.gatewayTopology.numTrustedProxies=2
+      - name: Install cert-manager
+        if: ${{ github.event.inputs.install_cert_manager == 'true' }}
+        run: |
+          kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.8.0/cert-manager.yaml
+      - name: Install cert-manager-webhook-ovh
+        if: ${{ github.event.inputs.install_cert_manager == 'true' }}
+        run: |
+          git clone https://github.com/baarde/cert-manager-webhook-ovh.git
+          cd cert-manager-webhook-ovh
+          helm upgrade -n cert-manager --install cert-manager-webhook-ovh ./deploy/cert-manager-webhook-ovh --set groupName='acme.s42.app'
+      - name: Create ovh-credentials secrets for cert-manager
+        if: ${{ github.event.inputs.install_cert_manager == 'true' }}
+        run: |
+          kubectl delete secret -n cert-manager ovh-credentials --ignore-not-found
+          kubectl create secret -n cert-manager generic ovh-credentials --from-literal=OVH_APPLICATION_KEY=${{ secrets.SECRET__OVH_CREDENTIALS_SECRET_KEY }}
+      - name: Deploy cert-manager issuers & certificates
+        if: ${{ github.event.inputs.install_issuers_and_certificates == 'true' }}
+        run: |
+          kubectl apply -f deploy/cluster/cert-manager/issuers
+          kubectl apply -f deploy/cluster/cert-manager/certificates
+          kubectl apply -f deploy/cluster/istio/gateways
+      - name: Install Prometheus Operator
+        if: ${{ github.event.inputs.install_monitoring == 'true' }}
+        run: |
+          find deploy/cluster/monitoring/. -type f -name '*.yaml' | xargs -l kubectl apply -f
 
   update_secrets:
     name: Install cross cluster secrets
     runs-on: ubuntu-latest
     needs: core_install
-    if: ${{ github.event.inputs.install_secrets == 'true' }} 
+    if: ${{ github.event.inputs.install_secrets == 'true' }}
     strategy:
       fail-fast: true
       matrix:
-        namespace: [ review-apps, staging, sandbox, production ]
+        namespace: [review-apps, staging, sandbox, production]
     steps:
-    - uses: azure/setup-kubectl@v3.0
-    - uses: azure/k8s-set-context@v3
-      with:
-        method: kubeconfig
-        kubeconfig: ${{ secrets.KUBECONFIG_ADMIN }}
-        cluster-type: generic
+      - uses: azure/setup-kubectl@v3.0
+      - uses: azure/k8s-set-context@v3
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBECONFIG_ADMIN }}
+          cluster-type: generic
 
-    # Safe
-    - name: Create docker-registry secret for GitHub Packages on ${{ matrix.namespace }}
-      run: |
-        kubectl delete secret --namespace=${{ matrix.namespace }} ghcr-creds --ignore-not-found
-        kubectl create secret docker-registry ghcr-creds \
-          --namespace=${{ matrix.namespace }} \
-          --docker-username=${{ github.repository_owner }} \
-          --docker-password=${{ secrets.SECRET__GHCR_TOKEN }} \
-          --docker-server=ghcr.io
+      # Safe
+      - name: Create docker-registry secret for GitHub Packages on ${{ matrix.namespace }}
+        run: |
+          kubectl delete secret --namespace=${{ matrix.namespace }} ghcr-creds --ignore-not-found
+          kubectl create secret docker-registry ghcr-creds \
+            --namespace=${{ matrix.namespace }} \
+            --docker-username=${{ github.repository_owner }} \
+            --docker-password=${{ secrets.SECRET__GHCR_TOKEN }} \
+            --docker-server=ghcr.io
 
-    # Safe
-    - name: Create github-token secret on ${{ matrix.namespace }}
-      run: |
-        kubectl delete secret --namespace=${{ matrix.namespace }} github-token --ignore-not-found
-        kubectl create secret generic github-token \
-          --namespace=${{ matrix.namespace }} \
-          --from-literal=GITHUB_TOKEN=${{ secrets.SECRET__GITHUB_TOKEN }}
+      # Safe
+      - name: Create github-token secret on ${{ matrix.namespace }}
+        run: |
+          kubectl delete secret --namespace=${{ matrix.namespace }} github-token --ignore-not-found
+          kubectl create secret generic github-token \
+            --namespace=${{ matrix.namespace }} \
+            --from-literal=GITHUB_TOKEN=${{ secrets.SECRET__GITHUB_TOKEN }}
 
-    # Safe
-    - name: Create discord-token secret on ${{ matrix.namespace }}
-      run: |
-        kubectl delete secret --namespace=${{ matrix.namespace }} discord-token --ignore-not-found
-        kubectl create secret generic discord-token \
-          --namespace=${{ matrix.namespace }} \
-          --from-literal=DISCORD_TOKEN=${{ secrets.SECRET__DISCORD_TOKEN }}
+      # Safe
+      - name: Create discord-token secret on ${{ matrix.namespace }}
+        run: |
+          kubectl delete secret --namespace=${{ matrix.namespace }} discord-token --ignore-not-found
+          kubectl create secret generic discord-token \
+            --namespace=${{ matrix.namespace }} \
+            --from-literal=DISCORD_TOKEN=${{ secrets.SECRET__DISCORD_TOKEN }}
 
-    # WARNING
-    - name: Create primary-postgres-credentials secret on ${{ matrix.namespace }}
-      if: ${{ github.actor == github.repository_owner	&& (github.event.inputs.install_postgres_secrets == 'true' || github.event.inputs.install_primary_postgres_storage == 'true') }} 
-      run: |
-        kubectl delete secret --namespace=${{ matrix.namespace }} primary-postgres-credentials --ignore-not-found
-        kubectl create secret generic primary-postgres-credentials \
-          --namespace=${{ matrix.namespace }} \
-          --from-literal=POSTGRES_PASSWORD=$(openssl rand -base64 42 | sed "s/[\/\+]/42/g")
+      # WARNING
+      - name: Create primary-postgres-credentials secret on ${{ matrix.namespace }}
+        if: ${{ github.actor == github.repository_owner	&& (github.event.inputs.install_postgres_secrets == 'true' || github.event.inputs.install_primary_postgres_storage == 'true') }}
+        run: |
+          kubectl delete secret --namespace=${{ matrix.namespace }} primary-postgres-credentials --ignore-not-found
+          kubectl create secret generic primary-postgres-credentials \
+            --namespace=${{ matrix.namespace }} \
+            --from-literal=POSTGRES_PASSWORD=$(openssl rand -base64 42 | sed "s/[\/\+]/42/g")
 
-    # WARNING
-    - name: Create next-auth secret on ${{ matrix.namespace }}
-      run: |
-        kubectl delete secret --namespace=${{ matrix.namespace }} next-auth --ignore-not-found
-        kubectl create secret generic next-auth \
-          --namespace=${{ matrix.namespace }} \
-          --from-literal=SECRET=$(openssl rand -base64 42 | sed "s/[\/\+]/42/g")
+      # WARNING
+      - name: Create next-auth secret on ${{ matrix.namespace }}
+        run: |
+          kubectl delete secret --namespace=${{ matrix.namespace }} next-auth --ignore-not-found
+          kubectl create secret generic next-auth \
+            --namespace=${{ matrix.namespace }} \
+            --from-literal=SECRET=$(openssl rand -base64 42 | sed "s/[\/\+]/42/g")
 
-    # Safe
-    - name: Create oauth2-providers secret on ${{ matrix.namespace }}
-      run: |
-        kubectl delete secret --namespace=${{ matrix.namespace }} oauth2-providers --ignore-not-found
-        kubectl create secret generic oauth2-providers \
-          --namespace=${{ matrix.namespace }} \
-          --from-literal=FORTY_TWO_CLIENT_ID=${{ secrets.SECRET__FORTY_TWO_CLIENT_ID }} \
-          --from-literal=FORTY_TWO_CLIENT_SECRET=${{ secrets.SECRET__FORTY_TWO_CLIENT_SECRET }} \
-          --from-literal=GITHUB_ID=${{ secrets.SECRET__GITHUB_ID }} \
-          --from-literal=GITHUB_SECRET=${{ secrets.SECRET__GITHUB_SECRET }} \
-          --from-literal=DISCORD_ID=${{ secrets.SECRET__DISCORD_ID }} \
-          --from-literal=DISCORD_SECRET=${{ secrets.SECRET__DISCORD_SECRET }} \
+      # Safe
+      - name: Create oauth2-providers secret on ${{ matrix.namespace }}
+        run: |
+          kubectl delete secret --namespace=${{ matrix.namespace }} oauth2-providers --ignore-not-found
+          kubectl create secret generic oauth2-providers \
+            --namespace=${{ matrix.namespace }} \
+            --from-literal=FORTY_TWO_CLIENT_ID=${{ secrets.SECRET__FORTY_TWO_CLIENT_ID }} \
+            --from-literal=FORTY_TWO_CLIENT_SECRET=${{ secrets.SECRET__FORTY_TWO_CLIENT_SECRET }} \
+            --from-literal=GITHUB_ID=${{ secrets.SECRET__GITHUB_ID }} \
+            --from-literal=GITHUB_SECRET=${{ secrets.SECRET__GITHUB_SECRET }} \
+            --from-literal=DISCORD_ID=${{ secrets.SECRET__DISCORD_ID }} \
+            --from-literal=DISCORD_SECRET=${{ secrets.SECRET__DISCORD_SECRET }} \
 
-    # WARNING
-    - name: Create s42-service-token secret on ${{ matrix.namespace }}
-      run: |
-        kubectl delete secret --namespace=${{ matrix.namespace }} s42-service-token --ignore-not-found
-        kubectl create secret generic s42-service-token \
-          --namespace=${{ matrix.namespace }} \
-          --from-literal=TOKEN=$(openssl rand -base64 512 | sed "s/[\/\+]/42/g" | tr -d '\n')
+      # WARNING
+      - name: Create s42-service-token secret on ${{ matrix.namespace }}
+        run: |
+          kubectl delete secret --namespace=${{ matrix.namespace }} s42-service-token --ignore-not-found
+          kubectl create secret generic s42-service-token \
+            --namespace=${{ matrix.namespace }} \
+            --from-literal=TOKEN=$(openssl rand -base64 512 | sed "s/[\/\+]/42/g" | tr -d '\n')
 
-    # Safe
-    - name: Create WEBHOOK_SECRET_HEADER secret on ${{ matrix.namespace }}
-      run: |
-        kubectl delete secret --namespace=${{ matrix.namespace }} s42-webhooked-secrets --ignore-not-found
-        kubectl create secret generic s42-webhooked-secrets \
-          --namespace=${{ matrix.namespace }} \
-          --from-literal=WEBHOOK_SECRET_HEADER=${{ secrets.SECRET__WEBHOOK_SECRET_HEADER }} \
-          --from-literal=GITHUB_WEBHOOK_SECRET=${{ secrets.SECRET__GITHUB_WEBHOOK_SECRET }}
+      # Safe
+      - name: Create WEBHOOK_SECRET_HEADER secret on ${{ matrix.namespace }}
+        run: |
+          kubectl delete secret --namespace=${{ matrix.namespace }} s42-webhooked-secrets --ignore-not-found
+          kubectl create secret generic s42-webhooked-secrets \
+            --namespace=${{ matrix.namespace }} \
+            --from-literal=WEBHOOK_SECRET_HEADER=${{ secrets.SECRET__WEBHOOK_SECRET_HEADER }} \
+            --from-literal=GITHUB_WEBHOOK_SECRET=${{ secrets.SECRET__GITHUB_WEBHOOK_SECRET }}
 
   storages_install:
     runs-on: ubuntu-latest
     name: Install storages
-    needs: [ update_secrets ]
+    needs: [update_secrets]
     strategy:
       matrix:
-        overlay: [ live, next, sandbox ]
+        overlay: [live, next, sandbox]
     if: github.event.inputs.install_primary_postgres_storage == 'true'
     steps:
-    - uses: actions/checkout@v3
-    - uses: azure/setup-kubectl@v3.0
-    - uses: azure/k8s-set-context@v3
-      with:
-        method: kubeconfig
-        kubeconfig: ${{ secrets.KUBECONFIG_ADMIN }}
-        cluster-type: generic
-    - run: |
-        kustomize build deploy/cluster/storages/primary-postgres/overlays/${{ matrix.overlay }} | kubectl apply -f -
+      - uses: actions/checkout@v3
+      - uses: azure/setup-kubectl@v3.0
+      - uses: azure/k8s-set-context@v3
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBECONFIG_ADMIN }}
+          cluster-type: generic
+      - run: |
+          kustomize build deploy/cluster/storages/primary-postgres/overlays/${{ matrix.overlay }} | kubectl apply -f -
 
   operators_install:
     runs-on: ubuntu-latest
     name: Install operators
-    needs: [ update_secrets ]
+    needs: [update_secrets]
     steps:
-    - uses: actions/checkout@v3
-    - uses: azure/setup-kubectl@v3.0
-    - uses: azure/k8s-set-context@v3
-      with:
-        method: kubeconfig
-        kubeconfig: ${{ secrets.KUBECONFIG_ADMIN }}
-        cluster-type: generic
-    - if: github.event.inputs.install_rabbitmq == 'true'
-      run: |
-        kubectl apply -f "https://github.com/rabbitmq/cluster-operator/releases/latest/download/cluster-operator.yml"
+      - uses: actions/checkout@v3
+      - uses: azure/setup-kubectl@v3.0
+      - uses: azure/k8s-set-context@v3
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBECONFIG_ADMIN }}
+          cluster-type: generic
+      - if: github.event.inputs.install_rabbitmq == 'true'
+        run: |
+          kubectl apply -f "https://github.com/rabbitmq/cluster-operator/releases/latest/download/cluster-operator.yml"
 
-    
   stuff_install:
     runs-on: ubuntu-latest
     name: Install application stuffs
-    needs: [ operators_install ]
+    needs: [operators_install]
     strategy:
       matrix:
-        overlay: [ live, next, sandbox ]
+        overlay: [live, next, sandbox]
     steps:
-    - uses: actions/checkout@v3
-    - uses: azure/setup-kubectl@v3.0
-    - uses: azure/k8s-set-context@v3
-      with:
-        method: kubeconfig
-        kubeconfig: ${{ secrets.KUBECONFIG_ADMIN }}
-        cluster-type: generic
-    - if: github.event.inputs.install_rabbitmq == 'true'
-      run: |
-        kustomize build deploy/cluster/storages/rabbitmq/overlays/${{ matrix.overlay }} | kubectl apply -f -
+      - uses: actions/checkout@v3
+      - uses: azure/setup-kubectl@v3.0
+      - uses: azure/k8s-set-context@v3
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBECONFIG_ADMIN }}
+          cluster-type: generic
+      - if: github.event.inputs.install_rabbitmq == 'true'
+        run: |
+          kustomize build deploy/cluster/storages/rabbitmq/overlays/${{ matrix.overlay }} | kubectl apply -f -
