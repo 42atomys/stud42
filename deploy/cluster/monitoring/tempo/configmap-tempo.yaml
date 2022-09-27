@@ -1,0 +1,55 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tempo
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/instance: tempo
+    app.kubernetes.io/name: tempo
+data:
+  overrides.yaml: |
+    overrides:
+      {}
+  tempo.yaml: |
+    multitenancy_enabled: false
+    search_enabled: false
+    metrics_generator_enabled: false
+    compactor:
+      compaction:
+        compacted_block_retention: 24h
+    distributor:
+      receivers:
+            jaeger:
+              protocols:
+                grpc:
+                  endpoint: 0.0.0.0:14250
+                thrift_binary:
+                  endpoint: 0.0.0.0:6832
+                thrift_compact:
+                  endpoint: 0.0.0.0:6831
+                thrift_http:
+                  endpoint: 0.0.0.0:14268
+            opencensus: null
+            otlp:
+              protocols:
+                grpc:
+                  endpoint: 0.0.0.0:4317
+                http:
+                  endpoint: 0.0.0.0:4318
+    ingester:
+          {}
+    server:
+          http_listen_port: 3100
+    storage:
+          trace:
+            backend: local
+            local:
+              path: /var/tempo/traces
+            wal:
+              path: /var/tempo/wal
+    querier:
+          {}
+    query_frontend:
+          {}
+    overrides:
+          per_tenant_override_config: /config/overrides.yaml

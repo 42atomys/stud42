@@ -29,41 +29,41 @@ spec:
         runAsNonRoot: true
       serviceAccountName: prometheus
       initContainers:
-      - name: "init-chown-data"
-        image: "busybox"
-        # 1000 is the user that prometheus uses.
-        command: ["chown", "-R", "1000:2000", /prometheus]
-        volumeMounts:
-        - name: prometheus-storage-volume
-          mountPath: /prometheus
+        - name: "init-chown-data"
+          image: "busybox"
+          # 1000 is the user that prometheus uses.
+          command: ["chown", "-R", "1000:2000", /prometheus]
+          volumeMounts:
+            - name: prometheus-storage-volume
+              mountPath: /prometheus
       containers:
-      - name: prometheus
-        image: prom/prometheus:v2.37.1
-        args:
-          - '--storage.tsdb.path=/prometheus'
-          - '--config.file=/etc/prometheus/prometheus.yml'
-        ports:
-          - containerPort: 9090
-            name: http-prometheus
-            protocol: TCP
-        volumeMounts:
-        - name: prometheus-config-volume
-          mountPath: /etc/prometheus
-        - name: prometheus-storage-volume
-          mountPath: /prometheus
-        resources:
-          requests:
-            cpu: 400m
-            memory: 800Mi
-          limits:
-            cpu: 500m
-            memory: 1Gi
+        - name: prometheus
+          image: prom/prometheus:v2.37.1
+          args:
+            - "--storage.tsdb.path=/prometheus"
+            - "--config.file=/etc/prometheus/prometheus.yml"
+          ports:
+            - containerPort: 9090
+              name: http-prometheus
+              protocol: TCP
+          volumeMounts:
+            - name: prometheus-config-volume
+              mountPath: /etc/prometheus
+            - name: prometheus-storage-volume
+              mountPath: /prometheus
+          resources:
+            requests:
+              cpu: 400m
+              memory: 1Gi
+            limits:
+              cpu: 500m
+              memory: 2Gi
       restartPolicy: Always
       volumes:
-      - name: prometheus-config-volume
-        configMap:
+        - name: prometheus-config-volume
+          configMap:
             defaultMode: 420
             name: prometheus-config
-      - name: prometheus-storage-volume
-        persistentVolumeClaim:
+        - name: prometheus-storage-volume
+          persistentVolumeClaim:
             claimName: prometheus-pvc

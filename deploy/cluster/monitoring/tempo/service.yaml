@@ -1,0 +1,65 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: tempo
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/instance: tempo
+    app.kubernetes.io/name: tempo
+spec:
+  selector:
+    app.kubernetes.io/instance: tempo
+    app.kubernetes.io/name: tempo
+  ports:
+    - name: tempo-prom-metrics
+      port: 3100
+      protocol: TCP
+      targetPort: 3100
+    - name: jaeger-metrics
+      port: 16687
+      protocol: TCP
+      targetPort: 16687
+    - name: tempo-query-jaeger-ui
+      port: 16686
+      protocol: TCP
+      targetPort: 16686
+    - name: tempo-jaeger-thrift-compact
+      port: 6831
+      protocol: UDP
+      targetPort: 6831
+    - name: tempo-jaeger-thrift-binary
+      port: 6832
+      protocol: UDP
+      targetPort: 6832
+    - name: tempo-jaeger-thrift-http
+      port: 14268
+      protocol: TCP
+      targetPort: 14268
+    - name: grpc-tempo-jaeger
+      port: 14250
+      protocol: TCP
+      targetPort: 14250
+    - name: tempo-zipkin
+      port: 9411
+      protocol: TCP
+      targetPort: 9411
+    - name: tempo-otlp-legacy
+      port: 55680
+      protocol: TCP
+      targetPort: 55680
+    - name: tempo-otlp-http-legacy
+      port: 55681
+      protocol: TCP
+      targetPort: 4318
+    - name: grpc-tempo-otlp
+      port: 4317
+      protocol: TCP
+      targetPort: 4317
+    - name: tempo-otlp-http
+      port: 4318
+      protocol: TCP
+      targetPort: 4318
+    - name: tempo-opencensus
+      port: 55678
+      protocol: TCP
+      targetPort: 55678
