@@ -97,7 +97,7 @@ jobs:
     - name: Install Prometheus Operator
       if: ${{ github.event.inputs.install_monitoring == 'true' }} 
       run: |
-        cd ./deploy/cluster/monitoring && ./build.sh
+        find deploy/cluster/monitoring/. -type f -name '*.yaml' | xargs -l kubectl apply -f
 
   update_secrets:
     name: Install cross cluster secrets
