@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tempo-query
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/instance: tempo
+    app.kubernetes.io/name: tempo-query
+data:
+  tempo-query.yaml: |
+    backend: tempo.monitoring.svc.cluster.local:3100

@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: loki
+  namespace: monitoring
+  labels:
+    app: loki
+    version: "2.6.1"
+spec:
+  ports:
+    - name: http-metrics
+      port: 3100
+      protocol: TCP
+      targetPort: http-metrics
+  selector:
+    app: loki
+    version: "2.6.1"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: loki-memberlist
+  namespace: monitoring
+  labels:
+    app: loki
+    version: "2.6.1"
+spec:
+  ports:
+    - name: http
+      port: 7946
+      protocol: TCP
+      targetPort: memberlist-port
+  selector:
+    app: loki
+    version: "2.6.1"
