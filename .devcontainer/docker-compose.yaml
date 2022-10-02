@@ -25,6 +25,7 @@ services:
       GO_ENV: development
       APP_VERSION: indev
       DATABASE_URL: postgresql://postgres:postgres@database:5432/s42?sslmode=disable
+      REDIS_URL: redis://:@redis:6379
       AMQP_URL: amqp://rabbitmq:rabbitmq@rabbitmq:5672
       CORS_ORIGIN: http://localhost:3000
       # Interface
@@ -56,6 +57,15 @@ services:
 
     # Add "forwardPorts": ["5432"] to **devcontainer.json** to forward PostgreSQL locally.
     # (Adding the "ports" property to this file will not forward from a Codespace.)
+
+  redis:
+    hostname: s42-redis
+    image: eqalpha/keydb:alpine
+    restart: unless-stopped
+
+    # Add "forwardPorts": ["5432"] to **devcontainer.json** to forward PostgreSQL locally.
+    # (Adding the "ports" property to this file will not forward from a Codespace.)
+
 
   rabbitmq:
     hostname: s42-rabbitmq

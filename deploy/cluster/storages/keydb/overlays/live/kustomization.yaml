@@ -1,0 +1,13 @@
+resources:
+  - ../../base
+namePrefix: prod-
+namespace: production
+
+patches:
+  - target:
+      kind: PersistentVolumeClaim
+      name: primary-keydb
+    patch: |-
+      - op: replace
+        path: /spec/resources/requests/storage
+        value: 10Gi

@@ -1,0 +1,11 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: primary-keydb
+spec:
+  selector: {}
+  type: ClusterIP
+  ports:
+    - name: keydb
+      port: 6379
+      targetPort: 6379

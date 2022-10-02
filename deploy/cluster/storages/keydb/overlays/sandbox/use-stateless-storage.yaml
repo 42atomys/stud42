@@ -1,0 +1,24 @@
+$patch: delete
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: primary-keydb
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: primary-keydb
+spec:
+  selector: {}
+
+  template:
+    spec:
+      containers:
+        - name: keydb
+          volumeMounts:
+            - name: data
+              mountPath: /data
+              $patch: delete
+      volumes:
+        - name: data
+          $patch: delete

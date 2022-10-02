@@ -1,12 +1,13 @@
 #! /bin/bash
 
 cat << EOF
+
          {                  
       {   }                 
        }_{ __{              
     .-{   }   }-.           
    (   }     {   )          First installation started...
-   |`-.._____..-'|          
+   |'-.._____..-'|          
    |             ;--.       Due to the installation of internet on your machine,
    |            (__  \      this task can be long, very long. But don't worry
    |             | )  )     it's executed only the first time the devcontainer
@@ -14,7 +15,8 @@ cat << EOF
    |             /  /       
    |            (  /        Take a break, take a coffee, browse the issues
    \             y'         
-    `-.._____..-'           
+    '-.._____..-'           
+
 EOF
 
 git config pull.rebase true

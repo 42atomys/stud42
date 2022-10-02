@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: primary-keydb
+spec:
+  revisionHistoryLimit: 1
+  selector: {}
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    spec:
+      containers:
+        - image: eqalpha/keydb:alpine
+          imagePullPolicy: IfNotPresent
+          name: keydb
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "200Mi"
+            limits:
+              cpu: "250m"
+              memory: "200Mi"
+          ports:
+            - containerPort: 6379
+              name: keydb
+          volumeMounts:
+            - name: data
+              mountPath: /data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: primary-keydb
+      restartPolicy: Always

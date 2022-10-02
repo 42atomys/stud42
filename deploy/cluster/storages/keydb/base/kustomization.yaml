@@ -1,0 +1,13 @@
+resources:
+  - pod-disruption-budget.yaml
+  - deployement.yaml
+  - pvc.yaml
+  - service.yaml
+
+commonLabels:
+  kubernetes.io/name: keydb
+  app.kubernetes.io/version: "latest"
+  app.kubernetes.io/component: cache-db
+  app.kubernetes.io/part-of: s42-app
+  app.kubernetes.io/managed-by: kustomize
+  app.kubernetes.io/created-by: github-actions

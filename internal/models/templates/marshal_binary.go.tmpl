@@ -1,0 +1,25 @@
+{{ define "import/additional/marshal_binary" }}
+  "bytes"
+  "encoding/gob"
+{{ end }}
+
+{{ define "model/additional/marshal_binary" }}
+
+func ({{ $.Receiver }} *{{ $.Name }}) MarshalBinary() ([]byte, error) {
+  var buf bytes.Buffer
+  enc := gob.NewEncoder(&buf)
+  if err := enc.Encode({{ $.Receiver }}); err != nil {
+    return nil, err
+  }
+  return buf.Bytes(), nil
+}
+
+func ({{ $.Receiver }} *{{ $.Name }}) UnmarshalBinary(data []byte) error {
+  reader := bytes.NewReader(data)
+  dec := gob.NewDecoder(reader)
+  if err := dec.Decode(&{{ $.Receiver }}); err != nil {
+    return err
+  }
+  return nil
+}
+{{ end }}

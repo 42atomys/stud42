@@ -44,7 +44,7 @@ func generateEntc() {
 		},
 		Target:  "./internal/models/generated",
 		Package: "atomys.codes/stud42/internal/models/generated",
-	}, entc.Extensions(ex))
+	}, entc.Extensions(ex), entc.TemplateDir("./internal/models/templates"))
 	if err != nil {
 		log.Fatalf("running ent codegen: %v", err)
 	}

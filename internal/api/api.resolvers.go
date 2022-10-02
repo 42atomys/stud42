@@ -12,6 +12,7 @@ import (
 
 	apigen "atomys.codes/stud42/internal/api/generated"
 	typesgen "atomys.codes/stud42/internal/api/generated/types"
+	"atomys.codes/stud42/internal/cache"
 	"atomys.codes/stud42/internal/discord"
 	modelsutils "atomys.codes/stud42/internal/models"
 	"atomys.codes/stud42/internal/models/generated"
@@ -22,6 +23,7 @@ import (
 	"atomys.codes/stud42/internal/models/gotype"
 	"atomys.codes/stud42/pkg/utils"
 	"entgo.io/ent/dialect/sql"
+	"github.com/eko/gocache/v3/store"
 	"github.com/google/uuid"
 )
 
@@ -214,13 +216,26 @@ func (r *queryResolver) LocationsByCampusName(ctx context.Context, page typesgen
 }
 
 func (r *queryResolver) LocationsByCluster(ctx context.Context, page typesgen.PageInput, campusName string, identifierPrefix *string) (*generated.LocationConnection, error) {
-	return r.client.Campus.Query().
-		Where(campus.NameEqualFold(campusName)).
-		QueryLocations().
-		WithCampus().
-		WithUser().
-		Where(location.IdentifierHasPrefix(*identifierPrefix), location.EndAtIsNil()).
-		Paginate(ctx, page.After, &page.First, page.Before, page.Last)
+	locationConnectionCache := cache.NewTyped[*generated.LocationConnection](r.cache)
+	cacheKey := cache.NewKeyBuilder().WithPrefix("locationsByCluster").WithParts(campusName, *identifierPrefix).Build()
+
+	loader := locationConnectionCache.
+		WithLoader(ctx, func(ctx context.Context, key cache.CacheKey) (*generated.LocationConnection, error) {
+			return r.client.Campus.Query().
+				Where(campus.NameEqualFold(campusName)).
+				QueryLocations().
+				WithCampus().
+				WithUser().
+				Where(location.IdentifierHasPrefix(*identifierPrefix), location.EndAtIsNil()).
+				Paginate(ctx, page.After, &page.First, page.Before, page.Last)
+		})
+	defer loader.Close()
+
+	return loader.Get(ctx,
+		cacheKey,
+		store.WithTags([]string{"locationsByCluster", campusName, *identifierPrefix}),
+		store.WithExpiration(1*time.Minute),
+	)
 }
 
 func (r *queryResolver) MyFollowing(ctx context.Context) ([]*generated.User, error) {

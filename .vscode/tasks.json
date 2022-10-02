@@ -142,6 +142,23 @@
         "focus": true,
         "panel": "dedicated"
       }
+    },
+    {
+      "label": "Run keydb cli (keydb-cli)",
+      "detail": "Execute keydb-cli on container",
+      "type": "process",
+      "isBackground": true,
+      "command": "keydb-cli",
+      "icon": {
+        "id": "debug-start",
+        "color": "terminal.ansiRed"
+      },
+      "problemMatcher": [],
+      "args": ["-h", "redis", "-p", "6379"],
+      "presentation": {
+        "focus": true,
+        "panel": "dedicated"
+      }
     }
   ]
 }

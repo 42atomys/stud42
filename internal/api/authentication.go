@@ -8,12 +8,14 @@ import (
 	"time"
 
 	"github.com/99designs/gqlgen/graphql"
+	"github.com/eko/gocache/v3/store"
 	"github.com/google/uuid"
 	"github.com/lestrrat-go/jwx/v2/jwk"
 	"github.com/lestrrat-go/jwx/v2/jwt"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
 
+	"atomys.codes/stud42/internal/cache"
 	modelgen "atomys.codes/stud42/internal/models/generated"
 	"atomys.codes/stud42/internal/models/generated/user"
 )
@@ -55,7 +57,9 @@ func AuthenticationMiddleware(next http.Handler) http.Handler {
 // the user will be stored in the context for the resolver.
 // The directive is registered in the schema and automatically used by the
 // resolver on fields that have the @authorization directive.
-func directiveAuthorization(client *modelgen.Client) func(ctx context.Context, obj interface{}, next graphql.Resolver) (res interface{}, err error) {
+func directiveAuthorization(client *modelgen.Client, cacheClient *cache.Client) func(ctx context.Context, obj interface{}, next graphql.Resolver) (res interface{}, err error) {
+	userCache := cache.NewTyped[*modelgen.User](cacheClient)
+
 	return func(ctx context.Context, obj interface{}, next graphql.Resolver) (res interface{}, err error) {
 		jwtToken, _ := ctx.Value(authTokenContextKey).(string)
 
@@ -81,17 +85,24 @@ func directiveAuthorization(client *modelgen.Client) func(ctx context.Context, o
 		}
 
 		if ctx.Value(currentUserContextKey) == nil {
-			user, err := client.User.Query().
-				Where(user.ID(uuid.MustParse(tok.Subject()))).
-				WithFollowing().
-				WithFollowers().
-				WithCurrentLocation().
-				Only(ctx)
+			loader := userCache.WithLoader(ctx, func(ctx context.Context, key cache.CacheKey) (*modelgen.User, error) {
+				log.Debug().Msg("fetching current user from database due to cache miss")
+				return client.User.Query().
+					Where(user.ID(uuid.MustParse(tok.Subject()))).
+					WithFollowing().
+					WithFollowers().
+					WithCurrentLocation().
+					Only(ctx)
+			})
+			defer loader.Close()
+
+			cu, err := loader.Get(ctx, cache.CurrentUserCacheKey.WithParts(tok.Subject()).Build(), store.WithExpiration(5*time.Minute))
+
 			if err != nil {
 				return nil, errUnauthenticated
 			}
 
-			ctx = context.WithValue(ctx, currentUserContextKey, user)
+			ctx = context.WithValue(ctx, currentUserContextKey, cu)
 		}
 
 		return next(ctx)

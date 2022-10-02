@@ -9,10 +9,15 @@ ENV SHELL /usr/bin/zsh
 ARG NODE_VERSION="none"
 RUN if [ "${NODE_VERSION}" != "none" ]; then su vscode -c "umask 0002 && . /usr/local/share/nvm/nvm.sh && nvm install ${NODE_VERSION} 2>&1"; fi
 
-RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-  && apt-get -y install --no-install-recommends gnupg2 postgresql-client \
+RUN export DEBIAN_FRONTEND=noninteractive && \
+  # Install keydb tools
+  echo "deb https://download.keydb.dev/open-source-dist $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/keydb.list && \
+  wget -O /etc/apt/trusted.gpg.d/keydb.gpg https://download.keydb.dev/open-source-dist/keyring.gpg && \
+  # Update and install packages
+  apt-get update && \
+  apt-get -y install --no-install-recommends gnupg2 postgresql-client \
   iputils-ping dnsutils vim htop nano sudo curl build-essential zsh wget \
-  fonts-powerline tig
+  fonts-powerline tig keydb-tools
 
 # Install global node packages.
 RUN npm install --location=global tslint-to-eslint-config typescript \

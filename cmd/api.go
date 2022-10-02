@@ -4,24 +4,30 @@ Copyright © 2022 42Atomys
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"os"
 	"strings"
+	"time"
 
 	"entgo.io/contrib/entgql"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/handler/extension"
 	"github.com/99designs/gqlgen/graphql/playground"
+	"github.com/getsentry/sentry-go"
 	sentryhttp "github.com/getsentry/sentry-go/http"
 	"github.com/go-chi/chi/v5"
 	_ "github.com/lib/pq"
 	"github.com/rs/cors"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
+	"github.com/vektah/gqlparser/v2/gqlerror"
 	"go.opentelemetry.io/otel"
 
 	"atomys.codes/stud42/internal/api"
+	"atomys.codes/stud42/internal/cache"
 	modelsutils "atomys.codes/stud42/internal/models"
 	_ "atomys.codes/stud42/internal/models/generated/runtime"
 	"atomys.codes/stud42/pkg/otelgql"
@@ -46,15 +52,28 @@ var apiCmd = &cobra.Command{
 			log.Fatal().Err(err).Msg("failed to migrate database")
 		}
 
+		cacheClient, err := cache.New(viper.GetString("redis-url"))
+		if err != nil {
+			log.Fatal().Err(err).Msg("failed to create cache")
+		}
+
 		tracer := otel.GetTracerProvider().Tracer("graphql-api")
-		srv := handler.NewDefaultServer(api.NewSchema(modelsutils.Client(), tracer))
-		// srv.SetRecoverFunc(func(ctx context.Context, err interface{}) error {
-		// 	// notify bug tracker...
-		// 	log.Error().Err(err.(error)).Msg("unhandled error")
-		// 	return gqlerror.Errorf("Internal server error!")
-		// })
+		srv := handler.NewDefaultServer(api.NewSchema(modelsutils.Client(), cacheClient, tracer))
+		srv.SetRecoverFunc(func(ctx context.Context, err interface{}) error {
+			if err, ok := err.(error); ok {
+				log.Error().Err(err).Msg("graphql recover")
+				sentry.CaptureException(err)
+			}
+			return gqlerror.Errorf("Internal server error!")
+		})
+
+		gqlCacheClient, err := cacheClient.NewGQLCache(30 * time.Minute)
+		if err != nil {
+			log.Fatal().Err(err).Msg("failed to init gql cache")
+		}
 
 		srv.Use(entgql.Transactioner{TxOpener: modelsutils.Client()})
+		srv.Use(extension.AutomaticPersistedQuery{Cache: gqlCacheClient})
 		srv.Use(extension.FixedComplexityLimit(50))
 		srv.Use(otelgql.Middleware(tracer))
 
