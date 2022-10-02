@@ -5894,15 +5894,10 @@ graphql-tag@^2.11.0, graphql-tag@^2.12.6:
   dependencies:
     tslib "^2.1.0"
 
-graphql-ws@^5.10.1:
-  version "5.10.1"
-  resolved "https://registry.yarnpkg.com/graphql-ws/-/graphql-ws-5.10.1.tgz#c5402a62f1be13e244ab90a6306b94f643577312"
-  integrity sha512-MKm/3SRd1vj5Km8NaujsgeGRTKZQjUN5HRnIMJ8dL2UznKoxvrtQyJqTmqJt0f6vQd9AooDg/+baXo3huiY4Ew==
-
-graphql-ws@^5.4.1:
-  version "5.9.1"
-  resolved "https://registry.yarnpkg.com/graphql-ws/-/graphql-ws-5.9.1.tgz#9c0fa48ceb695d61d574ed3ab21b426729e87f2d"
-  integrity sha512-mL/SWGBwIT9Meq0NlfS55yXXTOeWPMbK7bZBEZhFu46bcGk1coTx2Sdtzxdk+9yHWngD+Fk1PZDWaAutQa9tpw==
+graphql-ws@^5.11.2, graphql-ws@^5.4.1:
+  version "5.11.2"
+  resolved "https://registry.yarnpkg.com/graphql-ws/-/graphql-ws-5.11.2.tgz#d5e0acae8b4d4a4cf7be410a24135cfcefd7ddc0"
+  integrity sha512-4EiZ3/UXYcjm+xFGP544/yW1+DVI8ZpKASFbzrV5EDTFWJp0ZvLl4Dy2fSZAzz9imKp5pZMIcjB0x/H69Pv/6w==
 
 graphql@^16.6.0:
   version "16.6.0"
