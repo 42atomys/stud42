@@ -92,6 +92,7 @@ func directiveAuthorization(client *modelgen.Client, cacheClient *cache.Client) 
 					WithFollowing().
 					WithFollowers().
 					WithCurrentLocation().
+					WithCurrentCampus().
 					Only(ctx)
 			})
 			defer loader.Close()
