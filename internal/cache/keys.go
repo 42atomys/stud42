@@ -1,16 +1,20 @@
 package cache
 
 import (
+	"regexp"
 	"strings"
 )
 
 type CacheKey string
 
 const (
-	keySeparator = ":"
+	defaultKeySeparator = ":"
 )
 
 var (
+	// CurrentUserCacheKey is the key used to store the current user in cache,
+	// Usage:
+	// 	CurrentUserCacheKey.WithParts("user_id").Build()
 	CurrentUserCacheKey = NewKeyBuilder().WithPrefix("s42-current-user")
 	gqlCachekBuilder    = NewKeyBuilder().WithPrefix("s42-gql-cache")
 )
@@ -20,31 +24,41 @@ func (k CacheKey) String() string {
 }
 
 type KeyBuilder struct {
-	key    CacheKey
-	parts  []string
-	prefix string
-	suffix string
+	key       CacheKey
+	parts     []string
+	prefix    string
+	suffix    string
+	separator string
 }
 
+var (
+	matchFirstCap = regexp.MustCompile("(.)([A-Z][a-z]+)")
+	matchAllCap   = regexp.MustCompile("([a-z0-9])([A-Z])")
+	keyReplacer   = strings.NewReplacer(".", " ", "_", " ", "-", " ")
+)
+
 func (b *KeyBuilder) String() string {
-	var key string
+	var keyParts = []string{}
+
 	if b.prefix != "" {
-		key += b.prefix
+		keyParts = append(keyParts, kebabCase(b.prefix))
 	}
 
 	if b.key != "" {
-		key += keySeparator + string(b.key)
+		keyParts = append(keyParts, kebabCase(string(b.key)))
 	}
 
 	if len(b.parts) > 0 {
-		key += keySeparator + strings.Join(b.parts, keySeparator)
+		for _, part := range b.parts {
+			keyParts = append(keyParts, kebabCase(part))
+		}
 	}
 
 	if b.suffix != "" {
-		key += keySeparator + b.suffix
+		keyParts = append(keyParts, kebabCase(b.suffix))
 	}
 
-	return key
+	return strings.Join(keyParts, b.separator)
 }
 
 func (b *KeyBuilder) WithPrefix(prefix string) *KeyBuilder {
@@ -67,10 +81,29 @@ func (b *KeyBuilder) WithParts(parts ...string) *KeyBuilder {
 	return b
 }
 
+func (b *KeyBuilder) WithSeparator(separator string) *KeyBuilder {
+	b.separator = separator
+	return b
+}
+
 func NewKeyBuilder() *KeyBuilder {
-	return &KeyBuilder{}
+	return &KeyBuilder{separator: defaultKeySeparator}
 }
 
 func (b *KeyBuilder) Build() CacheKey {
 	return CacheKey(b.String())
+}
+
+func kebabCase(s string) string {
+	// convert camel case to snake case
+	s = matchAllCap.ReplaceAllString(
+		matchFirstCap.ReplaceAllString(s, "${1} ${2}"),
+		"${1} ${2}",
+	)
+
+	// convert to lower case and replace separators with spaces
+	s = keyReplacer.Replace(s)
+	s = strings.Join(strings.Fields(s), "-")
+
+	return strings.ToLower(s)
 }
