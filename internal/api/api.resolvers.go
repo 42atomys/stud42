@@ -217,7 +217,8 @@ func (r *queryResolver) LocationsByCampusName(ctx context.Context, page typesgen
 
 func (r *queryResolver) LocationsByCluster(ctx context.Context, page typesgen.PageInput, campusName string, identifierPrefix *string) (*generated.LocationConnection, error) {
 	locationConnectionCache := cache.NewTyped[*generated.LocationConnection](r.cache)
-	cacheKey := cache.NewKeyBuilder().WithPrefix("locationsByCluster").WithParts(campusName, *identifierPrefix).Build()
+
+	cacheKey := cache.NewKeyBuilder().WithKey("locationsByCluster").WithParts(campusName, *identifierPrefix).Build()
 
 	loader := locationConnectionCache.
 		WithLoader(ctx, func(ctx context.Context, key cache.CacheKey) (*generated.LocationConnection, error) {
