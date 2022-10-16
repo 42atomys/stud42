@@ -6,6 +6,10 @@
       "type": "go",
       "request": "launch",
       "mode": "debug",
+      "env": {
+        "APP_NAME": "api",
+        "DEBUG": "true"
+      },
       "program": "${workspaceFolder}/main.go",
       "args": ["serve", "api", "-g"],
       "showLog": true

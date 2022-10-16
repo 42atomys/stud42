@@ -27,6 +27,7 @@ import (
 	"github.com/google/uuid"
 )
 
+// CreateFriendship is the resolver for the createFriendship field.
 func (r *mutationResolver) CreateFriendship(ctx context.Context, userID uuid.UUID) (bool, error) {
 	cu, err := CurrentUserFromContext(ctx)
 	if err != nil {
@@ -43,6 +44,7 @@ func (r *mutationResolver) CreateFriendship(ctx context.Context, userID uuid.UUI
 	return true, nil
 }
 
+// DeleteFriendship is the resolver for the deleteFriendship field.
 func (r *mutationResolver) DeleteFriendship(ctx context.Context, userID uuid.UUID) (bool, error) {
 	cu, err := CurrentUserFromContext(ctx)
 	if err != nil {
@@ -55,6 +57,7 @@ func (r *mutationResolver) DeleteFriendship(ctx context.Context, userID uuid.UUI
 	return true, nil
 }
 
+// UpdateSettings is the resolver for the updateSettings field.
 func (r *mutationResolver) UpdateSettings(ctx context.Context, input typesgen.SettingsInput) (*gotype.Settings, error) {
 	cu, err := CurrentUserFromContext(ctx)
 	if err != nil {
@@ -68,6 +71,7 @@ func (r *mutationResolver) UpdateSettings(ctx context.Context, input typesgen.Se
 	return &updatedUser.Settings, nil
 }
 
+// InternalCreateUser is the resolver for the internalCreateUser field.
 func (r *mutationResolver) InternalCreateUser(ctx context.Context, input typesgen.CreateUserInput) (uuid.UUID, error) {
 	return r.client.User.Create().
 		SetEmail(input.Email).
@@ -87,6 +91,7 @@ func (r *mutationResolver) InternalCreateUser(ctx context.Context, input typesge
 		ID(ctx)
 }
 
+// InternalLinkAccount is the resolver for the internalLinkAccount field.
 func (r *mutationResolver) InternalLinkAccount(ctx context.Context, input typesgen.LinkAccountInput) (*generated.Account, error) {
 	id, err := r.client.Account.Create().
 		SetProvider(input.Provider.String()).
@@ -117,6 +122,7 @@ func (r *mutationResolver) InternalLinkAccount(ctx context.Context, input typesg
 	return account, nil
 }
 
+// InviteOnDiscord is the resolver for the inviteOnDiscord field.
 func (r *mutationResolver) InviteOnDiscord(ctx context.Context) (bool, error) {
 	cu, err := CurrentUserFromContext(ctx)
 	if err != nil {
@@ -135,10 +141,12 @@ func (r *mutationResolver) InviteOnDiscord(ctx context.Context) (bool, error) {
 	return true, nil
 }
 
+// Me is the resolver for the me field.
 func (r *queryResolver) Me(ctx context.Context) (*generated.User, error) {
 	return CurrentUserFromContext(ctx)
 }
 
+// SearchUser is the resolver for the searchUser field.
 func (r *queryResolver) SearchUser(ctx context.Context, query string, onlyOnline *bool) ([]*generated.User, error) {
 	cu, _ := CurrentUserFromContext(ctx)
 
@@ -184,18 +192,22 @@ func (r *queryResolver) SearchUser(ctx context.Context, query string, onlyOnline
 	}).Limit(10).All(ctx)
 }
 
+// Campus is the resolver for the campus field.
 func (r *queryResolver) Campus(ctx context.Context, id uuid.UUID) (*generated.Campus, error) {
 	return r.client.Campus.Query().Where(campus.ID(id)).Only(ctx)
 }
 
+// User is the resolver for the user field.
 func (r *queryResolver) User(ctx context.Context, id uuid.UUID) (*generated.User, error) {
 	return r.client.User.Query().Where(user.ID(id)).Only(ctx)
 }
 
+// Location is the resolver for the location field.
 func (r *queryResolver) Location(ctx context.Context, id uuid.UUID) (*generated.Location, error) {
 	return r.client.Location.Query().Where(location.ID(id)).Only(ctx)
 }
 
+// Locations is the resolver for the locations field.
 func (r *queryResolver) Locations(ctx context.Context, page typesgen.PageInput, campusID uuid.UUID) (*generated.LocationConnection, error) {
 	return r.client.Location.Query().
 		Where(location.CampusID(campusID)).
@@ -205,6 +217,7 @@ func (r *queryResolver) Locations(ctx context.Context, page typesgen.PageInput, 
 		Paginate(ctx, page.After, &page.First, page.Before, page.Last)
 }
 
+// LocationsByCampusName is the resolver for the locationsByCampusName field.
 func (r *queryResolver) LocationsByCampusName(ctx context.Context, page typesgen.PageInput, campusName string) (*generated.LocationConnection, error) {
 	return r.client.Campus.Query().
 		Where(campus.Name(campusName)).
@@ -215,6 +228,7 @@ func (r *queryResolver) LocationsByCampusName(ctx context.Context, page typesgen
 		Paginate(ctx, page.After, &page.First, page.Before, page.Last)
 }
 
+// LocationsByCluster is the resolver for the locationsByCluster field.
 func (r *queryResolver) LocationsByCluster(ctx context.Context, page typesgen.PageInput, campusName string, identifierPrefix *string) (*generated.LocationConnection, error) {
 	locationConnectionCache := cache.NewTyped[*generated.LocationConnection](r.cache)
 
@@ -239,6 +253,7 @@ func (r *queryResolver) LocationsByCluster(ctx context.Context, page typesgen.Pa
 	)
 }
 
+// MyFollowing is the resolver for the myFollowing field.
 func (r *queryResolver) MyFollowing(ctx context.Context) ([]*generated.User, error) {
 	cu, _ := CurrentUserFromContext(ctx)
 
@@ -261,6 +276,7 @@ func (r *queryResolver) MyFollowing(ctx context.Context) ([]*generated.User, err
 		All(ctx)
 }
 
+// InternalGetUserByAccount is the resolver for the internalGetUserByAccount field.
 func (r *queryResolver) InternalGetUserByAccount(ctx context.Context, provider typesgen.Provider, uid string) (*generated.User, error) {
 	return r.client.Account.Query().
 		Where(account.Provider(provider.String()), account.ProviderAccountID(uid)).
@@ -268,16 +284,19 @@ func (r *queryResolver) InternalGetUserByAccount(ctx context.Context, provider t
 		Only(ctx)
 }
 
+// InternalGetUserByEmail is the resolver for the internalGetUserByEmail field.
 func (r *queryResolver) InternalGetUserByEmail(ctx context.Context, email string) (*generated.User, error) {
 	return r.client.User.Query().
 		Where(user.Email(email)).
 		Only(ctx)
 }
 
+// InternalGetUser is the resolver for the internalGetUser field.
 func (r *queryResolver) InternalGetUser(ctx context.Context, id uuid.UUID) (*generated.User, error) {
 	return r.client.User.Get(ctx, id)
 }
 
+// IsSwimmer is the resolver for the isSwimmer field.
 func (r *userResolver) IsSwimmer(ctx context.Context, obj *generated.User) (bool, error) {
 	if obj.PoolYear == nil || obj.PoolMonth == nil {
 		return false, nil
@@ -288,16 +307,19 @@ func (r *userResolver) IsSwimmer(ctx context.Context, obj *generated.User) (bool
 		strings.EqualFold(*obj.PoolMonth, now.Format("January"))), nil
 }
 
+// IsMe is the resolver for the isMe field.
 func (r *userResolver) IsMe(ctx context.Context, obj *generated.User) (bool, error) {
 	cu, _ := CurrentUserFromContext(ctx)
 
 	return cu.ID == obj.ID, nil
 }
 
+// Flags is the resolver for the flags field.
 func (r *userResolver) Flags(ctx context.Context, obj *generated.User) ([]typesgen.Flag, error) {
 	return modelsutils.TranslateFlagFromORM(obj.FlagsList), nil
 }
 
+// IsFollowing is the resolver for the isFollowing field.
 func (r *userResolver) IsFollowing(ctx context.Context, obj *generated.User) (bool, error) {
 	cu, _ := CurrentUserFromContext(ctx)
 
@@ -310,6 +332,7 @@ func (r *userResolver) IsFollowing(ctx context.Context, obj *generated.User) (bo
 	return false, nil
 }
 
+// IsFollower is the resolver for the isFollower field.
 func (r *userResolver) IsFollower(ctx context.Context, obj *generated.User) (bool, error) {
 	cu, _ := CurrentUserFromContext(ctx)
 
