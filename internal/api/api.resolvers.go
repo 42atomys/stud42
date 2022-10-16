@@ -12,7 +12,6 @@ import (
 
 	apigen "atomys.codes/stud42/internal/api/generated"
 	typesgen "atomys.codes/stud42/internal/api/generated/types"
-	"atomys.codes/stud42/internal/cache"
 	"atomys.codes/stud42/internal/discord"
 	modelsutils "atomys.codes/stud42/internal/models"
 	"atomys.codes/stud42/internal/models/generated"
@@ -23,7 +22,6 @@ import (
 	"atomys.codes/stud42/internal/models/gotype"
 	"atomys.codes/stud42/pkg/utils"
 	"entgo.io/ent/dialect/sql"
-	"github.com/eko/gocache/v3/store"
 	"github.com/google/uuid"
 )
 
@@ -230,31 +228,13 @@ func (r *queryResolver) LocationsByCampusName(ctx context.Context, page typesgen
 
 // LocationsByCluster is the resolver for the locationsByCluster field.
 func (r *queryResolver) LocationsByCluster(ctx context.Context, page typesgen.PageInput, campusName string, identifierPrefix *string) (*generated.LocationConnection, error) {
-	locationConnectionCache := cache.NewTyped[*generated.LocationConnection](r.cache)
-
-	cacheParts := []string{campusName, *identifierPrefix, strconv.Itoa(page.First)}
-	if page.After != nil {
-		cacheParts = append(cacheParts, page.After.ID.String())
-	}
-	cacheKey := cache.NewKeyBuilder().WithPrefix("locations-by-cluster").WithParts(cacheParts...).Build()
-
-	loader := locationConnectionCache.
-		WithLoader(ctx, func(ctx context.Context, key cache.CacheKey) (*generated.LocationConnection, error) {
-			return r.client.Campus.Query().
-				Where(campus.NameEqualFold(campusName)).
-				QueryLocations().
-				WithCampus().
-				WithUser().
-				Where(location.IdentifierHasPrefix(*identifierPrefix), location.EndAtIsNil()).
-				Paginate(ctx, page.After, &page.First, page.Before, page.Last)
-		})
-	defer loader.Close()
-
-	return loader.Get(ctx,
-		cacheKey,
-		store.WithTags([]string{"locations-by-cluster", campusName, *identifierPrefix}),
-		store.WithExpiration(30*time.Second),
-	)
+	return r.client.Campus.Query().
+		Where(campus.NameEqualFold(campusName)).
+		QueryLocations().
+		WithCampus().
+		WithUser().
+		Where(location.IdentifierHasPrefix(*identifierPrefix), location.EndAtIsNil()).
+		Paginate(ctx, page.After, &page.First, page.Before, page.Last)
 }
 
 // MyFollowing is the resolver for the myFollowing field.

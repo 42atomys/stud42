@@ -24,8 +24,9 @@ import (
 )
 
 type processor struct {
-	db  *modelgen.Client
-	ctx context.Context
+	db    *modelgen.Client
+	cache *cache.Client
+	ctx   context.Context
 }
 
 // ErrInvalidWebhook is returned when the webhook is invalid and cannot be processed
@@ -44,8 +45,9 @@ func New() *processor {
 	}
 
 	return &processor{
-		ctx: context.Background(),
-		db:  modelsutils.Client(),
+		ctx:   context.Background(),
+		db:    modelsutils.Client(),
+		cache: cacheClient,
 	}
 }
 
