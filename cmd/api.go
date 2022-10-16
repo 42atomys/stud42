@@ -44,17 +44,17 @@ var apiCmd = &cobra.Command{
 	Short: "Serve the API in production",
 
 	Run: func(cmd *cobra.Command, args []string) {
-		if err := modelsutils.Connect(); err != nil {
+		cacheClient, err := cache.New(viper.GetString("redis-url"))
+		if err != nil {
+			log.Fatal().Err(err).Msg("failed to create cache")
+		}
+
+		if err := modelsutils.Connect(cacheClient); err != nil {
 			log.Fatal().Err(err).Msg("failed to connect to database")
 		}
 
 		if err := modelsutils.Migrate(); err != nil {
 			log.Fatal().Err(err).Msg("failed to migrate database")
-		}
-
-		cacheClient, err := cache.New(viper.GetString("redis-url"))
-		if err != nil {
-			log.Fatal().Err(err).Msg("failed to create cache")
 		}
 
 		tracer := otel.GetTracerProvider().Tracer("graphql-api")

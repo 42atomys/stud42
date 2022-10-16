@@ -1,13 +1,20 @@
 package schema
 
 import (
+	"context"
+
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
+	"github.com/getsentry/sentry-go"
 	"github.com/google/uuid"
+	"github.com/rs/zerolog/log"
 
+	"atomys.codes/stud42/internal/cache"
+	modelgen "atomys.codes/stud42/internal/models/generated"
+	"atomys.codes/stud42/internal/models/generated/hook"
 	"atomys.codes/stud42/internal/models/gotype"
 )
 
@@ -70,4 +77,35 @@ func (User) Indexes() []ent.Index {
 		index.Fields("duo_id").Unique(),
 		index.Fields("nickname").Unique(),
 	}
+}
+
+func (User) Hooks() []ent.Hook {
+	return []ent.Hook{
+		hookUserCacheClear(),
+	}
+}
+
+// hookUserCacheClear will automatically clean the cache of the "updated used"
+// to prevent mismatch between user cache and database statement.
+func hookUserCacheClear() ent.Hook {
+	hk := func(next modelgen.Mutator) modelgen.Mutator {
+		return hook.UserFunc(func(ctx context.Context, m *modelgen.UserMutation) (modelgen.Value, error) {
+			userCache := cache.NewTyped[*modelgen.User](m.Cache)
+
+			id, exist := m.ID()
+			if !exist {
+				goto MUTATE
+			}
+
+			if err := userCache.Delete(ctx, cache.CurrentUserCacheKey.WithParts(id.String()).Build()); err != nil {
+				sentry.CaptureException(err)
+				log.Error().Err(err).Msg("Cannot clear the current user cache")
+			}
+
+		MUTATE:
+			return next.Mutate(ctx, m)
+		})
+	}
+	// Limit the hook operations.
+	return hook.On(hk, modelgen.OpCreate|modelgen.OpUpdate|modelgen.OpUpdateOne)
 }

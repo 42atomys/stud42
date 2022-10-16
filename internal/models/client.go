@@ -7,17 +7,23 @@ import (
 	"entgo.io/ent/dialect/sql/schema"
 	"github.com/rs/zerolog/log"
 
+	"atomys.codes/stud42/internal/cache"
+	"atomys.codes/stud42/internal/models/generated"
 	modelgen "atomys.codes/stud42/internal/models/generated"
 )
 
 var client *modelgen.Client
 
 // Connect to the database and create the client.
-func Connect() (err error) {
+func Connect(cacheClient *cache.Client) (err error) {
 	var opts = []modelgen.Option{}
 
 	if os.Getenv("DEBUG") == "true" {
 		opts = append(opts, modelgen.Debug())
+	}
+
+	if cacheClient != nil {
+		opts = append(opts, generated.Cache(cacheClient))
 	}
 
 	client, err = modelgen.Open(

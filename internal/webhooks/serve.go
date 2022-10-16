@@ -9,9 +9,11 @@ import (
 
 	"github.com/getsentry/sentry-go"
 	"github.com/rs/zerolog/log"
+	"github.com/spf13/viper"
 	"github.com/streadway/amqp"
 
 	typesgen "atomys.codes/stud42/internal/api/generated/types"
+	"atomys.codes/stud42/internal/cache"
 	modelsutils "atomys.codes/stud42/internal/models"
 	"atomys.codes/stud42/internal/models/generated"
 	modelgen "atomys.codes/stud42/internal/models/generated"
@@ -32,8 +34,13 @@ var ErrInvalidWebhook = errors.New("invalid webhook, metadata is empty")
 
 // New creates a new webhooks processor instance
 func New() *processor {
-	if err := modelsutils.Connect(); err != nil {
-		log.Fatal().Err(err).Msg("failed to connect to database")
+	cacheClient, err := cache.New(viper.GetString("redis-url"))
+	if err != nil {
+		log.Fatal().Err(err).Msg("failed to create cache")
+	}
+
+	if modelsutils.Connect(cacheClient) != nil {
+		log.Fatal().Msg("Failed to connect to database")
 	}
 
 	return &processor{

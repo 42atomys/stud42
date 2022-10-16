@@ -24,7 +24,9 @@ package cmd
 import (
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 
+	"atomys.codes/stud42/internal/cache"
 	modelsutils "atomys.codes/stud42/internal/models"
 	modelgen "atomys.codes/stud42/internal/models/generated"
 	"atomys.codes/stud42/pkg/duoapi"
@@ -35,11 +37,16 @@ var campusCmd = &cobra.Command{
 	Use:   "campus",
 	Short: "Crawl all campus of 42 network and update the database",
 	Run: func(cmd *cobra.Command, args []string) {
-		log.Info().Msg("Start the crawling of all campus of 42 network")
-		if modelsutils.Connect() != nil {
+		cacheClient, err := cache.New(viper.GetString("redis-url"))
+		if err != nil {
+			log.Fatal().Err(err).Msg("failed to create cache")
+		}
+
+		if modelsutils.Connect(cacheClient) != nil {
 			log.Fatal().Msg("Failed to connect to database")
 		}
 
+		log.Info().Msg("Start the crawling of all campus of 42 network")
 		campus, err := duoapi.CampusAll(cmd.Context())
 		if err != nil {
 			log.Fatal().Err(err).Msg("Failed to get duoapi response")

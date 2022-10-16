@@ -29,7 +29,9 @@ import (
 
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 
+	"atomys.codes/stud42/internal/cache"
 	modelsutils "atomys.codes/stud42/internal/models"
 	modelgen "atomys.codes/stud42/internal/models/generated"
 	"atomys.codes/stud42/internal/models/generated/campus"
@@ -47,7 +49,12 @@ For any closed locations, the location will be marked as inactive in the databas
 	Run: func(cmd *cobra.Command, args []string) {
 		var campusID = cmd.Flag("campus_id").Value.String()
 
-		if modelsutils.Connect() != nil {
+		cacheClient, err := cache.New(viper.GetString("redis-url"))
+		if err != nil {
+			log.Fatal().Err(err).Msg("failed to create cache")
+		}
+
+		if modelsutils.Connect(cacheClient) != nil {
 			log.Fatal().Msg("Failed to connect to database")
 		}
 		db := modelsutils.Client()
