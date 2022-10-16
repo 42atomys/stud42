@@ -25,7 +25,7 @@ func (c *Client) NewGQLCache(ttl time.Duration) (*GQLCache, error) {
 //
 // [GQLGen Doc]: https://github.com/99designs/gqlgen/blob/master/graphql/cache.go
 func (c *GQLCache) Add(ctx context.Context, key string, value interface{}) {
-	err := c.Set(ctx, gqlCachekBuilder.WithParts(key).Build(), value, store.WithExpiration(c.ttl), store.WithTags([]string{"gql"}))
+	err := c.Set(ctx, gqlCacheKey.WithObject(key).Build(), value, store.WithExpiration(c.ttl), store.WithTags([]string{"gql"}))
 	if err != nil {
 		log.Error().Err(err).Msg("failed to add to cache")
 		sentry.CaptureException(err)
@@ -37,7 +37,7 @@ func (c *GQLCache) Add(ctx context.Context, key string, value interface{}) {
 //
 // [GQLGen Doc]: https://github.com/99designs/gqlgen/blob/master/graphql/cache.go
 func (c *GQLCache) Get(ctx context.Context, key string) (interface{}, bool) {
-	s, err := c.TypedClient.Get(ctx, gqlCachekBuilder.WithParts(key).Build())
+	s, err := c.TypedClient.Get(ctx, gqlCacheKey.WithObject(key).Build())
 	if err != nil {
 		return struct{}{}, false
 	}

@@ -96,6 +96,8 @@ func (c *LoadableCache[T]) Clear(ctx context.Context) error {
 	return c.TypedClient.Clear(ctx)
 }
 
+// Close the LoadableCache update channel to prevent any goroutine leak
+// and wait for the setter goroutine to finish
 func (c *LoadableCache[T]) Close() error {
 	close(c.setChannel)
 

@@ -97,7 +97,11 @@ func directiveAuthorization(client *modelgen.Client, cacheClient *cache.Client) 
 			})
 			defer loader.Close()
 
-			cu, err := loader.Get(ctx, cache.CurrentUserCacheKey.WithParts(tok.Subject()).Build(), store.WithExpiration(5*time.Minute))
+			cu, err := loader.Get(ctx,
+				cache.CurrentUserCacheKey.WithObject(tok.Subject()).Build(),
+				store.WithTags([]string{"currentUser"}),
+				store.WithExpiration(5*time.Minute),
+			)
 
 			if err != nil {
 				return nil, errUnauthenticated
