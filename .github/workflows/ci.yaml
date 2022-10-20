@@ -1,6 +1,7 @@
 name: CI/CD 🚀
 on:
   pull_request:
+  push:
   # push:
   #   branches:
   #     - main
