@@ -3,8 +3,7 @@ on:
   workflow_call:
 
 jobs:
-  build_and_push:
-    name: "Build & push to ghcr.io 🔧"
+  docker-images:
     runs-on: ubuntu-latest
     permissions:
       contents: read

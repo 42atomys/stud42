@@ -10,46 +10,39 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  ENVIROMENT: ${{ github.event_name == 'pull_request' && 'review-apps' || 'sandbox' }}
+
 jobs:
   ###############################
   ########### LINTERS ###########
   ###############################
-  backend-linters:
-    name: Backend Linters 💻
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "✅"
-  frontend-linters:
-    name: Frontend Linters 🕹
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "✅"
+  linters:
+    name: "Linters 🧹"
+    uses: ./.github/workflows/linters.yaml
   ###############################
   ############ TESTS ############
   ###############################
-  backend-tests:
-    name: Backend Tests 💻
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "✅"
-
-  frontend-tests:
-    name: Frontend Tests 🕹
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "✅"
+  tests:
+    name: Tests 🧪
+    uses: ./.github/workflows/tests.yaml
+    with:
+      environment: ${{ env.ENVIROMENT }}
   ###############################
   ############ BUILD ############
   ###############################
   build:
-    needs: [backend-tests, frontend-tests]
+    name: "Build 🔧"
+    needs: [tests]
     uses: ./.github/workflows/build.yaml
-
+    with:
+      environment: ${{ env.ENVIROMENT }}
   ###############################
   ########### DEPLOY ############
   ###############################
   deploy:
+    name: "Deploy 🚀"
     needs: [build]
     uses: ./.github/workflows/deploy.yaml
     with:
-      environment: ${{ github.event_name == 'pull_request' && 'review-apps' || 'sandbox' }}
+      environment: ${{ env.ENVIROMENT }}
