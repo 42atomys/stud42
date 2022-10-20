@@ -43,6 +43,9 @@ jobs:
 
   frontend:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: "web/ui"
     steps:
       - name: Checkout project
         uses: actions/checkout@v3
@@ -84,7 +87,7 @@ jobs:
   terraform:
     runs-on: ubuntu-latest
     env:
-      TF_WORKSPACE: production
+      TF_WORKSPACE: production # Compare the changes when plan with production
       AWS_ACCESS_KEY_ID: ${{ secrets.TERRAFORM_AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.TERRAFORM_AWS_SECRET_ACCESS_KEY }}
 
