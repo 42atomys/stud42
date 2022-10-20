@@ -1,9 +1,12 @@
 name: "CI"
 on:
   workflow_call:
-
+    outputs:
+      image:
+        description: The image builded and pushed to the registry
+        value: ${{ jobs.docker_images.outputs.image }}
 jobs:
-  docker-images:
+  docker_images:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -11,6 +14,8 @@ jobs:
     env:
       REGISTRY: ghcr.io
       IMAGE_NAME: ${{ github.repository }}
+    outputs:
+      image: ${{ steps.meta.outputs.tags }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3

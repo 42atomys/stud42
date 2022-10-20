@@ -41,3 +41,4 @@ jobs:
     secrets: inherit
     with:
       environment: ${{ github.event_name == 'pull_request' && 'review-apps' || 'sandbox' }}
+      image: ${{ needs.build.outputs.image }}
