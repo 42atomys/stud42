@@ -29,7 +29,7 @@ jobs:
   ###############################
   build:
     name: "Build 🔧"
-    needs: [tests]
+    needs: [linters, tests]
     uses: ./.github/workflows/build.yaml
   ###############################
   ########### DEPLOY ############
