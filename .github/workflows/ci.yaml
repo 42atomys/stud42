@@ -10,9 +10,6 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-env:
-  GH_ENV: ${{ github.event_name == 'pull_request' && 'review-apps' || 'sandbox' }}
-
 jobs:
   ###############################
   ########### LINTERS ###########
@@ -27,7 +24,7 @@ jobs:
     name: Tests 🧪
     uses: ./.github/workflows/tests.yaml
     with:
-      environment: "${{ env.GH_ENV }}"
+      environment: ${{ github.event_name == 'pull_request' && 'review-apps' || 'sandbox' }}
   ###############################
   ############ BUILD ############
   ###############################
@@ -36,7 +33,7 @@ jobs:
     needs: [tests]
     uses: ./.github/workflows/build.yaml
     with:
-      environment: "${{ env.GH_ENV }}"
+      environment: ${{ github.event_name == 'pull_request' && 'review-apps' || 'sandbox' }}
   ###############################
   ########### DEPLOY ############
   ###############################
@@ -45,4 +42,4 @@ jobs:
     needs: [build]
     uses: ./.github/workflows/deploy.yaml
     with:
-      environment: "${{ env.GH_ENV }}"
+      environment: ${{ github.event_name == 'pull_request' && 'review-apps' || 'sandbox' }}
