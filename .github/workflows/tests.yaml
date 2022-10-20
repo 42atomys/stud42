@@ -96,7 +96,9 @@ jobs:
       TF_WORKSPACE: production # Compare the changes when plan with production
       AWS_ACCESS_KEY_ID: ${{ secrets.TERRAFORM_AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.TERRAFORM_AWS_SECRET_ACCESS_KEY }}
-
+    defaults:
+      run:
+        working-directory: "deploy"
     steps:
       - name: Checkout project
         uses: actions/checkout@v3
@@ -104,13 +106,13 @@ jobs:
         uses: hashicorp/setup-terraform@v2
       - name: Terraform Init
         id: init
-        run: terraform -chdir=deploy init
+        run: terraform init
       - name: Terraform Validate
         id: validate
-        run: terraform -chdir=deploy validate -no-color
+        run: terraform validate -no-color
       - name: Terraform Plan
         id: plan
-        run: terraform -chdir=deploy plan -no-color -input=false
+        run: terraform plan -no-color -input=false
       # On pull request, build or change infrastructure according
       # to Terraform configuration files
       - uses: actions/github-script@v6

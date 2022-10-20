@@ -62,10 +62,13 @@ jobs:
 
   terraform:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: "deploy"
     steps:
       - name: Checkout project
         uses: actions/checkout@v3
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
       - name: Terraform Format
-        run: terraform -chdir=deploy fmt -check=true -recursive
+        run: terraform fmt -check=true -recursive

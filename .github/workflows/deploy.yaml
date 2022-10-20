@@ -39,6 +39,7 @@ jobs:
     defaults:
       run:
         shell: bash
+        working-directory: deploy
 
     steps:
       # Checkout the repository to the GitHub Actions runner
@@ -54,11 +55,11 @@ jobs:
       # initial files, loading any remote state, downloading modules, etc.
       - name: Terraform Init
         id: init
-        run: terraform -chdir=deploy init
+        run: terraform init
 
         # On push to main, build or change infrastructure according
         # to Terraform configuration files
       - name: Terraform Apply
         id: apply
         if: (github.ref == 'refs/heads/main' && github.event_name == 'push') || github.ref_name == 'refactor/infrastructure-as-code'
-        run: terraform -chdir=deploy apply -auto-approve -input=false
+        run: terraform apply -auto-approve -input=false
