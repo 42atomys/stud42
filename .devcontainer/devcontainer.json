@@ -96,7 +96,8 @@
         "esbenp.prettier-vscode",
         "bradlc.vscode-tailwindcss",
         "zxh404.vscode-proto3",
-        "redhat.vscode-yaml"
+        "redhat.vscode-yaml",
+        "hashicorp.terraform"
       ]
     }
   },

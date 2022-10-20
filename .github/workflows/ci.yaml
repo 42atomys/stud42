@@ -1,0 +1,56 @@
+name: CI/CD 🚀
+on:
+  pull_request:
+    branches:
+      - main
+      - refactor/infrastructure-as-code
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ###############################
+  ########### LINTERS ###########
+  ###############################
+  backend-linters:
+    name: Backend Linters 💻
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "✅"
+  frontend-linters:
+    name: Frontend Linters 🕹
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "✅"
+  ###############################
+  ############ TESTS ############
+  ###############################
+  backend-tests:
+    name: Backend Tests 💻
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "✅"
+
+  frontend-tests:
+    name: Frontend Tests 🕹
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "✅"
+  ###############################
+  ############ BUILD ############
+  ###############################
+  build_and_push:
+    needs: [backend-tests, frontend-tests]
+    uses: ./.github/workflows/build.yaml
+
+  ###############################
+  ########### DEPLOY ############
+  ###############################
+  deploy:
+    needs: [build_and_push]
+    uses: ./.github/workflows/deploy.yaml

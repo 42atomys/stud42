@@ -1,0 +1,28 @@
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: app-s42
+  namespace: production
+spec:
+  selector:
+    istio: ingressgateway # use istio default controller
+  servers:
+    - port: # http
+        number: 80
+        name: http
+        protocol: HTTP
+      hosts:
+        - s42.app
+        - "*.s42.app"
+      tls:
+        httpsRedirect: true
+    - port: # https
+        number: 443
+        name: https
+        protocol: HTTPS
+      tls:
+        mode: SIMPLE
+        credentialName: s42-app-tls
+      hosts:
+        - s42.app
+        - "*.s42.app"

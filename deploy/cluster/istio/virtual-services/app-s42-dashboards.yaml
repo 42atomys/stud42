@@ -1,0 +1,16 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: app-s42-dashboards
+  namespace: monitoring
+spec:
+  hosts:
+    - dashboards.s42.app
+  gateways:
+    - app-s42
+  http:
+    - route:
+        - destination:
+            port:
+              number: 3000
+            host: grafana.monitoring.svc.cluster.local

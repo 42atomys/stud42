@@ -1,8 +1,8 @@
 apiVersion: networking.istio.io/v1beta1
 kind: Gateway
 metadata:
-  name: s42-app-live
-  namespace: production
+  name: s42-dev-sandbox
+  namespace: sandbox
 spec:
   selector:
     istio: ingressgateway # use istio default controller
@@ -12,7 +12,10 @@ spec:
         name: http
         protocol: HTTP
       hosts:
-      - s42.app
+        - s42.dev
+        - "*.s42.dev"
+        - "*.sandbox.s42.dev"
+        - "*.reviews.s42.dev"
       tls:
         httpsRedirect: true
     - port:
@@ -21,6 +24,15 @@ spec:
         protocol: HTTPS
       tls:
         mode: SIMPLE
-        credentialName: s42-app-tls
+        credentialName: s42-dev-tls
       hosts:
-      - s42.app
+        - s42.dev
+        - "*.s42.dev"
+        - "*.sandbox.s42.dev"
+        - "*.reviews.s42.dev"
+    - port:
+        number: 51000
+        name: grpc
+        protocol: GRPC
+      hosts:
+        - sandbox.s42.dev

@@ -9,8 +9,7 @@ images:
     newName: ghcr.io/42atomys/stud42
     newTag: latest
 
-patchesStrategicMerge:
-  - ./use-live-routing.yaml
+patchesStrategicMerge: []
 
 replacements:
   - source:

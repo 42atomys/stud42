@@ -1,13 +1,3 @@
-apiVersion: networking.istio.io/v1beta1
-kind: VirtualService
-metadata:
-  name: http-api
-spec:
-  hosts:
-  - s42.app
-  gateways:
-  - s42-app-live
-
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -18,7 +8,7 @@ spec:
   template:
     spec:
       containers:
-      - name: service
-        env:
-        - name: CORS_ORIGIN
-          value: https://s42.app
+        - name: service
+          env:
+            - name: CORS_ORIGIN
+              value: https://s42.app

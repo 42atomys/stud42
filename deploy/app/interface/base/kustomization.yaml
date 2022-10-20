@@ -1,11 +1,10 @@
 resources:
-- deployment.yaml
-- service.yaml
-- virtual-service.yaml
+  - deployment.yaml
+  - service.yaml
 
 commonLabels:
   kubernetes.io/name: interface
-  app.kubernetes.io/version: '0.1'
+  app.kubernetes.io/version: "0.1"
   app.kubernetes.io/component: frontend
   app.kubernetes.io/part-of: s42-app
   app.kubernetes.io/managed-by: kustomize
