@@ -3,6 +3,19 @@ on:
   workflow_call:
 
 jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: "deploy"
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v3
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+      - name: Terraform Format
+        run: terraform fmt -check=true -recursive
+
   backend:
     runs-on: ubuntu-latest
     steps:
@@ -19,6 +32,7 @@ jobs:
         uses: golangci/golangci-lint-action@v3.2.0
         with:
           version: latest
+
   frontend:
     runs-on: ubuntu-latest
     defaults:
@@ -59,16 +73,3 @@ jobs:
 
       - name: TypeScript
         run: yarn style:ts
-
-  terraform:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: "deploy"
-    steps:
-      - name: Checkout project
-        uses: actions/checkout@v3
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-      - name: Terraform Format
-        run: terraform fmt -check=true -recursive

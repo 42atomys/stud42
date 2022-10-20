@@ -9,6 +9,82 @@ on:
         required: true
         description: "AWS secret access key"
 jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    env:
+      TF_WORKSPACE: production # Compare the changes when plan with production
+      AWS_ACCESS_KEY_ID: ${{ secrets.TERRAFORM_AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.TERRAFORM_AWS_SECRET_ACCESS_KEY }}
+    defaults:
+      run:
+        working-directory: "deploy"
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v3
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+      - name: Terraform Init
+        id: init
+        run: terraform init
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -no-color -input=false
+      # On pull request, build or change infrastructure according
+      # to Terraform configuration files
+      - uses: actions/github-script@v6
+        if: always() && github.event_name == 'pull_request'
+        env:
+          PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            // 1. Retrieve existing bot comments for the PR
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            })
+            const botComment = comments.find(comment => {
+              return comment.user.type === 'Bot' && comment.body.includes('Terraform Format and Style')
+            })
+
+            // 2. Prepare format of the comment
+            const output = `#### Terraform Initialization ⚙️ \`${{ steps.init.outcome }}\`
+            #### Terraform Validation 🤖 \`${{ steps.validate.outcome }}\`
+            <details><summary>Show Validation</summary>
+            \`\`\`\n
+            ${{ steps.validate.outputs.stdout }}
+            \`\`\`
+            </details>
+
+            #### Terraform Plan 📖 \`${{ steps.plan.outcome }}\`
+            <details><summary>Show Plan</summary>
+            \`\`\`\n
+            ${process.env.PLAN}
+            \`\`\`
+            </details>
+
+            * @${{ github.actor }} trigger the action \`${{ github.event_name }}\` on \`deploy\` directory, with the workflow \`${{ github.workflow }}\`*`;
+
+            // 3. If we have a comment, update it, otherwise create a new one
+            if (botComment) {
+              github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: output
+              })
+            } else {
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: output
+              })
+            }
   backend:
     runs-on: ubuntu-latest
     steps:
@@ -89,80 +165,3 @@ jobs:
               echo "Failed"
               exit 1
           fi
-
-  terraform:
-    runs-on: ubuntu-latest
-    env:
-      TF_WORKSPACE: production # Compare the changes when plan with production
-      AWS_ACCESS_KEY_ID: ${{ secrets.TERRAFORM_AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.TERRAFORM_AWS_SECRET_ACCESS_KEY }}
-    defaults:
-      run:
-        working-directory: "deploy"
-    steps:
-      - name: Checkout project
-        uses: actions/checkout@v3
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-      - name: Terraform Init
-        id: init
-        run: terraform init
-      - name: Terraform Validate
-        id: validate
-        run: terraform validate -no-color
-      - name: Terraform Plan
-        id: plan
-        run: terraform plan -no-color -input=false
-      # On pull request, build or change infrastructure according
-      # to Terraform configuration files
-      - uses: actions/github-script@v6
-        if: always() && github.event_name == 'pull_request'
-        env:
-          PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            // 1. Retrieve existing bot comments for the PR
-            const { data: comments } = await github.rest.issues.listComments({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-            })
-            const botComment = comments.find(comment => {
-              return comment.user.type === 'Bot' && comment.body.includes('Terraform Format and Style')
-            })
-
-            // 2. Prepare format of the comment
-            const output = `#### Terraform Initialization ⚙️ \`${{ steps.init.outcome }}\`
-            #### Terraform Validation 🤖 \`${{ steps.validate.outcome }}\`
-            <details><summary>Show Validation</summary>
-            \`\`\`\n
-            ${{ steps.validate.outputs.stdout }}
-            \`\`\`
-            </details>
-
-            #### Terraform Plan 📖 \`${{ steps.plan.outcome }}\`
-            <details><summary>Show Plan</summary>
-            \`\`\`\n
-            ${process.env.PLAN}
-            \`\`\`
-            </details>
-
-            * @${{ github.actor }} trigger the action \`${{ github.event_name }}\` on \`deploy\` directory, with the workflow \`${{ github.workflow }}\`*`;
-
-            // 3. If we have a comment, update it, otherwise create a new one
-            if (botComment) {
-              github.rest.issues.updateComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                comment_id: botComment.id,
-                body: output
-              })
-            } else {
-              github.rest.issues.createComment({
-                issue_number: context.issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                body: output
-              })
-            }
