@@ -41,7 +41,7 @@ jobs:
   ###############################
   ############ BUILD ############
   ###############################
-  build_and_push:
+  build:
     needs: [backend-tests, frontend-tests]
     uses: ./.github/workflows/build.yaml
 
@@ -49,7 +49,7 @@ jobs:
   ########### DEPLOY ############
   ###############################
   deploy:
-    needs: [build_and_push]
+    needs: [build]
     uses: ./.github/workflows/deploy.yaml
     with:
-      environment: ${{ github.event_name == 'push' && 'production' || 'staging' }}
+      environment: ${{ github.event_name == 'pull_request' && 'review-apps' || 'sandbox' }}

@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   terraform:
-    name: "Terraform"
+    name: ${{ inputs.environment }}
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
 
