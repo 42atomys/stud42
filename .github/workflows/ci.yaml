@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  ENVIROMENT: ${{ github.event_name == 'pull_request' && 'review-apps' || 'sandbox' }}
+  GH_ENV: ${{ github.event_name == 'pull_request' && 'review-apps' || 'sandbox' }}
 
 jobs:
   ###############################
@@ -27,7 +27,7 @@ jobs:
     name: Tests 🧪
     uses: ./.github/workflows/tests.yaml
     with:
-      environment: ${{ env.ENVIROMENT }}
+      environment: "${{ env.GH_ENV }}"
   ###############################
   ############ BUILD ############
   ###############################
@@ -36,7 +36,7 @@ jobs:
     needs: [tests]
     uses: ./.github/workflows/build.yaml
     with:
-      environment: ${{ env.ENVIROMENT }}
+      environment: "${{ env.GH_ENV }}"
   ###############################
   ########### DEPLOY ############
   ###############################
@@ -45,4 +45,4 @@ jobs:
     needs: [build]
     uses: ./.github/workflows/deploy.yaml
     with:
-      environment: ${{ env.ENVIROMENT }}
+      environment: "${{ env.GH_ENV }}"
