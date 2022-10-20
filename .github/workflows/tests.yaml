@@ -107,14 +107,14 @@ jobs:
         run: terraform -chdir=deploy init
       - name: Terraform Validate
         id: validate
-        run: terraform -chdir=deploy validate -no-color -check
+        run: terraform -chdir=deploy validate -no-color
       - name: Terraform Plan
         id: plan
         run: terraform -chdir=deploy plan -no-color -input=false
       # On pull request, build or change infrastructure according
       # to Terraform configuration files
       - uses: actions/github-script@v6
-        if: github.event_name == 'pull_request'
+        if: always() && github.event_name == 'pull_request'
         env:
           PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
         with:
