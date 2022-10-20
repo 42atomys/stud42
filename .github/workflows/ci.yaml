@@ -23,6 +23,7 @@ jobs:
   tests:
     name: Tests 🧪
     uses: ./.github/workflows/tests.yaml
+    secrets: inherit
   ###############################
   ############ BUILD ############
   ###############################
@@ -37,5 +38,6 @@ jobs:
     name: "Deploy 🚀"
     needs: [build]
     uses: ./.github/workflows/deploy.yaml
+    secrets: inherit
     with:
       environment: ${{ github.event_name == 'pull_request' && 'review-apps' || 'sandbox' }}

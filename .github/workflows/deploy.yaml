@@ -5,7 +5,16 @@ on:
       environment:
         required: true
         type: string
-
+    secrets:
+      TF_WORKSPACE:
+        required: true
+        description: "Terraform workspace"
+      TERRAFORM_AWS_ACCESS_KEY_ID:
+        required: true
+        description: "AWS access key id"
+      TERRAFORM_AWS_SECRET_ACCESS_KEY:
+        required: true
+        description: "AWS secret access key"
 permissions:
   contents: read
 
