@@ -23,8 +23,6 @@ jobs:
   tests:
     name: Tests 🧪
     uses: ./.github/workflows/tests.yaml
-    with:
-      environment: ${{ github.event_name == 'pull_request' && 'review-apps' || 'sandbox' }}
   ###############################
   ############ BUILD ############
   ###############################
@@ -32,8 +30,6 @@ jobs:
     name: "Build 🔧"
     needs: [tests]
     uses: ./.github/workflows/build.yaml
-    with:
-      environment: ${{ github.event_name == 'pull_request' && 'review-apps' || 'sandbox' }}
   ###############################
   ########### DEPLOY ############
   ###############################

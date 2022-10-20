@@ -1,10 +1,6 @@
 name: "Tests"
 on:
   workflow_call:
-    inputs:
-      environment:
-        required: true
-        type: string
 
 jobs:
   backend:
@@ -87,9 +83,8 @@ jobs:
 
   terraform:
     runs-on: ubuntu-latest
-    environment: ${{ inputs.environment }}
     env:
-      TF_WORKSPACE: ${{ secrets.TF_WORKSPACE }}
+      TF_WORKSPACE: production
       AWS_ACCESS_KEY_ID: ${{ secrets.TERRAFORM_AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.TERRAFORM_AWS_SECRET_ACCESS_KEY }}
 
