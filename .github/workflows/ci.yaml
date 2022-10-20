@@ -1,12 +1,9 @@
 name: CI/CD 🚀
 on:
   pull_request:
-    branches:
-      - main
-      - refactor/infrastructure-as-code
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
   workflow_dispatch:
 
 concurrency:
