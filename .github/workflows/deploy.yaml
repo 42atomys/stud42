@@ -26,7 +26,6 @@ on:
 
 permissions:
   contents: read
-  deployments: write
 
 jobs:
   terraform:
@@ -42,7 +41,7 @@ jobs:
       TF_WORKSPACE: ${{ secrets.TF_WORKSPACE }}
       AWS_ACCESS_KEY_ID: ${{ secrets.TERRAFORM_AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.TERRAFORM_AWS_SECRET_ACCESS_KEY }}
-
+      KUBE_CONFIG_PATH: ~/.kube/config
     # Use the Bash shell regardless whether the GitHub Actions runner is
     # ubuntu-latest, macos-latest, or windows-latest
     defaults:
@@ -54,13 +53,9 @@ jobs:
       # Checkout the repository to the GitHub Actions runner
       - name: Checkout
         uses: actions/checkout@v3
-      - name: DEBUG
-        run: |
-          echo "TF_WORKSPACE: $TF_WORKSPACE"
-          echo "environmentName: ${{ inputs.environmentName }}"
-          echo "stacks: ${{ inputs.stacks }}"
-          echo "image: ${{ inputs.image }}"
-          echo "matrix.stack: ${{ matrix.stack }}"
+      - env:
+          KUBECONFIG_ADMIN: ${{ secrets.KUBECONFIG_ADMIN }}
+        run: mkdir -p ~/.kube && echo "$KUBECONFIG_ADMIN" >> ~/.kube/config
       - name: Generate url of the environment
         id: envurl
         uses: actions/github-script@v6
@@ -78,15 +73,6 @@ jobs:
             } else {
               core.setOutput('url', 'https://s42.app');
             }
-      - uses: chrnorm/deployment-action@v2
-        name: Create GitHub deployment
-        id: deployment
-        with:
-          token: "${{ github.token }}"
-          environment-url: ${{ steps.envurl.outputs.url }}
-          environment: ${{ inputs.environmentName }}
-          initial-status: in_progress
-          transient-environment: ${{ github.event_name == 'pull_request' }}
 
       # Install the latest version of Terraform CLI and configure the
       # Terraform CLI configuration file with a Terraform Cloud user API token
@@ -104,21 +90,3 @@ jobs:
       - name: Terraform Apply
         id: apply
         run: terraform apply -auto-approve -input=false
-
-      - name: Update deployment status (success)
-        if: success()
-        uses: chrnorm/deployment-status@v2
-        with:
-          token: "${{ github.token }}"
-          environment-url: ${{ steps.envurl.outputs.url }}
-          state: "success"
-          deployment-id: ${{ steps.deployment.outputs.deployment_id }}
-
-      - name: Update deployment status (failure)
-        if: failure()
-        uses: chrnorm/deployment-status@v2
-        with:
-          token: "${{ github.token }}"
-          environment-url: ${{ steps.envurl.outputs.url }}
-          state: "failure"
-          deployment-id: ${{ steps.deployment.outputs.deployment_id }}
