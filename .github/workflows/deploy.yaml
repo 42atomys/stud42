@@ -39,6 +39,7 @@ jobs:
         stack: ${{ fromJson(inputs.stacks) }}
     env:
       TF_WORKSPACE: ${{ secrets.TF_WORKSPACE }}
+      TF_VAR_pull_request_number: ${{ github.event.pull_request.number }}
       AWS_ACCESS_KEY_ID: ${{ secrets.TERRAFORM_AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.TERRAFORM_AWS_SECRET_ACCESS_KEY }}
       KUBE_CONFIG_PATH: ~/.kube/config

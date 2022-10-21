@@ -1,9 +1,9 @@
-resource "kubernetes_pod" "helloworld" {
+resource "kubernetes_pod" "preview" {
   metadata {
-    name      = "helloworld"
+    name      = local.deployment_name
     namespace = "previews"
     labels = {
-      "app" = "helloworld"
+      "app" = local.deployment_name
     }
   }
 
@@ -31,28 +31,28 @@ resource "kubernetes_pod" "helloworld" {
   }
 }
 
-resource "kubernetes_service" "helloworld" {
+resource "kubernetes_service" "preview" {
   depends_on = [
-    kubernetes_pod.helloworld
+    kubernetes_pod.preview
   ]
 
   metadata {
-    name      = "helloworld"
+    name      = local.deployment_name
     namespace = "previews"
   }
 
   spec {
-    selector = kubernetes_pod.helloworld.metadata.0.labels
+    selector = kubernetes_pod.preview.metadata.0.labels
     port {
-      name = kubernetes_pod.helloworld.spec.0.container.0.port.0.name
-      port = kubernetes_pod.helloworld.spec.0.container.0.port.0.container_port
+      name = kubernetes_pod.preview.spec.0.container.0.port.0.name
+      port = kubernetes_pod.preview.spec.0.container.0.port.0.container_port
     }
   }
 }
 
-resource "kubectl_manifest" "virtual_services_helloworld" {
+resource "kubectl_manifest" "virtual_services_preview" {
   depends_on = [
-    kubernetes_service.helloworld
+    kubernetes_service.preview
   ]
 
   yaml_body = yamlencode(
@@ -60,19 +60,19 @@ resource "kubectl_manifest" "virtual_services_helloworld" {
       apiVersion = "networking.istio.io/v1alpha3"
       kind       = "VirtualService"
       metadata = {
-        name      = "helloworld"
+        name      = local.deployment_name
         namespace = "previews"
       }
       spec = {
         gateways = ["dev-s42-previews"]
-        hosts    = ["pr-237.previews.s42.dev"]
+        hosts    = ["${local.deployment_name}.previews.s42.dev"]
         http = [
           {
-            name = "helloworld"
+            name = local.deployment_name
             route = [
               {
                 destination = {
-                  host = "helloworld.previews.svc.cluster.local"
+                  host = "${local.deployment_name}.previews.svc.cluster.local"
                   port = {
                     number = 80
                   }
