@@ -1,7 +1,7 @@
 resource "kubernetes_pod" "helloworld" {
   metadata {
     name      = "helloworld"
-    namespace = "review-apps"
+    namespace = "previews"
     labels = {
       "app" = "helloworld"
     }
@@ -38,7 +38,7 @@ resource "kubernetes_service" "helloworld" {
 
   metadata {
     name      = "helloworld"
-    namespace = "review-apps"
+    namespace = "previews"
   }
 
   spec {
@@ -61,18 +61,18 @@ resource "kubectl_manifest" "virtual_services_helloworld" {
       kind       = "VirtualService"
       metadata = {
         name      = "helloworld"
-        namespace = "review-apps"
+        namespace = "previews"
       }
       spec = {
         gateways = ["dev-s42"]
-        hosts    = ["pr-237.review-apps.s42.dev"]
+        hosts    = ["pr-237.previews.s42.dev"]
         http = [
           {
             name = "helloworld"
             route = [
               {
                 destination = {
-                  host = "helloworld.review-apps.svc.cluster.local"
+                  host = "helloworld.previews.svc.cluster.local"
                   port = {
                     number = 80
                   }

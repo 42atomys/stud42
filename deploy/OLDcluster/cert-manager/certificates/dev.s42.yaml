@@ -8,7 +8,7 @@ spec:
     - s42.dev
     - "*.s42.dev"
     - "*.sandbox.s42.dev"
-    - "*.reviews.s42.dev"
+    - "*.previews.s42.dev"
   duration: 2160h # 90d
   renewBefore: 360h # 15d
   issuerRef:

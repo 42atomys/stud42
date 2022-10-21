@@ -22,7 +22,7 @@ module "istio" {
       ingressSelectorName = "ingressgateway"
       namespace           = module.kubernetes_namespaces.namespace.sandbox
       serverHttpsRedirect = true
-      hosts               = ["s42.dev", "*.s42.dev", "*.sandbox.s42.dev", "*.reviews.s42.dev"]
+      hosts               = ["s42.dev", "*.s42.dev", "*.sandbox.s42.dev", "*.previews.s42.dev"]
       tlsMode             = "SIMPLE"
       tlsCredentialName   = "s42-dev-tls"
       extraServers = [

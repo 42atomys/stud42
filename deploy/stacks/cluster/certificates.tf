@@ -66,7 +66,7 @@ module "cert_manager" {
       issuer_name = "ovh-issuer"
     }
     "s42-dev" = {
-      dns_names   = ["s42.dev", "*.s42.dev", "*.sandbox.s42.dev", "*.reviews.s42.dev"]
+      dns_names   = ["s42.dev", "*.s42.dev", "*.sandbox.s42.dev", "*.previews.s42.dev"]
       issuer_name = "ovh-issuer"
     }
   }

@@ -110,7 +110,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        namespace: [review-apps, staging, sandbox, production]
+        namespace: [previews, staging, sandbox, production]
     steps:
       - uses: azure/setup-kubectl@v3.0
       - uses: azure/k8s-set-context@v3

@@ -65,7 +65,7 @@ jobs:
             const event = context.payload;
 
             if (eventName == 'pull_request') {
-              const url = `https://pr-${context.payload.pull_request.number}.review-apps.s42.dev`;
+              const url = `https://pr-${context.payload.pull_request.number}.previews.s42.dev`;
               core.setOutput('url', url);
             } else if (eventName == 'release' && context.payload.action == 'prereleased') {
               const url = 'https://next.s42.app';

@@ -1,1 +1,1 @@
-environment = "review-apps"
+environment = "previews"

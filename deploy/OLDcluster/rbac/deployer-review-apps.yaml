@@ -3,7 +3,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: deployer
-  namespace: review-apps
+  namespace: previews
 rules:
   - apiGroups: ["", "apps", "batch"]
     resources: ["*"]
@@ -12,7 +12,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  namespace: review-apps
+  namespace: previews
   name: deployer
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -21,10 +21,10 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: deployer
-    namespace: review-apps
+    namespace: previews
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: deployer
-  namespace: review-apps
+  namespace: previews
