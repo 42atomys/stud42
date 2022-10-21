@@ -5,6 +5,10 @@ on:
       environmentName:
         required: true
         type: string
+      stacks:
+        required: true
+        type: string
+        description: "The name of stacks to deploy, in json array format"
       image:
         required: true
         description: "The docker image SHA to deploy"
@@ -26,11 +30,14 @@ run-name: "Deploy ${{ inputs.image }} to ${{ inputs.environmentName }}"
 
 jobs:
   terraform:
-    name: "${{ inputs.environmentName }}"
+    name: "${{ matrix.stack }} on ${{ inputs.environmentName }}"
     runs-on: ubuntu-latest
     environment:
       name: ${{ inputs.environmentName }}
       url: ${{ steps.envurl.outputs.url }}
+    strategy:
+      matrix:
+        stack: ${{ fromJson(inputs.stacks) }}
     env:
       TF_WORKSPACE: ${{ secrets.TF_WORKSPACE }}
       AWS_ACCESS_KEY_ID: ${{ secrets.TERRAFORM_AWS_ACCESS_KEY_ID }}
@@ -41,7 +48,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: deploy
+        working-directory: "deploy/stacks/${{ matrix.stack }}"
 
     steps:
       # Checkout the repository to the GitHub Actions runner
