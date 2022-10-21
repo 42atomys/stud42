@@ -73,7 +73,8 @@ jobs:
           token: "${{ github.token }}"
           environment-url: ${{ steps.envurl.outputs.url }}
           environment: ${{ inputs.environmentName }}
-          state: in_progress
+          initial-status: in_progress
+          transient-environment: ${{ github.event_name == 'pull_request' }}
 
       # Install the latest version of Terraform CLI and configure the
       # Terraform CLI configuration file with a Terraform Cloud user API token
