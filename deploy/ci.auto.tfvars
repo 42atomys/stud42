@@ -1,1 +1,1 @@
-environment = "previews"
+environment = "previews-pr"
