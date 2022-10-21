@@ -26,8 +26,6 @@ on:
 permissions:
   contents: read
 
-run-name: "Deploy ${{ inputs.image }} to ${{ inputs.environmentName }}"
-
 jobs:
   terraform:
     name: "${{ matrix.stack }} on ${{ inputs.environmentName }}"
@@ -54,7 +52,13 @@ jobs:
       # Checkout the repository to the GitHub Actions runner
       - name: Checkout
         uses: actions/checkout@v3
-
+      - name: DEBUG
+        run: |
+          echo "TF_WORKSPACE: $TF_WORKSPACE"
+          echo "environmentName: ${{ inputs.environmentName }}"
+          echo "stacks: ${{ inputs.stacks }}"
+          echo "image: ${{ inputs.image }}"
+          echo "matrix.stack: ${{ matrix.stack }}"
       - name: Generate url of the environment
         id: envurl
         uses: actions/github-script@v6
@@ -62,10 +66,9 @@ jobs:
           script: |
             const eventName = context.eventName;
             const event = context.payload;
-            const refName = context.ref.split('refs/heads/').pop().replaceAll("/", "-");
 
             if (eventName == 'pull_request') {
-              const url = `https://${refName}.review-apps.s42.dev`;
+              const url = `https://pr-${context.payload.pull_request.number}.review-apps.s42.dev`;
               core.setOutput('url', url);
             } else if (eventName == 'release' && context.payload.action == 'prereleased') {
               const url = 'https://next.s42.app';

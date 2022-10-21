@@ -18,16 +18,16 @@ jobs:
   ###############################
   ########### LINTERS ###########
   ###############################
-  linters:
-    name: "Linters 🧹"
-    uses: ./.github/workflows/linters.yaml
+  # linters:
+  #   name: "Linters 🧹"
+  #   uses: ./.github/workflows/linters.yaml
   ###############################
   ############ TESTS ############
   ###############################
-  tests:
-    name: Tests 🧪
-    uses: ./.github/workflows/tests.yaml
-    secrets: inherit
+  # tests:
+  #   name: Tests 🧪
+  #   uses: ./.github/workflows/tests.yaml
+  #   secrets: inherit
   ###############################
   ############ BUILD ############
   ###############################
@@ -38,13 +38,13 @@ jobs:
   ###############################
   ########### DEPLOY ############
   ###############################
+
   deploy:
     name: "Deploy 🚀"
-    needs: [tests, linters] # [tests, linters, build]
+    # needs:  [tests, linters, build]
     uses: ./.github/workflows/deploy.yaml
     secrets: inherit
-    if: github.event_name == 'release' || github.event_name == 'pull_request'
     with:
-      environmentName: "${{ github.event_name == 'pull_request' && 'reviews/${{ github.ref_name }}' || 'sandbox' }}"
+      environmentName: "${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.number) || (github.event_name == 'release' && github.event.action == 'released' && 'production' || 'staging') }}"
       stacks: '["test"]'
       image: "false" # ${{ needs.build.outputs.image }}
