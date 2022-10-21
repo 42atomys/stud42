@@ -8,7 +8,7 @@ module "istio" {
       serverHttpsRedirect = true
       hosts               = ["s42.app", "*.s42.app"]
       tlsMode             = "SIMPLE"
-      tlsCredentialName   = "s42-app-tls"
+      tlsCredentialName   = "app-s42-tls"
     },
     "app-s42-next" = {
       ingressSelectorName = "ingressgateway"
@@ -16,15 +16,15 @@ module "istio" {
       serverHttpsRedirect = true
       hosts               = ["next.s42.app", "*.next.s42.app"]
       tlsMode             = "SIMPLE"
-      tlsCredentialName   = "next-s42-app-tls"
+      tlsCredentialName   = "app-s42-next-tls"
     },
     "dev-s42" = {
       ingressSelectorName = "ingressgateway"
       namespace           = module.kubernetes_namespaces.namespace.sandbox
       serverHttpsRedirect = true
-      hosts               = ["s42.dev", "*.s42.dev", "*.sandbox.s42.dev", "*.previews.s42.dev"]
+      hosts               = ["s42.dev", "*.s42.dev", "*.sandbox.s42.dev"]
       tlsMode             = "SIMPLE"
-      tlsCredentialName   = "s42-dev-tls"
+      tlsCredentialName   = "dev-s42-tls"
       extraServers = [
         {
           port = {
@@ -35,6 +35,14 @@ module "istio" {
           hosts = ["sandbox.s42.dev"]
         }
       ]
+    }
+    "dev-s42-previews" = {
+      ingressSelectorName = "ingressgateway"
+      namespace           = module.kubernetes_namespaces.namespace.previews
+      serverHttpsRedirect = true
+      hosts               = ["*.previews.s42.dev"]
+      tlsMode             = "SIMPLE"
+      tlsCredentialName   = "dev-s42-previews-tls"
     }
   }
 

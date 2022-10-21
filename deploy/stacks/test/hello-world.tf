@@ -64,7 +64,7 @@ resource "kubectl_manifest" "virtual_services_helloworld" {
         namespace = "previews"
       }
       spec = {
-        gateways = ["dev-s42"]
+        gateways = ["dev-s42-previews"]
         hosts    = ["pr-237.previews.s42.dev"]
         http = [
           {

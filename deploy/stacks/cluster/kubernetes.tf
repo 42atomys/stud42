@@ -26,8 +26,8 @@ module "kubernetes_namespaces" {
       alias : []
       istioInjection : true
     },
-    "review-apps" = {
-      alias : ["reviews", "pull-requests"]
+    "previews" = {
+      alias : ["reviews", "review-apps", "pull-requests"]
       istioInjection : true
     },
     "sandbox" = {
