@@ -49,10 +49,7 @@ jobs:
       github.event_name == 'release' ||
       github.event_name == 'push' ||
       github.event_name == 'workflow_dispatch' ||
-      (github.event_name == 'pull_request' && github.event.action == 'ready_for_review') ||
-      (github.event_name == 'pull_request' && github.event.action == 'synchronize') ||
-      (github.event_name == 'pull_request' && github.event.action == 'reopened') ||
-      (github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'needs-preview-deploy')
+      (github.event_name == 'pull_request' && github.event.pull_request.draft == true && contains(github.event.pull_request.labels.*.name, 'needs-preview-deploy'))
     with:
       environmentName: "${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.number) || (github.event_name == 'release' && github.event.action == 'released' && 'production' || 'staging') }}"
       stacks: '["test"]'
