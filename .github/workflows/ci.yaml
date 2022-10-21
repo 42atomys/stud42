@@ -45,5 +45,5 @@ jobs:
     secrets: inherit
     if: github.event_name == 'release' || github.event_name == 'pull_request'
     with:
-      environmentName: ${{ github.event_name == 'pull_request' && 'review-apps' || 'sandbox' }}
+      environmentName: ${{ github.event_name == 'pull_request' && 'reviews/${{ github.ref_name }}' || 'sandbox' }}
       image: ${{ needs.build.outputs.image }}
