@@ -23,8 +23,10 @@ on:
       TERRAFORM_AWS_SECRET_ACCESS_KEY:
         required: true
         description: "AWS secret access key"
+
 permissions:
   contents: read
+  deployments: write
 
 jobs:
   terraform:
