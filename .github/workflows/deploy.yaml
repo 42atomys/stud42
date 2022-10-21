@@ -103,7 +103,6 @@ jobs:
         # to Terraform configuration files
       - name: Terraform Apply
         id: apply
-        if: (github.ref == 'refs/heads/main' && github.event_name == 'push') || github.ref_name == 'refactor/infrastructure-as-code'
         run: terraform apply -auto-approve -input=false
 
       - name: Update deployment status (success)

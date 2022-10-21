@@ -7,4 +7,19 @@ terraform {
     skip_region_validation      = true
     skip_credentials_validation = true
   }
+
+  required_providers {
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = ">= 2.14"
+    }
+    kubectl = {
+      source  = "gavinbunney/kubectl"
+      version = ">= 1.11"
+    }
+    helm = {
+      source  = "hashicorp/helm"
+      version = ">= 2.7.1"
+    }
+  }
 }
