@@ -50,38 +50,37 @@ resource "kubernetes_service" "preview" {
   }
 }
 
-resource "kubectl_manifest" "virtual_services_preview" {
+resource "kubernetes_manifest" "virtual_services_preview" {
   depends_on = [
     kubernetes_service.preview
   ]
 
-  yaml_body = yamlencode(
-    {
-      apiVersion = "networking.istio.io/v1alpha3"
-      kind       = "VirtualService"
-      metadata = {
-        name      = local.deployment_name
-        namespace = "previews"
-      }
-      spec = {
-        gateways = ["dev-s42-previews"]
-        hosts    = ["${local.deployment_name}.previews.s42.dev"]
-        http = [
-          {
-            name = local.deployment_name
-            route = [
-              {
-                destination = {
-                  host = "${local.deployment_name}.previews.svc.cluster.local"
-                  port = {
-                    number = 80
-                  }
+  manifest = {
+    apiVersion = "networking.istio.io/v1alpha3"
+    kind       = "VirtualService"
+    metadata = {
+      name      = local.deployment_name
+      namespace = "previews"
+    }
+
+    spec = {
+      gateways = ["dev-s42-previews"]
+      hosts    = ["${local.deployment_name}.previews.s42.dev"]
+      http = [
+        {
+          name = local.deployment_name
+          route = [
+            {
+              destination = {
+                host = "${local.deployment_name}.previews.svc.cluster.local"
+                port = {
+                  number = 80
                 }
               }
-            ]
-          }
-        ]
-      }
+            }
+          ]
+        }
+      ]
     }
-  )
+  }
 }
