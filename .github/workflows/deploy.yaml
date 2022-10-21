@@ -5,9 +5,6 @@ on:
       environmentName:
         required: true
         type: string
-      environmentUrl:
-        required: true
-        type: string
       image:
         required: true
         description: "The docker image SHA to deploy"
@@ -33,13 +30,13 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: ${{ inputs.environmentName}}
-      url: ${{ inputs.environmentUrl }}
+      url: ${{ steps.envurl.outputs.url }}
     env:
       TF_WORKSPACE: ${{ secrets.TF_WORKSPACE }}
       AWS_ACCESS_KEY_ID: ${{ secrets.TERRAFORM_AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.TERRAFORM_AWS_SECRET_ACCESS_KEY }}
       TF_VAR_environment_name: ${{ inputs.environmentName }}
-      TF_VAR_environment_url: ${{ inputs.environmentUrl }}
+      TF_VAR_environment_url: ${{ steps.envurl.outputs.url }}
 
     # Use the Bash shell regardless whether the GitHub Actions runner is
     # ubuntu-latest, macos-latest, or windows-latest
@@ -52,6 +49,33 @@ jobs:
       # Checkout the repository to the GitHub Actions runner
       - name: Checkout
         uses: actions/checkout@v3
+
+      - name: Generate url of the environment
+        id: envurl
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const eventName = context.eventName;
+            const event = context.payload;
+            const refName = context.ref.split('refs/heads/').pop().replaceAll("/", "-");
+
+            if (eventName == 'pull_request') {
+              const url = `https://${refName}.review-apps.s42.dev`;
+              core.setOutput('url', url);
+            } else if (eventName == 'release' && context.payload.action == 'prereleased') {
+              const url = 'https://next.s42.app';
+              core.setOutput('url', url);
+            } else {
+              core.setOutput('url', 'https://s42.app');
+            }
+      - uses: chrnorm/deployment-action@v2
+        name: Create GitHub deployment
+        id: deployment
+        with:
+          token: "${{ github.token }}"
+          environment-url: ${{ steps.envurl.outputs.url }}
+          environment: ${{ inputs.environmentName }}
+          state: in_progress
 
       # Install the latest version of Terraform CLI and configure the
       # Terraform CLI configuration file with a Terraform Cloud user API token
@@ -70,3 +94,21 @@ jobs:
         id: apply
         if: (github.ref == 'refs/heads/main' && github.event_name == 'push') || github.ref_name == 'refactor/infrastructure-as-code'
         run: terraform apply -auto-approve -input=false
+
+      - name: Update deployment status (success)
+        if: success()
+        uses: chrnorm/deployment-status@v2
+        with:
+          token: "${{ github.token }}"
+          environment-url: ${{ steps.envurl.outputs.url }}
+          state: "success"
+          deployment-id: ${{ steps.deployment.outputs.deployment_id }}
+
+      - name: Update deployment status (failure)
+        if: failure()
+        uses: chrnorm/deployment-status@v2
+        with:
+          token: "${{ github.token }}"
+          environment-url: ${{ steps.envurl.outputs.url }}
+          state: "failure"
+          deployment-id: ${{ steps.deployment.outputs.deployment_id }}

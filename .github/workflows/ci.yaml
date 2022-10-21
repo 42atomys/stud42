@@ -46,5 +46,4 @@ jobs:
     if: github.event_name == 'release' || github.event_name == 'pull_request'
     with:
       environmentName: ${{ github.event_name == 'pull_request' && 'review-apps' || 'sandbox' }}
-      environmentUrl: ${{ github.event_name == 'pull_request' && 'https://${github.ref_name}.review-apps.s42.dev' || (github.event_name == 'release' && github.event.action == 'prereleased' && 'https://next.s42.app' || 'https://s42.app' ) }}
       image: ${{ needs.build.outputs.image }}
