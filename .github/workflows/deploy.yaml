@@ -29,14 +29,12 @@ jobs:
     name: "${{ inputs.environmentName }}"
     runs-on: ubuntu-latest
     environment:
-      name: ${{ inputs.environmentName}}
+      name: ${{ inputs.environmentName }}
       url: ${{ steps.envurl.outputs.url }}
     env:
       TF_WORKSPACE: ${{ secrets.TF_WORKSPACE }}
       AWS_ACCESS_KEY_ID: ${{ secrets.TERRAFORM_AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.TERRAFORM_AWS_SECRET_ACCESS_KEY }}
-      TF_VAR_environment_name: ${{ inputs.environmentName }}
-      TF_VAR_environment_url: ${{ steps.envurl.outputs.url }}
 
     # Use the Bash shell regardless whether the GitHub Actions runner is
     # ubuntu-latest, macos-latest, or windows-latest
