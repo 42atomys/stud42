@@ -31,20 +31,20 @@ jobs:
   ###############################
   ############ BUILD ############
   ###############################
-  build:
-    name: "Build 🔧"
-    needs: [linters, tests]
-    uses: ./.github/workflows/build.yaml
+  # build:
+  #   name: "Build 🔧"
+  #   needs: [linters, tests]
+  #   uses: ./.github/workflows/build.yaml
   ###############################
   ########### DEPLOY ############
   ###############################
   deploy:
     name: "Deploy 🚀"
-    needs: [build]
+    needs: [tests, linters] # [tests, linters, build]
     uses: ./.github/workflows/deploy.yaml
     secrets: inherit
     if: github.event_name == 'release' || github.event_name == 'pull_request'
     with:
       environmentName: "${{ github.event_name == 'pull_request' && 'reviews/${{ github.ref_name }}' || 'sandbox' }}"
       stacks: '["test"]'
-      image: ${{ needs.build.outputs.image }}
+      image: "false" # ${{ needs.build.outputs.image }}
