@@ -79,6 +79,7 @@ module "webhooked" {
 
   env = {
     RABBITMQ_DATABASE_URL = "amqp://$(RABBITMQ_USER):$(RABBITMQ_PASSWORD)@prod-primary-rabbitmq.production.svc.cluster.local:5672/"
+    CONFIG_MAPS_HASH      = "${md5(file("${path.root}/configs/webhooked/webhooks.yaml"))}-${md5(file("${path.root}/configs/webhooked/template.tpl"))}"
   }
 
   volumeMounts = [
