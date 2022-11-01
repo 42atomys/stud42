@@ -1,20 +1,16 @@
 resource "kubernetes_manifest" "certificate" {
   for_each = { for k, v in var.certificates : k => v }
 
-  depends_on = [
-    kubernetes_deployment.app
-  ]
-
   manifest = {
     apiVersion = "cert-manager.io/v1"
     kind       = "Certificate"
     metadata = {
-      name      = "${kubernetes_deployment.app.metadata[0].name}-${each.key}"
-      namespace = kubernetes_deployment.app.metadata[0].namespace
-      labels    = kubernetes_deployment.app.metadata[0].labels
+      name      = each.key == "default" ? var.name : "${var.name}-${each.key}"
+      namespace = var.namespace
+      labels    = local.defaultLabels
     }
     spec = {
-      secretName = "${kubernetes_deployment.app.metadata[0].name}-${each.key}-tls"
+      secretName = each.key == "default" ? "${var.name}-tls" : "${var.name}-${each.key}-tls"
       issuerRef = {
         name = each.value.issuerRefName
         kind = each.value.issuerRefKind
@@ -24,21 +20,27 @@ resource "kubernetes_manifest" "certificate" {
   }
 }
 
+resource "kubernetes_secret" "app" {
+  for_each = { for k, v in var.secrets : k => v }
+
+  metadata {
+    name      = "${var.name}-${each.key}"
+    namespace = var.namespace
+    labels    = local.defaultLabels
+  }
+
+  immutable = lookup(each.value, "immutable", false)
+  type      = each.value.type
+  data      = each.value.data
+}
+
 resource "kubernetes_config_map" "app" {
   for_each = { for k, v in var.configMaps : k => v }
 
   metadata {
     name      = "${var.name}-${each.key}"
     namespace = var.namespace
-    labels = {
-      "app"                          = var.appName
-      "version"                      = var.appVersion
-      "kubernetes.io/name"           = var.name
-      "app.kubernetes.io/version"    = var.appVersion
-      "app.kubernetes.io/part-of"    = var.appName
-      "app.kubernetes.io/managed-by" = "terraform"
-      "app.kubernetes.io/created-by" = "github-actions"
-    }
+    labels    = local.defaultLabels
   }
 
   immutable = lookup(each.value, "immutable", false)
@@ -47,17 +49,10 @@ resource "kubernetes_config_map" "app" {
 
 resource "kubernetes_deployment" "app" {
   metadata {
-    name      = var.name
-    namespace = var.namespace
-    labels = {
-      "app"                          = var.appName
-      "version"                      = var.appVersion
-      "kubernetes.io/name"           = var.name
-      "app.kubernetes.io/version"    = var.appVersion
-      "app.kubernetes.io/part-of"    = var.appName
-      "app.kubernetes.io/managed-by" = "terraform"
-      "app.kubernetes.io/created-by" = "github-actions"
-    }
+    name        = var.name
+    namespace   = var.namespace
+    labels      = merge(local.defaultLabels, var.deploymentLabels)
+    annotations = var.deploymentAnnotations
   }
 
   spec {

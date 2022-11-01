@@ -4,5 +4,5 @@ metadata:
   name: http-api
 spec:
   ports:
-  - port: 4000
-    targetPort: 4000
+    - port: 4000
+      targetPort: 4000

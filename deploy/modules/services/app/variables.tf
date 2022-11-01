@@ -341,6 +341,28 @@ variable "configMaps" {
   default     = {}
 }
 
+variable "secrets" {
+  type = map(object({
+    immutable = optional(bool, false)
+    type      = optional(string, "Opaque")
+    data      = map(string)
+  }))
+  description = "Secrets needed by the application (not automounted)"
+  default     = {}
+}
+
+variable "deploymentLabels" {
+  type        = map(string)
+  description = "Labels to add to the Deployment"
+  default     = {}
+}
+
+variable "deploymentAnnotations" {
+  type        = map(string)
+  description = "Annotations to add to the Deployment"
+  default     = {}
+}
+
 variable "podLabels" {
   type        = map(string)
   description = "Labels to add to the pod"
@@ -355,7 +377,7 @@ variable "podAnnotations" {
 
 variable "prometheus" {
   type = object({
-    enabled = optional(bool, false)
+    enabled = bool
     port    = optional(number, 8080)
     path    = optional(string, "/metrics")
   })

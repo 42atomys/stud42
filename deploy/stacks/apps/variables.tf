@@ -10,11 +10,24 @@ variable "appsVersion" {
 
   default = {
     webhooked = "latest"
+    stud42    = "latest"
   }
 
   validation {
-    condition = alltrue([for k, v in var.appsVersion : contains(["webhooked"], k) && v != "latest"])
+    condition = alltrue([for k, v in var.appsVersion : contains(["webhooked", "stud42"], k) && v != "latest"])
 
     error_message = "The appsVersion variable must contain a key for each application to be deployed"
   }
+}
+
+variable "baseUrl" {
+  type        = string
+  description = "The base URL for the application"
+  default     = "https://s42.app"
+}
+
+variable "jwtksSecretNeedsToBeCreated" {
+  type        = bool
+  description = "Whether the jwtks secret needs to be created or not (must be executed after `make build/Makefile certs`)"
+  default     = false
 }
