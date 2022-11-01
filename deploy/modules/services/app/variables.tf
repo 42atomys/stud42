@@ -23,7 +23,7 @@ variable "appVersion" {
   description = "Version of the service"
 
   validation {
-    condition     = can(regex("^v[0-9.]+$", var.appVersion))
+    condition     = can(regex("^v?[0-9.]+$", var.appVersion)) # disable v prefix for now
     error_message = "The version must be numeric characters and periods only and start with a v."
   }
 }
@@ -47,6 +47,17 @@ variable "replicas" {
   validation {
     condition     = var.replicas > 0
     error_message = "The number of replicas must be greater than 0."
+  }
+}
+
+variable "revisionHistoryLimit" {
+  type        = number
+  description = "Revision history limit"
+  default     = 2
+
+  validation {
+    condition     = var.revisionHistoryLimit > 0
+    error_message = "The revision history limit must be greater than 0."
   }
 }
 
@@ -79,9 +90,9 @@ variable "imagePullSecrets" {
 }
 
 variable "nodeSelector" {
-  type        = string
+  type        = map(string)
   description = "Node selector for the pod assignment"
-  default     = null
+  default     = {}
 }
 
 variable "image" {
@@ -98,6 +109,11 @@ variable "imagePullPolicy" {
   type        = string
   description = "Image pull policy"
   default     = "IfNotPresent"
+
+  validation {
+    condition     = can(regex("^(Always|IfNotPresent|Never)$", var.imagePullPolicy))
+    error_message = "The image pull policy must be one of Always, IfNotPresent, or Never."
+  }
 }
 
 variable "command" {
@@ -124,7 +140,7 @@ variable "envFromSecret" {
     key  = string
   }))
   description = "Secret to use as environment variables"
-  default     = null
+  default     = {}
 }
 
 variable "envFromConfigMap" {
@@ -133,7 +149,7 @@ variable "envFromConfigMap" {
     key  = string
   }))
   description = "ConfigMap to use as environment variables"
-  default     = null
+  default     = {}
 }
 
 variable "envFromFieldRef" {
@@ -141,7 +157,7 @@ variable "envFromFieldRef" {
     field_path = string
   }))
   description = "FieldRef to use as environment variables"
-  default     = null
+  default     = {}
 }
 
 variable "ports" {
@@ -155,28 +171,29 @@ variable "ports" {
 
 variable "resources" {
   type = object({
-    limits = optional(map(object({
+    limits = optional(object({
+      cpu    = optional(string)
+      memory = optional(string, "128Mi")
+    }), null)
+    requests = optional(object({
       cpu    = optional(string, "100m")
       memory = optional(string, "128Mi")
-    })), null)
-    requests = optional(map(object({
-      cpu    = optional(string, "100m")
-      memory = optional(string, "128Mi")
-    })), null)
+    }), null)
   })
   description = "Resources to request and limit"
   default     = {}
 }
 
 variable "volumeMounts" {
-  type = map(object({
+  type = list(object({
     mountPath        = string
+    volumeName       = string
     readOnly         = optional(bool, false)
     subPath          = optional(string, null)
     mountPropagation = optional(string, null)
   }))
   description = "List of volumes to mount"
-  default     = {}
+  default     = []
 }
 
 variable "livenessProbe" {
@@ -236,14 +253,14 @@ variable "securityContext" {
     capabilities = optional(map(object({
       add  = optional(list(string), [])
       drop = optional(list(string), [])
-    })), null)
+    })), {})
     privileged   = optional(bool, false)
     runAsNonRoot = optional(bool, true)
     runAsUser    = optional(number, 1000)
     runAsGroup   = optional(number, 1000)
   })
   description = "Security context configuration"
-  default     = null
+  default     = {}
 }
 
 variable "workingDir" {
@@ -257,7 +274,7 @@ variable "volumesFromConfig" {
     configMapName = string
   }))
   description = "ConfigMap to use as volumes"
-  default     = null
+  default     = {}
 }
 
 variable "volumesFromSecret" {
@@ -265,13 +282,22 @@ variable "volumesFromSecret" {
     secretName = string
   }))
   description = "Secret to use as volumes"
-  default     = null
+  default     = {}
+}
+
+variable "volumesFromPVC" {
+  type = map(object({
+    claimName = string
+    readOnly  = optional(bool, false)
+  }))
+  description = "PVC to use as volumes"
+  default     = {}
 }
 
 variable "volumesFromEmptyDir" {
   type        = map(object({}))
   description = "EmptyDir to use as volumes"
-  default     = null
+  default     = {}
 }
 
 variable "waitForRollout" {
@@ -282,11 +308,9 @@ variable "waitForRollout" {
 
 variable "autoscaling" {
   type = object({
-    enabled                             = bool
-    minReplicas                         = optional(number, 1)
-    maxReplicas                         = optional(number, 3)
-    scaleUpStabilizationWindowSeconds   = optional(number, 0)
-    scaleDownStabilizationWindowSeconds = optional(number, 60)
+    enabled     = bool
+    minReplicas = optional(number, 1)
+    maxReplicas = optional(number, 3)
     metrics = optional(map(object({
       targetAverageUtilization = optional(number, 75)
     })), {})
@@ -315,4 +339,39 @@ variable "configMaps" {
   }))
   description = "ConfigMaps needed by the application (not automounted)"
   default     = {}
+}
+
+variable "podLabels" {
+  type        = map(string)
+  description = "Labels to add to the pod"
+  default     = {}
+}
+
+variable "podAnnotations" {
+  type        = map(string)
+  description = "Annotations to add to the pod"
+  default     = {}
+}
+
+variable "prometheus" {
+  type = object({
+    enabled = optional(bool, false)
+    port    = optional(number, 8080)
+    path    = optional(string, "/metrics")
+  })
+  description = "Prometheus configuration"
+  default = {
+    enabled = false
+  }
+}
+
+variable "serviceType" {
+  type        = string
+  description = "Type of the service"
+  default     = "ClusterIP"
+
+  validation {
+    condition     = contains(["ClusterIP", "NodePort", "LoadBalancer"], var.serviceType)
+    error_message = "serviceType must be one of ClusterIP, NodePort or LoadBalancer"
+  }
 }
