@@ -49,7 +49,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - uses: azure/setup-kubectl@v3.0
-    - uses: azure/setup-helm@v3.3
+    - uses: azure/setup-helm@v3.4
     - uses: azure/k8s-set-context@v3
       with:
         method: kubeconfig
