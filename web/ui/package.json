@@ -45,7 +45,7 @@
     "isomorphic-unfetch": "^3.1.0",
     "js-cookie": "^3.0.1",
     "jsonwebtoken": "^8.5.1",
-    "jwks-rsa": "^2.1.4",
+    "jwks-rsa": "^2.1.5",
     "next": "^12.2.5",
     "next-auth": "^4.10.3",
     "protoc-gen-ts": "^0.8.5",
