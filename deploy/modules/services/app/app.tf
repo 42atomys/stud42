@@ -47,6 +47,26 @@ resource "kubernetes_config_map" "app" {
   data      = each.value.data
 }
 
+resource "kubernetes_persistent_volume_claim" "app" {
+  for_each = { for k, v in var.persistentVolumeClaims : k => v }
+
+  metadata {
+    name      = "${var.name}-${each.key}"
+    namespace = var.namespace
+    labels    = local.defaultLabels
+  }
+
+  spec {
+    storage_class_name = each.value.storageClassName
+    access_modes       = each.value.accessModes
+    resources {
+      requests = {
+        storage = each.value.storage
+      }
+    }
+  }
+}
+
 resource "kubernetes_deployment" "app" {
   metadata {
     name        = var.name

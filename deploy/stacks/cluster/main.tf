@@ -20,6 +20,10 @@ terraform {
       source  = "hashicorp/helm"
       version = ">= 2.7.1"
     }
+    random = {
+      source  = "hashicorp/random"
+      version = "3.4.3"
+    }
   }
   required_version = ">= v1.3.3"
 }

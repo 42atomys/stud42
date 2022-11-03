@@ -351,6 +351,16 @@ variable "secrets" {
   default     = {}
 }
 
+variable "persistentVolumeClaims" {
+  type = map(object({
+    storageClassName = optional(string, "csi-cinder-classic")
+    accessModes      = list(string)
+    storage          = string
+  }))
+  description = "PersistentVolumeClaims needed by the application (not automounted)"
+  default     = {}
+}
+
 variable "deploymentLabels" {
   type        = map(string)
   description = "Labels to add to the Deployment"
