@@ -1,15 +1,15 @@
-resource "helm_release" "rabbitmq_operator" {
-  repository = "https://charts.bitnami.com/bitnami"
-  chart      = "bitnami/rabbitmq-cluster-operator"
-
-  create_namespace = true
-  namespace        = "rabbitmq-operator"
+data "kubernetes_resource" "rabbitmq_operator" {
+  api_version = "apps/v1"
+  kind        = "Deployment"
+  metadata {
+    name      = "primary-rabbitmq-cluster-operator"
+    namespace = "rabbitmq-operator"
+  }
 }
 
 resource "kubernetes_manifest" "rabbitmq" {
   depends_on = [
-    helm_release.rabbitmq_operator,
-    kubernetes_namespace.namespace
+    data.kubernetes_resource.rabbitmq_operator,
   ]
 
   manifest = {
@@ -74,12 +74,8 @@ resource "random_password" "postgres" {
 module "postgres" {
   source = "../../modules/services/app"
 
-  depends_on = [
-    random_password.postgres
-  ]
-
   appName         = "postgres"
-  appVersion      = "14.1-alpine3.14"
+  appVersion      = "14.1"
   name            = "postgres"
   namespace       = "production"
   image           = "ghcr.io/42atomys/s42-postgres:14.2-alpine3.15"
@@ -89,10 +85,24 @@ module "postgres" {
   replicas             = 1
   maxUnavailable       = 0
 
+  podSecurityContext = {
+    runAsGroup = 70
+    runAsUser  = 70
+    fsGroup    = 70
+  }
+
+  containerSecurityContext = {
+    runAsGroup = 70
+    runAsUser  = 70
+  }
+
   resources = {
     requests = {
       cpu    = "250m"
       memory = "200Mi"
+    }
+    limits = {
+      memory = "1Gi"
     }
   }
 
@@ -139,7 +149,7 @@ module "postgres" {
   }
 
   configMaps = {
-    postgres-config = {
+    config = {
       data = {
         "init-database.sh" = file("${path.root}/configs/postgres/init-database.sh")
       }
@@ -148,7 +158,7 @@ module "postgres" {
   }
 
   secrets = {
-    postgres-credentials = {
+    credentials = {
       data = {
         "POSTGRES_PASSWORD" = random_password.postgres.result
       }
@@ -157,7 +167,7 @@ module "postgres" {
   }
 
   persistentVolumeClaims = {
-    postgres-data = {
+    data = {
       accessModes      = ["ReadWriteOnce"]
       storage          = "10Gi"
       storageClassName = "csi-cinder-high-speed"

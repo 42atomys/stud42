@@ -119,6 +119,15 @@ resource "kubernetes_deployment" "app" {
           }
         }
         node_selector = var.nodeSelector
+
+        security_context {
+          run_as_user         = lookup(var.podSecurityContext, "runAsUser", 1000)
+          run_as_group        = lookup(var.podSecurityContext, "runAsGroup", 1000)
+          fs_group            = lookup(var.podSecurityContext, "fsGroup", 1000)
+          run_as_non_root     = lookup(var.podSecurityContext, "runAsNonRoot", true)
+          supplemental_groups = lookup(var.podSecurityContext, "supplementalGroups", [1000])
+        }
+
         container {
           name              = var.name
           image             = var.image
@@ -260,20 +269,20 @@ resource "kubernetes_deployment" "app" {
           }
 
           security_context {
-            run_as_user     = lookup(var.securityContext, "runAsUser", 1000)
-            run_as_group    = lookup(var.securityContext, "runAsGroup", 1000)
-            run_as_non_root = lookup(var.securityContext, "runAsNonRoot", true)
+            run_as_user     = lookup(var.containerSecurityContext, "runAsUser", 1000)
+            run_as_group    = lookup(var.containerSecurityContext, "runAsGroup", 1000)
+            run_as_non_root = lookup(var.containerSecurityContext, "runAsNonRoot", true)
 
             dynamic "capabilities" {
-              for_each = { for k, v in var.securityContext.capabilities : k => v }
+              for_each = { for k, v in var.containerSecurityContext.capabilities : k => v }
               content {
                 add  = capabilities.value.add
                 drop = capabilities.value.drop
               }
             }
 
-            allow_privilege_escalation = lookup(var.securityContext, "allowPrivilegeEscalation", false)
-            privileged                 = lookup(var.securityContext, "privileged", false)
+            allow_privilege_escalation = lookup(var.containerSecurityContext, "allowPrivilegeEscalation", false)
+            privileged                 = lookup(var.containerSecurityContext, "privileged", false)
           }
 
           working_dir = var.workingDir

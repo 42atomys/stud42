@@ -4,7 +4,7 @@ module "istio" {
   gateways = {
     "app-s42" = {
       ingressSelectorName = "ingressgateway"
-      namespace           = module.kubernetes_namespaces.namespace.production
+      namespace           = "production"
       serverHttpsRedirect = true
       hosts               = ["s42.app", "*.s42.app"]
       tlsMode             = "SIMPLE"
@@ -12,7 +12,7 @@ module "istio" {
     },
     "app-s42-next" = {
       ingressSelectorName = "ingressgateway"
-      namespace           = module.kubernetes_namespaces.namespace.staging
+      namespace           = "staging"
       serverHttpsRedirect = true
       hosts               = ["next.s42.app", "*.next.s42.app"]
       tlsMode             = "SIMPLE"
@@ -20,7 +20,7 @@ module "istio" {
     },
     "dev-s42" = {
       ingressSelectorName = "ingressgateway"
-      namespace           = module.kubernetes_namespaces.namespace.sandbox
+      namespace           = "sandbox"
       serverHttpsRedirect = true
       hosts               = ["s42.dev", "*.s42.dev", "*.sandbox.s42.dev"]
       tlsMode             = "SIMPLE"
@@ -38,7 +38,7 @@ module "istio" {
     }
     "dev-s42-previews" = {
       ingressSelectorName = "ingressgateway"
-      namespace           = module.kubernetes_namespaces.namespace.previews
+      namespace           = "previews"
       serverHttpsRedirect = true
       hosts               = ["*.previews.s42.dev"]
       tlsMode             = "SIMPLE"

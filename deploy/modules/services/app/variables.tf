@@ -100,8 +100,8 @@ variable "image" {
   description = "Image of the service"
 
   validation {
-    condition     = can(regex("^[a-z0-9-]+/[a-z0-9-]+:[a-z0-9.-]+$", var.image))
-    error_message = "The image must be in the format <registry>/<repository>:<tag>."
+    condition     = can(regex("^(?:[a-z0-9-\\.]+\\/)+[a-z0-9-]+:[a-z0-9.-]+$", var.image))
+    error_message = "The image must be in the format <registry>/<repository>:<tag>"
   }
 }
 
@@ -247,7 +247,18 @@ variable "startupProbe" {
   default     = null
 }
 
-variable "securityContext" {
+variable "podSecurityContext" {
+  type = object({
+    runAsNonRoot       = optional(bool, true)
+    runAsGroup         = optional(number, 1000)
+    fsGroup            = optional(number, 1000)
+    supplementalGroups = optional(list(number), [1000])
+  })
+  description = "Security context configuration for pod"
+  default     = {}
+}
+
+variable "containerSecurityContext" {
   type = object({
     allowPrivilegeEscalation = optional(bool, false)
     capabilities = optional(map(object({
@@ -259,7 +270,7 @@ variable "securityContext" {
     runAsUser    = optional(number, 1000)
     runAsGroup   = optional(number, 1000)
   })
-  description = "Security context configuration"
+  description = "Security context configuration for container"
   default     = {}
 }
 
