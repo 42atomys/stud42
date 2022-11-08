@@ -10,11 +10,11 @@ variable "appsVersion" {
 
   default = {
     webhooked = "latest"
-    stud42    = "latest"
+    s42       = "latest"
   }
 
   validation {
-    condition = alltrue([for k, v in var.appsVersion : contains(["webhooked", "stud42"], k) && v != "latest"])
+    condition = alltrue([for k, v in var.appsVersion : contains(["webhooked", "s42"], k) && v != "latest"])
 
     error_message = "The appsVersion variable must contain a key for each application to be deployed"
   }

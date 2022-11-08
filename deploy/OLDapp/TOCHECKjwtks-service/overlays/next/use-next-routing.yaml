@@ -1,9 +1,0 @@
-apiVersion: networking.istio.io/v1beta1
-kind: VirtualService
-metadata:
-  name: http-jwtks-service
-spec:
-  hosts:
-  - next.s42.app
-  gateways:
-  - s42-app-next

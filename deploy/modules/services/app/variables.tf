@@ -39,6 +39,12 @@ variable "appName" {
   }
 }
 
+variable "enabled" {
+  type        = bool
+  description = "Enable or disable the service"
+  default     = true
+}
+
 variable "replicas" {
   type        = number
   description = "Number of replicas"

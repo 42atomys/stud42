@@ -168,8 +168,8 @@ jobs:
           kubectl delete secret --namespace=${{ matrix.namespace }} oauth2-providers --ignore-not-found
           kubectl create secret generic oauth2-providers \
             --namespace=${{ matrix.namespace }} \
-            --from-literal=FORTY_TWO_CLIENT_ID=${{ secrets.SECRET__FORTY_TWO_CLIENT_ID }} \
-            --from-literal=FORTY_TWO_CLIENT_SECRET=${{ secrets.SECRET__FORTY_TWO_CLIENT_SECRET }} \
+            --from-literal=FORTY_TWO_ID=${{ secrets.SECRET__FORTY_TWO_ID }} \
+            --from-literal=FORTY_TWO_SECRET=${{ secrets.SECRET__FORTY_TWO_SECRET }} \
             --from-literal=GITHUB_ID=${{ secrets.SECRET__GITHUB_ID }} \
             --from-literal=GITHUB_SECRET=${{ secrets.SECRET__GITHUB_SECRET }} \
             --from-literal=DISCORD_ID=${{ secrets.SECRET__DISCORD_ID }} \

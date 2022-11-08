@@ -40,15 +40,15 @@ spec:
                   value: s42
                 - name: DATABASE_URL
                   value: postgresql://$(DATABASE_USERNAME):$(DATABASE_PASSWORD)@$(DATABASE_HOST):5432/$(DATABASE_NAME)?sslmode=disable
-                - name: FORTY_TWO_CLIENT_ID
+                - name: FORTY_TWO_ID
                   valueFrom:
                     secretKeyRef:
-                      key: FORTY_TWO_CLIENT_ID
+                      key: FORTY_TWO_ID
                       name: oauth2-providers
-                - name: FORTY_TWO_CLIENT_SECRET
+                - name: FORTY_TWO_SECRET
                   valueFrom:
                     secretKeyRef:
-                      key: FORTY_TWO_CLIENT_SECRET
+                      key: FORTY_TWO_SECRET
                       name: oauth2-providers
                 - name: SENTRY_DSN
                   valueFrom:

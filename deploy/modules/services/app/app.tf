@@ -48,7 +48,7 @@ resource "kubernetes_config_map" "app" {
 }
 
 resource "kubernetes_persistent_volume_claim" "app" {
-  for_each = { for k, v in var.persistentVolumeClaims : k => v }
+  for_each = { for k, v in var.persistentVolumeClaims : k => v if var.enabled }
 
   metadata {
     name      = "${var.name}-${each.key}"
@@ -68,6 +68,7 @@ resource "kubernetes_persistent_volume_claim" "app" {
 }
 
 resource "kubernetes_deployment" "app" {
+  count = var.enabled ? 1 : 0
   metadata {
     name        = var.name
     namespace   = var.namespace
@@ -134,24 +135,6 @@ resource "kubernetes_deployment" "app" {
           image_pull_policy = var.imagePullPolicy
           command           = var.command
           args              = var.args != null ? var.args : []
-          env {
-            name = "S42_SERVICE_TOKEN"
-            value_from {
-              secret_key_ref {
-                name     = "s42-service-token"
-                key      = "TOKEN"
-                optional = false
-              }
-            }
-          }
-
-          dynamic "env" {
-            for_each = { for k, v in var.env : k => v }
-            content {
-              name  = env.key
-              value = env.value
-            }
-          }
 
           dynamic "env" {
             for_each = { for k, v in var.envFromSecret : k => v }
@@ -188,6 +171,14 @@ resource "kubernetes_deployment" "app" {
                   field_path = env.value.field_path
                 }
               }
+            }
+          }
+
+          dynamic "env" {
+            for_each = { for k, v in var.env : k => v }
+            content {
+              name  = env.key
+              value = env.value
             }
           }
 
@@ -336,6 +327,8 @@ resource "kubernetes_deployment" "app" {
 
 
 resource "kubernetes_service" "app" {
+  count = length(var.ports) >= 1 && var.enabled ? 1 : 0
+
   depends_on = [
     kubernetes_deployment.app
   ]
@@ -363,7 +356,7 @@ resource "kubernetes_service" "app" {
 }
 
 resource "kubernetes_horizontal_pod_autoscaler_v2" "app" {
-  count = var.autoscaling.enabled ? 1 : 0
+  count = var.autoscaling.enabled && var.enabled ? 1 : 0
 
   depends_on = [
     kubernetes_deployment.app
@@ -396,6 +389,35 @@ resource "kubernetes_horizontal_pod_autoscaler_v2" "app" {
             type                = "Utilization"
             average_utilization = lookup(metric.value, "targetAverageUtilization", 75)
           }
+        }
+      }
+    }
+
+    behavior {
+      scale_down {
+        select_policy                = "Max"
+        stabilization_window_seconds = 0
+        policy {
+          type           = "Percent"
+          period_seconds = 15
+          value          = 100
+        }
+      }
+
+      scale_up {
+        select_policy                = "Max"
+        stabilization_window_seconds = 0
+
+        policy {
+          type           = "Pods"
+          period_seconds = 15
+          value          = lookup(var.autoscaling, "maxReplicas", 3) + 1
+        }
+
+        policy {
+          type           = "Percent"
+          period_seconds = 15
+          value          = 100
         }
       }
     }

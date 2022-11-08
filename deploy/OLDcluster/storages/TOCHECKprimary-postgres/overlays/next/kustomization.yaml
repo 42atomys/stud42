@@ -1,5 +1,0 @@
-resources:
-- ../../base
-namePrefix: next-
-namespace: staging
-
