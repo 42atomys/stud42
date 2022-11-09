@@ -48,11 +48,11 @@ module "jwtks_service" {
   }
 
   ports = {
-    grpc = {
+    signing = {
       containerPort = 5000
     }
 
-    http = {
+    wellknow = {
       containerPort = 5500
     }
   }

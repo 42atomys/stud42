@@ -57,7 +57,7 @@ module "interface" {
   }
 
   ports = {
-    http = {
+    interface = {
       containerPort = 3000
     }
   }

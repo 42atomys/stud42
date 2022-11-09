@@ -78,9 +78,84 @@ resource "random_password" "postgres" {
   special = true
 }
 
+# resource "helm_release" "postgresql" {
+#   repository = "https://charts.bitnami.com/bitnami"
+#   chart      = "postgresql"
+#   version    = "10.0.1"
+
+#   create_namespace = false
+#   name             = "postgres"
+#   namespace        = var.namespace
+
+#   set {
+#     name  = "image.registry"
+#     value = "ghcr.io/42atomys"
+#   }
+
+#   set {
+#     name  = "image.repository"
+#     value = "s42-postgres"
+#   }
+
+#   set {
+#     name  = "image.tag"
+#     value = "13.4.0"
+#   }
+
+#   set {
+#     name  = "image.pullSecrets"
+#     value = ["ghcr-creds"]
+#   }
+
+#   set {
+#     name  = "postgresqlDataDir"
+#     value = "/var/lib/postgresql/data/pgdata"
+#   }
+
+#   set {
+#     name  = "auth.postgresPassword"
+#     value = random_password.postgres.result
+#   }
+
+#   set {
+#     name  = "volumePermissions.enabled"
+#     value = ""
+#   }
+
+#   set {
+#     name  = "primary.persistence.enabled"
+#     value = true
+#   }
+
+#   set {
+#     name  = "primary.persistence.storageClass"
+#     value = "csi-cinder-high-speed"
+#   }
+
+#   set {
+#     name  = "primary.persistence.size"
+#     value = var.namespace == "production" ? "10Gi" : "1Gi"
+#   }
+
+#   set {
+#     name  = "primary.persistence.accessModes"
+#     value = ["ReadWriteOnce"]
+#   }
+
+#   set {
+#     name  = "primary.persistence.mountPath"
+#     value = "/var/lib/postgresql/data/pgdata"
+#   }
+
+#   set {
+#     name  = "primary.initdb.scriptsConfigMap"
+#     value = ""
+#   }
+# }
 
 module "postgres" {
   source = "../../../modules/services/app"
+  kind   = "StatefulSet"
 
   appName         = "postgres"
   appVersion      = "14.1"
@@ -94,14 +169,15 @@ module "postgres" {
   maxUnavailable       = 0
 
   podSecurityContext = {
-    runAsGroup = 70
-    runAsUser  = 70
-    fsGroup    = 70
+    fsGroup      = 70
+    runAsGroup   = 70
+    runAsNonRoot = true
   }
 
   containerSecurityContext = {
-    runAsGroup = 70
-    runAsUser  = 70
+    runAsGroup   = 70
+    runAsNonRoot = true
+    runAsUser    = 70
   }
 
   resources = {
@@ -129,6 +205,7 @@ module "postgres" {
   ports = {
     postgres = {
       containerPort = 5432
+      istioProtocol = "tcp"
     }
   }
 

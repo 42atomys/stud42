@@ -4,7 +4,7 @@ module "s42" {
   appVersion = var.appsVersion["s42"]
   namespace  = "production"
 
-  rootDomain                   = "example.tld"
+  rootDomain                   = var.baseUrl
   hasProvidedJWTKSCertificates = true
   hasPersistentStorage         = true
   # crawlerEnabled               = true

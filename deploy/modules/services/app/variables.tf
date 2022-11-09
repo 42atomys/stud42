@@ -89,6 +89,50 @@ variable "maxUnavailable" {
   }
 }
 
+variable "kind" {
+  type        = string
+  description = "Kind of the app"
+  default     = "Deployment"
+
+  validation {
+    condition     = can(regex("^(Deployment|StatefulSet)$", var.kind))
+    error_message = "The kind must be either Deployment or StatefulSet."
+  }
+}
+
+variable "updateStrategy" {
+  type        = string
+  description = "Update strategy"
+  default     = "RollingUpdate"
+
+  validation {
+    condition     = can(regex("^(RollingUpdate|Recreate)$", var.updateStrategy))
+    error_message = "The update strategy must be either RollingUpdate or Recreate."
+  }
+}
+
+variable "updatePartition" {
+  type        = number
+  description = "The partition of the update"
+  default     = 0
+
+  validation {
+    condition     = var.updatePartition >= 0
+    error_message = "The update partition must be greater or equal than 0."
+  }
+}
+
+variable "podManagementPolicy" {
+  type        = string
+  description = "Pod management policy"
+  default     = "OrderedReady"
+
+  validation {
+    condition     = can(regex("^(OrderedReady|Parallel)$", var.podManagementPolicy))
+    error_message = "The pod management policy must be either OrderedReady or Parallel."
+  }
+}
+
 variable "imagePullSecrets" {
   type        = list(string)
   description = "List of image pull secrets"
@@ -125,7 +169,7 @@ variable "imagePullPolicy" {
 variable "command" {
   type        = list(string)
   description = "Command to run in the container"
-  default     = null
+  default     = []
 }
 
 variable "args" {
@@ -170,9 +214,28 @@ variable "ports" {
   type = map(object({
     containerPort = number
     protocol      = optional(string, "TCP")
+    istioProtocol = optional(string, "http2")
   }))
   description = "List of ports to expose"
   default     = {}
+
+  validation {
+    // protocol must be TCP, UDP or SCTP
+    // https://kubernetes.io/docs/concepts/services-networking/service/#protocol-support
+    condition = alltrue([
+      for p in var.ports : contains(["TCP", "UDP", "SCTP"], p.protocol)
+    ])
+    error_message = "The protocol must be one of TCP, UDP, or SCTP."
+  }
+
+  validation {
+    // istioProtocol must be http, http2, https, grpc, grpc-web, tls, or tcp
+    // https://istio.io/latest/docs/ops/configuration/traffic-management/protocol-selection/#explicit-protocol-selection
+    condition = alltrue([
+      for p in var.ports : contains(["http", "http2", "https", "grpc", "grpc-web", "tls", "tcp"], p.istioProtocol)
+    ])
+    error_message = "The istioProtocol must be one of http, http2, https, grpc, grpc-web, tls, or tcp."
+  }
 }
 
 variable "resources" {
@@ -258,7 +321,7 @@ variable "podSecurityContext" {
     runAsNonRoot       = optional(bool, true)
     runAsGroup         = optional(number, 1000)
     fsGroup            = optional(number, 1000)
-    supplementalGroups = optional(list(number), [1000])
+    supplementalGroups = optional(list(number), [])
   })
   description = "Security context configuration for pod"
   default     = {}

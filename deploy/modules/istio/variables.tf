@@ -22,6 +22,7 @@ variable "gateways" {
       }))
     })), [])
   }))
+  default = {}
 }
 
 variable "virtual_services" {
@@ -57,4 +58,5 @@ variable "virtual_services" {
       }))
     })), [])
   }))
+  default = {}
 }

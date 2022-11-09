@@ -51,7 +51,7 @@ module "webhooked" {
   }
 
   ports = {
-    http = {
+    app = {
       containerPort = 8080
       protocol      = "TCP"
     }

@@ -37,7 +37,7 @@ module "api" {
   }
 
   ports = {
-    http = {
+    api = {
       containerPort = 4000
     }
   }

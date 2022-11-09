@@ -23,7 +23,7 @@ variable "appsVersion" {
 variable "baseUrl" {
   type        = string
   description = "The base URL for the application"
-  default     = "https://s42.app"
+  default     = "s42.app"
 }
 
 variable "jwtksSecretNeedsToBeCreated" {

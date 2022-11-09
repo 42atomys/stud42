@@ -34,7 +34,7 @@ module "cert_manager" {
         {
           dns01 = {
             webhook = {
-              groupName  = "acme.s42.app"
+              groupName  = "acme.zbou.be"
               solverName = "ovh"
               config = {
                 endpoint       = "ovh-eu"
@@ -71,6 +71,10 @@ module "cert_manager" {
     }
     "dev-s42-previews" = {
       dns_names   = ["*.previews.s42.dev"]
+      issuer_name = "ovh-issuer"
+    }
+    "be-zboub" = {
+      dns_names   = ["zbou.be", "*.zbou.be"]
       issuer_name = "ovh-issuer"
     }
   }
