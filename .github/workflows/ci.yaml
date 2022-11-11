@@ -72,7 +72,7 @@ jobs:
             }
             stacks.push('apps');
 
-            console.log(`Stack to deploy: ${stack}`);
+            console.log(`Stack to deploy: ${stacks}`);
             core.setOutput('stacks', stacks);
 
   deploy:
