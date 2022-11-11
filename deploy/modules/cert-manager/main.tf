@@ -74,7 +74,7 @@ resource "helm_release" "cert_manager" {
 resource "null_resource" "cert_manager_ovh_source" {
   provisioner "local-exec" {
     working_dir = "/tmp"
-    command     = "rm -rf '/tmp/*cert-manager-webhook-ovh*' && curl -L0 https://github.com/baarde/cert-manager-webhook-ovh/tarball/master | tar -xz | mv /tmp/baarde-cert-manager-webhook-ovh-* /tmp/cert-manager-webhook-ovh"
+    command     = "rm -rf '/tmp/cert-manager-webhook-ovh' '/tmp/baarde-cert-manager-webhook-ovh-*' && curl -L0 https://github.com/baarde/cert-manager-webhook-ovh/tarball/master | tar -xz && mv /tmp/baarde-cert-manager-webhook-ovh-?* /tmp/cert-manager-webhook-ovh"
   }
 }
 
