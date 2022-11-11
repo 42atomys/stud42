@@ -40,6 +40,41 @@ jobs:
   ########### DEPLOY ############
   ###############################
 
+  detect_stack_to_deploy:
+    name: "Detect stack to deploy 📦"
+    needs: [build]
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+      contents: read
+    outputs:
+      stacks: ${{ steps.detected_stack.outputs.stacks }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Detect stack to deploy
+        id: detect_changes
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            pre-cluster:
+              - 'deploy/stacks/pre-cluster/**'
+            cluster:
+              - 'deploy/stacks/cluster/**'
+      - name: Expose stack to deploy
+        uses: actions/github-script@v6
+        id: detected_stack
+        with:
+          script: |
+            let stacks = [];
+            if (context.eventName == 'release' && context.payload.action == 'released') {
+              stacks = Object.keys(steps.detect_changes.outputs.filter( (stack) => stack == true ));
+            }
+            stacks.push('apps');
+
+            console.log(`Stack to deploy: ${stack}`);
+            core.setOutput('stacks', stacks);
+
   deploy:
     name: "Deploy 🚀"
     needs: [build]
@@ -53,5 +88,5 @@ jobs:
     with:
       ghEnvironmentName: "${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.number) || (github.event_name == 'release' && github.event.action == 'released' && 'production' || 'staging') }}"
       kubeNamespace: "${{ github.event_name == 'pull_request' && 'previews' || (github.event_name == 'release' && github.event.action == 'released' && 'production' || 'staging') }}"
-      stacks: '["pre-cluster", "cluster", "apps"]'
+      stacks: "${{ job.detect_stack_to_deploy.outputs.stacks }}"
       imageTag: ${{ needs.build.outputs.imageTag }}
