@@ -1,7 +1,29 @@
 module "service-token" {
   source = "../../../modules/sealed-secrets"
 
-  sealedSecrets = {
+  sealedSecrets = var.namespace == "production" ? {
+    "github-token" : {
+      isClusterWide = false
+
+      reflected           = true
+      reflectedNamespaces = ["production", "staging", "previews", "sandbox"]
+
+      encryptedData = {
+        "GITHUB_TOKEN" : "AgCUfMzi9vCyiQtCPsy8kt7DYJC4IfeEQH4AkPIy4NyDbRWYoN6atRXhflDD3bmFJjw8TS+UVmjuAbEcwWXNae496P2TwoTx0z51FISOKvGMibIjdsleiOb0lA50c4hibscXyLspAdW80nhPD5GT2+TLvUntaPReEmuvxVIRg/q6LDWeO8wpVFZD5rlFarFX2D+/vWBwH5ZzBoAFQk3GNpy9+wXFrDNXJtBFp7b3u5oKm5aiba2WpiRKIEZuXeiMmj5+VVl8AVKKy89d6+aCPTePfjoRc1uwH+Uz4LrTWZaOxGN89oYrtSB8M1xnDldomzYcVqXW+iNzhTcXClQaB3MUuQaHS3yfFqMJ6iX32IAt2vN8MUYe+8HBRLcBzdq12MgVBGjzfUWMIzoHfQK1diTxE6fZTVizV0QzVf1gw+/YpGHFn1Yc4phdff+c1+HbUSj8tfvU+JOiijBlOdxgGJPbQ4XAimvD4dofnL8lFo2h4zajkPJDyl2y4xzJ3HI+f0IiSBLnuTx3nmYCICGqFRs3kVIixq4lzqbzvWx9t222TtOKPlRHOfyp+BHMWwf/Ll7Q747df86HzYFWt4RCDvAiRw5gZvU/eNvGf5bR0P/sIKpDeXjch7N2IRPqCYttf/35Foz7Bqy/WOECJjSGjpsBFhtucvEyV9nQuAO3b9QFF0E3o4J/QvAfvbFYeBJ2rPiOvgyIGyV01fUSH95yftG3hVFNOIOqZO3XWCYrwwycL4QmvdwAYJez"
+      }
+    }
+
+    "discord-token" : {
+      isClusterWide = false
+
+      reflected           = true
+      reflectedNamespaces = ["production", "staging", "previews", "sandbox"]
+
+      encryptedData = {
+        "DISCORD_TOKEN" : "AgCNVGBZq8iVZeKef6QaXrGHDPsb3e8BmH7moy6iewrWlXmgidx4gYK9QDk11vKzh3DfOaJAPpqAQPOScUF/eUBeK29nl5Z4JP9RhII4IGNEauxJMtnMKp9PQx6ht9Bf/alB6VNL3K8BkT+PSjC1EzoQyj9OMCrZEerXDYF3+Zl4F4KM9gE43u8uPbGhoayAR4rPbccRh3DcVSckPrkGRVp+DoxuNejMou3fx6g6w7qUJYHh61kCVgA2EsOjceEP+UJGqbtfzgHeJCpCaU/bLGGviDXmIDF1M3zQkUT3lPP+s3Fu3W+hbVdd5bJEkNbxtSprZPL0iS/Tjlm76tY0ShjqerIMuNZvnMxemTKPXpuoTNaEDE15ed06Ww8w5hynyYLmmL9rZt1Vjgyo+IqtUjQOX+H6zVyhNkTNOD1syG+zQA9ShUTSOYRCLI8BREerr/00cL0B2wazT+W0wazZdfuRRzZL+/fMxrvRLldWXlubXh05QwH7PxfT0F46CLAacL/zAaque2nZQPOGZkS6F+LEcy3fz6NN6o/kJwCyWBxulnLnAj7NAX8spgcL3wrb2HbjxnZDHdt/D0gI6zIxEgzZ/M7/gfcMX+Ey49Uhl7+j16IWcVFzk4wEP5jiVzKaV6nLvVi1gkORTJ/b9ise2BNPhb70Y0hNEx+7AEuFkVICf+tid4Av1zq1iThc5lryZSO6+wbba5IWxTxJSbRFGD00TIMCwXpkUbz8/NkeH5cTKjHE7gT6s3AzsTF+cm23s6IyUmSu6bJby2S7l/0evM9d5s3YHJIB"
+      }
+    }
+
     "s42-service-token" = {
       isClusterWide = false
       namespace     = "production"
@@ -31,28 +53,6 @@ module "service-token" {
       }
     }
 
-    "github-token" : {
-      isClusterWide = false
-
-      reflected           = true
-      reflectedNamespaces = ["production", "staging", "previews", "sandbox"]
-
-      encryptedData = {
-        "GITHUB_TOKEN" : "AgCUfMzi9vCyiQtCPsy8kt7DYJC4IfeEQH4AkPIy4NyDbRWYoN6atRXhflDD3bmFJjw8TS+UVmjuAbEcwWXNae496P2TwoTx0z51FISOKvGMibIjdsleiOb0lA50c4hibscXyLspAdW80nhPD5GT2+TLvUntaPReEmuvxVIRg/q6LDWeO8wpVFZD5rlFarFX2D+/vWBwH5ZzBoAFQk3GNpy9+wXFrDNXJtBFp7b3u5oKm5aiba2WpiRKIEZuXeiMmj5+VVl8AVKKy89d6+aCPTePfjoRc1uwH+Uz4LrTWZaOxGN89oYrtSB8M1xnDldomzYcVqXW+iNzhTcXClQaB3MUuQaHS3yfFqMJ6iX32IAt2vN8MUYe+8HBRLcBzdq12MgVBGjzfUWMIzoHfQK1diTxE6fZTVizV0QzVf1gw+/YpGHFn1Yc4phdff+c1+HbUSj8tfvU+JOiijBlOdxgGJPbQ4XAimvD4dofnL8lFo2h4zajkPJDyl2y4xzJ3HI+f0IiSBLnuTx3nmYCICGqFRs3kVIixq4lzqbzvWx9t222TtOKPlRHOfyp+BHMWwf/Ll7Q747df86HzYFWt4RCDvAiRw5gZvU/eNvGf5bR0P/sIKpDeXjch7N2IRPqCYttf/35Foz7Bqy/WOECJjSGjpsBFhtucvEyV9nQuAO3b9QFF0E3o4J/QvAfvbFYeBJ2rPiOvgyIGyV01fUSH95yftG3hVFNOIOqZO3XWCYrwwycL4QmvdwAYJez"
-      }
-    }
-
-    "discord-token" : {
-      isClusterWide = false
-
-      reflected           = true
-      reflectedNamespaces = ["production", "staging", "previews", "sandbox"]
-
-      encryptedData = {
-        "DISCORD_TOKEN" : "AgCNVGBZq8iVZeKef6QaXrGHDPsb3e8BmH7moy6iewrWlXmgidx4gYK9QDk11vKzh3DfOaJAPpqAQPOScUF/eUBeK29nl5Z4JP9RhII4IGNEauxJMtnMKp9PQx6ht9Bf/alB6VNL3K8BkT+PSjC1EzoQyj9OMCrZEerXDYF3+Zl4F4KM9gE43u8uPbGhoayAR4rPbccRh3DcVSckPrkGRVp+DoxuNejMou3fx6g6w7qUJYHh61kCVgA2EsOjceEP+UJGqbtfzgHeJCpCaU/bLGGviDXmIDF1M3zQkUT3lPP+s3Fu3W+hbVdd5bJEkNbxtSprZPL0iS/Tjlm76tY0ShjqerIMuNZvnMxemTKPXpuoTNaEDE15ed06Ww8w5hynyYLmmL9rZt1Vjgyo+IqtUjQOX+H6zVyhNkTNOD1syG+zQA9ShUTSOYRCLI8BREerr/00cL0B2wazT+W0wazZdfuRRzZL+/fMxrvRLldWXlubXh05QwH7PxfT0F46CLAacL/zAaque2nZQPOGZkS6F+LEcy3fz6NN6o/kJwCyWBxulnLnAj7NAX8spgcL3wrb2HbjxnZDHdt/D0gI6zIxEgzZ/M7/gfcMX+Ey49Uhl7+j16IWcVFzk4wEP5jiVzKaV6nLvVi1gkORTJ/b9ise2BNPhb70Y0hNEx+7AEuFkVICf+tid4Av1zq1iThc5lryZSO6+wbba5IWxTxJSbRFGD00TIMCwXpkUbz8/NkeH5cTKjHE7gT6s3AzsTF+cm23s6IyUmSu6bJby2S7l/0evM9d5s3YHJIB"
-      }
-    }
-
     "oauth2-providers" : {
       isClusterWide = false
       namespace     = "production"
@@ -70,5 +70,5 @@ module "service-token" {
         "FORTY_TWO_SECRET" = "AgAx6aeu7VVsIYbmkna3UdNXuWvOlfzQPCjU0wCIgaS+rjBFvmkwzhyqgPzPOacn7aMGOd7hBDvYVzZNB/Qwq7u54xl3UhkK7oLVhGYeOG7MigY/YFH7Z9KYxgweke5GzV1ecG8fk8py/Vq+WWj2c60P+yE+Fd3/36kefp4Q1PBsrkVasVYVDy5YOOfhvDXUhJ5iHXKGZygE0AeOUksv6PW7NJdkp+nBxcE0xy0JNagZVMEA+eFqcIiPlFVT0R+ajerzYiK0H4xwbZCVSBO3bQt2hllKRTQTYKHjsu0MIPojlTEkMwhUZuXkP176BfKC85CeOqt2fhwGPpNoD8ASdohj6i3tvbiZGtL4Tovgn2IuceydZ0Go18S/0tJfg3cbLZ+zZneFRbEqne0kAclyvEhzz8jbvJIfM/JyHXBEK9ZOO8FE0KmSpIBqMksQkC0vN9NlOtLa82FgYWBkSagfZhagtbfpx8+XSj7yUeb9+oBJcJ77iGtrG6KvVinxZrhFa3agFzYiSenSXXYk54mqwJadCyoKPSiUw+TPqBwYefWn3SekU/j1aLiyjClOa1BUCmg3xU2jidcqX8I91NZcMjkJp+p/Vq9hAi4MOPN69TFJpd3o4YqOUko5nnavULDmO94GxBCMZUrmE6dd447teM0y33LIIMUPRafiEisUpnQn1JiXwgB1n2T27s1BGPTVc04p3Ik5mjptgQ7nCkT0nWWVIWITkM/w+kqpiu3l/OwQ1Lw6jx1MdIugPsAqa0CCUJebfs2sDdbSkcnhJf27B5PF"
       }
     }
-  }
+  } : {}
 }
