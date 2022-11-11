@@ -55,14 +55,14 @@ jobs:
             const output = `#### Terraform Initialization ⚙️ \`${{ steps.init.outcome }}\`
             #### Terraform Validation 🤖 \`${{ steps.validate.outcome }}\`
             <details><summary>Show Validation</summary>
-            \`\`\`\n
+            \`\`\`
             ${{ steps.validate.outputs.stdout }}
             \`\`\`
             </details>
 
             #### Terraform Plan 📖 \`${{ steps.plan.outcome }}\`
             <details><summary>Show Plan</summary>
-            \`\`\`\n
+            \`\`\`
             ${process.env.PLAN}
             \`\`\`
             </details>

@@ -115,5 +115,5 @@ jobs:
           TF_VAR_webhooksEnabled: ${{ inputs.kubeNamespace == 'production' }}
           TF_VAR_crawlerEnabled: ${{ inputs.kubeNamespace == 'production' }}
           TF_VAR_hasProvidedJWTKSCertificates: "false"
-          TF_VAR_hasPersistentStorage: ${{ contains(fromJson('["production", "staging"]', inputs.kubeNamespace) }}
+          TF_VAR_hasPersistentStorage: ${{ contains(fromJson('["production", "staging"]'), inputs.kubeNamespace) }}
         run: terraform apply -auto-approve -input=false
