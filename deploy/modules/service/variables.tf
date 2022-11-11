@@ -213,12 +213,12 @@ variable "jobActiveDeadlineSeconds" {
 
 variable "jobBackoffLimit" {
   type        = number
-  description = "The number of retries before considering a job as failed. Defaults to 6."
-  default     = 6
+  description = "The number of retries before considering a job as failed. Defaults to 0."
+  default     = 0
 
   validation {
-    condition     = var.jobBackoffLimit > 0
-    error_message = "The backoff limit must be greater than 0."
+    condition     = var.jobBackoffLimit >= 0
+    error_message = "The backoff limit must be greater or equals than 0."
   }
 }
 
@@ -347,7 +347,7 @@ variable "ports" {
   type = map(object({
     containerPort = number
     protocol      = optional(string, "TCP")
-    istioProtocol = optional(string, "http2")
+    istioProtocol = optional(string, "http")
   }))
   description = "List of ports to expose"
   default     = {}
@@ -568,6 +568,7 @@ variable "persistentVolumeClaims" {
   type = map(object({
     storageClassName = optional(string, "csi-cinder-classic")
     accessModes      = list(string)
+    volumeName       = optional(string)
     storage          = string
   }))
   description = "PersistentVolumeClaims needed by the application (not automounted)"

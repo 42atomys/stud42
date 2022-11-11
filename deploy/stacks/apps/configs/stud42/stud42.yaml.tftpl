@@ -10,7 +10,7 @@ jwtks:
   # a JWT Token
   endpoints:
     sets: https://${rootDomain}/.well-known/jwks
-    sign: jwtks-service:5000
+    sign: jwtks-service.${namespace}.svc.cluster.local:5000
   # Certs used to sign and validate the JWT
   # Also called : The JWK
   jwk:

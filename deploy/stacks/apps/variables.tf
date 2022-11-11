@@ -37,7 +37,7 @@ variable "crawlerEnabled" {
 
 variable "hasProvidedJWTKSCertificates" {
   type        = bool
-  description = "Whether the user has provided the certificates for the JWT Key Server"
+  description = "Whether the jwtks secret needs to be created or not (must be executed after make build/Makefile certs)"
   default     = false
 }
 

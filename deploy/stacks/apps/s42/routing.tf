@@ -12,13 +12,16 @@ module "istio" {
           match = [
             {
               uri = {
-                prefix = "/api"
+                prefix = "/.well-known/jwks"
               }
               method = {
                 exact = "GET"
               }
             }
           ]
+          rewrite = {
+            uri = "/jwks"
+          }
           route = [
             {
               destination = {

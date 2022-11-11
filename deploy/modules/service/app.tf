@@ -59,6 +59,7 @@ resource "kubernetes_persistent_volume_claim" "app" {
   spec {
     storage_class_name = each.value.storageClassName
     access_modes       = each.value.accessModes
+    volume_name        = each.value.volumeName
     resources {
       requests = {
         storage = each.value.storage
