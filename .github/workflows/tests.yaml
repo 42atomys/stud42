@@ -55,12 +55,11 @@ jobs:
               issue_number: context.issue.number,
             })
             const botComment = comments.find(comment => {
-              return comment.user.type === 'Bot' && comment.body.includes('## Terraform data for \`${{ matrix.stack }}\` stack')
+              return comment.user.type === 'Bot' && comment.body.includes('Terraform data for \`${{ matrix.stack }}\` stack')
             })
 
             // 2. Prepare format of the comment
             const output = `## Terraform data for \`${{ matrix.stack }}\` stack
-
             #### Terraform Initialization ⚙️ \`${{ steps.init.outcome }}\`
             #### Terraform Validation 🤖 \`${{ steps.validate.outcome }}\`
             <details><summary>Show Validation</summary>
@@ -76,7 +75,7 @@ jobs:
             \`\`\`
             ${process.env.PLAN}
             \`\`\`
-            </details>
+            </details>`
 
             // 3. If we have a comment, update it, otherwise create a new one
             if (botComment) {
