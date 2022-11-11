@@ -51,7 +51,7 @@ resource "kubectl_manifest" "gateways" {
               httpsRedirect = each.value.serverHttpsRedirect
             }
           }
-        ], tolist(each.value.extraServers))
+        ], each.value.extraServers)
       }
     }
   )

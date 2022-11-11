@@ -34,7 +34,7 @@ module "cert_manager" {
         {
           dns01 = {
             webhook = {
-              groupName  = "acme.zbou.be"
+              groupName  = "acme.s42.app"
               solverName = "ovh"
               config = {
                 endpoint       = "ovh-eu"
@@ -57,24 +57,20 @@ module "cert_manager" {
   }
 
   certificates = {
-    # "app-s42" = {
-    #   dns_names   = ["s42.app", "*.s42.app"]
-    #   issuer_name = "ovh-issuer"
-    # }
-    # "app-s42-next" = {
-    #   dns_names   = ["next.s42.app", "*.next.s42.app"]
-    #   issuer_name = "ovh-issuer"
-    # }
-    # "dev-s42" = {
-    #   dns_names   = ["s42.dev", "*.s42.dev", "*.sandbox.s42.dev"]
-    #   issuer_name = "ovh-issuer"
-    # }
-    # "dev-s42-previews" = {
-    #   dns_names   = ["*.previews.s42.dev"]
-    #   issuer_name = "ovh-issuer"
-    # }
-    "be-zboub" = {
-      dns_names   = ["zbou.be", "*.zbou.be"]
+    "app-s42" = {
+      dns_names   = ["s42.app", "*.s42.app"]
+      issuer_name = "ovh-issuer"
+    }
+    "app-s42-next" = {
+      dns_names   = ["next.s42.app", "*.next.s42.app"]
+      issuer_name = "ovh-issuer"
+    }
+    "dev-s42" = {
+      dns_names   = ["s42.dev", "*.s42.dev", "*.sandbox.s42.dev"]
+      issuer_name = "ovh-issuer"
+    }
+    "dev-s42-previews" = {
+      dns_names   = ["*.previews.s42.dev"]
       issuer_name = "ovh-issuer"
     }
   }

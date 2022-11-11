@@ -44,14 +44,5 @@ module "istio" {
       tlsMode             = "SIMPLE"
       tlsCredentialName   = "dev-s42-previews-tls"
     }
-
-    "be-zboub" = {
-      ingressSelectorName = "ingressgateway"
-      namespace           = "production"
-      serverHttpsRedirect = true
-      hosts               = ["zbou.be"]
-      tlsMode             = "SIMPLE"
-      tlsCredentialName   = "be-zboub-tls"
-    }
   }
 }

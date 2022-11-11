@@ -13,8 +13,7 @@ variable "appsVersion" {
   }
 
   validation {
-    condition = alltrue([for k, v in var.appsVersion : contains(["s42"], k) && v != "latest"])
-
+    condition     = alltrue([for k, v in var.appsVersion : contains(["s42"], k)])
     error_message = "The appsVersion variable must contain a key for each application to be deployed"
   }
 }

@@ -19,7 +19,7 @@ variable "gateways" {
         mode           = optional(string)
         credentialName = optional(string)
         httpsRedirect  = optional(bool, false)
-      }))
+      }), {})
     })), [])
   }))
   default = {}
