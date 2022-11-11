@@ -47,8 +47,6 @@ jobs:
       # to Terraform configuration files
       - uses: actions/github-script@v6
         if: always() && github.event_name == 'pull_request'
-        env:
-          PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -77,7 +75,7 @@ jobs:
             <details><summary>Show Plan</summary>
 
             \`\`\`
-            ${process.env.PLAN}
+            ${{ steps.plan.outputs.stdout }}
             \`\`\`
             </details>`
 
