@@ -5,6 +5,8 @@ data "kubernetes_resource" "rabbitmq_operator" {
     name      = "primary-rabbitmq-cluster-operator"
     namespace = "rabbitmq-operator"
   }
+
+  object = {}
 }
 
 resource "kubernetes_manifest" "rabbitmq" {

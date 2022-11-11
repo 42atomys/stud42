@@ -6,6 +6,8 @@ data "kubernetes_resource" "sealed_secret_controller" {
     name      = var.sealedSecretsControllerName
     namespace = var.sealedSecretsControllerNamespace
   }
+
+  object = {}
 }
 
 

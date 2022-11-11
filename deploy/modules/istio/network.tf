@@ -6,6 +6,8 @@ data "kubernetes_resource" "istio_controller" {
     name      = "istiod"
     namespace = "istio-system"
   }
+
+  object = {}
 }
 
 resource "kubectl_manifest" "gateways" {
