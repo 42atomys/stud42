@@ -1,10 +1,6 @@
 resource "kubernetes_manifest" "sealed_secret" {
   for_each = { for k, secret in var.sealedSecrets : k => secret if var.enabled }
 
-  depends_on = [
-    data.kubernetes_resource.sealed_secret_controller
-  ]
-
   manifest = {
     apiVersion = "bitnami.com/v1alpha1"
     kind       = "SealedSecret"
