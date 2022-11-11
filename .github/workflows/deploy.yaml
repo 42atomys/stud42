@@ -31,7 +31,6 @@ permissions:
 jobs:
   detect_stack_to_deploy:
     name: "Detect stack to deploy 📦"
-    needs: [linters, tests]
     runs-on: ubuntu-latest
     permissions:
       pull-requests: read
