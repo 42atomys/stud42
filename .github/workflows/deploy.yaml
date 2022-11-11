@@ -10,10 +10,6 @@ on:
         required: true
         type: string
         description: "The name of the Kubernetes namespace to deploy to (e.g. staging, production, previews, sandbox)"
-      stacks:
-        required: true
-        type: string
-        description: "The name of stacks to deploy, in json array format"
       imageTag:
         required: true
         description: "The docker image tag to deploy"
@@ -33,18 +29,51 @@ permissions:
   contents: read
 
 jobs:
-  terraform:
-    name: "${{ matrix.stack }} on ${{ inputs.ghEnvironmentName }}"
+  detect_stack_to_deploy:
+    name: "Detect stack to deploy 📦"
+    needs: [linters, tests]
     runs-on: ubuntu-latest
-    environment:
-      name: ${{ inputs.ghEnvironmentName }}
-      url: ${{ steps.envurl.outputs.urlWithProtocol }}
     permissions:
       pull-requests: read
       contents: read
+    outputs:
+      stacks: ${{ steps.detected_stack.outputs.stacks }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Detect stack to deploy
+        id: detect_changes
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            pre-cluster:
+              - 'deploy/stacks/pre-cluster/**'
+            cluster:
+              - 'deploy/stacks/cluster/**'
+      - name: Expose stack to deploy
+        uses: actions/github-script@v6
+        id: detected_stack
+        with:
+          script: |
+            let stacks = [];
+            if (context.eventName == 'release' && context.payload.action == 'released') {
+              stacks = Object.keys(steps.detect_changes.outputs.filter( (stack) => stack == true ));
+            }
+            stacks.push('apps');
+
+            console.log(`Stack to deploy: ${stacks}`);
+            core.setOutput('stacks', stacks);
+
+  terraform:
+    name: "${{ matrix.stack }} on ${{ inputs.ghEnvironmentName }}"
+    runs-on: ubuntu-latest
+    needs: [detect_stack_to_deploy]
+    environment:
+      name: ${{ inputs.ghEnvironmentName }}
+      url: ${{ steps.envurl.outputs.urlWithProtocol }}
     strategy:
       matrix:
-        stack: ${{ fromJson(inputs.stacks) }}
+        stack: ${{ fromJson(needs.detect_stack_to_deploy.outputs.stacks) }}
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.TERRAFORM_AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.TERRAFORM_AWS_SECRET_ACCESS_KEY }}
@@ -63,13 +92,6 @@ jobs:
       - env:
           KUBECONFIG_ADMIN: ${{ secrets.KUBECONFIG_ADMIN }}
         run: mkdir -p ~/.kube && echo "$KUBECONFIG_ADMIN" >> ~/.kube/config
-      # Detect changes in stack
-      - uses: dorny/paths-filter@v2
-        id: changes
-        with:
-          filters: |
-            stack:
-              - 'deploy/stacks/${{ matrix.stack }}/**'
       # Generate the url of the environment
       - name: Generate url of the environment
         id: envurl
@@ -94,7 +116,6 @@ jobs:
       # Install the latest version of Terraform CLI and configure the
       # Terraform CLI configuration file with a Terraform Cloud user API token
       - name: Setup Terraform
-        if: steps.changes.outputs.stack == 'true' || matrix.stack == 'apps'
         uses: hashicorp/setup-terraform@v2
         with:
           # Force the version due to crash on latest
@@ -105,14 +126,12 @@ jobs:
       # initial files, loading any remote state, downloading modules, etc.
       - name: Terraform Init
         id: init
-        if: steps.changes.outputs.stack == 'true' || matrix.stack == 'apps'
         run: terraform init -input=false
 
         # On push to main, build or change infrastructure according
         # to Terraform configuration files
       - name: Terraform Apply
         id: apply
-        if: steps.changes.outputs.stack == 'true' || matrix.stack == 'apps'
         env:
           TF_WORKSPACE: ${{ secrets.TF_WORKSPACE }}
           # TF VARS

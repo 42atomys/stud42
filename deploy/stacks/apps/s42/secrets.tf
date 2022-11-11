@@ -4,8 +4,11 @@ module "service-token" {
   sealedSecrets = {
     "s42-service-token" = {
       isClusterWide = false
-      namespace     = var.namespace
+      namespace     = "production"
       secretType    = "Opaque"
+
+      reflected           = true
+      reflectedNamespaces = ["staging", "previews", "sandbox"]
 
       encryptedData = {
         "TOKEN" = "AgAlVdqq8lH5K32i8MkN04M/rG1YkgDU0zcDGgJjHd/o8OfuYhCNRbUvi/xN5jbSL39k5tJVWMuGW0SV+nvM5KyGAProoHkLL1ltnV9lcvSxhfxY5N8TbKLZmn9iWIpMayucYPUHUi2zyv+D8D9IR2GzgtbZLa/f0OKqLwkebxnd4rCMwOVwn6ZV1SFUnwOnYMSs8X8vISWK8YD2qmE+lo/CNbixoW9qw1t4PbqMiV6ZJsbA+xr5niqAEgEhFLEsZC0VHmvRJulfkJg99+OTKzUcSJ1saMdCi95pyU54pnAOvHbApxfZigxrXC1UE+MoxShnuIzRErcsvo5+FUPZkubKshBha+OwAKjCF3jUsdmkG30V0cWswVSoxejTf5WVOw75C7Kas+HddJaq4JLqT8KZyWKNvkiDTTvOO5QL7jm26a0zGvJ6sR/4py3TdcrF7XCdGv3ysRRdcQ2Kk0e2z2Gn3ZA/67m9RDLU1CyGxEZcU7LTEYQQyGI+GkWQNjqka//AdM+i1J5f68hSIzrrKna/GGOlRCYVmfwVypDOKIc8x5bZf087+36cvqMuiVqPaoyRBhA0jjHOEiq9gI7S0QRhTA1fbT5ddQdnYW+zcXvcMzQ4H2XGPszXzmUh6hD4g4UAcweWEjKRulebG1IIgYbiZ9tJGwmwUEObWX1QZ4r9BxZCzwE/x+o/pNe6K2Mi+i+uOfBq6sEzGlULo4uFvrGrtP/0ZBTLP+hAvTXl1ETMGxnA/fYJokrkyrDkh4Udy64Bgge3004wHA=="
@@ -14,8 +17,11 @@ module "service-token" {
 
     "sentry-dsns" = {
       isClusterWide = false
-      namespace     = var.namespace
+      namespace     = "production"
       secretType    = "Opaque"
+
+      reflected           = true
+      reflectedNamespaces = ["staging", "previews", "sandbox"]
 
       encryptedData = {
         "API_DSN"                = "AgAbUOogu4NrjaHzukkiyT8eRjBzbK+O0/91nUtN+bAicpWcFAaxGTQmJt8MOskt9OotMTUiaHVwKx2iDjVeGHVOLVzA2N+Sfriik38nhaNu2GBxMNxvsvS9zvXH8RevOcpcR0P+ZO8aq1DXwOEQU7X6AHcwVhPv09+4ZRy8FeFqpxndNj/j2cqDTc+9zHF472IZEgV4Sat/Xk/NtAGMsxOPVsCJQmcZ4AJw5/ebgUdwPbljWlEE2Be+t7fQkXfjw4vBzcTh7GNEO7rtwVWN+sTetPZ+TJ2RVvifoOT0G9XLjeg7U+uj0R75tAwm4sPIk85lMRZ5blGlV3Yv9t0c1fOkEOwypKEJg2DzRm8wOhU0HBfI5SGblo90N18iDNjmVQLZq+9BDNahp/waHoSZvxOgo30XeThXKLU62ljoYEzR8DrtdIBmMOmXzHxsJhcjD/Y13agEJd9yPBt0i7rMOgz+R4BC/rds/P11y55416NVtpFhgjpqCqDIQrbvVlstAvt2XRGi9tpvtiGFQWOE6Ckl0EiC1hEZy3uh/WmD6CMZbh/58IfIp+s1P9x4TmedpXRHwYjyQBa7bMZqmCqmFZ0tROkur93Scicxgz7XCmbMztDBbAHIsFdWavPUfsx/ybekWbkQUgWIGkb7IMSAuiY2U1CS1lDfqAG+Z794SI/kwhhDvUY21zUn10e3yOlzct3cw90g4XFBb+l57WURsalol6OVpdrj9Y+9gD7jjm81S9cv+6Y+oYMfFKW2lmwM8vOtGzQPxZPJVcj4sd6VrjT4lCb0BK8e6T99"
@@ -50,6 +56,10 @@ module "service-token" {
     "oauth2-providers" : {
       isClusterWide = false
       namespace     = "production"
+
+      # TODO(@42Atomys): Scope the providers to the namespace.
+      reflected           = true
+      reflectedNamespaces = ["staging", "previews", "sandbox"]
 
       encryptedData = {
         "DISCORD_ID"       = "AgBWxCUvhWaPxN3ACvO2dRGoppBkc1av284R86ygoZYVQ0dELWZ2BH4XqjnVeMdM7TDFEoZU7A3RbB9NGIUNjSg+meXKNupbabceOu6fbLg9sZrooZrxa2kLLWpSzsJ3OVEWsYkK6RnOAl0ewTU3LUOePHIxPEdOSfbdETD7J3JtlI2HsFls92nqEuXdD8GZuRZNHsHmqgIft9rZmABA5a/CKreWjopxg3YLgUkUHKSmSNWQ2h27/SsiKbGrsA3Gh/ksBY9etgNd+abWGMUSxHxaGKFfAcxvgdkT0sptDEG3cWg614pGFYgtcT59zK4nnsQeczvFpV0ITHNYWijbtrFK7T+e6M8YxYwxt2eyslbDDd+3Kdw0G5qi+RF13mJ79Ut5fY157ikjOuiVDi75aFrFja2GNiMyy5ze7IyGMOVGDjuVxU4WKH7ecopoKEx2+yn6532KgL3kzQdRRKorXKFUQ9w3Da84cJlslfnhJSu7367F4AtdT5yh9awPPnAUgxSdZWv2qRqPobiuHiOJuMTeejo+lIiMRt5QVhr77zzQUDIbXE7yI8Dlyfq337VmnFBDEOjiXWPOBY8IShYWwWqGle0eKZ2bIev4tzKEu+gl723a7YyIQyuRBB/OEIoPnM6HMbMCdUeXQBKUvQwXNQ5nk2OXK8k/14OzJcROuPavs8DfqH6p0U3164TSuTkZT3ITGIIWNmhsEmjT2ex12fZ7+e8="
