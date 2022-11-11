@@ -15,6 +15,15 @@ jobs:
       TF_WORKSPACE: production # Compare the changes when plan with production
       AWS_ACCESS_KEY_ID: ${{ secrets.TERRAFORM_AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.TERRAFORM_AWS_SECRET_ACCESS_KEY }}
+      # TF VARS (bind to production to display changes between branch and production)
+      TF_VAR_namespace: production
+      TF_ENV_appsVersion: '{"s42": "${{ inputs.imageTag }}"}'
+      TF_VAR_baseUrl: "s42.apps"
+      TF_VAR_webhooksEnabled: "true"
+      TF_VAR_crawlerEnabled: "true"
+      TF_VAR_hasProvidedJWTKSCertificates: "false"
+      TF_VAR_hasPersistentStorage: "true"
+
     strategy:
       matrix:
         stack: ["pre-cluster", "cluster", "apps"]
