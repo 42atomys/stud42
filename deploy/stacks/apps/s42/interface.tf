@@ -29,6 +29,7 @@ module "interface" {
 
   args = ["server.js"]
 
+  nodeSelector = local.nodepoolSelector["services"]
 
   replicas = 1
   autoscaling = {
@@ -63,18 +64,21 @@ module "interface" {
   }
 
   env = {
+    DEBUG                   = "true"
     NODE_ENV                = var.namespace
     NEXT_PUBLIC_GRAPHQL_API = "https://${var.rootDomain}/graphql"
     NEXTAUTH_URL            = "https://${var.rootDomain}"
     CONFIG_PATH             = "/config/stud42.yaml"
   }
   envFromSecret = {
-    FORTY_TWO_ID = {
+    # TODO(@42atomys) : Remove this when release
+    FORTY_TWO_CLIENT_ID = {
       key  = "FORTY_TWO_ID"
       name = "oauth2-providers"
     }
 
-    FORTY_TWO_SECRET = {
+    # TODO(@42atomys) : Remove this when release
+    FORTY_TWO_CLIENT_SECRET = {
       key  = "FORTY_TWO_SECRET"
       name = "oauth2-providers"
     }

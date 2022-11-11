@@ -12,6 +12,8 @@ module "crawler_campus" {
   command = ["stud42cli"]
   args    = ["--config", "/config/stud42.yaml", "jobs", "crawler", "campus"]
 
+  nodeSelector = local.nodepoolSelector["services"]
+
   podLabels = {
     # Disable istio sidecar injection for this pod due to the fact this is a 
     # job and we dont implement the /quitquitquit endpoint of envoy actually.
@@ -51,12 +53,12 @@ module "crawler_campus" {
       name = "postgres-credentials"
     }
     # TODO(@42atomys) : Remove this when release
-    FORTY_TWO_ID = {
+    FORTY_TWO_CLIENT_ID = {
       key  = "FORTY_TWO_ID"
       name = "oauth2-providers"
     }
     # TODO(@42atomys) : Remove this when release
-    FORTY_TWO_SECRET = {
+    FORTY_TWO_CLIENT_SECRET = {
       key  = "FORTY_TWO_SECRET"
       name = "oauth2-providers"
     }

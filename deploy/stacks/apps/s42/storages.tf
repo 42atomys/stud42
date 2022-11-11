@@ -23,6 +23,24 @@ resource "kubernetes_manifest" "rabbitmq" {
         }
       ]
 
+      affinity = {
+        nodeAffinity = {
+          requiredDuringSchedulingIgnoredDuringExecution = {
+            nodeSelectorTerms = [
+              {
+                matchExpressions = [
+                  {
+                    key      = "nodepool"
+                    operator = "In"
+                    values   = [local.nodepoolSelector["storages"]["nodepool"]]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+
       persistence = var.hasPersistentStorage ? {
         storageClassName = "csi-cinder-high-speed"
         storage          = var.namespace == "production" ? "5Gi" : "1Gi"
@@ -65,81 +83,6 @@ resource "random_password" "postgres" {
   special = true
 }
 
-# resource "helm_release" "postgresql" {
-#   repository = "https://charts.bitnami.com/bitnami"
-#   chart      = "postgresql"
-#   version    = "10.0.1"
-
-#   create_namespace = false
-#   name             = "postgres"
-#   namespace        = var.namespace
-
-#   set {
-#     name  = "image.registry"
-#     value = "ghcr.io/42atomys"
-#   }
-
-#   set {
-#     name  = "image.repository"
-#     value = "s42-postgres"
-#   }
-
-#   set {
-#     name  = "image.tag"
-#     value = "13.4.0"
-#   }
-
-#   set {
-#     name  = "image.pullSecrets"
-#     value = ["ghcr-creds"]
-#   }
-
-#   set {
-#     name  = "postgresqlDataDir"
-#     value = "/var/lib/postgresql/data/pgdata"
-#   }
-
-#   set {
-#     name  = "auth.postgresPassword"
-#     value = random_password.postgres.result
-#   }
-
-#   set {
-#     name  = "volumePermissions.enabled"
-#     value = ""
-#   }
-
-#   set {
-#     name  = "primary.persistence.enabled"
-#     value = true
-#   }
-
-#   set {
-#     name  = "primary.persistence.storageClass"
-#     value = "csi-cinder-high-speed"
-#   }
-
-#   set {
-#     name  = "primary.persistence.size"
-#     value = var.namespace == "production" ? "10Gi" : "1Gi"
-#   }
-
-#   set {
-#     name  = "primary.persistence.accessModes"
-#     value = ["ReadWriteOnce"]
-#   }
-
-#   set {
-#     name  = "primary.persistence.mountPath"
-#     value = "/var/lib/postgresql/data/pgdata"
-#   }
-
-#   set {
-#     name  = "primary.initdb.scriptsConfigMap"
-#     value = ""
-#   }
-# }
-
 module "postgres" {
   source = "../../../modules/service"
   kind   = "StatefulSet"
@@ -150,6 +93,8 @@ module "postgres" {
   namespace       = var.namespace
   image           = "ghcr.io/42atomys/s42-postgres:14.2-alpine3.15"
   imagePullPolicy = "IfNotPresent"
+
+  nodeSelector = local.nodepoolSelector["storages"]
 
   revisionHistoryLimit = 1
   replicas             = 1

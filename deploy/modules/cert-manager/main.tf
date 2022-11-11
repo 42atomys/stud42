@@ -50,8 +50,24 @@ resource "helm_release" "cert_manager" {
   }
 
   set {
-    name  = "nodeSelector.kubernetes\\.io/os"
-    value = "linux"
+    name  = "nodeSelector.nodepool"
+    value = "small"
+  }
+
+
+  set {
+    name  = "webhook.nodeSelector.nodepool"
+    value = "small"
+  }
+
+  set {
+    name  = "cainjector.nodeSelector.nodepool"
+    value = "small"
+  }
+
+  set {
+    name  = "startupapicheck.nodeSelector.nodepool"
+    value = "small"
   }
 
   set {
@@ -130,6 +146,11 @@ resource "helm_release" "cert_manager_ovh" {
   namespace        = helm_release.cert_manager.namespace
   create_namespace = false
   chart            = "/tmp/cert-manager-webhook-ovh/deploy/cert-manager-webhook-ovh"
+
+  set {
+    name  = "nodeSelector.nodepool"
+    value = "small"
+  }
 
   set {
     name  = "groupName"

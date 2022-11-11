@@ -11,6 +11,8 @@ module "webhooks_processor" {
   command = ["stud42cli"]
   args    = ["--config", "/config/stud42.yaml", "jobs", "webhooks"]
 
+  nodeSelector = local.nodepoolSelector["services"]
+
   podLabels = {
     # Disable istio sidecar injection for this pod as it is not needed
     "sidecar.istio.io/inject" = "false"

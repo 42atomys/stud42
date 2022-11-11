@@ -25,6 +25,8 @@ module "webhooked" {
   namespace  = var.namespace
   image      = "atomys/webhooked:${var.appVersion}"
 
+  nodeSelector = local.nodepoolSelector
+
   replicas = 1
   autoscaling = {
     enabled     = true

@@ -10,6 +10,8 @@ module "api" {
   command = ["stud42cli"]
   args    = ["--config", "/config/stud42.yaml", "serve", "api", "-g"]
 
+  nodeSelector = local.nodepoolSelector["services"]
+
   replicas = 1
   autoscaling = {
     enabled     = true

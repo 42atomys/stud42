@@ -11,6 +11,8 @@ module "jwtks_service" {
   command = ["stud42cli"]
   args    = ["--config", "/config/stud42.yaml", "serve", "jwtks"]
 
+  nodeSelector = local.nodepoolSelector["services"]
+
   replicas = 1
   autoscaling = {
     enabled     = true
@@ -50,10 +52,12 @@ module "jwtks_service" {
   ports = {
     signing = {
       containerPort = 5000
+      istioProtocol = "tls"
     }
 
     wellknow = {
       containerPort = 5500
+      istioProtocol = "http"
     }
   }
 
@@ -107,7 +111,7 @@ module "jwtks_service" {
 
   certificates = {
     grpc-internal = {
-      dnsNames      = ["jwtks-service"]
+      dnsNames      = ["jwtks-service", "jwtks-service.${var.namespace}.svc.cluster.local"]
       issuerRefKind = "ClusterIssuer"
       issuerRefName = "selfsigned-issuer"
     }

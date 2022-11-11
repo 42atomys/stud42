@@ -19,6 +19,11 @@ resource "helm_release" "gateway" {
   version          = helm_release.istio_base.version
   max_history      = helm_release.istio_base.max_history
   namespace        = helm_release.istio_base.namespace
+
+  set {
+    name  = "nodeSelector.nodepool"
+    value = "medium"
+  }
 }
 
 
@@ -34,6 +39,10 @@ resource "helm_release" "istiod" {
   max_history      = helm_release.istio_base.max_history
   namespace        = helm_release.istio_base.namespace
 
+  set {
+    name  = "pilot.nodeSelector.nodepool"
+    value = "medium"
+  }
   set {
     name  = "components.pilot.k8s.strategy.rollingUpdate.maxUnavailable"
     value = "0"
@@ -78,6 +87,11 @@ resource "helm_release" "rabbitmq_operator" {
   create_namespace = true
   name             = "primary"
   namespace        = "rabbitmq-operator"
+
+  set {
+    name  = "nodeSelector.nodepool"
+    value = "small"
+  }
 }
 
 resource "helm_release" "sealed_secret" {
@@ -88,6 +102,11 @@ resource "helm_release" "sealed_secret" {
   create_namespace = false
   name             = "sealed-secret"
   namespace        = "kube-system"
+
+  set {
+    name  = "nodeSelector.nodepool"
+    value = "small"
+  }
 
   set {
     name  = "fullnameOverride"
@@ -143,4 +162,9 @@ resource "helm_release" "reflector" {
   create_namespace = false
   name             = "reflector"
   namespace        = "kube-system"
+
+  set {
+    name  = "nodeSelector.nodepool"
+    value = "small"
+  }
 }

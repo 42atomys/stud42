@@ -12,4 +12,15 @@ locals {
       min(3, length(split(".", var.rootDomain)))
     )
   )
+
+  // nodepoolSelector is a selector that matches all nodes in the node pool
+  // that the application is deployed to
+  nodepoolSelector = {
+    storages = {
+      nodepool = var.namespace == "production" ? "medium" : var.namespace == "staging" ? "small" : "small-shared"
+    }
+    services = {
+      nodepool = var.namespace == "production" ? "small" : var.namespace == "staging" ? "small" : "small-shared"
+    }
+  }
 }
