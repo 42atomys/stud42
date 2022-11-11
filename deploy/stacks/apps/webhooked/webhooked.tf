@@ -1,4 +1,5 @@
 module "secrets" {
+  count  = var.enabled ? 1 : 0
   source = "../../../modules/sealed-secrets"
 
   sealedSecrets = {
@@ -15,7 +16,8 @@ module "secrets" {
 }
 
 module "webhooked" {
-  source = "../../../modules/services/app"
+  source  = "../../../modules/service"
+  enabled = var.enabled
 
   name       = "webhooked"
   appName    = "webhooked"

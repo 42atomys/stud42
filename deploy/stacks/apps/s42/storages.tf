@@ -154,7 +154,7 @@ resource "random_password" "postgres" {
 # }
 
 module "postgres" {
-  source = "../../../modules/services/app"
+  source = "../../../modules/service"
   kind   = "StatefulSet"
 
   appName         = "postgres"

@@ -19,30 +19,30 @@ jobs:
   ###############################
   ########### LINTERS ###########
   ###############################
-  # linters:
-  #   name: "Linters 🧹"
-  #   uses: ./.github/workflows/linters.yaml
+  linters:
+    name: "Linters 🧹"
+    uses: ./.github/workflows/linters.yaml
   ###############################
   ############ TESTS ############
   ###############################
-  # tests:
-  #   name: Tests 🧪
-  #   uses: ./.github/workflows/tests.yaml
-  #   secrets: inherit
+  tests:
+    name: Tests 🧪
+    uses: ./.github/workflows/tests.yaml
+    secrets: inherit
   ###############################
   ############ BUILD ############
   ###############################
-  # build:
-  #   name: "Build 🔧"
-  #   needs: [linters, tests]
-  #   uses: ./.github/workflows/build.yaml
+  build:
+    name: "Build 🔧"
+    needs: [linters, tests]
+    uses: ./.github/workflows/build.yaml
   ###############################
   ########### DEPLOY ############
   ###############################
 
   deploy:
     name: "Deploy 🚀"
-    # needs:  [tests, linters, build]
+    needs: [tests, linters, build]
     uses: ./.github/workflows/deploy.yaml
     secrets: inherit
     if: |
@@ -51,6 +51,7 @@ jobs:
       github.event_name == 'workflow_dispatch' ||
       (github.event_name == 'pull_request' && github.event.pull_request.draft == false && contains(github.event.pull_request.labels.*.name, 'needs-preview-deploy'))
     with:
-      environmentName: "${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.number) || (github.event_name == 'release' && github.event.action == 'released' && 'production' || 'staging') }}"
-      stacks: '["test"]'
-      image: "false" # ${{ needs.build.outputs.image }}
+      ghEnvironmentName: "${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.number) || (github.event_name == 'release' && github.event.action == 'released' && 'production' || 'staging') }}"
+      kubeNamespace: "${{ github.event_name == 'pull_request' && 'previews' || (github.event_name == 'release' && github.event.action == 'released' && 'production' || 'staging') }}"
+      stacks: '["pre-cluster", "cluster", "apps"]'
+      imageTag: ${{ needs.build.outputs.imageTag }}

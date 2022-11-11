@@ -2,18 +2,19 @@ module "s42" {
   source = "./s42"
 
   appVersion = var.appsVersion["s42"]
-  namespace  = "production"
+  namespace  = var.namespace
 
   rootDomain                   = var.baseUrl
-  hasProvidedJWTKSCertificates = true
-  hasPersistentStorage         = true
-  # crawlerEnabled               = true
-  webhookProcessorEnabled = true
+  hasProvidedJWTKSCertificates = var.hasProvidedJWTKSCertificates
+  hasPersistentStorage         = var.hasPersistentStorage
+  crawlerEnabled               = var.crawlerEnabled
+  webhookProcessorEnabled      = var.webhooksEnabled
 }
 
 module "webhooked" {
-  source = "./webhooked"
+  source  = "./webhooked"
+  enabled = var.webhooksEnabled
 
-  appVersion = var.appsVersion["webhooked"]
-  namespace  = "production"
+  appVersion = "0.6.4"
+  namespace  = var.namespace
 }

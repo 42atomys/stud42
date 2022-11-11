@@ -1,5 +1,5 @@
 module "api" {
-  source = "../../../modules/services/app"
+  source = "../../../modules/service"
 
   name       = "api"
   appName    = "api"

@@ -1,6 +1,6 @@
 
 module "jwtks_service" {
-  source = "../../../modules/services/app"
+  source = "../../../modules/service"
 
   name       = "jwtks-service"
   appName    = "jwtks-service"

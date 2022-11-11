@@ -19,7 +19,7 @@ resource "kubernetes_secret" "next_auth_secret" {
 }
 
 module "interface" {
-  source = "../../../modules/services/app"
+  source = "../../../modules/service"
 
   name       = "interface"
   appName    = "interface"

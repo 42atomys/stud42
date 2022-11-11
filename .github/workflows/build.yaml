@@ -5,6 +5,9 @@ on:
       image:
         description: The image builded and pushed to the registry
         value: ${{ jobs.docker_images.outputs.image }}
+      imageTag:
+        description: The image tag
+        value: ${{ jobs.docker_images.outputs.imageTag }}
 jobs:
   docker_images:
     runs-on: ubuntu-latest
@@ -16,6 +19,7 @@ jobs:
       IMAGE_NAME: ${{ github.repository }}
     outputs:
       image: ${{ steps.meta.outputs.tags }}
+      imageTag: ${{ steps.meta.outputs.version }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3

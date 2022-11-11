@@ -115,6 +115,7 @@ resource "kubernetes_role_binding" "cert_manager_webhook_ovh_secret_reader" {
     api_group = ""
     kind      = "ServiceAccount"
     name      = "cert-manager-webhook-ovh"
+    namespace = helm_release.cert_manager.namespace
   }
 }
 

@@ -95,8 +95,8 @@ variable "kind" {
   default     = "Deployment"
 
   validation {
-    condition     = can(regex("^(Deployment|StatefulSet)$", var.kind))
-    error_message = "The kind must be either Deployment or StatefulSet."
+    condition     = can(regex("^(Deployment|StatefulSet|CronJob)$", var.kind))
+    error_message = "The kind must be either Deployment, StatefulSet or CronJob."
   }
 }
 
@@ -130,6 +130,139 @@ variable "podManagementPolicy" {
   validation {
     condition     = can(regex("^(OrderedReady|Parallel)$", var.podManagementPolicy))
     error_message = "The pod management policy must be either OrderedReady or Parallel."
+  }
+}
+
+variable "restartPolicy" {
+  type        = string
+  description = "Restart policy"
+  default     = "Always"
+
+  validation {
+    condition     = can(regex("^(Always|OnFailure|Never)$", var.restartPolicy))
+    error_message = "The restart policy must be either Always, OnFailure or Never."
+  }
+}
+
+variable "jobConcurrencyPolicy" {
+  type        = string
+  description = "Concurrency policy"
+  default     = "Forbid"
+
+  validation {
+    condition     = can(regex("^(Forbid|Replace|Allow)$", var.jobConcurrencyPolicy))
+    error_message = "The concurrency policy must be either Forbid, Replace or Allow."
+  }
+}
+
+variable "jobFailedJobsHistoryLimit" {
+  type        = number
+  description = "Failed jobs history limit"
+  default     = 2
+
+  validation {
+    condition     = var.jobFailedJobsHistoryLimit >= 0
+    error_message = "The failed jobs history limit must be greater or equal than 0."
+  }
+}
+
+variable "jobSuccessfulJobsHistoryLimit" {
+  type        = number
+  description = "Successful jobs history limit"
+  default     = 1
+
+  validation {
+    condition     = var.jobSuccessfulJobsHistoryLimit >= 0
+    error_message = "The successful jobs history limit must be greater or equal than 0."
+  }
+}
+
+variable "jobStartingDeadlineSeconds" {
+  type        = number
+  description = "Starting deadline seconds"
+  default     = 0
+
+  validation {
+    condition     = var.jobStartingDeadlineSeconds >= 0
+    error_message = "The starting deadline seconds must be greater or equal than 0."
+  }
+}
+
+variable "jobSchedule" {
+  type        = string
+  description = "Schedule of the job based on the cron format"
+  default     = ""
+}
+
+variable "jobSuspend" {
+  type        = bool
+  description = "This flag tells the controller to suspend subsequent executions, it does not apply to already started executions. Defaults to false."
+  default     = false
+}
+
+variable "jobActiveDeadlineSeconds" {
+  type        = number
+  description = "Specifies the duration in seconds relative to the startTime that the job may be active before the system tries to terminate it in. Defaults to 0."
+  default     = 600 # 10 minutes by default, this is to prevent jobs from running forever
+
+  validation {
+    condition     = var.jobActiveDeadlineSeconds >= 0
+    error_message = "The active deadline seconds must be greater than 0."
+  }
+}
+
+variable "jobBackoffLimit" {
+  type        = number
+  description = "The number of retries before considering a job as failed. Defaults to 6."
+  default     = 6
+
+  validation {
+    condition     = var.jobBackoffLimit > 0
+    error_message = "The backoff limit must be greater than 0."
+  }
+}
+
+variable "jobCompletions" {
+  type        = number
+  description = "The number of desired completions. Defaults to 1."
+  default     = 1
+
+  validation {
+    condition     = var.jobCompletions >= 0
+    error_message = "The completions must be greater or equal than 0."
+  }
+}
+
+variable "jobCompletionMode" {
+  type        = string
+  description = "Specifies how Pod completions are tracked. It can be either `NonIndexed` (default) or `Indexed`."
+  default     = "NonIndexed"
+
+  validation {
+    condition     = can(regex("^(NonIndexed|Indexed)$", var.jobCompletionMode))
+    error_message = "The completion mode must be either NonIndexed or Indexed."
+  }
+}
+
+variable "jobTTLSecondsAfterFinished" {
+  type        = number
+  description = "TTLSecondsAfterFinished limits the lifetime of a Job that has finished execution (either Complete or Failed). If this field is set, ttlSecondsAfterFinished after the Job finishes, it is eligible to be automatically deleted. When the Job is being deleted, its lifecycle guarantees (e.g. finalizers) will be honored. If this field is unset, the Job won't be automatically deleted. If this field is set to zero, the Job becomes eligible to be deleted immediately after it finishes. This field is alpha-level and is only honored by servers that enable the TTLAfterFinished feature."
+  default     = 0
+
+  validation {
+    condition     = var.jobTTLSecondsAfterFinished >= 0
+    error_message = "The TTL seconds after finished must be greater or equal than 0."
+  }
+}
+
+variable "jobParallelism" {
+  type        = number
+  description = "The maximum desired number of pods the job should run at any given time. Defaults to 1."
+  default     = 1
+
+  validation {
+    condition     = var.jobParallelism >= 0
+    error_message = "The parallelism must be greater or equal than 0."
   }
 }
 

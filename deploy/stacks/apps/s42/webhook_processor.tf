@@ -1,5 +1,5 @@
 module "webhooks_processor" {
-  source  = "../../../modules/services/app"
+  source  = "../../../modules/service"
   enabled = var.webhookProcessorEnabled
 
   name       = "webhooks-processor"

@@ -9,12 +9,11 @@ variable "appsVersion" {
   description = "The version of the application to deploy"
 
   default = {
-    webhooked = "latest"
-    s42       = "latest"
+    s42 = "latest"
   }
 
   validation {
-    condition = alltrue([for k, v in var.appsVersion : contains(["webhooked", "s42"], k) && v != "latest"])
+    condition = alltrue([for k, v in var.appsVersion : contains(["s42"], k) && v != "latest"])
 
     error_message = "The appsVersion variable must contain a key for each application to be deployed"
   }
@@ -25,9 +24,27 @@ variable "baseUrl" {
   description = "The base URL for the application"
   default     = "s42.app"
 }
-
-variable "jwtksSecretNeedsToBeCreated" {
+variable "webhooksEnabled" {
   type        = bool
-  description = "Whether the jwtks secret needs to be created or not (must be executed after `make build/Makefile certs`)"
+  description = "Whether the webhooks workflow should be deployed or not"
+  default     = false
+}
+
+variable "crawlerEnabled" {
+  type        = bool
+  description = "Whether the crawler should be deployed or not"
+  default     = false
+}
+
+variable "hasProvidedJWTKSCertificates" {
+  type        = bool
+  description = "Whether the user has provided the certificates for the JWT Key Server"
+  default     = false
+}
+
+
+variable "hasPersistentStorage" {
+  type        = bool
+  description = "Whether the application should use persistent storage or not"
   default     = false
 }
