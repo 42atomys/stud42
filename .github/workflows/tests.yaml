@@ -16,8 +16,8 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.TERRAFORM_AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.TERRAFORM_AWS_SECRET_ACCESS_KEY }}
     strategy:
+      fail-fast: true
       matrix:
-        fail-fast: true
         stack: ["pre-cluster", "cluster", "apps"]
     defaults:
       run:

@@ -6,8 +6,8 @@ jobs:
   terraform:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: true
       matrix:
-        fail-fast: true
         stack: ["pre-cluster", "cluster", "apps"]
     defaults:
       run:
