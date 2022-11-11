@@ -16,7 +16,6 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.TERRAFORM_AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.TERRAFORM_AWS_SECRET_ACCESS_KEY }}
     strategy:
-      fail-fast: true
       matrix:
         stack: ["pre-cluster", "cluster", "apps"]
     defaults:
@@ -59,6 +58,7 @@ jobs:
             const output = `#### Terraform Initialization ⚙️ \`${{ steps.init.outcome }}\`
             #### Terraform Validation 🤖 \`${{ steps.validate.outcome }}\`
             <details><summary>Show Validation</summary>
+
             \`\`\`
             ${{ steps.validate.outputs.stdout }}
             \`\`\`
@@ -66,6 +66,7 @@ jobs:
 
             #### Terraform Plan 📖 \`${{ steps.plan.outcome }}\`
             <details><summary>Show Plan</summary>
+
             \`\`\`
             ${process.env.PLAN}
             \`\`\`
