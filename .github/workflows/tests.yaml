@@ -18,7 +18,7 @@ jobs:
       # TF VARS (bind to production to display changes between branch and production)
       TF_VAR_namespace: production
       TF_ENV_appsVersion: '{"s42": "${{ inputs.imageTag }}"}'
-      TF_VAR_baseUrl: "s42.apps"
+      TF_VAR_baseUrl: "s42.app"
       TF_VAR_webhooksEnabled: "true"
       TF_VAR_crawlerEnabled: "true"
       TF_VAR_hasProvidedJWTKSCertificates: "false"
