@@ -1,20 +1,4 @@
-data "kubernetes_resource" "istio_controller" {
-  api_version = "apps/v1"
-  kind        = "Deployment"
-
-  metadata {
-    name      = "istiod"
-    namespace = "istio-system"
-  }
-
-  object = {}
-}
-
 resource "kubectl_manifest" "gateways" {
-  depends_on = [
-    data.kubernetes_resource.istio_controller
-  ]
-
   for_each = { for key, value in var.gateways : key => value }
 
   yaml_body = yamlencode(
@@ -60,10 +44,6 @@ resource "kubectl_manifest" "gateways" {
 }
 
 resource "kubectl_manifest" "virtual_services" {
-  depends_on = [
-    data.kubernetes_resource.istio_controller
-  ]
-
   for_each = { for key, value in var.virtual_services : key => value }
 
   yaml_body = yamlencode(

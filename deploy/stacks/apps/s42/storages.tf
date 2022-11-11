@@ -1,19 +1,4 @@
-data "kubernetes_resource" "rabbitmq_operator" {
-  api_version = "apps/v1"
-  kind        = "Deployment"
-  metadata {
-    name      = "primary-rabbitmq-cluster-operator"
-    namespace = "rabbitmq-operator"
-  }
-
-  object = {}
-}
-
 resource "kubernetes_manifest" "rabbitmq" {
-  depends_on = [
-    data.kubernetes_resource.rabbitmq_operator,
-  ]
-
   field_manager {
     force_conflicts = true
   }

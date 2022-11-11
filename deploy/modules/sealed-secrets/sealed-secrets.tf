@@ -1,29 +1,9 @@
-data "kubernetes_resource" "sealed_secret_controller" {
-  api_version = "apps/v1"
-  kind        = "Deployment"
-
-  metadata {
-    name      = var.sealedSecretsControllerName
-    namespace = var.sealedSecretsControllerNamespace
-  }
-
-  object = {}
-}
-
-
 resource "kubernetes_manifest" "sealed_secret" {
   for_each = { for k, secret in var.sealedSecrets : k => secret if var.enabled }
 
   depends_on = [
     data.kubernetes_resource.sealed_secret_controller
   ]
-
-  lifecycle {
-    precondition {
-      condition     = data.kubernetes_resource.sealed_secret_controller != null
-      error_message = "Sealed Secrets controller is not available"
-    }
-  }
 
   manifest = {
     apiVersion = "bitnami.com/v1alpha1"
