@@ -39,6 +39,9 @@ jobs:
     environment:
       name: ${{ inputs.ghEnvironmentName }}
       url: ${{ steps.envurl.outputs.urlWithProtocol }}
+    permissions:
+      pull-requests: read
+      contents: read
     strategy:
       matrix:
         stack: ${{ fromJson(inputs.stacks) }}
