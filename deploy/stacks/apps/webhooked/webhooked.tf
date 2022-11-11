@@ -1,6 +1,6 @@
 module "secrets" {
-  count  = var.enabled ? 1 : 0
-  source = "../../../modules/sealed-secrets"
+  source  = "../../../modules/sealed-secrets"
+  enabled = var.enabled
 
   sealedSecrets = {
     "s42-webhooked-secrets" : {

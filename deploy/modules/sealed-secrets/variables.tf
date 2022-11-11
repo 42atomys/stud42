@@ -1,3 +1,9 @@
+variable "enabled" {
+  type        = bool
+  description = "Whether the module should be deployed or not"
+  default     = true
+}
+
 variable "sealedSecretsControllerName" {
   type        = string
   description = "The name of the sealed secrets controller"
