@@ -24,6 +24,10 @@ jobs:
     steps:
       - name: Checkout project
         uses: actions/checkout@v3
+      - name: Setup kube config
+        env:
+          KUBECONFIG_ADMIN: ${{ secrets.KUBECONFIG_ADMIN }}
+        run: mkdir -p ~/.kube && echo "$KUBECONFIG_ADMIN" >> ~/.kube/config
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
       - name: Terraform Init
@@ -51,7 +55,7 @@ jobs:
               issue_number: context.issue.number,
             })
             const botComment = comments.find(comment => {
-              return comment.user.type === 'Bot' && comment.body.includes('@${{ github.actor }} trigger the action \`${{ github.event_name }}\` on \`deploy/stacks/${{ matrix.stack }}\` directory')
+              return comment.user.type === 'Bot' && comment.body.includes('## Terraform data for \`${{ matrix.stack }}\` stack')
             })
 
             // 2. Prepare format of the comment
@@ -73,8 +77,6 @@ jobs:
             ${process.env.PLAN}
             \`\`\`
             </details>
-
-            * @${{ github.actor }} trigger the action \`${{ github.event_name }}\` on \`deploy/stacks/${{ matrix.stack }}\` directory, with the workflow \`${{ github.workflow }}\`*`;
 
             // 3. If we have a comment, update it, otherwise create a new one
             if (botComment) {
