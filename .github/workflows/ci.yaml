@@ -42,7 +42,7 @@ jobs:
 
   deploy:
     name: "Deploy 🚀"
-    needs: [tests, linters, build]
+    needs: [build]
     uses: ./.github/workflows/deploy.yaml
     secrets: inherit
     if: |
