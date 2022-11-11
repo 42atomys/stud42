@@ -5,9 +5,13 @@ on:
 jobs:
   terraform:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        fail-fast: true
+        stack: ["pre-cluster", "cluster", "apps"]
     defaults:
       run:
-        working-directory: "deploy"
+        working-directory: "deploy/stacks/${{ matrix.stack }}"
     steps:
       - name: Checkout project
         uses: actions/checkout@v3

@@ -15,9 +15,13 @@ jobs:
       TF_WORKSPACE: production # Compare the changes when plan with production
       AWS_ACCESS_KEY_ID: ${{ secrets.TERRAFORM_AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.TERRAFORM_AWS_SECRET_ACCESS_KEY }}
+    strategy:
+      matrix:
+        fail-fast: true
+        stack: ["pre-cluster", "cluster", "apps"]
     defaults:
       run:
-        working-directory: "deploy"
+        working-directory: "deploy/stacks/${{ matrix.stack }}"
     steps:
       - name: Checkout project
         uses: actions/checkout@v3
@@ -48,7 +52,7 @@ jobs:
               issue_number: context.issue.number,
             })
             const botComment = comments.find(comment => {
-              return comment.user.type === 'Bot' && comment.body.includes('Terraform Initialization')
+              return comment.user.type === 'Bot' && comment.body.includes('@${{ github.actor }} trigger the action \`${{ github.event_name }}\` on \`deploy/stacks/${{ matrix.stack }}\` directory')
             })
 
             // 2. Prepare format of the comment
@@ -67,7 +71,7 @@ jobs:
             \`\`\`
             </details>
 
-            * @${{ github.actor }} trigger the action \`${{ github.event_name }}\` on \`deploy\` directory, with the workflow \`${{ github.workflow }}\`*`;
+            * @${{ github.actor }} trigger the action \`${{ github.event_name }}\` on \`deploy/stacks/${{ matrix.stack }}\` directory, with the workflow \`${{ github.workflow }}\`*`;
 
             // 3. If we have a comment, update it, otherwise create a new one
             if (botComment) {
