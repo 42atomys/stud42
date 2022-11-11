@@ -103,7 +103,7 @@ jobs:
       - name: Terraform Init
         id: init
         if: steps.changes.outputs.stack == 'true' || matrix.stack == 'apps'
-        run: terraform init
+        run: terraform init -input=false
 
         # On push to main, build or change infrastructure according
         # to Terraform configuration files
