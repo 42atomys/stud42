@@ -1,7 +1,7 @@
 module "service-token" {
   source = "../../../modules/sealed-secrets"
 
-  sealedSecrets = var.namespace == "production" ? {
+  sealedSecrets = var.namespace != "production" ? null : {
     "github-token" : {
       isClusterWide = false
 
@@ -24,7 +24,7 @@ module "service-token" {
       }
     }
 
-    "s42-service-token" = {
+    "s42-service-token" : {
       isClusterWide = false
       namespace     = "production"
       secretType    = "Opaque"
@@ -37,7 +37,7 @@ module "service-token" {
       }
     }
 
-    "sentry-dsns" = {
+    "sentry-dsns" : {
       isClusterWide = false
       namespace     = "production"
       secretType    = "Opaque"
@@ -70,5 +70,5 @@ module "service-token" {
         "FORTY_TWO_SECRET" = "AgAx6aeu7VVsIYbmkna3UdNXuWvOlfzQPCjU0wCIgaS+rjBFvmkwzhyqgPzPOacn7aMGOd7hBDvYVzZNB/Qwq7u54xl3UhkK7oLVhGYeOG7MigY/YFH7Z9KYxgweke5GzV1ecG8fk8py/Vq+WWj2c60P+yE+Fd3/36kefp4Q1PBsrkVasVYVDy5YOOfhvDXUhJ5iHXKGZygE0AeOUksv6PW7NJdkp+nBxcE0xy0JNagZVMEA+eFqcIiPlFVT0R+ajerzYiK0H4xwbZCVSBO3bQt2hllKRTQTYKHjsu0MIPojlTEkMwhUZuXkP176BfKC85CeOqt2fhwGPpNoD8ASdohj6i3tvbiZGtL4Tovgn2IuceydZ0Go18S/0tJfg3cbLZ+zZneFRbEqne0kAclyvEhzz8jbvJIfM/JyHXBEK9ZOO8FE0KmSpIBqMksQkC0vN9NlOtLa82FgYWBkSagfZhagtbfpx8+XSj7yUeb9+oBJcJ77iGtrG6KvVinxZrhFa3agFzYiSenSXXYk54mqwJadCyoKPSiUw+TPqBwYefWn3SekU/j1aLiyjClOa1BUCmg3xU2jidcqX8I91NZcMjkJp+p/Vq9hAi4MOPN69TFJpd3o4YqOUko5nnavULDmO94GxBCMZUrmE6dd447teM0y33LIIMUPRafiEisUpnQn1JiXwgB1n2T27s1BGPTVc04p3Ik5mjptgQ7nCkT0nWWVIWITkM/w+kqpiu3l/OwQ1Lw6jx1MdIugPsAqa0CCUJebfs2sDdbSkcnhJf27B5PF"
       }
     }
-  } : {}
+  }
 }
