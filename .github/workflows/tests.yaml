@@ -55,7 +55,9 @@ jobs:
             })
 
             // 2. Prepare format of the comment
-            const output = `#### Terraform Initialization ⚙️ \`${{ steps.init.outcome }}\`
+            const output = `## Terraform data for \`${{ matrix.stack }}\` stack
+
+            #### Terraform Initialization ⚙️ \`${{ steps.init.outcome }}\`
             #### Terraform Validation 🤖 \`${{ steps.validate.outcome }}\`
             <details><summary>Show Validation</summary>
 
