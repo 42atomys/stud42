@@ -5,7 +5,11 @@ on:
       ghEnvironmentName:
         required: true
         type: string
-        description: "The name of the environment on Github to deploy to (e.g. staging, production, pr-123)"
+        description: "The name of the environment on Github to deploy to (e.g. staging, production, previews)"
+      friendlyEnvironmentName:
+        required: false
+        type: string
+        description: "The name of the environment as friendly named to deploy to (e.g. staging, production, pr-123)"
       kubeNamespace:
         required: true
         type: string
@@ -64,7 +68,7 @@ jobs:
             core.setOutput('stacks', stacks);
 
   terraform:
-    name: "${{ matrix.stack }} on ${{ inputs.ghEnvironmentName }}"
+    name: "${{ matrix.stack }} on ${{ inputs.friendlyEnvironmentName }}"
     runs-on: ubuntu-latest
     needs: [detect_stack_to_deploy]
     environment:
