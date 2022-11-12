@@ -33,8 +33,8 @@ permissions:
   contents: read
 
 jobs:
-  detect_stack_to_deploy:
-    name: "Detect stack to deploy 📦"
+  detect_stack:
+    name: "detect stack"
     runs-on: ubuntu-latest
     permissions:
       pull-requests: read
@@ -70,13 +70,13 @@ jobs:
   terraform:
     name: "${{ matrix.stack }} on ${{ inputs.friendlyEnvironmentName }}"
     runs-on: ubuntu-latest
-    needs: [detect_stack_to_deploy]
+    needs: [detect_stack]
     environment:
       name: ${{ inputs.ghEnvironmentName }}
       url: ${{ steps.envurl.outputs.urlWithProtocol }}
     strategy:
       matrix:
-        stack: ${{ fromJson(needs.detect_stack_to_deploy.outputs.stacks) }}
+        stack: ${{ fromJson(needs.detect_stack.outputs.stacks) }}
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.TERRAFORM_AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.TERRAFORM_AWS_SECRET_ACCESS_KEY }}

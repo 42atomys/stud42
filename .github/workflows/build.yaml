@@ -10,6 +10,7 @@ on:
         value: ${{ jobs.docker_images.outputs.imageTag }}
 jobs:
   docker_images:
+    name: "docker images"
     runs-on: ubuntu-latest
     permissions:
       contents: read
