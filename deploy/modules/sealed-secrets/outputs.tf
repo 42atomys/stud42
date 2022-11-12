@@ -4,7 +4,7 @@ output "sealedSecrets" {
   ]
 
   value = {
-    for k, v in var.sealedSecrets : k => merge(v, {
+    for k, v in local.safeSealedSecrets : k => merge(v, {
       secretName = k
     })
   }
