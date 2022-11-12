@@ -1,0 +1,98 @@
+name: "Previews cleaner 🗑"
+on:
+  pull_request:
+    types: [closed, unlabeled]
+
+jobs:
+  terraform:
+    name: "delete ${{ format('pr-{0}', github.event.number) }} terraform"
+    runs-on: ubuntu-latest
+    if: |
+      (github.event_name == 'pull_request' && github.event.action == 'closed') ||
+      !contains(github.event.pull_request.labels.*.name, 'needs-preview-deploy')
+    environment:
+      name: previews
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.TERRAFORM_AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.TERRAFORM_AWS_SECRET_ACCESS_KEY }}
+      KUBE_CONFIG_PATH: ~/.kube/config
+    # Use the Bash shell regardless whether the GitHub Actions runner is
+    # ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: "deploy/stacks/apps"
+    steps:
+      # Checkout the repository to the GitHub Actions runner
+      - name: Checkout
+        uses: actions/checkout@v3
+      # Configure the kube config
+      - env:
+          KUBECONFIG_ADMIN: ${{ secrets.KUBECONFIG_ADMIN }}
+        run: mkdir -p ~/.kube && echo "$KUBECONFIG_ADMIN" >> ~/.kube/config
+
+      # Install the latest version of Terraform CLI and configure the
+      # Terraform CLI configuration file with a Terraform Cloud user API token
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          # Force the version due to crash on latest
+          # https://github.com/hashicorp/terraform/issues/32200
+          terraform_version: "1.3.3"
+
+      # Initialize a new or existing Terraform working directory by creating
+      # initial files, loading any remote state, downloading modules, etc.
+      - name: Terraform Init
+        id: init
+        run: terraform init -input=false
+
+        # On push to main, build or change infrastructure according
+        # to Terraform configuration files
+      - name: Terraform Apply
+        id: apply
+        env:
+          TF_WORKSPACE: ${{ secrets.TF_WORKSPACE }}
+          # TF VARS
+          TF_VAR_namespace: previews
+          TF_VAR_baseUrl: "${{ format('pr-{0}', github.event.number) }}.previews.s42.dev"
+          TF_VAR_webhooksEnabled: "false"
+          TF_VAR_crawlerEnabled: "false"
+          TF_VAR_hasProvidedJWTKSCertificates: "false"
+          TF_VAR_hasPersistentStorage: "false"
+        run: terraform destroy -auto-approve -input=false
+
+  github_deployements:
+    name: "delete ${{ format('pr-{0}', github.event.number) }} deployment"
+    runs-on: ubuntu-latest
+    if: |
+      (github.event_name == 'pull_request' && github.event.action == 'closed') ||
+      !contains(github.event.pull_request.labels.*.name, 'needs-preview-deploy')
+    environment:
+      name: previews
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      # Checkout the repository to the GitHub Actions runner
+      - name: Checkout
+        uses: actions/checkout@v3
+      # Get all deployement from "previews" environment and set it as inactive
+      - name: Turn of deployment
+        uses: actions/github-script@v6
+        run: |
+          const deployments = await github.rest.repos.listDeployments({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            environment: 'previews',
+          });
+
+          const filteredDeployments = deployments.data.filter(deployment => deployment.ref === context.ref);
+
+          for (const deployment of filteredDeployments) {
+            console.log("Deleting the deployement " + deployment.id);
+            await github.rest.repos.createDeploymentStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              deployment_id: deployment.id,
+              state: 'inactive',
+            });
+          }
