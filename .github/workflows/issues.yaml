@@ -1,0 +1,96 @@
+name: Plan Management 📝
+on:
+  pull_request:
+    types: [opened, reopened]
+  issues:
+    types: [opened, reopened]
+  schedule:
+    - cron: "42 8,23 * * *"
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    if: ${{ (github.event_name == 'issues' || github.event_name == 'pull_request') && (github.event.action == 'opened' || github.event.action == 'reopened') }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            # Add label "state/triage 🚦" to issue or pull request if no labels are present
+            const { owner, repo } = context.repo
+            if ((context.payload.issue || context.payload.pull_request).labels.length == 0) {
+              github.issues.addLabels({
+                issue_number: context.payload.issue.number || context.payload.pull_request.number,
+                owner,
+                repo,
+                labels: ["state/triage 🚦"]
+              })
+            }
+  sponsors:
+    runs-on: ubuntu-latest
+    if: ${{ (github.event_name == 'issues' || github.event_name == 'pull_request') && (github.event.action == 'opened' || github.event.action == 'reopened') }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            const { owner, repo } = context.repo
+            const { data: { repositoryOwner: { isSponsoredBy: isSponsor } } } = await github.graphql(
+              `query($owner: String!, $sponsor: String!) {
+                repositoryOwner(login: $owner) {
+                  ... on User {
+                    isSponsoredBy(accountLogin: $sponsor)
+                  }
+                }
+              }`,
+              {
+                owner,
+                sponsor: context.payload.issue.user.login || context.payload.pull_request.user.login
+              }
+            )
+            if (isSponsor) {
+              await github.issues.addLabels({
+                owner,
+                repo,
+                issue_number: context.payload.issue.number || context.payload.pull_request.number,
+                labels: ["sponsor 💖"]
+              })
+            }
+  stale:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'schedule' }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/stale@v6
+        with:
+          exempt-all-milestones: true
+          exempt-assignees: "42Atomys"
+
+          enable-statistics: true
+
+          days-before-issue-stale: 28
+          days-before-issue-close: 14
+          days-before-pr-stale: -1
+          days-before-pr-close: -1
+
+          stale-issue-label: "stale/stale 🦴"
+          stale-issue-message: "This issue is stale because it has been open for 28 days with no activity."
+
+          close-issue-label: "stale/dead 💀"
+          close-issue-message: "This issue was closed because it has been inactive for 14 days since being marked as stale."
+
+          stale-pr-label: "stale/stale 🦴"
+          stale-pr-message: "This pull request is stale because it has been open for 28 days with no activity."
+
+          close-pr-label: "stale/dead 💀"
+          close-pr-message: "This pull request was closed because it has been inactive for 14 days since being marked as stale."
+
+          exempt-issue-labels: "state/confirmed 💜,slate/lock 🔒"
+          exempt-pr-labels: "state/confirmed 💜,slate/lock 🔒"
+
+          labels-to-add-when-unstale: "stale/unstale 🍖"
+          labels-to-remove-when-unstale: "stale/stale 🦴,stale/dead 💀"

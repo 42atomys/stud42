@@ -22,7 +22,7 @@ To develop on S42, you need to have your OAuth2 applications with her credential
 
 **Endpoint**: https://profile.intra.42.fr/oauth/applications/new
 
-**Environment keys**: `FORTY_TWO_CLIENT_ID` and `FORTY_TWO_CLIENT_SECRET`
+**Environment keys**: `FORTY_TWO_ID` and `FORTY_TWO_SECRET`
 
 #### Github
 

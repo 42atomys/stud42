@@ -42,4 +42,4 @@ jwtks:
     certPublicKeyFile: /etc/stud42/certs/server.pem
 
 discord:
-  guildID: '248936708379246593'
+  guildID: "248936708379246593"

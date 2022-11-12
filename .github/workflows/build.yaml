@@ -1,0 +1,51 @@
+name: "CI"
+on:
+  workflow_call:
+    outputs:
+      image:
+        description: The image builded and pushed to the registry
+        value: ${{ jobs.docker_images.outputs.image }}
+      imageTag:
+        description: The image tag
+        value: ${{ jobs.docker_images.outputs.imageTag }}
+jobs:
+  docker_images:
+    name: "docker images"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_NAME: ${{ github.repository }}
+    outputs:
+      image: ${{ steps.meta.outputs.tags }}
+      imageTag: ${{ steps.meta.outputs.version }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          github-token: ${{ github.token }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          file: build/Dockerfile
+          build-args: |
+            APP_VERSION=${{ steps.meta.outputs.version }}
