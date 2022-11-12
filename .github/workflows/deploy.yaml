@@ -110,7 +110,7 @@ jobs:
               url = 's42.app';
             }
             core.setOutput('url', url);
-            core.setOutput('urlWithProtocol', 'https://${url}');
+            core.setOutput('urlWithProtocol', `https://${url}`);
 
       # Install the latest version of Terraform CLI and configure the
       # Terraform CLI configuration file with a Terraform Cloud user API token
