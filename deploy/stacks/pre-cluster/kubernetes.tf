@@ -20,10 +20,6 @@ locals {
       alias : ["live"]
       istioInjection : true
     },
-    "rabbitmq-system" = {
-      alias : []
-      istioInjection : true
-    },
     "previews" = {
       alias : ["reviews", "review-apps", "pull-requests"]
       istioInjection : true
