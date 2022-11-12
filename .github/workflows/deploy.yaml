@@ -108,10 +108,11 @@ jobs:
             let url = '';
             if (eventName == 'pull_request') {
               url = `pr-${context.payload.pull_request.number}.previews.s42.dev`;
-            } else if (eventName == 'release' && context.payload.action == 'prereleased') {
-              url = 'next.s42.app';
-            } else {
+            } else if (eventName == 'release' && context.payload.action == 'released') {
               url = 's42.app';
+            } else {
+              console.log(`No configuration (fallback to staging) for this event: ${eventName} | context.payload: ${JSON.stringify(context.payload)}`)
+              url = 'next.s42.app';
             }
             core.setOutput('url', url);
             core.setOutput('urlWithProtocol', `https://${url}`);
