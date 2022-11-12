@@ -1,5 +1,13 @@
+locals {
+  // This is a workarround to avoid the following error:
+  // Error: Invalid for_each argument 
+  // Error: mismatch true and false types when we use `{}` as default value for
+  // `sealedSecrets` variable
+  safeSealedSecrets = var.sealedSecrets == null ? {} : var.sealedSecrets
+}
+
 resource "kubernetes_manifest" "sealed_secret" {
-  for_each = { for k, secret in var.sealedSecrets : k => secret if var.enabled }
+  for_each = { for k, secret in local.safeSealedSecrets : k => secret if var.enabled }
 
   manifest = {
     apiVersion = "bitnami.com/v1alpha1"
