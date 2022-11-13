@@ -8,6 +8,7 @@ on:
     - cron: "42 8,23 * * *"
 
 permissions:
+  contents: read
   issues: write
   pull-requests: write
 
