@@ -15,7 +15,7 @@ permissions:
 jobs:
   triage:
     runs-on: ubuntu-latest
-    if: ${{ (github.event_name == 'issues' || github.event_name == 'pull_request') && (github.event.action == 'opened' || github.event.action == 'reopened' || github.event.action == 'synchronize') }}
+    if: ${{ github.event_name == 'issues' || github.event_name == 'pull_request' }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/github-script@v6
@@ -35,12 +35,12 @@ jobs:
             }
   sponsors:
     runs-on: ubuntu-latest
-    if: ${{ (github.event_name == 'issues' || github.event_name == 'pull_request') && (github.event.action == 'opened' || github.event.action == 'reopened' || github.event.action == 'synchronize') }}
+    if: ${{ github.event_name == 'issues' || github.event_name == 'pull_request' }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/github-script@v6
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN_SPONSOR_CHECKING }}
         with:
           script: |
             const { owner, repo } = context.repo
