@@ -1,30 +1,33 @@
 name: Plan Management 📝
 on:
   pull_request:
-    types: [opened, reopened]
+    types: [opened, reopened, synchronize, unlabeled]
   issues:
-    types: [opened, reopened]
+    types: [opened, reopened, edited, unlabeled]
   schedule:
     - cron: "42 8,23 * * *"
 
 permissions:
+  contents: read
   issues: write
   pull-requests: write
 
 jobs:
   triage:
     runs-on: ubuntu-latest
-    if: ${{ (github.event_name == 'issues' || github.event_name == 'pull_request') && (github.event.action == 'opened' || github.event.action == 'reopened') }}
+    if: ${{ github.event_name == 'issues' || github.event_name == 'pull_request' }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions/github-script@v6
         with:
           script: |
-            # Add label "state/triage 🚦" to issue or pull request if no labels are present
             const { owner, repo } = context.repo
-            if ((context.payload.issue || context.payload.pull_request).labels.length == 0) {
-              github.issues.addLabels({
-                issue_number: context.payload.issue.number || context.payload.pull_request.number,
+            const labelsCount = context.payload.issue?.labels?.length || context.payload.pull_request?.labels?.length || 0
+
+            console.log(`Issue/PR #${context.payload.issue?.number || context.payload.pull_request?.number} has ${labelsCount} labels.`)
+            if (labelsCount == 0) {
+              github.rest.issues.addLabels({
+                issue_number: context.payload.issue?.number || context.payload.pull_request?.number,
                 owner,
                 repo,
                 labels: ["state/triage 🚦"]
@@ -32,14 +35,16 @@ jobs:
             }
   sponsors:
     runs-on: ubuntu-latest
-    if: ${{ (github.event_name == 'issues' || github.event_name == 'pull_request') && (github.event.action == 'opened' || github.event.action == 'reopened') }}
+    if: ${{ github.event_name == 'issues' || github.event_name == 'pull_request' }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions/github-script@v6
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN_SPONSOR_CHECKING }}
         with:
           script: |
             const { owner, repo } = context.repo
-            const { data: { repositoryOwner: { isSponsoredBy: isSponsor } } } = await github.graphql(
+            const { repositoryOwner } = await github.graphql(
               `query($owner: String!, $sponsor: String!) {
                 repositoryOwner(login: $owner) {
                   ... on User {
@@ -48,15 +53,20 @@ jobs:
                 }
               }`,
               {
-                owner,
-                sponsor: context.payload.issue.user.login || context.payload.pull_request.user.login
+                owner: owner,
+                sponsor: context.payload.issue?.user?.login || context.payload.pull_request?.user?.login,
+                headers: {
+                  authorization: `token ${process.env.GITHUB_TOKEN}`
+                }
               }
             )
-            if (isSponsor) {
-              await github.issues.addLabels({
+
+            console.log("request response", JSON.stringify(repositoryOwner, null, 2))
+            if (repositoryOwner.isSponsoredBy) {
+              github.issues.addLabels({
                 owner,
                 repo,
-                issue_number: context.payload.issue.number || context.payload.pull_request.number,
+                issue_number: context.payload.issue?.number || context.payload.pull_request?.number,
                 labels: ["sponsor 💖"]
               })
             }
@@ -64,7 +74,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'schedule' }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions/stale@v6
         with:
           exempt-all-milestones: true
