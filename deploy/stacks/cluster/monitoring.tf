@@ -1,11 +1,11 @@
 locals {
   monitoringNamespace = "monitoring"
   grafanaRootUrl      = "dashboards.s42.app"
-  grafanaVersion      = "9.1.6"
-  prometheusVersion   = "v2.37.1"
-  lokiVersion         = "2.6.1"
+  grafanaVersion      = "9.2.4"
+  prometheusVersion   = "v2.40.1"
+  lokiVersion         = "2.7.0"
+  promtailVersion     = "2.7.0"
   tempoVersion        = "1.5.0"
-  promtailVersion     = "2.6.1"
 
   nodeSelector = {
     "nodepool" = "small"
@@ -777,7 +777,9 @@ module "grafana" {
   }
 
   env = {
-    GF_SERVER_ROOT_URL = "https://${local.grafanaRootUrl}"
+    GF_SERVER_ROOT_URL         = "https://${local.grafanaRootUrl}"
+    GF_AUTH_ANONYMOUS_ENABLED  = "true"
+    GF_AUTH_ANONYMOUS_ORG_NAME = "S42"
   }
 
   resources = {

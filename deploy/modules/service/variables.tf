@@ -298,7 +298,7 @@ variable "serviceAccountName" {
 variable "automountServiceAccountToken" {
   type        = bool
   description = "Automount service account token"
-  default     = false
+  default     = true
 }
 
 variable "image" {
