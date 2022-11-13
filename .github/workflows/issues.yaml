@@ -21,11 +21,11 @@ jobs:
       - uses: actions/github-script@v6
         with:
           script: |
-            # Add label "state/triage 🚦" to issue or pull request if no labels are present
             const { owner, repo } = context.repo
-            if ((context.payload.issue || context.payload.pull_request).labels.length == 0) {
+            const labelsCount = context.payload.issue?.labels?.length || context.payload.pull_request?.labels?.length || 0
+            if (labelsCount == 0) {
               github.issues.addLabels({
-                issue_number: context.payload.issue.number || context.payload.pull_request.number,
+                issue_number: context.payload.issue?.number || context.payload.pull_request?.number,
                 owner,
                 repo,
                 labels: ["state/triage 🚦"]
@@ -50,14 +50,14 @@ jobs:
               }`,
               {
                 owner,
-                sponsor: context.payload.issue.user.login || context.payload.pull_request.user.login
+                sponsor: context.payload.issue?.user?.login || context.payload.pull_request?.user?.login
               }
             )
             if (isSponsor) {
               await github.issues.addLabels({
                 owner,
                 repo,
-                issue_number: context.payload.issue.number || context.payload.pull_request.number,
+                issue_number: context.payload.issue?.number || context.payload.pull_request?.number,
                 labels: ["sponsor 💖"]
               })
             }
