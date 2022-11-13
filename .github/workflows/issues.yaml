@@ -44,7 +44,7 @@ jobs:
         with:
           script: |
             const { owner, repo } = context.repo
-            const { data, errors } = github.graphql(
+            const d = await github.graphql(
               `query($owner: String!, $sponsor: String!) {
                 repositoryOwner(login: $owner) {
                   ... on User {
@@ -61,14 +61,8 @@ jobs:
               }
             )
 
-            if (errors) {
-              console.log("ERROR", errors)
-              throw new Error("GraphQL query failed")
-            }
-
-            console.log("request response", JSON.stringify(data, null, 2))
-            const { repositoryOwner: { isSponsoredBy: isSponsor } } = data
-            if (isSponsor) {
+            console.log("request response", JSON.stringify(d, null, 2))
+            if (d.isSponsoredBy) {
               github.issues.addLabels({
                 owner,
                 repo,
