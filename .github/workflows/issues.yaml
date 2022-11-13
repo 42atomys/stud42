@@ -1,7 +1,7 @@
 name: Plan Management 📝
 on:
   pull_request:
-    types: [opened, reopened]
+    types: [opened, reopened, synchronize]
   issues:
     types: [opened, reopened]
   schedule:
@@ -15,7 +15,7 @@ permissions:
 jobs:
   triage:
     runs-on: ubuntu-latest
-    if: ${{ (github.event_name == 'issues' || github.event_name == 'pull_request') && (github.event.action == 'opened' || github.event.action == 'reopened') }}
+    if: ${{ (github.event_name == 'issues' || github.event_name == 'pull_request') && (github.event.action == 'opened' || github.event.action == 'reopened' || github.event.action == 'synchronize') }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/github-script@v6
@@ -23,8 +23,10 @@ jobs:
           script: |
             const { owner, repo } = context.repo
             const labelsCount = context.payload.issue?.labels?.length || context.payload.pull_request?.labels?.length || 0
+
+            console.log(`Issue/PR #${context.payload.issue?.number || context.payload.pull_request?.number} has ${labelsCount} labels.`)
             if (labelsCount == 0) {
-              github.issues.addLabels({
+              github.rest.issues.addLabels({
                 issue_number: context.payload.issue?.number || context.payload.pull_request?.number,
                 owner,
                 repo,
@@ -33,7 +35,7 @@ jobs:
             }
   sponsors:
     runs-on: ubuntu-latest
-    if: ${{ (github.event_name == 'issues' || github.event_name == 'pull_request') && (github.event.action == 'opened' || github.event.action == 'reopened') }}
+    if: ${{ (github.event_name == 'issues' || github.event_name == 'pull_request') && (github.event.action == 'opened' || github.event.action == 'reopened' || github.event.action == 'synchronize') }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/github-script@v6
@@ -42,7 +44,7 @@ jobs:
         with:
           script: |
             const { owner, repo } = context.repo
-            const { data, errors } = await github.graphql(
+            const { data, errors } = github.graphql(
               `query($owner: String!, $sponsor: String!) {
                 repositoryOwner(login: $owner) {
                   ... on User {
@@ -67,7 +69,7 @@ jobs:
             console.log("request response", JSON.stringify(data, null, 2))
             const { repositoryOwner: { isSponsoredBy: isSponsor } } = data
             if (isSponsor) {
-              await github.issues.addLabels({
+              github.issues.addLabels({
                 owner,
                 repo,
                 issue_number: context.payload.issue?.number || context.payload.pull_request?.number,
