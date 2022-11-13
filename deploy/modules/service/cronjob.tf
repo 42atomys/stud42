@@ -62,8 +62,20 @@ resource "kubernetes_cron_job" "app" {
               }
             }
 
-            restart_policy = var.restartPolicy
-            node_selector  = var.nodeSelector
+            restart_policy                  = var.restartPolicy
+            node_selector                   = var.nodeSelector
+            service_account_name            = var.serviceAccountName
+            automount_service_account_token = var.automountServiceAccountToken
+
+            dynamic "toleration" {
+              for_each = { for k, v in var.tolerations : k => v }
+              content {
+                key      = toleration.key
+                operator = toleration.value.operator
+                value    = toleration.value.value
+                effect   = toleration.value.effect
+              }
+            }
 
             security_context {
               run_as_user         = lookup(var.podSecurityContext, "runAsUser", 1000)
@@ -259,6 +271,17 @@ resource "kubernetes_cron_job" "app" {
                 persistent_volume_claim {
                   claim_name = volume.value.claimName
                   read_only  = lookup(volume.value, "readOnly", false)
+                }
+              }
+            }
+
+            dynamic "volume" {
+              for_each = { for k, v in var.volumesFromHostPath : k => v }
+              content {
+                name = volume.key
+                host_path {
+                  path = volume.value.hostPath
+                  type = volume.value.type
                 }
               }
             }

@@ -95,7 +95,7 @@ variable "kind" {
   default     = "Deployment"
 
   validation {
-    condition     = can(regex("^(Deployment|StatefulSet|CronJob)$", var.kind))
+    condition     = can(regex("^(Deployment|StatefulSet|CronJob|DaemonSet)$", var.kind))
     error_message = "The kind must be either Deployment, StatefulSet or CronJob."
   }
 }
@@ -278,6 +278,29 @@ variable "nodeSelector" {
   default     = {}
 }
 
+variable "tolerations" {
+  type = map(object({
+    effect            = optional(string, "NoSchedule")
+    operator          = string
+    tolerationSeconds = optional(number)
+    value             = optional(string)
+  }))
+  description = "List of tolerations for the pod assignment"
+  default     = {}
+}
+
+variable "serviceAccountName" {
+  type        = string
+  description = "Service account name"
+  default     = null
+}
+
+variable "automountServiceAccountToken" {
+  type        = bool
+  description = "Automount service account token"
+  default     = false
+}
+
 variable "image" {
   type        = string
   description = "Image of the service"
@@ -365,9 +388,9 @@ variable "ports" {
     // istioProtocol must be http, http2, https, grpc, grpc-web, tls, or tcp
     // https://istio.io/latest/docs/ops/configuration/traffic-management/protocol-selection/#explicit-protocol-selection
     condition = alltrue([
-      for p in var.ports : contains(["http", "http2", "https", "grpc", "grpc-web", "tls", "tcp"], p.istioProtocol)
+      for p in var.ports : contains(["http", "http2", "https", "grpc", "grpc-web", "tls", "tcp", "udp"], p.istioProtocol)
     ])
-    error_message = "The istioProtocol must be one of http, http2, https, grpc, grpc-web, tls, or tcp."
+    error_message = "The istioProtocol must be one of http, http2, https, grpc, grpc-web, tls, tcp or udp."
   }
 }
 
@@ -451,10 +474,11 @@ variable "startupProbe" {
 
 variable "podSecurityContext" {
   type = object({
-    runAsNonRoot       = optional(bool, true)
-    runAsGroup         = optional(number, 1000)
-    fsGroup            = optional(number, 1000)
-    supplementalGroups = optional(list(number), [])
+    runAsNonRoot        = optional(bool, true)
+    runAsGroup          = optional(number, 1000)
+    fsGroup             = optional(number, 1000)
+    fsGroupChangePolicy = optional(string, "OnRootMismatch")
+    supplementalGroups  = optional(list(number), [])
   })
   description = "Security context configuration for pod"
   default     = {}
@@ -504,6 +528,15 @@ variable "volumesFromPVC" {
     readOnly  = optional(bool, false)
   }))
   description = "PVC to use as volumes"
+  default     = {}
+}
+
+variable "volumesFromHostPath" {
+  type = map(object({
+    hostPath = string
+    type     = optional(string, "")
+  }))
+  description = "HostPath to use as volumes"
   default     = {}
 }
 

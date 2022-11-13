@@ -48,7 +48,9 @@ resource "kubernetes_manifest" "rabbitmq" {
 
       rabbitmq = {
         additionalPlugins = [
-          "rabbitmq_delayed_message_exchange"
+          "rabbitmq_delayed_message_exchange",
+          "rabbitmq_prometheus",
+          "rabbitmq_tracing"
         ]
       }
     }
