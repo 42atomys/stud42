@@ -40,7 +40,7 @@ jobs:
         with:
           script: |
             const { owner, repo } = context.repo
-            const { data: { repositoryOwner: { isSponsoredBy: isSponsor } } } = await github.graphql(
+            const { data } = await github.graphql(
               `query($owner: String!, $sponsor: String!) {
                 repositoryOwner(login: $owner) {
                   ... on User {
@@ -53,6 +53,8 @@ jobs:
                 sponsor: context.payload.issue?.user?.login || context.payload.pull_request?.user?.login
               }
             )
+            console.log("request response", JSON.stringify(data, null, 2))
+            const { repositoryOwner: { isSponsoredBy: isSponsor } } = data
             if (isSponsor) {
               await github.issues.addLabels({
                 owner,
