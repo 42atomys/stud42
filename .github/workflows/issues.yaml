@@ -37,6 +37,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/github-script@v6
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           script: |
             const { owner, repo } = context.repo
@@ -49,14 +51,19 @@ jobs:
                 }
               }`,
               {
-                owner,
-                sponsor: context.payload.issue?.user?.login || context.payload.pull_request?.user?.login
+                owner: owner,
+                sponsor: context.payload.issue?.user?.login || context.payload.pull_request?.user?.login,
+                headers: {
+                  authorization: `token ${process.env.GITHUB_TOKEN}`
+                }
               }
             )
+
             if (errors) {
               console.log("ERROR", errors)
               throw new Error("GraphQL query failed")
             }
+
             console.log("request response", JSON.stringify(data, null, 2))
             const { repositoryOwner: { isSponsoredBy: isSponsor } } = data
             if (isSponsor) {
