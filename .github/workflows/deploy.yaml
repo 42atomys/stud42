@@ -140,7 +140,7 @@ jobs:
           TF_WORKSPACE: ${{ secrets.TF_WORKSPACE }}
           # TF VARS
           TF_VAR_namespace: ${{ inputs.kubeNamespace }}
-          TF_ENV_appsVersion: '{"s42": "${{ inputs.imageTag }}"}'
+          TF_ENV_appsVersion: '{"s42"="${{ inputs.imageTag }}"}'
           TF_VAR_baseUrl: ${{ steps.envurl.outputs.url }}
           TF_VAR_webhooksEnabled: ${{ inputs.kubeNamespace == 'production' }}
           TF_VAR_crawlerEnabled: ${{ inputs.kubeNamespace == 'production' }}
