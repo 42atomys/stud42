@@ -3,12 +3,14 @@ module "secrets" {
 
   sealedSecrets = {
     "ghcr-creds" = {
-      secretType    = "kubernetes.io/dockerconfigjson"
-      isClusterWide = true
-      reflected     = true
+      secretType          = "kubernetes.io/dockerconfigjson"
+      isClusterWide       = false
+      namespace           = "kube-system"
+      reflected           = true
+      reflectedNamespaces = ["production", "staging", "previews", "sandbox"]
 
       encryptedData = {
-        ".dockerconfigjson" : "AgA0gQETza4ZHq7T/AWRxd4mXk4CBlJS7nyWrQ2NloNDIcRp3iGkj+N6uCGtxeqo2Xuz5mtDYzQ6WMqg2FfqJVIg2FQeW7Vkadm38ZApnp6gA9+qYFqDPFjwyhHVEtu4rSR1oz+AFcQKPEJbwDoeOhxnJxyn8jU+EqgZl7MLflgFSLb+4gqVCeBoonDWU8AUzZW9cITHQVhdylozGkbI9je+xbjZKwGXymSq8NfOed99FGvml1+7LcYQJl/VhuFtviFET8CrFy223EVdeVj3mmSXdyzhGQhbud3fPM0AfDXybY8b277La+bUXq1qTfE9WlQGoW+GWqhUqZYjFwRBOD+F8YJS2GUyPIIETUGKO172JndRTGvmagvkYmf/uCKXHHYXdT8Fh8Xru7KNPYFpdfM/NowwQvRzTSfQYwiorNIht98prHX/cYmdS1kCzZjQ7P10wRUOHgyB85LcSvDQ53vphr7WekrJqW5C8EbqZSRoj6qTKjtk5ovG2OBZMVtqAbTLCiJ1nrK+FsSTrNZiIX2hOMW4DgEwg3bxFF9VT4d/KQ6KwSOV3AoqAnDdRjLyoiM19Q439hW+47ONyktq5YEvr+R+4wWlSWtPrO9LbiE+V+IiAJFurg3EWtYqD/rBCemiFDfC3y/JadEte+t3spHMbG/x6CRypls2ETqIbKiX2r/H26/5uH3sGUieP+zKAdzq06dTHlPjVcHpKOel3x4oiPdtLo7QnqITp5CxP9Cm/T0IGAsQYbNreh8XU/rrdTFcqWzU0G9kIqWpTmNVLDpOaBvw3/Me7lETPX8prALN7Vb8ZR5QgxFRlROFBznFhuk34Zb6yfwCfKyV3QKehxqGBRYWGKkUaejt1fjVt0O/eMwYmhx2lFjsC88q0dplRwzfcjB+1dd8573m1Fi2wrJli5d3v6e+bGurTdhAw0+ccBc="
+        ".dockerconfigjson" : "AgA6cjvRXnpCTnZDf3gt3Co+K/i+TUShOBhbT+0N0JqJai/EQYDJBWriKFB7AzujY13iBTiP0HykKAmA+CfrB8nd2Q775cIDvpyQlHhc2dU/zUs3wpboIZroq2bGrEOUqw9bcWh/oCaTX3krEjyVROdI71FJ4QIfER5EceeI33KT+gDfQLnW6b6DAL26Vh+obMvTyso7iaeHywfC2GI0QDRxjg2rHajZOE4ciHZj3wOkMaT5p5pgpt0CsQlubkkE4Rv0qdt0fZA/MPgYdL+XfiVYQfz3aR4IMHV0l0AwdVEQkUrTLWR4DIRM3xhaHLnWiIiS5Ks53gK3yJEy/3r1yoNi5Cs2TMGab/utf7O8ZwDrbrRpzI3atk+E/WCDdg7STXHR/N0cxSCeUUdoFbHnx+u5AcdW3mLQsEXjpQG8xW6y3ThS1jpi/j6Nmn6JoAvgZlWBKNiNR33tQrRtgDSi8+6GBijl4IYky/V/OZ1TccKUZZwT0lYneDtwjWYuKtdzXFrrOczhconvNrnwYnKuy/nyq91fVBdOkY1r7otIYCPFPXCIASpT8VhaIlnNHBes0QdPQILyI+xxlOMiW/pJ2/QG6c2dPzgIYxVeIo5E4wdOfnXEp6AESnBrOkKvwm9tVh7RuK6tPgp5wzbNkOoJC8jA5AKtlWmFhPABN5TzfrKoIR5q0Bc/YOSkSJuMJVC7lgzBE1OOqm8jHhpM3OEon7lAAyJOMTj8zTlU1Y/DecL7dpM6WG8DvaFj/1L7RCoKFNPn0R5clXQ2/8urm86mp1QaVBcLxsi0CcTO4Xznii8GAoyr9HLJnVipCvA58XCk85q+8a7Nf7g+a46CsP1qLj6yahYIY9R7HPLKAN+kkNPGfvKUlsiB6hE9mXkKl9WBFemudfKujPdNq7DbWKS891Cz3pgV8i/GKr2iYkUazyeVMWU="
       }
     }
 
