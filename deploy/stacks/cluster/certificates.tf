@@ -73,5 +73,9 @@ module "cert_manager" {
       dns_names   = ["*.previews.s42.dev"]
       issuer_name = "ovh-issuer"
     }
+    "app-s42-dashboards" = {
+      dns_names   = ["dashboards.s42.app"]
+      issuer_name = "ovh-issuer"
+    }
   }
 }

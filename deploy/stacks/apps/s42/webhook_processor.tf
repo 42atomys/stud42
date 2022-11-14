@@ -18,7 +18,6 @@ module "webhooks_processor" {
     "sidecar.istio.io/inject" = "false"
   }
 
-  replicas = 1
   autoscaling = {
     enabled     = true
     minReplicas = 1
