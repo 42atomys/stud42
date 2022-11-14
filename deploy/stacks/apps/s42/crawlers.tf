@@ -52,13 +52,11 @@ module "crawler_campus" {
       key  = "POSTGRES_PASSWORD_ENCODED"
       name = "postgres-credentials"
     }
-    # TODO(@42atomys) : Remove this when release
-    FORTY_TWO_CLIENT_ID = {
+    FORTY_TWO_ID = {
       key  = "FORTY_TWO_ID"
       name = "oauth2-providers"
     }
-    # TODO(@42atomys) : Remove this when release
-    FORTY_TWO_CLIENT_SECRET = {
+    FORTY_TWO_SECRET = {
       key  = "FORTY_TWO_SECRET"
       name = "oauth2-providers"
     }
@@ -137,13 +135,11 @@ module "crawler_locations" {
       key  = "POSTGRES_PASSWORD_ENCODED"
       name = "postgres-credentials"
     }
-    # TODO(@42atomys) : Remove this when release
-    FORTY_TWO_CLIENT_ID = {
+    FORTY_TWO_ID = {
       key  = "FORTY_TWO_ID"
       name = "oauth2-providers"
     }
-    # TODO(@42atomys) : Remove this when release
-    FORTY_TWO_CLIENT_SECRET = {
+    FORTY_TWO_SECRET = {
       key  = "FORTY_TWO_SECRET"
       name = "oauth2-providers"
     }

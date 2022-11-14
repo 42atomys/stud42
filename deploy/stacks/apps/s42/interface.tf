@@ -71,14 +71,12 @@ module "interface" {
     CONFIG_PATH             = "/config/stud42.yaml"
   }
   envFromSecret = {
-    # TODO(@42atomys) : Remove this when release
-    FORTY_TWO_CLIENT_ID = {
+    FORTY_TWO_ID = {
       key  = "FORTY_TWO_ID"
       name = "oauth2-providers"
     }
 
-    # TODO(@42atomys) : Remove this when release
-    FORTY_TWO_CLIENT_SECRET = {
+    FORTY_TWO_SECRET = {
       key  = "FORTY_TWO_SECRET"
       name = "oauth2-providers"
     }
