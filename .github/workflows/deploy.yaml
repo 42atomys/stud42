@@ -60,7 +60,7 @@ jobs:
           script: |
             let stacks = [];
             if (context.eventName == 'release' && context.payload.action == 'released') {
-              stacks = Object.keys(steps.detect_changes.outputs.filter( (stack) => stack == true ));
+              stacks = ['pre-cluster', 'cluster'];
             }
             stacks.push('apps');
 
