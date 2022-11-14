@@ -105,6 +105,8 @@ module "jwtks_service" {
       secretName = "jwtks-service-grpc-internal-tls"
     }
     certs-jwk = {
+      # secret defined in the secrets.tf file, not on the app module
+      # TODO: move it to the app module (add sealedSecret to the app module)
       secretName = "jwtks-service-certs-jwk"
     }
   }
