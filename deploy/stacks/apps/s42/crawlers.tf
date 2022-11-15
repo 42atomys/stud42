@@ -95,15 +95,17 @@ module "crawler_locations" {
   command = ["stud42cli"]
   args    = ["--config", "/config/stud42.yaml", "jobs", "crawler", "locations"]
 
+  nodeSelector = local.nodepoolSelector["services"]
+
   podLabels = {
     # Disable istio sidecar injection for this pod due to the fact this is a 
     # job and we dont implement the /quitquitquit endpoint of envoy actually.
     "sidecar.istio.io/inject" = "false"
   }
 
-  # Each two minute due to webhooks is not correctly triggered on 42API
+  # Each hour due to webhooks is not correctly triggered on 42API
   # THIS IS USED AS WORKAROUND FOR THIS BUG.
-  jobSchedule                   = "*/2 * * * *"
+  jobSchedule                   = "0 * * * *"
   jobSuccessfulJobsHistoryLimit = 1
   jobFailedJobsHistoryLimit     = 3
   jobConcurrencyPolicy          = "Forbid"
