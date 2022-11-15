@@ -19,6 +19,8 @@ THE SOFTWARE.
 package cmd
 
 import (
+	"context"
+
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -34,8 +36,8 @@ var rootCmd = &cobra.Command{
 
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
-func Execute() {
-	cobra.CheckErr(rootCmd.Execute())
+func Execute(ctx context.Context) {
+	cobra.CheckErr(rootCmd.ExecuteContext(ctx))
 }
 
 func init() {

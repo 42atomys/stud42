@@ -63,7 +63,7 @@ export const Search: SearchComponent = ({
               >
                 <Combobox.Options
                   static
-                  className="absolute top-[100%] left-0 z-50 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white dark:bg-slate-900 py-2 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+                  className="absolute top-[100%] left-0 z-50 mt-1 max-h-60 w-full overflow-auto rounded-md bg-slate-50 dark:bg-slate-900 py-2 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
                 >
                   {users.length === 0 && query !== '' ? (
                     <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
@@ -76,14 +76,19 @@ export const Search: SearchComponent = ({
                         className={({ active }) =>
                           `relative select-none py-2 px-4 cursor-pointer group ${
                             active
-                              ? 'bg-indigo-600 text-white'
+                              ? 'bg-indigo-600 text-white [&>span>span]:text-white'
                               : 'text-slate-200'
                           }`
                         }
                         value={user}
                       >
                         <span className={`flex truncate font-normal`}>
-                          <span className="text-slate-700 dark:text-slate-300 font-bold flex-1">
+                          <span
+                            className={classNames(
+                              'font-bold flex-1 mr-2',
+                              'text-slate-700 dark:text-slate-300'
+                            )}
+                          >
                             {user.duoLogin}
                           </span>
                           <Name

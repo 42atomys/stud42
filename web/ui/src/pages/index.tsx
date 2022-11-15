@@ -20,7 +20,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   });
 
   const { flags = [] } = data?.me || {};
-  if (flags.includes(Flag.STAFF) || flags.includes(Flag.BETA)) {
+  if (flags?.includes(Flag.STAFF) || flags?.includes(Flag.BETA)) {
     return {
       redirect: {
         destination: '/clusters',

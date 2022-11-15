@@ -6,6 +6,8 @@ import BadgeProps, { BadgeChildrenProps, BadgeTextProps } from './types';
 const colorClasses = {
   purple:
     'bg-indigo-500/20 border-indigo-500 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-500/50',
+  fuchsia:
+    'bg-fuchsia-500/20 border-fuchsia-500 text-fuchsia-700 dark:text-fuchsia-300 hover:bg-fuchsia-500/50',
   blue: 'bg-cyan-500/20 border-cyan-500 text-cyan-700 dark:text-cyan-300 hover:bg-cyan-500/50',
   green:
     'bg-emerald-500/20 border-emerald-500 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-500/50',

@@ -19,6 +19,7 @@ THE SOFTWARE.
 package main
 
 import (
+	"context"
 	"errors"
 	"os"
 	"time"
@@ -26,6 +27,12 @@ import (
 	"github.com/getsentry/sentry-go"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/exporters/jaeger"
+	"go.opentelemetry.io/otel/sdk/resource"
+	tracesdk "go.opentelemetry.io/otel/sdk/trace"
+	semconv "go.opentelemetry.io/otel/semconv/v1.12.0"
 
 	"atomys.codes/stud42/cmd"
 )
@@ -41,6 +48,8 @@ func init() {
 }
 
 func main() {
+	ctx := context.Background()
+
 	defer func() {
 		err := recover()
 
@@ -54,7 +63,33 @@ func main() {
 	if os.Getenv("GO_ENV") != "development" || os.Getenv("SENTRY_DSN") != "" {
 		initSentry()
 	}
-	cmd.Execute()
+
+	if jaegerEndpoint := os.Getenv("JAEGER_ENDPOINT"); jaegerEndpoint != "" {
+		log.Info().Msg("initializing jaeger exporter")
+		tp, err := tracerProvider((jaegerEndpoint))
+		if err != nil {
+			log.Fatal().Err(err).Msg("failed to initialize tracer provider")
+		}
+		// Cleanly shutdown and flush telemetry when the application exits.
+		defer func(ctx context.Context) {
+			// Do not make the application hang when it is shutdown.
+			ctx, cancel := context.WithTimeout(ctx, time.Second*5)
+			defer cancel()
+			if err := tp.Shutdown(ctx); err != nil {
+				log.Fatal().Err(err).Msg("cannot shutdown trace")
+			}
+		}(ctx)
+
+		// Register our TracerProvider as the global so any imported
+		// instrumentation in the future will default to using it.
+		otel.SetTracerProvider(tp)
+
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithCancel(context.Background())
+		defer cancel()
+	}
+
+	cmd.Execute(ctx)
 }
 
 /**
@@ -97,4 +132,33 @@ func initSentry() {
 	if err != nil {
 		log.Fatal().Err(err).Msg("failed to initialize sentry")
 	}
+}
+
+// tracerProvider returns an OpenTelemetry TracerProvider configured to use
+// the Jaeger exporter that will send spans to the provided url. The returned
+// TracerProvider will also use a Resource configured with all the information
+// about the application.
+func tracerProvider(url string) (*tracesdk.TracerProvider, error) {
+	// Create the Jaeger exporter
+	exp, err := jaeger.New(jaeger.WithCollectorEndpoint(jaeger.WithEndpoint(url)))
+	if err != nil {
+		return nil, err
+	}
+
+	if os.Getenv("APP_NAME") == "" {
+		log.Warn().Msg("APP_NAME is not set")
+		os.Setenv("APP_NAME", "unknown")
+	}
+
+	traceProvider := tracesdk.NewTracerProvider(
+		// Always be sure to batch in production.
+		tracesdk.WithBatcher(exp),
+		// Record information about this application in a Resource.
+		tracesdk.WithResource(resource.NewWithAttributes(
+			semconv.SchemaURL,
+			semconv.ServiceNameKey.String(os.Getenv("APP_NAME")),
+			attribute.String("environment", os.Getenv("GO_ENV")),
+		)),
+	)
+	return traceProvider, nil
 }

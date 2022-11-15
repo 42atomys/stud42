@@ -13,8 +13,8 @@ export default NextAuth({
   // https://next-auth.js.org/configuration/providers
   providers: [
     FortyTwoProvider({
-      clientId: process.env.FORTY_TWO_CLIENT_ID as string,
-      clientSecret: process.env.FORTY_TWO_CLIENT_SECRET as string,
+      clientId: process.env.FORTY_TWO_ID as string,
+      clientSecret: process.env.FORTY_TWO_SECRET as string,
     }),
     GithubProvider({
       clientId: process.env.GITHUB_ID as string,
@@ -172,5 +172,5 @@ export default NextAuth({
   },
 
   // Enable debug messages in the console if you are having problems
-  debug: true,
+  debug: process.env.NODE_ENV !== 'production',
 });

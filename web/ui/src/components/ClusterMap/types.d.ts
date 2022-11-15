@@ -1,6 +1,7 @@
 import type { Actions, PayloadOf } from '@components/UserPopup';
 import type { ClusterViewQuery } from '@graphql.d';
 import { NonNullable } from 'types/utils';
+import { CampusClusterMapData } from './data';
 
 // ClusterMap.tsx
 export type MapLocation = NonNullable<
@@ -28,19 +29,19 @@ type ClusterContainerChildrenProps = {
   hidePopup: () => void;
 };
 
-type CampusClusterMap = {
-  Paris: 'e1' | 'e2' | 'e3';
-  Helsinki: 'c1' | 'c2' | 'c3';
-  Malaga: 'c1' | 'c2' | 'c3';
+type CampusNames = keyof typeof CampusClusterMapData;
+type ClusterPrefixes<CampusName> = typeof CampusClusterMapData[CampusName];
+type ClusterMap = {
+  [key: string]: (number | 'pillar' | null)[];
 };
 
 export type ClusterContainerProps = {
-  [Key in keyof CampusClusterMap]: {
+  [Key in CampusNames as readonly Key]: {
     campus: Key;
-    cluster: CampusClusterMap[Key];
+    cluster: Exclude<keyof ClusterPrefixes<Key>, '_data'>;
     children: (props: ClusterContainerChildrenProps) => JSX.Element;
   };
-}[keyof CampusClusterMap];
+}[CampusNames];
 
 type ClusterContainerComponent = (props: ClusterContainerProps) => JSX.Element;
 

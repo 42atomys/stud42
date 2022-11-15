@@ -112,9 +112,18 @@ mutation deleteFriendship($userID: UUID!) {
   deleteFriendship(userID: $userID)
 }
 
-query me {
+mutation updateSettings($input: SettingsInput!) {
+  updateSettings(input: $input) {
+    ...ApparenceSettings
+  }
+}
+
+query myApparenceSettings {
   me {
-    ...UserAccountsData
+    id
+    settings {
+      ...ApparenceSettings
+    }
   }
 }
 
@@ -122,6 +131,9 @@ query meWithFlags {
   me {
     ...UserAccountsData
     flags
+    currentCampus {
+      ...CampusBasicData
+    }
   }
 }
 
@@ -132,9 +144,7 @@ query myFollowings {
     currentLocation {
       ...LocationBasicData
       campus {
-        name
-        city
-        country
+        ...CampusBasicData
       }
     }
     ...UserIdentyData
@@ -161,10 +171,7 @@ query clusterView($campusName: String!, $identifierPrefix: String!) {
         identifier
         user {
           id
-          duoLogin
-          firstName
-          usualFirstName
-          lastName
+          ...UserIdentyData
           duoAvatarURL
           isMe
           isSwimmer
@@ -210,6 +217,7 @@ fragment UserIdentyData on User {
   firstName
   usualFirstName
   lastName
+  flags
 }
 
 fragment LocationBasicData on Location {
@@ -223,4 +231,15 @@ fragment PreciseLocationData on Location {
   campus {
     name
   }
+}
+
+fragment CampusBasicData on Campus {
+  name
+  city
+  country
+}
+
+fragment ApparenceSettings on Settings {
+  theme
+  clusterMapAvatarSize
 }

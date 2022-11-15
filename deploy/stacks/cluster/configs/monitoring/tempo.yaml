@@ -1,0 +1,39 @@
+multitenancy_enabled: false
+search_enabled: false
+metrics_generator_enabled: false
+compactor:
+  compaction:
+    compacted_block_retention: 24h
+distributor:
+  receivers:
+    jaeger:
+      protocols:
+        grpc:
+          endpoint: 0.0.0.0:14250
+        thrift_binary:
+          endpoint: 0.0.0.0:6832
+        thrift_compact:
+          endpoint: 0.0.0.0:6831
+        thrift_http:
+          endpoint: 0.0.0.0:14268
+    opencensus: null
+    otlp:
+      protocols:
+        grpc:
+          endpoint: 0.0.0.0:4317
+        http:
+          endpoint: 0.0.0.0:4318
+ingester: {}
+server:
+  http_listen_port: 3100
+storage:
+  trace:
+    backend: local
+    local:
+      path: /data/traces
+    wal:
+      path: /data/wal
+querier: {}
+query_frontend: {}
+overrides:
+  per_tenant_override_config: /etc/tempo/overrides.yaml

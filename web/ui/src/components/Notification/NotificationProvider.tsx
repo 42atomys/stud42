@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { NotificationContext } from './NotificationContext';
 import { NotificationProps } from './types';
 
@@ -12,9 +12,13 @@ export const NotificationProvider = ({
   children: React.ReactNode;
 }): JSX.Element => {
   const [notifications, setNotifications] = useState<NotificationProps[]>([]);
+  const store = useMemo(
+    () => ({ notifications, setNotifications }),
+    [notifications]
+  );
 
   return (
-    <NotificationContext.Provider value={{ notifications, setNotifications }}>
+    <NotificationContext.Provider value={store}>
       {children}
     </NotificationContext.Provider>
   );

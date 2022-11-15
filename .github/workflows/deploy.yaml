@@ -1,0 +1,149 @@
+name: "Deployement"
+on:
+  workflow_call:
+    inputs:
+      ghEnvironmentName:
+        required: true
+        type: string
+        description: "The name of the environment on Github to deploy to (e.g. staging, production, previews)"
+      friendlyEnvironmentName:
+        required: false
+        type: string
+        description: "The name of the environment as friendly named to deploy to (e.g. staging, production, pr-123)"
+      kubeNamespace:
+        required: true
+        type: string
+        description: "The name of the Kubernetes namespace to deploy to (e.g. staging, production, previews, sandbox)"
+      imageTag:
+        required: true
+        description: "The docker image tag to deploy"
+        type: string
+    secrets:
+      TF_WORKSPACE:
+        required: true
+        description: "Terraform workspace"
+      TERRAFORM_AWS_ACCESS_KEY_ID:
+        required: true
+        description: "AWS access key id"
+      TERRAFORM_AWS_SECRET_ACCESS_KEY:
+        required: true
+        description: "AWS secret access key"
+
+permissions:
+  contents: read
+
+jobs:
+  detect_stack:
+    name: "detect stack"
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+      contents: read
+    outputs:
+      stacks: ${{ steps.detected_stack.outputs.stacks }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Detect stack to deploy
+        id: detect_changes
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            pre-cluster:
+              - 'deploy/stacks/pre-cluster/**'
+            cluster:
+              - 'deploy/stacks/cluster/**'
+      - name: Expose stack to deploy
+        uses: actions/github-script@v6
+        id: detected_stack
+        with:
+          script: |
+            let stacks = [];
+            if (context.eventName == 'release' && context.payload.action == 'released') {
+              stacks = ['pre-cluster', 'cluster'];
+            }
+            stacks.push('apps');
+
+            console.log(`Stack to deploy: ${stacks}`);
+            core.setOutput('stacks', stacks);
+
+  terraform:
+    name: "${{ matrix.stack }} on ${{ inputs.friendlyEnvironmentName }}"
+    runs-on: ubuntu-latest
+    needs: [detect_stack]
+    environment:
+      name: ${{ inputs.ghEnvironmentName }}
+      url: ${{ steps.envurl.outputs.urlWithProtocol }}
+    strategy:
+      matrix:
+        stack: ${{ fromJson(needs.detect_stack.outputs.stacks) }}
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.TERRAFORM_AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.TERRAFORM_AWS_SECRET_ACCESS_KEY }}
+      KUBE_CONFIG_PATH: ~/.kube/config
+    # Use the Bash shell regardless whether the GitHub Actions runner is
+    # ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: "deploy/stacks/${{ matrix.stack }}"
+    steps:
+      # Checkout the repository to the GitHub Actions runner
+      - name: Checkout
+        uses: actions/checkout@v3
+      # Configure the kube config
+      - env:
+          KUBECONFIG_ADMIN: ${{ secrets.KUBECONFIG_ADMIN }}
+        run: mkdir -p ~/.kube && echo "$KUBECONFIG_ADMIN" >> ~/.kube/config
+      # Generate the url of the environment
+      - name: Generate url of the environment
+        id: envurl
+        uses: actions/github-script@v6
+        if: matrix.stack == 'apps'
+        with:
+          script: |
+            const eventName = context.eventName;
+            const event = context.payload;
+
+            let url = '';
+            if (eventName == 'pull_request') {
+              url = `pr-${context.payload.pull_request.number}.previews.s42.dev`;
+            } else if (eventName == 'release' && context.payload.action == 'released') {
+              url = 's42.app';
+            } else {
+              console.log(`No configuration (fallback to staging) for this event: ${eventName} | context.payload: ${JSON.stringify(context.payload)}`)
+              url = 'next.s42.app';
+            }
+            core.setOutput('url', url);
+            core.setOutput('urlWithProtocol', `https://${url}`);
+
+      # Install the latest version of Terraform CLI and configure the
+      # Terraform CLI configuration file with a Terraform Cloud user API token
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          # Force the version due to crash on latest
+          # https://github.com/hashicorp/terraform/issues/32200
+          terraform_version: "1.3.3"
+
+      # Initialize a new or existing Terraform working directory by creating
+      # initial files, loading any remote state, downloading modules, etc.
+      - name: Terraform Init
+        id: init
+        run: terraform init -input=false
+
+        # On push to main, build or change infrastructure according
+        # to Terraform configuration files
+      - name: Terraform Apply
+        id: apply
+        env:
+          TF_WORKSPACE: ${{ secrets.TF_WORKSPACE }}
+          # TF VARS
+          TF_VAR_namespace: ${{ inputs.kubeNamespace }}
+          TF_ENV_appsVersion: '{"s42"="${{ inputs.imageTag }}"}'
+          TF_VAR_baseUrl: ${{ steps.envurl.outputs.url }}
+          TF_VAR_webhooksEnabled: ${{ inputs.kubeNamespace == 'production' }}
+          TF_VAR_crawlerEnabled: ${{ inputs.kubeNamespace == 'production' }}
+          TF_VAR_hasProvidedJWTKSCertificates: "false"
+          TF_VAR_hasPersistentStorage: ${{ contains(fromJson('["production", "staging"]'), inputs.kubeNamespace) }}
+        run: terraform apply -auto-approve -input=false

@@ -1,4 +1,6 @@
 import Avatar from '@components/Avatar';
+import { ClusterMapAvatarSize } from '@graphql.d';
+import useSettings from '@lib/useSettings';
 import classNames from 'classnames';
 import { Children } from 'react';
 import { ClusterContext } from './ClusterContainer';
@@ -51,6 +53,8 @@ export const ClusterWorkspaceWithUser = ({
     location: MapLocation
   ) => void;
 }) => {
+  const [settings] = useSettings();
+
   return (
     <ClusterContext.Consumer>
       {({ highlight, hightlightVisibility }) => (
@@ -81,7 +85,15 @@ export const ClusterWorkspaceWithUser = ({
               login={location.user.duoLogin}
               duoAvatarURL={location.user.duoAvatarURL}
               rounded={false}
-              size="md"
+              flags={location.user.flags}
+              size={
+                settings.clusterMapAvatarSize === ClusterMapAvatarSize.LARGE
+                  ? 'xl'
+                  : settings.clusterMapAvatarSize ===
+                    ClusterMapAvatarSize.MEDIUM
+                  ? 'md'
+                  : 'auto-based-on-witdth'
+              }
             />
           </span>
           <span className="text-xs">{displayText || location.identifier}</span>

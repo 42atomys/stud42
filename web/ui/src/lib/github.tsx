@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 export interface Repository {
   id?: number;
@@ -115,29 +115,28 @@ export interface Owner {
 
 const PROJECT_PATH = '42Atomys/stud42';
 
-export const getRepo = async (): Promise<Repository> => {
-  try {
-    const { data }: { data: Repository } = await axios.get(
-      `https://api.github.com/repos/${PROJECT_PATH}`
-    );
-    return data;
-  } catch {
-    return {};
-  }
-};
-
 /**
  * Star get the repository information from the GitHub API about the stars
  * of the current project and display it like a badge.
  */
 export const Star = (): JSX.Element => {
-  const [stars, setStars] = useState(0);
-
-  useEffect(() => {
-    getRepo().then(({ stargazers_count }) =>
-      setStars(isNaN(Number(stargazers_count)) ? 0 : Number(stargazers_count))
-    );
+  const getRepo = useCallback(async () => {
+    try {
+      const { data }: { data: Repository } = await axios.get(
+        `https://api.github.com/repos/${PROJECT_PATH}`
+      );
+      return data;
+    } catch {
+      return {};
+    }
   }, []);
+
+  const [stars, setStars] = useState(0);
+  useEffect(() => {
+    getRepo().then(({ stargazers_count }) => {
+      setStars(isNaN(Number(stargazers_count)) ? 0 : Number(stargazers_count));
+    });
+  }, [getRepo]);
 
   return (
     <a

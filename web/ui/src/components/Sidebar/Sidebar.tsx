@@ -1,3 +1,4 @@
+import { TooltipProps } from '@components/Tooltip';
 import Tooltip from '@components/Tooltip/Tooltip';
 import { Contribute, Star } from '@lib/github';
 import classNames from 'classnames';
@@ -20,16 +21,18 @@ const MenuItem = ({
   href,
   icon,
   name,
+  tooltipColor: tooltipType = 'info',
 }: {
   href: string;
   icon: string;
   name: string;
+  tooltipColor?: TooltipProps['color'];
 }) => {
   const { pathname } = useRouter();
   const activeRoute = pathname.split('/')[1] == href.split('/')[1];
 
   return (
-    <Tooltip text={name}>
+    <Tooltip text={name} size="md" color={tooltipType} direction="right">
       <Link href={href}>
         <a
           className={`duration-100 transition-all flex items-center justify-center my-3 text-xl`}
@@ -74,7 +77,7 @@ export const Sidebar = ({
   const { publicRuntimeConfig } = getConfig();
 
   return (
-    <div className="md:flex flex-row md:flex-row md:min-h-screen w-full md:w-auto drop-shadow-xl md:drop-shadow-none md:sticky md:top-0 md:h-screen">
+    <div className="md:flex flex-row md:flex-row md:min-h-screen w-full md:w-auto drop-shadow-xl md:drop-shadow-none md:sticky md:top-0 md:h-screen z-40">
       <div className="flex flex-col text-slate-600 dark:text-slate-400 bg-slate-200 dark:bg-slate-900/80 flex-shrink-0">
         <div className="flex-shrink-0 p-4 flex flex-row justify-between">
           <span className="text-lg font-display antialiased font-black tracking-widest text-gray-900 uppercase rounded-lg dark:text-white focus:outline-none focus:shadow-outline">
@@ -133,9 +136,9 @@ export const Sidebar = ({
               name="Github"
             />
           )}
-          <MenuItem href="/auth/signout" icon="fa-sign-out" name="Logout" />
+          <MenuItem href="/settings" icon="fa-cog" name="Settings" />
           <span className="text-sm text-slate-400 dark:text-slate-600">
-            {publicRuntimeConfig.app_version}
+            {publicRuntimeConfig.appVersion}
           </span>
         </div>
       </div>
@@ -150,7 +153,7 @@ export const Sidebar = ({
             <Contribute />
           </div>
 
-          <div className="p-4 flex flex-col h-full bg-slate-100/60 dark:bg-slate-800/40 rounded-tl-md">
+          <div className="p-4 flex flex-col h-full bg-slate-100/60 dark:bg-slate-800/40 rounded-tl-md relative">
             {React.Children.map(subSidebar, (c) => (
               <>{c}</>
             ))}

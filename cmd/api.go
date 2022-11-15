@@ -1,6 +1,5 @@
 /*
 Copyright © 2022 42Atomys
-
 */
 package cmd
 
@@ -20,10 +19,12 @@ import (
 	"github.com/rs/cors"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
+	"go.opentelemetry.io/otel"
 
 	"atomys.codes/stud42/internal/api"
 	modelsutils "atomys.codes/stud42/internal/models"
 	_ "atomys.codes/stud42/internal/models/generated/runtime"
+	"atomys.codes/stud42/pkg/otelgql"
 )
 
 var (
@@ -45,7 +46,8 @@ var apiCmd = &cobra.Command{
 			log.Fatal().Err(err).Msg("failed to migrate database")
 		}
 
-		srv := handler.NewDefaultServer(api.NewSchema(modelsutils.Client()))
+		tracer := otel.GetTracerProvider().Tracer("graphql-api")
+		srv := handler.NewDefaultServer(api.NewSchema(modelsutils.Client(), tracer))
 		// srv.SetRecoverFunc(func(ctx context.Context, err interface{}) error {
 		// 	// notify bug tracker...
 		// 	log.Error().Err(err.(error)).Msg("unhandled error")
@@ -54,6 +56,7 @@ var apiCmd = &cobra.Command{
 
 		srv.Use(entgql.Transactioner{TxOpener: modelsutils.Client()})
 		srv.Use(extension.FixedComplexityLimit(50))
+		srv.Use(otelgql.Middleware(tracer))
 
 		router := chi.NewRouter()
 		router.Use(cors.New(cors.Options{

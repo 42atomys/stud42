@@ -19,8 +19,8 @@ var config *clientcredentials.Config
 
 func init() {
 	config = &clientcredentials.Config{
-		ClientID:     os.Getenv("FORTY_TWO_CLIENT_ID"),
-		ClientSecret: os.Getenv("FORTY_TWO_CLIENT_SECRET"),
+		ClientID:     os.Getenv("FORTY_TWO_ID"),
+		ClientSecret: os.Getenv("FORTY_TWO_SECRET"),
 		TokenURL:     "https://api.intra.42.fr/oauth/token",
 		AuthStyle:    oauth2.AuthStyleInHeader,
 	}

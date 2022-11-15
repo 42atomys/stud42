@@ -1,6 +1,10 @@
+import ConditionalWrapper from '@components/ConditionalWrapper';
 import Emoji from '@components/Emoji';
+import NewFeaturePing from '@components/NewFeaturePing';
 import classNames from 'classnames';
+import Link from 'next/link';
 import React from 'react';
+import { ClassNameProps } from 'types/globals';
 
 /**
  * SidebarMenu is the menu available in the sub sidebar part.
@@ -21,12 +25,20 @@ import React from 'react';
  */
 export const Menu = ({
   children,
+  size = 'md',
 }: {
   // The list of MenuCategory and/or MenuItem.
   children: React.ReactNode[] | React.ReactNode;
+  // The size of the menu.
+  size?: 'sm' | 'md';
 }) => {
   return (
-    <ul>
+    <ul
+      className={classNames('flex flex-col', {
+        '[--menu-padding-y:0.5rem]': size === 'md',
+        '[--menu-padding-y:0.25rem]': size === 'sm',
+      })}
+    >
       {React.Children.map(children, (c) => (
         <>{c}</>
       ))}
@@ -43,27 +55,42 @@ export const Menu = ({
  */
 export const MenuCategory = ({
   emoji,
+  icon,
   name,
+  text,
   children,
 }: {
   // The emoji to display before the category name.
   emoji?: string;
+  // The icon to display before the category name.
+  icon?: string;
   // The category name.
   name: string;
+  // The additional text to display
+  text?: string;
   // The list of MenuItem.
   children: React.ReactNode[] | React.ReactNode;
 }) => {
   return (
     <li>
-      <span className="font-bold my-2 ml-2 flex items-center flex-row-reverse justify-end">
+      <span className="my-[var(--menu-padding-y)] ml-2 flex items-center flex-row justify-end text-slate-400 dark:text-slate-600 text-sm">
         {emoji && (
           <Emoji
             emoji={emoji}
             size={20}
-            containerClassName="flex items-center mx-2"
+            containerClassName="flex items-center mr-2"
           />
         )}
-        <span>{name}</span>
+        {icon && <i className={classNames('fa-fw fa-regular', icon, 'mr-2')} />}
+        <span className="flex grow items-baseline">
+          <span className="grow first-letter:capitalize">{name}</span>
+          {text && (
+            <span className={classNames('items-stretch ml-2 text-xs')}>
+              <span>{text}</span>
+              <NewFeaturePing featureName="dynamic-campus-assignment" />
+            </span>
+          )}
+        </span>
       </span>
       <ul>
         {React.Children.map(children, (c) => (
@@ -86,45 +113,84 @@ export const MenuCategory = ({
 export const MenuItem = ({
   active = false,
   emoji,
+  icon,
   name,
-  text,
+  href,
+  leftText,
+  rightText,
+  className,
 }: {
   // Whether the menu item is active or not
   active?: boolean;
   // The emoji to display
   emoji?: string;
+  // The FontAwesome icon to display before the name
+  icon?: string;
+  // The destination of the menu item. When provided, the menu item is wrapped
+  // in a Link component.
+  href?: string;
   // The name of the menu item
   name: string;
-  // The additional text to display
-  text?: string;
-}) => {
+  // The additional text to display on the left
+  leftText?: string;
+  // The additional text to display on the right
+  rightText?: JSX.Element | string;
+} & ClassNameProps) => {
   return (
-    <li
-      className={classNames(
-        active ? 'bg-indigo-500/20 text-indigo-500' : '',
-        'group empty:hidden transition-all hover:cursor-pointer px-2 py-2 my-1 rounded hover:bg-indigo-500/20 hover:text-indigo-500 flex flex-row items-center'
+    <ConditionalWrapper
+      condition={!!href}
+      trueWrapper={(children) => (
+        <Link href={href as string}>
+          <a>{children}</a>
+        </Link>
       )}
     >
-      <span className="flex items-center w-full">
-        {emoji && (
-          <Emoji emoji={emoji} size={24} containerClassName="contents" />
+      <li
+        data-active={active}
+        className={classNames(
+          active ? 'bg-indigo-500/20 text-indigo-500' : '',
+          'group empty:hidden transition-all hover:cursor-pointer px-2 py-[var(--menu-padding-y)] my-1 rounded hover:bg-indigo-500/20 hover:text-indigo-500 flex flex-row items-center',
+          className
         )}
-        <span className="ml-2 flex items-baseline">
-          <span className="">{name || text}</span>
-          {text && (
-            <span
-              className={classNames(
-                active
-                  ? 'text-indigo-500'
-                  : 'text-slate-400 dark:text-slate-600',
-                'ml-2 text-xs group-hover:text-indigo-500'
-              )}
-            >
-              {text}
-            </span>
+      >
+        <span className="flex items-center w-full">
+          {emoji && (
+            <Emoji emoji={emoji} size={24} containerClassName="contents" />
           )}
+          {icon && <i className={classNames('fa-fw fa-light', icon)} />}
+          <span className="ml-2 flex items-baseline flex-1 justify-between">
+            <span>
+              <span>{name}</span>
+              {leftText && (
+                <span
+                  data-active={active}
+                  className={classNames(
+                    active
+                      ? 'text-indigo-500'
+                      : 'text-slate-400 dark:text-slate-600',
+                    'ml-2 text-xs transition-all group-hover:text-indigo-500 anchor-sub-text'
+                  )}
+                >
+                  {leftText}
+                </span>
+              )}
+            </span>
+            {rightText && (
+              <span
+                data-active={active}
+                className={classNames(
+                  active
+                    ? 'text-indigo-500'
+                    : 'text-slate-400 dark:text-slate-600',
+                  'ml-2 text-xs transition-all group-hover:text-indigo-500 anchor-sub-text'
+                )}
+              >
+                {rightText}
+              </span>
+            )}
+          </span>
         </span>
-      </span>
-    </li>
+      </li>
+    </ConditionalWrapper>
   );
 };

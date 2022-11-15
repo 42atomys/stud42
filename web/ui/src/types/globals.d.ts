@@ -6,3 +6,9 @@
 export type ClassNameProps = {
   className?: string;
 };
+
+declare global {
+  interface String {
+    equalsIgnoreCase(searchString: string): boolean;
+  }
+}

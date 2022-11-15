@@ -7,6 +7,8 @@ import (
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
 	"github.com/google/uuid"
+
+	"atomys.codes/stud42/internal/models/gotype"
 )
 
 type User struct {
@@ -38,9 +40,11 @@ func (User) Fields() []ent.Field {
 		field.String("avatar_url").Optional().Nillable().MaxLen(255),
 		field.String("cover_url").Optional().Nillable().MaxLen(255),
 		field.UUID("current_location_id", uuid.UUID{}).Nillable().Optional(),
+		field.UUID("current_campus_id", uuid.UUID{}).Nillable().Optional(),
 		field.Bool("is_staff").Default(false),
 		field.Bool("is_a_user").Default(false),
 		field.JSON("flags_list", []string{}).Default([]string{}).Optional(),
+		field.JSON("settings", gotype.Settings{}).Default(gotype.DefaultSettings).Optional(),
 	}
 }
 
@@ -53,6 +57,9 @@ func (User) Edges() []ent.Edge {
 			Unique().
 			Field("current_location_id").
 			Annotations(entsql.Annotation{OnDelete: entsql.Cascade}),
+		edge.To("current_campus", Campus.Type).
+			Unique().
+			Field("current_campus_id"),
 	}
 }
 

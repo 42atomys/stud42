@@ -1,0 +1,192 @@
+name: "Tests"
+on:
+  workflow_call:
+    secrets:
+      TERRAFORM_AWS_ACCESS_KEY_ID:
+        required: true
+        description: "AWS access key id"
+      TERRAFORM_AWS_SECRET_ACCESS_KEY:
+        required: true
+        description: "AWS secret access key"
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    env:
+      TF_WORKSPACE: production # Compare the changes when plan with production
+      AWS_ACCESS_KEY_ID: ${{ secrets.TERRAFORM_AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.TERRAFORM_AWS_SECRET_ACCESS_KEY }}
+      # TF VARS (bind to production to display changes between branch and production)
+      TF_VAR_namespace: production
+      TF_ENV_appsVersion: '{"s42": "${{ inputs.imageTag }}"}'
+      TF_VAR_baseUrl: "s42.app"
+      TF_VAR_webhooksEnabled: "true"
+      TF_VAR_crawlerEnabled: "true"
+      TF_VAR_hasProvidedJWTKSCertificates: "false"
+      TF_VAR_hasPersistentStorage: "true"
+
+    strategy:
+      matrix:
+        stack: ["pre-cluster", "cluster", "apps"]
+    defaults:
+      run:
+        working-directory: "deploy/stacks/${{ matrix.stack }}"
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v3
+      - name: Setup kube config
+        env:
+          KUBECONFIG_ADMIN: ${{ secrets.KUBECONFIG_ADMIN }}
+        run: mkdir -p ~/.kube && echo "$KUBECONFIG_ADMIN" >> ~/.kube/config
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          # Force the version due to crash on latest
+          # https://github.com/hashicorp/terraform/issues/32200
+          terraform_version: "1.3.3"
+      - name: Terraform Init
+        id: init
+        run: terraform init -input=false
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -no-color -input=false -out=${{ matrix.stack }}-tfplan
+      - name: Store terraform plan as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.stack }}-tfplan
+          path: ${{ matrix.stack }}-tfplan
+          retention-days: 7
+      # On pull request, build or change infrastructure according
+      # to Terraform configuration files
+      - uses: actions/github-script@v6
+        if: always() && github.event_name == 'pull_request'
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            // 1. Retrieve existing bot comments for the PR
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            })
+            const botComment = comments.find(comment => {
+              return comment.user.type === 'Bot' && comment.body.includes('Terraform data for \`${{ matrix.stack }}\` stack')
+            })
+
+            // 2. Prepare format of the comment
+            const output = `## Terraform data for \`${{ matrix.stack }}\` stack
+            #### Terraform Initialization ⚙️ \`${{ steps.init.outcome }}\`
+            #### Terraform Validation 🤖 \`${{ steps.validate.outcome }}\`
+            <details><summary>Show Validation</summary>
+
+            \`\`\`
+            ${{ steps.validate.outputs.stdout }}
+            \`\`\`
+            </details>
+
+            #### Terraform Plan 📖 \`${{ steps.plan.outcome }}\`
+            <details><summary>Show Plan</summary>
+
+            \`\`\`
+            ${{ steps.plan.outputs.stdout }}
+            \`\`\`
+            </details>`
+
+            // 3. If we have a comment, update it, otherwise create a new one
+            if (botComment) {
+              github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: output
+              })
+            } else {
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: output
+              })
+            }
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v3
+      - name: Setup go
+        uses: actions/setup-go@v3
+        with:
+          go-version: "1.18"
+          check-latest: true
+      - name: Generate code
+        run: make -f build/Makefile deps generate
+      - name: Run Unit tests
+        run: |
+          go test ./... -coverprofile coverage.out -covermode count
+          go tool cover -func coverage.out
+      - name: Quality Gate - Test coverage shall be above threshold
+        # continue-on-error to allow job to pass without tests.
+        # @see issue #57 on Github
+        continue-on-error: true
+        env:
+          TESTCOVERAGE_THRESHOLD: 80
+        run: |
+          echo "Quality Gate: checking test coverage is above threshold ..."
+          echo "Threshold             : $TESTCOVERAGE_THRESHOLD %"
+          totalCoverage=`go tool cover -func=coverage.out | grep total | grep -Eo '[0-9]+\.[0-9]+'`
+          echo "Current test coverage : $totalCoverage %"
+          if (( $(echo "$totalCoverage $TESTCOVERAGE_THRESHOLD" | awk '{print ($1 > $2)}') )); then
+              echo "OK"
+          else
+              echo "Current test coverage is below threshold. Please add more unit tests or adjust threshold to a lower value."
+              echo "Failed"
+              exit 1
+          fi
+      - name: Run Go Build
+        run: |
+          go build -o /tmp/applications-test-units
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: "web/ui"
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v3
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Jest
+        run: yarn test:ci
+
+      - name: Quality Gate - Test coverage shall be above threshold
+        env:
+          TESTCOVERAGE_THRESHOLD: 80
+        run: |
+          echo "Quality Gate: checking test coverage is above threshold ..."
+          echo "Threshold             : $TESTCOVERAGE_THRESHOLD %"
+          totalCoverage=`cat coverage/coverage-summary.json | jq '.total.statements.pct'`
+          echo "Current test coverage : $totalCoverage %"
+          if (( $(echo "$totalCoverage $TESTCOVERAGE_THRESHOLD" | awk '{print ($1 > $2)}') )); then
+              echo "OK"
+          else
+              echo "Current test coverage is below threshold. Please add more unit tests or adjust threshold to a lower value."
+              echo "Failed"
+              exit 1
+          fi

@@ -1,9 +1,10 @@
-ARG APP_VERSION
 # GOLANG BUILD - BUILD
 FROM golang:1.18 AS go-build
 
 WORKDIR /build
 COPY . /build
+
+ARG APP_VERSION
 ENV APP_VERSION=$APP_VERSION
 
 RUN apt-get update && \
@@ -22,8 +23,9 @@ WORKDIR /build
 COPY --from=node-deps /build/node_modules ./node_modules
 COPY . .
 
-ENV NEXT_TELEMETRY_DISABLED 1
+ARG APP_VERSION
 ENV APP_VERSION=$APP_VERSION
+ENV NEXT_TELEMETRY_DISABLED 1
 
 RUN apt-get update -y && \
   apt-get install -y jq && \
@@ -41,8 +43,9 @@ LABEL repository "https://github.com/42Atomys/stud42"
 
 WORKDIR /app
 
-ENV NEXT_TELEMETRY_DISABLED 1
+ARG APP_VERSION
 ENV APP_VERSION=$APP_VERSION
+ENV NEXT_TELEMETRY_DISABLED 1
 
 COPY --from=node-builder /build/web/ui/next.config.js ./
 COPY --from=node-builder /build/web/ui/public ./public
