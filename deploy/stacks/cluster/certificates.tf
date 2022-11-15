@@ -58,7 +58,7 @@ module "cert_manager" {
 
   certificates = {
     "app-s42" = {
-      dns_names   = ["s42.app", "*.s42.app"]
+      dns_names   = ["s42.app"]
       issuer_name = "ovh-issuer"
     }
     "app-s42-next" = {
