@@ -3,8 +3,8 @@ module atomys.codes/stud42
 go 1.18
 
 require (
-	entgo.io/contrib v0.2.0
-	entgo.io/ent v0.10.1
+	entgo.io/contrib v0.3.0
+	entgo.io/ent v0.11.4
 	github.com/99designs/gqlgen v0.17.2
 	github.com/bwmarrin/discordgo v0.25.0
 	github.com/getsentry/sentry-go v0.13.0
