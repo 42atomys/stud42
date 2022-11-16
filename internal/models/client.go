@@ -4,7 +4,6 @@ import (
 	"context"
 	"os"
 
-	"entgo.io/ent/dialect/sql/schema"
 	"github.com/rs/zerolog/log"
 
 	modelgen "atomys.codes/stud42/internal/models/generated"
@@ -41,7 +40,7 @@ func Client() *modelgen.Client {
 
 // Migrate migrates the schema of the database.
 func Migrate() (err error) {
-	err = client.Schema.Create(context.Background(), schema.WithAtlas(true))
+	err = client.Schema.Create(context.Background())
 	if err != nil {
 		log.Error().Err(err).Msg("running schema migration")
 	}
