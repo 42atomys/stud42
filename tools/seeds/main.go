@@ -4,7 +4,6 @@ import (
 	"context"
 	"os"
 
-	"entgo.io/ent/dialect/sql/schema"
 	_ "github.com/lib/pq"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
@@ -33,7 +32,7 @@ func init() {
 		log.Fatal().Err(err).Msg("failed to connect to database")
 	}
 
-	if err := client.Schema.Create(context.Background(), schema.WithAtlas(true)); err != nil {
+	if err := client.Schema.Create(context.Background()); err != nil {
 		log.Fatal().Err(err).Msg("running schema migration")
 	}
 }
