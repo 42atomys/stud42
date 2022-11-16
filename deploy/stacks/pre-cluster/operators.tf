@@ -24,6 +24,21 @@ resource "helm_release" "gateway" {
     name  = "nodeSelector.nodepool"
     value = "medium"
   }
+
+  set {
+    name  = "service.ports[3].name"
+    value = "grpc"
+  }
+
+  set {
+    name  = "service.ports[3].port"
+    value = "51000"
+  }
+
+  set {
+    name  = "service.ports[3].protocol"
+    value = "TCP"
+  }
 }
 
 
