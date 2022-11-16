@@ -17,11 +17,7 @@
         "go.coverMode": "atomic",
         "go.coverOnSave": true,
         "go.disableConcurrentTests": true,
-        "go.enableCodeLens": {
-          "references": true
-        },
         "editor.formatOnSave": true,
-        "go.formatTool": "goimports",
         "go.lintTool": "golangci-lint",
         "terminal.integrated.fontFamily": "'DejaVu Sans Mono for Powerline', monospace",
         "editor.tabSize": 2,
@@ -29,7 +25,6 @@
         "gopls": {
           "ui.completion.usePlaceholders": true,
           "build.experimentalWorkspaceModule": true,
-
           // Experimental settings
           "completeUnimported": true, // autocomplete unimported packages
           "deepCompletion": true, // enable deep completion
@@ -81,6 +76,7 @@
       "extensions": [
         "golang.Go",
         "aaron-bond.better-comments",
+        "IBM.output-colorizer",
         "miguelsolorio.fluent-icons",
         "peterj.proto",
         "jasonnutter.vscode-codeowners",
