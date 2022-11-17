@@ -120,6 +120,12 @@ type LocationEdge {
   cursor: Cursor!
 }
 
+type LocationStats {
+  campusID: UUID!
+  prefix: String!
+  occupiedWorkspace: Int!
+}
+
 type Settings {
   theme: Theme!
   clusterMapAvatarSize: ClusterMapAvatarSize!
@@ -145,6 +151,10 @@ type Query {
     campusName: String!
     identifierPrefix: String
   ): LocationConnection! @authenticated
+  locationsStatsByPrefixes(
+    campusName: String!
+    identifierPrefixes: [String!]
+  ): [LocationStats!]! @authenticated
 
   myFollowing: [User!]! @authenticated
 

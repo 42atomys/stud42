@@ -58,6 +58,8 @@ export const MenuCategory = ({
   icon,
   name,
   text,
+  isCollapsable = false,
+  collapsed = false,
   children,
 }: {
   // The emoji to display before the category name.
@@ -68,9 +70,17 @@ export const MenuCategory = ({
   name: string;
   // The additional text to display
   text?: string;
+  // The menu category can be collapsed and expanded.
+  isCollapsable?: boolean;
+  // The menu is collapsed by default.
+  collapsed?: boolean;
   // The list of MenuItem.
   children: React.ReactNode[] | React.ReactNode;
 }) => {
+  const [isCollapsed, setIsCollapsed] = React.useState(
+    isCollapsable && collapsed
+  );
+
   return (
     <li>
       <span className="my-[var(--menu-padding-y)] ml-2 flex items-center flex-row justify-end text-slate-400 dark:text-slate-600 text-sm">
@@ -82,7 +92,14 @@ export const MenuCategory = ({
           />
         )}
         {icon && <i className={classNames('fa-fw fa-regular', icon, 'mr-2')} />}
-        <span className="flex grow items-baseline">
+        <span
+          className={classNames('flex grow items-baseline', {
+            'cursor-pointer': isCollapsable,
+          })}
+          onClick={
+            isCollapsable ? () => setIsCollapsed(!isCollapsed) : undefined
+          }
+        >
           <span className="grow first-letter:capitalize">{name}</span>
           {text && (
             <span className={classNames('items-stretch ml-2 text-xs')}>
@@ -90,9 +107,19 @@ export const MenuCategory = ({
               <NewFeaturePing featureName="dynamic-campus-assignment" />
             </span>
           )}
+          {isCollapsable && (
+            <div
+              className={classNames(
+                'transition-all',
+                isCollapsed ? 'rotate-0' : 'rotate-90'
+              )}
+            >
+              <i className="fa-fw fa-light fa-chevron-right" />
+            </div>
+          )}
         </span>
       </span>
-      <ul>
+      <ul className={classNames(isCollapsed ? 'hidden' : 'visible')}>
         {React.Children.map(children, (c) => (
           <>{c}</>
         ))}

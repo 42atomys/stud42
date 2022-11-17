@@ -1,6 +1,7 @@
 export type TooltipProps = {
   children: React.ReactNode;
   className?: string;
+  tooltipClassName?: string;
   text: string | React.ReactNode;
   subText?: string | React.ReactNode;
   showArrow?: boolean = true;

@@ -152,6 +152,22 @@ query myFollowings {
   }
 }
 
+query clusterSidebarData($campusName: String!, $clusterPrefixes: [String!]!) {
+  me {
+    currentCampus {
+      ...CampusBasicData
+    }
+  }
+
+  locationsStatsByPrefixes(
+    campusName: $campusName
+    identifierPrefixes: $clusterPrefixes
+  ) {
+    prefix
+    occupiedWorkspace
+  }
+}
+
 query clusterView($campusName: String!, $identifierPrefix: String!) {
   locationsByCluster(
     campusName: $campusName

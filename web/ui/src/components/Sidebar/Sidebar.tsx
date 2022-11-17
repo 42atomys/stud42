@@ -32,7 +32,13 @@ const MenuItem = ({
   const activeRoute = pathname.split('/')[1] == href.split('/')[1];
 
   return (
-    <Tooltip text={name} size="md" color={tooltipType} direction="right">
+    <Tooltip
+      text={name}
+      size="md"
+      color={tooltipType}
+      direction="right"
+      tooltipClassName="hidden md:flex"
+    >
       <Link href={href}>
         <a
           className={`duration-100 transition-all flex items-center justify-center my-3 text-xl`}
@@ -145,15 +151,17 @@ export const Sidebar = ({
       {subSidebar && (
         <div
           className={`${
-            open ? 'block' : 'hidden md:block'
+            open ? 'block' : 'hidden md:flex'
           } flex flex-col w-full md:w-72 text-slate-600 dark:text-slate-400 bg-slate-200 dark:bg-slate-900/80 flex-shrink-0`}
+          // TODO: put into tailwind when the flex flow is added to tailwind
+          style={{ flexFlow: 'column' }}
         >
           <div className="flex my-6 w-full justify-evenly">
             <Star />
             <Contribute />
           </div>
 
-          <div className="p-4 flex flex-col h-full bg-slate-100/60 dark:bg-slate-800/40 rounded-tl-md relative">
+          <div className="p-4 flex flex-col flex-auto bg-slate-100/60 dark:bg-slate-800/40 rounded-tl-md relative">
             {React.Children.map(subSidebar, (c) => (
               <>{c}</>
             ))}

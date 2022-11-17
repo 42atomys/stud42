@@ -2,7 +2,6 @@ import Loader from '@components/Loader';
 import useSidebar from '@components/Sidebar';
 import { PopupConsumer, PopupProvider, UserPopup } from '@components/UserPopup';
 import { useClusterViewQuery, User } from '@graphql.d';
-import { isFirstLoading } from '@lib/apollo';
 import { useRouter } from 'next/router';
 import { createContext, useEffect, useState } from 'react';
 import { ClusterSidebar } from '../../containers/clusters/ClusterSidebar';
@@ -52,7 +51,7 @@ export const ClusterContainer: ClusterContainerComponent = ({
     replace,
   } = useRouter();
   const [highlight, setHighlight] = useState(false);
-  const { data, networkStatus, error } = useClusterViewQuery({
+  const { data, error, loading } = useClusterViewQuery({
     variables: { campusName: campus, identifierPrefix: cluster },
   });
 
@@ -91,10 +90,10 @@ export const ClusterContainer: ClusterContainerComponent = ({
                 'p-2 flex-1 flex justify-center min-h-screen items-center'
               }
             >
-              {isFirstLoading(networkStatus) && <Loader />}
+              {loading && <Loader />}
               {error && <div>Error!</div>}
 
-              {!isFirstLoading(networkStatus) && data && (
+              {!loading && data && (
                 <PopupConsumer>
                   {([state, dispatch]) => (
                     <>
