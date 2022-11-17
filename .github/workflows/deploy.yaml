@@ -44,15 +44,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Detect stack to deploy
-        id: detect_changes
-        uses: dorny/paths-filter@v2
-        with:
-          filters: |
-            pre-cluster:
-              - 'deploy/stacks/pre-cluster/**'
-            cluster:
-              - 'deploy/stacks/cluster/**'
       - name: Expose stack to deploy
         uses: actions/github-script@v6
         id: detected_stack
@@ -62,7 +53,9 @@ jobs:
             if (context.eventName == 'release' && context.payload.action == 'released') {
               stacks = ['pre-cluster', 'cluster'];
             }
-            stacks.push('apps');
+            if (context.eventName == 'push' && context.ref == 'refs/heads/main' ) {
+              stacks.push('sandbox');
+            }
 
             console.log(`Stack to deploy: ${stacks}`);
             core.setOutput('stacks', stacks);
