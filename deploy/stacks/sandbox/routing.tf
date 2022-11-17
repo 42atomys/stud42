@@ -8,17 +8,6 @@ module "istio" {
       gateways  = [local.reversedRootDomain]
       http = [
         {
-          name = "jwtks-service-public-sign"
-          route = [{
-            destination = {
-              host = "jwtks-service.${var.namespace}.svc.cluster.local"
-              port = {
-                number = 5000
-              }
-            }
-          }]
-        },
-        {
           name = "jwtks-service"
           match = [
             {
@@ -43,6 +32,17 @@ module "istio" {
               }
             }
           ]
+        },
+        {
+          name = "jwtks-service-public-sign"
+          route = [{
+            destination = {
+              host = "jwtks-service.${var.namespace}.svc.cluster.local"
+              port = {
+                number = 5000
+              }
+            }
+          }]
         }
       ]
     }
