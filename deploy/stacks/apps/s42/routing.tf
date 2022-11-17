@@ -6,148 +6,132 @@ module "istio" {
       namespace = var.namespace
       hosts     = [var.rootDomain]
       gateways  = [local.reversedRootDomain]
-      http = concat(
-        // public sandbox grpc sign
-        var.namespace == "sandbox" ? [
-          {
-            name = "jwtks-service-public-sign"
-            route = [{
+      http = [
+        {
+          name = "jwtks-service"
+          match = [
+            {
+              uri = {
+                prefix = "/.well-known/jwks"
+              }
+              method = {
+                exact = "GET"
+              }
+            }
+          ]
+          rewrite = {
+            uri = "/jwks"
+          }
+          route = [
+            {
               destination = {
                 host = "jwtks-service.${var.namespace}.svc.cluster.local"
                 port = {
-                  number = 5000
+                  number = 5500
                 }
               }
-            }]
+            }
+          ]
+        },
+        {
+          name = "webhooked"
+          match = [
+            {
+              uri = {
+                prefix = "/webhooks/v1alpha1"
+              }
+              method = {
+                exact = "POST"
+              }
+            }
+          ]
+          rewrite = {
+            uri = "/v1alpha1"
           }
-        ] : [],
-        // Global definition
-        [
-          {
-            name = "jwtks-service"
-            match = [
-              {
-                uri = {
-                  prefix = "/.well-known/jwks"
-                }
-                method = {
-                  exact = "GET"
+          route = [
+            {
+              destination = {
+                host = "webhooked.${var.namespace}.svc.cluster.local"
+                port = {
+                  number = 8080
                 }
               }
-            ]
-            rewrite = {
-              uri = "/jwks"
             }
-            route = [
-              {
-                destination = {
-                  host = "jwtks-service.${var.namespace}.svc.cluster.local"
-                  port = {
-                    number = 5500
-                  }
-                }
+          ]
+        },
+        {
+          name = "api-gql"
+          match = [
+            {
+              uri = {
+                exact = "/graphql"
               }
-            ]
-          },
-          {
-            name = "webhooked"
-            match = [
-              {
-                uri = {
-                  prefix = "/webhooks/v1alpha1"
-                }
-                method = {
-                  exact = "POST"
-                }
+              method = {
+                exact = "POST"
               }
-            ]
-            rewrite = {
-              uri = "/v1alpha1"
             }
-            route = [
-              {
-                destination = {
-                  host = "webhooked.${var.namespace}.svc.cluster.local"
-                  port = {
-                    number = 8080
-                  }
+          ]
+          rewrite = {
+            uri = "/graphql"
+          }
+          route = [
+            {
+              destination = {
+                host = "api.${var.namespace}.svc.cluster.local"
+                port = {
+                  number = 4000
                 }
               }
-            ]
-          },
-          {
-            name = "api-gql"
-            match = [
-              {
-                uri = {
-                  exact = "/graphql"
-                }
-                method = {
-                  exact = "POST"
-                }
-              }
-            ]
-            rewrite = {
-              uri = "/graphql"
             }
-            route = [
-              {
-                destination = {
-                  host = "api.${var.namespace}.svc.cluster.local"
-                  port = {
-                    number = 4000
-                  }
-                }
+          ]
+        },
+        {
+          name = "api-gqli"
+          match = [
+            {
+              uri = {
+                exact = "/graphql"
               }
-            ]
-          },
-          {
-            name = "api-gqli"
-            match = [
-              {
-                uri = {
-                  exact = "/graphql"
-                }
-                method = {
-                  exact = "GET"
-                }
+              method = {
+                exact = "GET"
               }
-            ]
-            rewrite = {
-              uri = "/"
             }
-            route = [
-              {
-                destination = {
-                  host = "api.${var.namespace}.svc.cluster.local"
-                  port = {
-                    number = 4000
-                  }
+          ]
+          rewrite = {
+            uri = "/"
+          }
+          route = [
+            {
+              destination = {
+                host = "api.${var.namespace}.svc.cluster.local"
+                port = {
+                  number = 4000
                 }
               }
-            ]
-          },
-          {
-            name = "interface"
-            match = [
-              {
-                uri = {
-                  prefix = "/"
+            }
+          ]
+        },
+        {
+          name = "interface"
+          match = [
+            {
+              uri = {
+                prefix = "/"
+              }
+            }
+          ]
+          route = [
+            {
+              destination = {
+                host = "interface.${var.namespace}.svc.cluster.local"
+                port = {
+                  number = 3000
                 }
               }
-            ]
-            route = [
-              {
-                destination = {
-                  host = "interface.${var.namespace}.svc.cluster.local"
-                  port = {
-                    number = 3000
-                  }
-                }
-              }
-            ]
-          },
-      ])
+            }
+          ]
+        }
+      ]
     }
   }
 }

@@ -26,6 +26,36 @@ resource "helm_release" "gateway" {
   }
 
   set {
+    name  = "service.ports[0].name"
+    value = "status-port"
+  }
+
+  set {
+    name  = "service.ports[0].port"
+    value = "15021"
+  }
+
+  set {
+    name  = "service.ports[1].name"
+    value = "http2"
+  }
+
+  set {
+    name  = "service.ports[1].port"
+    value = "80"
+  }
+
+  set {
+    name  = "service.ports[2].name"
+    value = "https"
+  }
+
+  set {
+    name  = "service.ports[2].port"
+    value = "443"
+  }
+
+  set {
     name  = "service.ports[3].name"
     value = "grpc"
   }
@@ -35,10 +65,6 @@ resource "helm_release" "gateway" {
     value = "51000"
   }
 
-  set {
-    name  = "service.ports[3].protocol"
-    value = "TCP"
-  }
 }
 
 
