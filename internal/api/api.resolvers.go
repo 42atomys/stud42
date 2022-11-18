@@ -223,6 +223,81 @@ func (r *queryResolver) LocationsByCluster(ctx context.Context, page typesgen.Pa
 		Paginate(ctx, page.After, &page.First, page.Before, page.Last)
 }
 
+func (r *queryResolver) LocationsStatsByPrefixes(ctx context.Context, campusName string, identifierPrefixes []string) ([]*typesgen.LocationStats, error) {
+	sqlResults := []*typesgen.LocationStats{}
+	prefixes := make([]any, len(identifierPrefixes))
+	identifierMaxSize := 2
+
+	// We need to convert the prefixes to any to be able to use them in the query
+	// and we also need to know the max size of the prefixes to be able to
+	// know how many characters we need to take from the identifier to filter
+	// after the request.
+	for i, prefix := range identifierPrefixes {
+		// Validate the length of the prefix.
+		if len(prefix) < 2 || len(prefix) > 4 {
+			return nil, fmt.Errorf("invalid prefix size. Must be between 2 and 4")
+		}
+
+		if len(prefix) > identifierMaxSize {
+			identifierMaxSize = len(prefix)
+		}
+		prefixes[i] = prefix
+	}
+
+	err := r.client.Location.Query().
+		Modify(func(s *sql.Selector) {
+			s.Select(
+				sql.As(sql.Table(campus.Table).C(campus.FieldID), "campusID"),
+				sql.As(sql.Count(sql.Table(location.Table).C(location.FieldID)), "occupiedWorkspace"),
+				sql.As(fmt.Sprintf("left(%s, %d)", sql.Table(location.Table).C(location.FieldIdentifier), identifierMaxSize), "prefix"),
+			).
+				Join(sql.Table(campus.Table).As(campus.Table)).
+				On(
+					sql.Table(campus.Table).C(campus.FieldID),
+					sql.Table(location.Table).C(location.FieldCampusID),
+				).
+				Where(
+					sql.And(
+						sql.EqualFold(sql.Table(campus.Table).C(campus.FieldName), campusName),
+						sql.IsNull(sql.Table(location.Table).C(location.FieldEndAt)),
+						sql.ExprP(
+							fmt.Sprintf(
+								"%q.%q ~ $2",
+								location.Table,
+								location.FieldIdentifier,
+							),
+							"^"+strings.Join(identifierPrefixes, "|"),
+						),
+					),
+				).
+				GroupBy("(campus.id, prefix)")
+		}).
+		Scan(ctx, &sqlResults)
+
+	// We need to loop over the result to calculate the total number of workspaces
+	// for each prefix. This is because we can't use group by sql instruction
+	// with the count function over a regex filter.
+	// Need more research on this topic. Maybe there is a better way to do this.
+	var finalLocationStats = make([]*typesgen.LocationStats, len(identifierPrefixes))
+	for i, prefix := range identifierPrefixes {
+		finalLocationStats[i] = &typesgen.LocationStats{
+			Prefix: prefix,
+		}
+
+		for _, locationStat := range sqlResults {
+			if finalLocationStats[i].CampusID == uuid.Nil {
+				finalLocationStats[i].CampusID = locationStat.CampusID
+			}
+
+			if strings.HasPrefix(locationStat.Prefix, prefix) {
+				finalLocationStats[i].OccupiedWorkspace += locationStat.OccupiedWorkspace
+			}
+		}
+	}
+
+	return finalLocationStats, err
+}
+
 func (r *queryResolver) MyFollowing(ctx context.Context) ([]*generated.User, error) {
 	cu, _ := CurrentUserFromContext(ctx)
 

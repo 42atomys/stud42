@@ -30,10 +30,17 @@ type ClusterContainerChildrenProps = {
 };
 
 type CampusNames = keyof typeof CampusClusterMapData;
-type ClusterPrefixes<CampusName> = typeof CampusClusterMapData[CampusName];
+type ClusterPrefixes<T extends CampusNames> = typeof CampusClusterMapData[T];
 type ClusterMap = {
   [key: string]: (number | 'pillar' | null)[];
 };
+
+export type AllClusterPrefixes = {
+  [Key in CampusNames as readonly Key]: Exclude<
+    keyof ClusterPrefixes<Key>,
+    '_data'
+  >;
+}[CampusNames];
 
 export type ClusterContainerProps = {
   [Key in CampusNames as readonly Key]: {

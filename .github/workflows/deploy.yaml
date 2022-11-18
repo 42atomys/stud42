@@ -55,8 +55,9 @@ jobs:
             }
             if (context.eventName == 'push' && context.ref == 'refs/heads/main' ) {
               stacks.push('sandbox');
+            } else {
+              stacks.push('apps');
             }
-            stacks.push('apps');
 
             console.log(`Stack to deploy: ${stacks}`);
             core.setOutput('stacks', stacks);

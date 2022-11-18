@@ -38,6 +38,7 @@ func generateEntc() {
 	err = entc.Generate("./internal/models/schema", &gen.Config{
 		Features: []gen.Feature{
 			gen.FeaturePrivacy,
+			gen.FeatureModifier,
 			gen.FeatureSnapshot,
 			gen.FeatureUpsert,
 			gen.FeatureVersionedMigration,
