@@ -26,7 +26,7 @@ jobs:
 
     strategy:
       matrix:
-        stack: ["pre-cluster", "cluster", "apps"]
+        stack: ["pre-cluster", "cluster", "apps", "sandbox"]
     defaults:
       run:
         working-directory: "deploy/stacks/${{ matrix.stack }}"
