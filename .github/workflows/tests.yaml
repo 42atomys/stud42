@@ -12,11 +12,14 @@ jobs:
   terraform:
     runs-on: ubuntu-latest
     env:
-      TF_WORKSPACE: production # Compare the changes when plan with production
+      # Sandbox is not deployed to the production workspace.
+      # Compare the changes when plan with production
+      TF_WORKSPACE: ${{ matrix.stack == 'sandbox' && 'sandbox' || 'production' }}
       AWS_ACCESS_KEY_ID: ${{ secrets.TERRAFORM_AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.TERRAFORM_AWS_SECRET_ACCESS_KEY }}
       # TF VARS (bind to production to display changes between branch and production)
-      TF_VAR_namespace: production
+      # Compare the changes when plan with production
+      TF_VAR_namespace: ${{ matrix.stack == 'sandbox' && 'sandbox' || 'production' }}
       TF_ENV_appsVersion: '{"s42": "${{ inputs.imageTag }}"}'
       TF_VAR_baseUrl: "s42.app"
       TF_VAR_webhooksEnabled: "true"

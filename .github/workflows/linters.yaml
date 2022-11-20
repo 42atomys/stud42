@@ -17,6 +17,9 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
       - name: Terraform Format
+        env:
+          # Sandbox is not deployed to the production workspace.
+          TF_WORKSPACE: ${{ matrix.stack == 'sandbox' && 'sandbox' || 'production' }}
         run: terraform fmt -check=true -recursive
 
   backend:
