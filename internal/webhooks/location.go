@@ -58,7 +58,7 @@ func (p *locationProcessor) Create(loc *duoapi.Location[duoapi.LocationUser], me
 		}
 		// Assign the current location to the user if it's not already assigned
 		// to the user.
-		return tx.User.UpdateOneID(user.ID).SetCurrentLocationID(locationID).SetCurrentCampus(campus).Exec(p.ctx)
+		return tx.User.UpdateOneID(user.ID).SetCurrentLocationID(locationID).SetLastLocationID(locationID).SetCurrentCampus(campus).Exec(p.ctx)
 	})
 
 	return err

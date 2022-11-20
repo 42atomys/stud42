@@ -72,9 +72,9 @@ For any closed locations, the location will be marked as inactive in the databas
 		log.Debug().Msgf("Found %d locations", len(locations))
 
 		// Create the new locations in the database
-		bulk := []*modelgen.LocationCreate{}
 		duoLocationIDs := []int{}
 		for _, l := range locations {
+			log.Debug().Msgf("Crawling location %d", l.ID)
 			duoLocationIDs = append(duoLocationIDs, l.ID)
 
 			u, err := modelsutils.UserFirstOrCreateFromComplexLocation(cmd.Context(), l)
@@ -82,17 +82,36 @@ For any closed locations, the location will be marked as inactive in the databas
 				log.Fatal().Err(err).Msg("Failed to create user")
 			}
 
-			bulk = append(bulk, db.Location.Create().
-				SetCampus(campus).
-				SetUser(u).
-				SetDuoID(l.ID).
-				SetBeginAt(l.BeginAt.Time()).
-				SetNillableEndAt(l.EndAt.NillableTime()).
-				SetIdentifier(l.Host).
-				SetUserDuoID(l.User.ID).
-				SetUserDuoLogin(l.User.Login))
+			if err = modelsutils.WithTx(cmd.Context(), db, func(tx *modelgen.Tx) error {
+				createdLocationID, err := db.Location.Create().
+					SetCampus(campus).
+					SetUser(u).
+					SetDuoID(l.ID).
+					SetBeginAt(l.BeginAt.Time()).
+					SetNillableEndAt(l.EndAt.NillableTime()).
+					SetIdentifier(l.Host).
+					SetUserDuoID(l.User.ID).
+					SetUserDuoLogin(l.User.Login).
+					OnConflictColumns(location.FieldDuoID).DoNothing().
+					ID(cmd.Context())
+				if err != nil {
+					log.Error().Err(err).Msg("Failed to create location")
+					return err
+				}
+
+				if err := db.User.UpdateOne(u).
+					SetCurrentLocationID(createdLocationID).
+					SetLastLocationID(createdLocationID).
+					Exec(cmd.Context()); err != nil {
+					log.Error().Err(err).Msg("Failed to update user")
+					return err
+				}
+
+				return nil
+			}); err != nil {
+				log.Fatal().Err(err).Msg("Failed to process location")
+			}
 		}
-		db.Location.CreateBulk(bulk...).OnConflictColumns(location.FieldDuoID).DoNothing().ExecX(cmd.Context())
 
 		// Mark all locations as inactive that are not in the list anymore
 		err = modelsutils.WithTx(cmd.Context(), db, func(tx *modelgen.Tx) error {

@@ -144,6 +144,18 @@ export const isRefetching = (networkStatus: NetworkStatus): boolean => {
 };
 
 /**
+ * Retrieve if the current network status is a first loading event or if
+ * the loading state is due to a page change (or a variable change)
+ * @param networkStatus - the network status of apollo query
+ */
+export const isFetchLoading = (networkStatus: NetworkStatus): boolean => {
+  return (
+    networkStatus === NetworkStatus.loading ||
+    networkStatus === NetworkStatus.setVariables
+  );
+};
+
+/**
  * Check if the current network status is the first loading event or not.
  * Is very usefull to know if we need to show a loading indicator on the UI
  * when a page is loading. And to know if is necessary to show a loading

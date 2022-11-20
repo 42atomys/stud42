@@ -61,6 +61,7 @@ type User {
   accounts: [Account]
   flags: [FLAG!]!
   currentLocation: Location
+  lastLocation: Location
   currentCampus: Campus
   isFollowing: Boolean!
   isFollower: Boolean!
