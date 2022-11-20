@@ -2,13 +2,12 @@ import { CampusClusterMapData, CampusNames } from '@components/ClusterMap';
 import Search from '@components/Search';
 import useSidebar, { Menu, MenuCategory, MenuItem } from '@components/Sidebar';
 import { useClusterSidebarDataQuery } from '@graphql.d';
-import { LocalStorageKeys } from '@lib/localStorageKeys';
+import { isFirstLoading } from '@lib/apollo';
 import '@lib/prototypes/string';
 import { clusterURL } from '@lib/searchEngine';
-import useLocalStorage from '@lib/useLocalStorage';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
+import React from 'react';
 
 /**
  * ClusterSidebar is the sidebar for the cluster page. It contains the cluster
@@ -28,7 +27,7 @@ export const ClusterSidebar = ({
   const router = useRouter();
   const campusKeys = Object.keys(CampusClusterMapData) as Array<CampusNames>;
 
-  const { data: { me, locationsStatsByPrefixes = [] } = {}, loading } =
+  const { data: { me, locationsStatsByPrefixes = [] } = {}, networkStatus } =
     useClusterSidebarDataQuery({
       variables: {
         campusName: campus,
@@ -37,7 +36,7 @@ export const ClusterSidebar = ({
         ).filter((e) => e !== '_data'),
       },
     });
-  const myCampusNameLowerFromAPI = me?.currentCampus?.name?.toLowerCase() || '';
+  const myCampusName = me?.currentCampus?.name?.toLowerCase() || '';
   const freePlacesPerCluster: { [key: string]: number } =
     locationsStatsByPrefixes
       .map((l) => {
@@ -51,18 +50,7 @@ export const ClusterSidebar = ({
         {}
       );
 
-  const [myCampusNameCached, setMyCampusName] = useLocalStorage(
-    LocalStorageKeys.MyCurrentCampusName,
-    ''
-  );
-
-  useEffect(() => {
-    if (myCampusNameCached !== myCampusNameLowerFromAPI) {
-      setMyCampusName(myCampusNameLowerFromAPI);
-    }
-  }, [myCampusNameLowerFromAPI]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  if (loading && !myCampusNameCached) {
+  if (isFirstLoading(networkStatus)) {
     return (
       <Sidebar>
         <div className="animate-pulse flex w-full flex-col">
@@ -106,16 +94,15 @@ export const ClusterSidebar = ({
             .sort((a, b) => {
               // Sort the campus list in alphabetical order and put the current
               // campus at the top.
-              return a?.equalsIgnoreCase(myCampusNameCached)
+              return a?.equalsIgnoreCase(myCampusName)
                 ? -1
-                : b?.equalsIgnoreCase(myCampusNameCached)
+                : b?.equalsIgnoreCase(myCampusName)
                 ? 1
                 : a.localeCompare(b);
             })
             .map((campusName) => {
               const campusData = CampusClusterMapData[campusName]._data;
-              const isMyCampus =
-                myCampusNameCached?.equalsIgnoreCase(campusName);
+              const isMyCampus = campusName?.equalsIgnoreCase(myCampusName);
               const activeCampus = campus == campusName;
 
               return (
