@@ -43,7 +43,7 @@ jobs:
                     {
                       "style": 5,
                       "label": "Show Full Release",
-                      "url": "https://api.github.com/repos/42Atomys/stud42/releases/72738031",
+                      "url": "https://github.com/42Atomys/stud42/releases/tag/${{ github.event.release.tag_name }}",
                       "disabled": false,
                       "type": 2
                     }
@@ -83,7 +83,7 @@ jobs:
                     {
                       "style": 5,
                       "label": "Show Full Release",
-                      "url": "${{ github.event.release.url }}",
+                      "url": "https://github.com/42Atomys/stud42/releases/tag/${{ github.event.release.tag_name }}",
                       "disabled": false,
                       "type": 2
                     }

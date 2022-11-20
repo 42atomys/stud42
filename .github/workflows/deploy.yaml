@@ -127,18 +127,34 @@ jobs:
         id: init
         run: terraform init -input=false
 
-        # On push to main, build or change infrastructure according
-        # to Terraform configuration files
+      # On push to main, build or change infrastructure according
+      # to Terraform configuration files
       - name: Terraform Apply
         id: apply
         env:
           TF_WORKSPACE: ${{ secrets.TF_WORKSPACE }}
           # TF VARS
           TF_VAR_namespace: ${{ inputs.kubeNamespace }}
-          TF_ENV_appsVersion: '{"s42"="${{ inputs.imageTag }}"}'
+          TF_VAR_appsVersion: '{"s42"="${{ inputs.imageTag }}"}'
           TF_VAR_baseUrl: ${{ steps.envurl.outputs.url }}
           TF_VAR_webhooksEnabled: ${{ inputs.kubeNamespace == 'production' }}
           TF_VAR_crawlerEnabled: ${{ inputs.kubeNamespace == 'production' }}
           TF_VAR_hasProvidedJWTKSCertificates: "false"
           TF_VAR_hasPersistentStorage: ${{ contains(fromJson('["production", "staging"]'), inputs.kubeNamespace) }}
         run: terraform apply -auto-approve -input=false
+
+  # Update discord channel version information after all jobs are done
+  # under production environment.
+  update_discord_channel:
+    name: "update discord channel"
+    runs-on: ubuntu-latest
+    needs: [terraform]
+    if: ${{ inputs.kubeNamespace == 'production'  }}
+    steps:
+      - name: Update Discord channel
+        run: |
+          curl --request PATCH \
+            --url https://discord.com/api/v9/channels/954496570362044466 \
+            --header 'Authorization: Bot ${{ secrets.DISCORD_BOT_TOKEN }}' \
+            --header 'Content-Type: application/json' \
+            --data '{"name": "🔖 ${{ github.event.release.tag_name }}+beta"}'
