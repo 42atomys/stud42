@@ -66,8 +66,7 @@ type ComplexLocationUser struct {
 	UsualFirstName  string  `json:"usual_first_name"`
 	Phone           string  `json:"phone"`
 	Displayname     string  `json:"displayname"`
-	ImageURL        string  `json:"image_url"`
-	NewImageURL     string  `json:"new_image_url"`
+	Image           Image   `json:"image"`
 	Staff           bool    `json:"staff?"`
 	CorrectionPoint int     `json:"correction_point"`
 	PoolMonth       string  `json:"pool_month"`
@@ -89,11 +88,20 @@ type User struct {
 	LastName       string `json:"last_name"`
 	UsualFullName  string `json:"usual_full_name"`
 	UsualFirstName string `json:"usual_first_name"`
-	ImageURL       string `json:"image_url"`
-	NewImageURL    string `json:"new_image_url"`
+	Image          Image  `json:"image"`
 	URL            string `json:"url"`
 	Staff          bool   `json:"staff?"`
 	Phone          string `json:"phone"`
 	PoolMonth      string `json:"pool_month"`
 	PoolYear       string `json:"pool_year"`
+}
+
+type Image struct {
+	Link     string `json:"link"`
+	Versions struct {
+		Large  string `json:"large"`
+		Medium string `json:"medium"`
+		Small  string `json:"small"`
+		Micro  string `json:"micro"`
+	} `json:"versions"`
 }

@@ -96,6 +96,8 @@ export default NextAuth({
           firstName: profile.first_name,
           lastName: profile.last_name,
           usualFirstName: profile.usual_first_name,
+          imageUrl: (profile.image as any)?.link,
+          imageSmallUrl: (profile.image as any)?.versions?.small,
           poolYear: profile.pool_year,
           poolMonth: profile.pool_month,
           phone: profile.phone,

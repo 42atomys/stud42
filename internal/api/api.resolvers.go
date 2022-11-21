@@ -77,7 +77,8 @@ func (r *mutationResolver) InternalCreateUser(ctx context.Context, input typesge
 		SetNillablePoolYear(input.PoolYear).
 		SetNillablePoolMonth(input.PoolMonth).
 		SetNillablePhone(input.Phone).
-		SetNillableDuoAvatarURL(input.ImageURL).
+		SetNillableDuoAvatarURL(input.DuoAvatarURL).
+		SetNillableDuoAvatarSmallURL(input.DuoAvatarSmallURL).
 		SetIsStaff(input.IsStaff).
 		SetIsAUser(true).
 		OnConflictColumns(user.FieldDuoID).

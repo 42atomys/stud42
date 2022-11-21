@@ -54,6 +54,8 @@ export interface DuoContext {
   usualFirstName: string;
   poolYear: string;
   poolMonth: string;
+  imageUrl: string;
+  imageSmallUrl: string;
   phone: string;
   isStaff: boolean;
 }

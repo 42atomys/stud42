@@ -32,6 +32,8 @@ mutation internalCreateUser(
   $lastName: String!
   $poolYear: String
   $poolMonth: String
+  $duoAvatarURL: String
+  $duoAvatarSmallURL: String
   $phone: String
   $isStaff: Boolean!
 ) {
@@ -45,6 +47,8 @@ mutation internalCreateUser(
       lastName: $lastName
       poolYear: $poolYear
       poolMonth: $poolMonth
+      duoAvatarURL: $duoAvatarURL
+      duoAvatarSmallURL: $duoAvatarSmallURL
       phone: $phone
       isStaff: $isStaff
     }
@@ -148,7 +152,7 @@ query myFollowings {
       }
     }
     ...UserIdentyData
-    duoAvatarURL
+    duoAvatarSmallURL
   }
 }
 
@@ -189,7 +193,7 @@ query clusterView($campusName: String!, $identifierPrefix: String!) {
         user {
           id
           ...UserIdentyData
-          duoAvatarURL
+          duoAvatarSmallURL
           isMe
           isSwimmer
           isFollowing
