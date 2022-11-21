@@ -1,6 +1,3 @@
-import request from 'graphql-request';
-import { Account } from 'next-auth';
-import type { DuoContext, S42Adapter } from './types';
 import {
   InternalCreateUserDocument,
   InternalCreateUserMutation,
@@ -19,10 +16,13 @@ import {
   InternalLinkAccountMutationVariables,
   Provider,
 } from '@graphql.d';
-import { ProviderType } from 'next-auth/providers';
-import { captureException } from '@sentry/nextjs';
-import { AdapterUser } from 'next-auth/adapters';
 import { getServiceToken } from '@lib/config';
+import { captureException } from '@sentry/nextjs';
+import request from 'graphql-request';
+import { Account } from 'next-auth';
+import { AdapterUser } from 'next-auth/adapters';
+import { ProviderType } from 'next-auth/providers';
+import type { DuoContext, S42Adapter } from './types';
 
 if (!process.env.NEXT_PUBLIC_GRAPHQL_API)
   throw new Error('Missing NEXT_PUBLIC_GRAPHQL_API');
@@ -68,6 +68,8 @@ export const GraphQLAdapter = (): S42Adapter => {
             firstName: typedUser.duo.firstName,
             usualFirstName: typedUser.duo.usualFirstName,
             lastName: typedUser.duo.lastName,
+            duoAvatarURL: typedUser.duo.imageUrl,
+            duoAvatarSmallURL: typedUser.duo.imageSmallUrl,
             poolYear: typedUser.duo.poolYear,
             poolMonth: typedUser.duo.poolMonth,
             phone: typedUser.duo.phone,

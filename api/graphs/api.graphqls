@@ -47,6 +47,7 @@ type User {
   duoLogin: String!
   duoID: Int!
   duoAvatarURL: String
+  duoAvatarSmallURL: String
   firstName: String!
   usualFirstName: String
   lastName: String!
@@ -195,7 +196,8 @@ input CreateUserInput {
   lastName: String!
   poolYear: String
   poolMonth: String
-  imageURL: String
+  duoAvatarURL: String
+  duoAvatarSmallURL: String
   phone: String
   isStaff: Boolean!
 }

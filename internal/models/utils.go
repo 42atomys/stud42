@@ -57,7 +57,8 @@ func UserFirstOrCreateFromComplexLocation(ctx context.Context, l *duoapi.Locatio
 				SetPhone(l.User.Phone).
 				SetPoolMonth(l.User.PoolMonth).
 				SetPoolYear(l.User.PoolYear).
-				SetDuoAvatarURL(l.User.ImageURL).
+				SetDuoAvatarURL(l.User.Image.Link).
+				SetDuoAvatarSmallURL(l.User.Image.Versions.Small).
 				SetIsStaff(l.User.Staff).
 				SetIsAUser(false).
 				OnConflictColumns(user.FieldDuoID).
@@ -98,7 +99,8 @@ func UserFirstOrCreateFromLocation(ctx context.Context, l *duoapi.Location[duoap
 				SetPhone(duoUser.Phone).
 				SetPoolMonth(duoUser.PoolMonth).
 				SetPoolYear(duoUser.PoolYear).
-				SetDuoAvatarURL(duoUser.ImageURL).
+				SetDuoAvatarURL(duoUser.Image.Link).
+				SetDuoAvatarSmallURL(duoUser.Image.Versions.Small).
 				SetIsStaff(duoUser.Staff).
 				SetIsAUser(false).
 				OnConflictColumns(user.FieldDuoID).

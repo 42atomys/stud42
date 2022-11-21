@@ -26,8 +26,7 @@ export const UserCard: UserCardComponent = ({
       )}
     >
       <Avatar
-        login={user.duoLogin}
-        duoAvatarURL={user.duoAvatarURL}
+        duoAvatarURL={user.duoAvatarSmallURL}
         size="xxxl"
         rounded
         className="mb-4 bg-slate-800 outline-offset-4"

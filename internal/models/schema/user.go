@@ -37,6 +37,7 @@ func (User) Fields() []ent.Field {
 		field.String("pool_month").Optional().Nillable(),
 		field.String("nickname").Optional().Nillable().Unique().MaxLen(255),
 		field.String("duo_avatar_url").Optional().Nillable().MaxLen(255),
+		field.String("duo_avatar_small_url").Optional().Nillable().MaxLen(255),
 		field.String("avatar_url").Optional().Nillable().MaxLen(255),
 		field.String("cover_url").Optional().Nillable().MaxLen(255),
 		field.UUID("current_location_id", uuid.UUID{}).Nillable().Optional(),
