@@ -78,15 +78,16 @@ const IndexPage: NextPage<PageProps> = () => {
               </span>
             </div>
           )}
-          {myFollowing?.map((user) => (
-            <UserCard
-              key={user?.duoLogin}
-              user={user as User}
-              location={user?.lastLocation}
-              refetchQueries={[MyFollowingsDocument]}
-              className="m-2 hover:scale-[102%] hover:border-indigo-500"
-            />
-          ))}
+          {!isFirstLoading(networkStatus) &&
+            myFollowing?.map((user) => (
+              <UserCard
+                key={user?.duoLogin}
+                user={user as User}
+                location={user?.lastLocation}
+                refetchQueries={[MyFollowingsDocument]}
+                className="m-2 hover:scale-[102%] hover:border-indigo-500"
+              />
+            ))}
         </PageContent>
       </PageContainer>
     </SidebarProvider>
