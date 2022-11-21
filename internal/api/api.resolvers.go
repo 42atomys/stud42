@@ -301,12 +301,15 @@ func (r *queryResolver) LocationsStatsByPrefixes(ctx context.Context, campusName
 func (r *queryResolver) MyFollowing(ctx context.Context) ([]*generated.User, error) {
 	cu, _ := CurrentUserFromContext(ctx)
 
+	withCampus := func(lq *generated.LocationQuery) {
+		lq.WithCampus()
+	}
+
 	return r.client.User.Query().
 		Where(user.ID(cu.ID)).
 		QueryFollowing().
-		WithCurrentLocation(func(lq *generated.LocationQuery) {
-			lq.WithCampus()
-		}).
+		WithCurrentLocation(withCampus).
+		WithLastLocation(withCampus).
 		// Unique is necessary because the query builder always add a DISTINCT clause
 		// and cannot order the query properly by location identifier
 		Unique(false).

@@ -19,7 +19,10 @@ const IndexPage: NextPage<PageProps> = () => {
   const { SidebarProvider, Sidebar, PageContainer, PageContent } = useSidebar();
 
   const [createFriendship] = useCreateFriendshipMutation();
-  const { data, networkStatus, refetch } = useMyFollowingsQuery();
+  const { data, networkStatus, refetch } = useMyFollowingsQuery({
+    fetchPolicy: 'network-only', // Used for first execution
+    nextFetchPolicy: 'cache-and-network', // Used for subsequent executions
+  });
   const { myFollowing } = data || {};
   const hasFollowing = (myFollowing?.length || 0) > 0;
 
@@ -79,7 +82,7 @@ const IndexPage: NextPage<PageProps> = () => {
             <UserCard
               key={user?.duoLogin}
               user={user as User}
-              location={user?.currentLocation}
+              location={user?.lastLocation}
               refetchQueries={[MyFollowingsDocument]}
               className="m-2 hover:scale-[102%] hover:border-indigo-500"
             />

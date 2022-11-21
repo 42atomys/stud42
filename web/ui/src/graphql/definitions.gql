@@ -141,7 +141,7 @@ query myFollowings {
   myFollowing {
     id
     isFollowing
-    currentLocation {
+    lastLocation {
       ...LocationBasicData
       campus {
         ...CampusBasicData
@@ -185,6 +185,7 @@ query clusterView($campusName: String!, $identifierPrefix: String!) {
       cursor
       node {
         identifier
+        endAt
         user {
           id
           ...UserIdentyData

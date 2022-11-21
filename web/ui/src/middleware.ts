@@ -14,8 +14,9 @@ export const middleware: NextMiddleware = async (req) => {
     return NextResponse.next();
   }
 
-  const { data } = await queryAuthenticatedSSR<MeWithFlagsQuery>(req, {
+  const { data, error } = await queryAuthenticatedSSR<MeWithFlagsQuery>(req, {
     query: MeWithFlagsDocument,
+    errorPolicy: 'all',
   });
 
   if (pathname.startsWith('/auth')) {
@@ -23,7 +24,7 @@ export const middleware: NextMiddleware = async (req) => {
     else return NextResponse.next();
   }
 
-  if (!data) {
+  if (!data || error?.message === 'request not authenticated') {
     return NextResponse.redirect(
       new URL(
         '/auth/signin?callbackUrl=' + encodeURIComponent(pathname),
