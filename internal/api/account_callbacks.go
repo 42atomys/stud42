@@ -6,6 +6,8 @@ import (
 	typesgen "atomys.codes/stud42/internal/api/generated/types"
 	"atomys.codes/stud42/internal/discord"
 	modelgen "atomys.codes/stud42/internal/models/generated"
+	"atomys.codes/stud42/internal/models/generated/user"
+	"atomys.codes/stud42/pkg/utils"
 	"github.com/getsentry/sentry-go"
 	"github.com/google/go-github/v47/github"
 	"github.com/rs/zerolog/log"
@@ -22,12 +24,16 @@ const (
 // accountLinkCallback is the callback for all accounts. This is used to define
 // an asynchronous callback for each account type that will be called when the
 // account is linked to a user.
-func accountLinkCallback(ctx context.Context, account *modelgen.Account) {
-	switch account.Type {
+func accountLinkCallback(ctx context.Context, db *modelgen.Client, account *modelgen.Account) {
+	// Create a background context to avoid the context to be canceled when the
+	// request is finished.
+	bgCtx := context.Background()
+
+	switch account.Provider {
 	case string(typesgen.ProviderDiscord):
-		discordLinkCallback(ctx, account)
+		discordLinkCallback(bgCtx, db, account)
 	case string(typesgen.ProviderGithub):
-		githubLinkCallback(ctx, account)
+		githubLinkCallback(bgCtx, db, account)
 	case string(typesgen.ProviderDuo):
 		break
 	default:
@@ -37,7 +43,7 @@ func accountLinkCallback(ctx context.Context, account *modelgen.Account) {
 
 // discordLinkCallback is the callback for Discord accounts when the account is
 // linked to a user. It will add the user to the Discord server.
-func discordLinkCallback(ctx context.Context, account *modelgen.Account) {
+func discordLinkCallback(ctx context.Context, db *modelgen.Client, account *modelgen.Account) {
 	// Invite the user to the S42 server using the Discord API
 	err := discord.
 		DefaultClient().
@@ -50,7 +56,7 @@ func discordLinkCallback(ctx context.Context, account *modelgen.Account) {
 // githubLinkCallback is the callback for Github accounts when the account is
 // linked to a user. It will follow the creator of the repository and star
 // the repository.
-func githubLinkCallback(ctx context.Context, account *modelgen.Account) {
+func githubLinkCallback(ctx context.Context, db *modelgen.Client, account *modelgen.Account) {
 	client := github.NewClient(oauth2.NewClient(ctx, oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: account.AccessToken},
 	)))
@@ -62,6 +68,7 @@ func githubLinkCallback(ctx context.Context, account *modelgen.Account) {
 		_, err = client.Activity.Star(ctx, githubCreator, githubRepository)
 	}
 	if err != nil {
+		log.Error().Err(err).Msg("failed to star the repository")
 		sentry.CaptureException(err)
 	}
 
@@ -70,6 +77,22 @@ func githubLinkCallback(ctx context.Context, account *modelgen.Account) {
 		_, err = client.Users.Follow(ctx, githubCreator)
 	}
 	if err != nil {
+		log.Error().Err(err).Msg("failed to follow the creator")
+		sentry.CaptureException(err)
+	}
+
+	// Give beta access to the user
+	u, err := db.User.Query().Where(user.ID(account.UserID)).First(ctx)
+	if err != nil {
+		log.Error().Err(err).Msg("failed to retrieve user")
+		sentry.CaptureException(err)
+		return
+	}
+
+	u.FlagsList = append(u.FlagsList, typesgen.FlagBeta.String())
+	err = db.User.UpdateOne(u).SetFlagsList(utils.Uniq(u.FlagsList)).Exec(ctx)
+	if err != nil {
+		log.Error().Err(err).Msg("failed to give beta access to the user")
 		sentry.CaptureException(err)
 	}
 }

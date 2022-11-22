@@ -49,9 +49,14 @@ export const decodeJWT: JWTOptions['decode'] = async ({ token }) => {
   };
 
   return new Promise<JWT | null>((resolve, reject) => {
-    jwt.verify(token, getKey, { algorithms: ['RS256'] }, (err, decoded) => {
-      if (err) return reject(err);
-      return resolve(decoded as JWT);
-    });
+    jwt.verify(
+      token,
+      getKey,
+      { algorithms: ['RS256'], clockTolerance: 5000 },
+      (err, decoded) => {
+        if (err) return reject(err);
+        return resolve(decoded as JWT);
+      }
+    );
   });
 };

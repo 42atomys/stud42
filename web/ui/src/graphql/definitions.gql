@@ -36,6 +36,7 @@ mutation internalCreateUser(
   $duoAvatarSmallURL: String
   $phone: String
   $isStaff: Boolean!
+  $currentDuoCampusID: Int!
 ) {
   internalCreateUser(
     input: {
@@ -51,6 +52,7 @@ mutation internalCreateUser(
       duoAvatarSmallURL: $duoAvatarSmallURL
       phone: $phone
       isStaff: $isStaff
+      currentDuoCampusID: $currentDuoCampusID
     }
   )
 }

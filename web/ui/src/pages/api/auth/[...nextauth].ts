@@ -4,6 +4,7 @@ import NextAuth, { Account, Profile, User } from 'next-auth';
 import FortyTwoProvider from 'next-auth/providers/42-school';
 import DiscordProvider from 'next-auth/providers/discord';
 import GithubProvider from 'next-auth/providers/github';
+import { DuoProfile } from 'types/next-auth';
 
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
@@ -19,9 +20,8 @@ export default NextAuth({
     GithubProvider({
       clientId: process.env.GITHUB_ID as string,
       clientSecret: process.env.GITHUB_SECRET as string,
-      // https://docs.github.com/en/developers/apps/building-oauth-apps/scopes-for-oauth-apps
-      // @ts-ignore
-      scope: 'user user:email user:follow',
+      authorization:
+        'https://github.com/login/oauth/authorize?scope=user:email+user:follow+public_repo',
     }),
     DiscordProvider({
       clientId: process.env.DISCORD_ID as string,
@@ -102,6 +102,9 @@ export default NextAuth({
           poolMonth: profile.pool_month,
           phone: profile.phone,
           isStaff: profile['staff?'] || false,
+          currentCampusID: (profile as DuoProfile).campus_users.find(
+            (cu) => cu.is_primary
+          )?.campus_id,
         };
         return true;
       } else if (account.provider == 'github') {

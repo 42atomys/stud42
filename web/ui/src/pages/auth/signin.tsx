@@ -9,7 +9,6 @@ import {
   LiteralUnion,
   signIn,
 } from 'next-auth/react';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 type PageProps = {
@@ -37,24 +36,15 @@ export const LoginPage: NextPage<PageProps, {}> = () => {
             Login
           </h1>
         </div>
-        <div className="bg-orange-400 px-6 py-4 text-white rounded mb-10">
-          <h1 className="text-lg mb-2">Currently in closed beta</h1>
-          <p className="text-sm text-orange-800 dark:text-orange-100 mb-2">
-            The stud42 v3 beta is currently reserved for project <br />
-            sponsors on github.
-            <br />
-            <br />
-            Support the project and become a pioneering contributor to the new
-            version
+        <div className="bg-emerald-600 px-6 py-4 text-white rounded mb-10">
+          <h1 className="text-lg mb-2">
+            Currently in <b>open</b> beta
+          </h1>
+          <p className="text-sm text-emerald-100 mb-2">
+            The <b>s</b>
+            <span className="opacity-50 line-through decoration-1">tud</span>
+            <b>42</b> v3 beta is available to everyone!
           </p>
-          <Link href="https://github.com/sponsors/42Atomys" passHref={true}>
-            <a
-              className="font-medium underline underline-offset-2"
-              target="_blank"
-            >
-              Sponsor it on Github
-            </a>
-          </Link>
         </div>
         {error && <Error error={error as ErrorType} />}
         <p>Sign up with your 42 account to enjoy app</p>

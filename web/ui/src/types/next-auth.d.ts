@@ -1,10 +1,10 @@
 import { DuoContext, GithubContext } from '@lib/GraphqlAdapter';
 import { JwtPayload } from 'jsonwebtoken';
 import {
-  DefaultSession,
   DefaultAccount,
-  DefaultUser,
   DefaultProfile,
+  DefaultSession,
+  DefaultUser,
 } from 'next-auth';
 
 interface Session extends Omit<DefaultSession, 'user'> {
@@ -14,6 +14,13 @@ interface Session extends Omit<DefaultSession, 'user'> {
 interface User extends Record<string, unknown>, DefaultUser {}
 
 interface Profile extends Record<string, unknown>, DefaultProfile {}
+
+interface DuoProfile extends Profile {
+  campus_users: {
+    is_primary: boolean;
+    campus_id: number;
+  }[];
+}
 
 interface Account extends Record<string, unknown>, DefaultAccount {
   _profile?: Profile & {

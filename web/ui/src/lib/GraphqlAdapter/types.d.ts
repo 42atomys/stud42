@@ -58,6 +58,7 @@ export interface DuoContext {
   imageSmallUrl: string;
   phone: string;
   isStaff: boolean;
+  currentCampusID: number;
 }
 
 export interface GithubContext {

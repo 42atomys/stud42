@@ -74,6 +74,7 @@ export const GraphQLAdapter = (): S42Adapter => {
             poolMonth: typedUser.duo.poolMonth,
             phone: typedUser.duo.phone,
             isStaff: typedUser.duo.isStaff,
+            currentDuoCampusID: typedUser.duo.currentCampusID,
           },
           { Authorization: `ServiceToken ${getServiceToken()}` }
         );

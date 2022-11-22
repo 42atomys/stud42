@@ -23,6 +23,7 @@ import (
 	"atomys.codes/stud42/pkg/utils"
 	"entgo.io/ent/dialect/sql"
 	"github.com/google/uuid"
+	"github.com/rs/zerolog/log"
 )
 
 func (r *mutationResolver) CreateFriendship(ctx context.Context, userID uuid.UUID) (bool, error) {
@@ -67,6 +68,12 @@ func (r *mutationResolver) UpdateSettings(ctx context.Context, input typesgen.Se
 }
 
 func (r *mutationResolver) InternalCreateUser(ctx context.Context, input typesgen.CreateUserInput) (uuid.UUID, error) {
+	campusID, err := r.client.Campus.Query().Where(campus.DuoID(input.CurrentDuoCampusID)).FirstID(ctx)
+	if err != nil {
+		log.Error().Err(err).Msg("cannot find campus")
+		return uuid.Nil, err
+	}
+
 	return r.client.User.Create().
 		SetEmail(input.Email).
 		SetDuoLogin(input.DuoLogin).
@@ -80,6 +87,7 @@ func (r *mutationResolver) InternalCreateUser(ctx context.Context, input typesge
 		SetNillableDuoAvatarURL(input.DuoAvatarURL).
 		SetNillableDuoAvatarSmallURL(input.DuoAvatarSmallURL).
 		SetIsStaff(input.IsStaff).
+		SetNillableCurrentCampusID(&campusID).
 		SetIsAUser(true).
 		OnConflictColumns(user.FieldDuoID).
 		UpdateNewValues().
@@ -111,7 +119,7 @@ func (r *mutationResolver) InternalLinkAccount(ctx context.Context, input typesg
 		return nil, err
 	}
 
-	go accountLinkCallback(ctx, account)
+	go accountLinkCallback(ctx, r.client, account)
 
 	return account, nil
 }
