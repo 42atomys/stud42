@@ -40,7 +40,7 @@ func (e *Theme) UnmarshalGQL(v interface{}) error {
 
 	*e = Theme(str)
 	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid THEME", str)
+		return fmt.Errorf("%s is not a valid Theme", str)
 	}
 	return nil
 }

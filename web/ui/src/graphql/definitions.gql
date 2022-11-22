@@ -56,7 +56,7 @@ mutation internalCreateUser(
 }
 
 mutation internalLinkAccount(
-  $provider: PROVIDER!
+  $provider: Provider!
   $providerAccountId: String!
   $username: String!
   $token_type: String!
@@ -216,7 +216,7 @@ query internalGetUserByEmail($email: String!) {
 }
 
 query internalGetUserByAccount(
-  $provider: PROVIDER!
+  $provider: Provider!
   $providerAccountId: String!
 ) {
   user: internalGetUserByAccount(provider: $provider, uid: $providerAccountId) {

@@ -42,7 +42,7 @@ func AuthzByPolicyMiddleware(next http.Handler) http.Handler {
 // returns an error if the IP is not allowed by the policy.
 // The directive is registered in the schema and automatically used by the
 // resolver on fields that have the @authorizationByPolicy directive.
-func directiveAuthzByPolicy(ctx context.Context, obj interface{}, next graphql.Resolver, policy *typesgen.Policy) (res interface{}, err error) {
+func directiveAuthzByPolicy(ctx context.Context, obj interface{}, next graphql.Resolver, policy *typesgen.SecurityPolicy) (res interface{}, err error) {
 	token := ctx.Value(policyRequestHeaderAuthorizationContextKey).(string)
 	log.Debug().Msgf("Request being tested against policy %s", policy)
 
@@ -52,12 +52,12 @@ func directiveAuthzByPolicy(ctx context.Context, obj interface{}, next graphql.R
 	}
 
 	switch *policy {
-	case typesgen.PolicyServiceToken:
+	case typesgen.SecurityPolicyServiceToken:
 		log.Debug().Str("token", token).Str("env", os.Getenv("S42_SERVICE_TOKEN")).Msg("testing service token")
 		if token != os.Getenv("S42_SERVICE_TOKEN") {
 			return nil, errBlockedByPolicy
 		}
-	case typesgen.PolicyNone:
+	case typesgen.SecurityPolicyNone:
 		break
 	default:
 		break

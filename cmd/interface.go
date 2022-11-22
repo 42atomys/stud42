@@ -1,7 +1,3 @@
-/*
-Copyright © 2022 42Atomys
-
-*/
 package cmd
 
 import (

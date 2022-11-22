@@ -10,9 +10,9 @@ Inside the devcontainers, the database, rabbitmq and others dependencies is auto
 
 ## Setup your credentials
 
-Like say before, you needs to add some credentials listed on the file `.devcontainer/.env.example` by creating a `.devcontainer/.env` file (this file is ignored but not the example).
+Like say before, you needs to add some credentials listed on the file `.devcontainer/.env` file (this file is hard ignored but be careful to never force add this file).
 
-**DO NOT EDIT THE `.env.example` FILE. NEVER PUSH YOUR CREDENTIALS ON ANY COMMITS**
+**DO NOT GIT ADD THE `.devcontainer/.env` FILE. NEVER PUSH YOUR CREDENTIALS ON ANY COMMITS**
 
 ### Oauth2 credentials
 

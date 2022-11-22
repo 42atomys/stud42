@@ -1,9 +1,15 @@
-enum POLICY {
+####################################
+############## ENUMS ###############
+####################################
+
+"SecurityPolicy represents the required policy access for the directive @authzByPolicy"
+enum SecurityPolicy {
   SERVICE_TOKEN
   NONE
 }
 
-enum FLAG {
+"Flag represents the special feature/access for an User (like a role)"
+enum Flag {
   STAFF
   COLLABORATOR
   CONTRIBUTOR
@@ -12,28 +18,43 @@ enum FLAG {
   DISCORD
 }
 
-enum PROVIDER {
+"Provider represents the oauth2 provider supported by the app"
+enum Provider {
   GITHUB
   DUO
   DISCORD
 }
 
-enum ACCOUNT_TYPE {
+"AccountType represents the tpe of the account. Currently only support Oauth"
+enum AccountType {
   OAUTH
 }
 
+"Theme represents the supported theme for the app"
 enum Theme {
   AUTO
   DARK
   LIGHT
 }
 
+"""
+ClusterMapAvatarSize represents the value accepted for the avatar size on the
+cluster map
+"""
 enum ClusterMapAvatarSize {
   AUTO
   MEDIUM
   LARGE
 }
 
+####################################
+############## TYPES ###############
+####################################
+
+"""
+PageInfo represents the pagination information for a list of objects. It is
+used to provide the cursor for the previous and next page.
+"""
 type PageInfo {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
@@ -41,6 +62,10 @@ type PageInfo {
   endCursor: Cursor
 }
 
+"""
+User represents a user of the app. It is the main entity of the app and is
+used to represent the User model.
+"""
 type User {
   id: UUID!
   email: String!
@@ -60,7 +85,7 @@ type User {
   avatarURL: String
   coverURL: String
   accounts: [Account]
-  flags: [FLAG!]!
+  flags: [Flag!]!
   currentLocation: Location
   lastLocation: Location
   currentCampus: Campus
@@ -71,6 +96,10 @@ type User {
   settings: Settings! @authenticated
 }
 
+"""
+Account represents an account of a user. It is used to represent the Account
+model.
+"""
 type Account {
   id: UUID!
   type: String!
@@ -86,6 +115,9 @@ type Account {
   user: User!
 }
 
+"""
+Campus represents a campus of the app. It is used to represent the Campus model.
+"""
 type Campus {
   id: UUID!
   name: String!
@@ -96,6 +128,10 @@ type Campus {
   city: String
 }
 
+"""
+Location represents a location of the app. It is used to represent the Location
+model.
+"""
 type Location {
   id: UUID!
   duoID: Int!
@@ -111,75 +147,155 @@ type Location {
   campus: Campus!
 }
 
+"""
+LocationConnection represents a connection of locations, in other words a list
+of locations. This will support pagination with cursors. This also provide
+the total count of the locations for the request.
+"""
 type LocationConnection {
   totalCount: Int!
   pageInfo: PageInfo!
   edges: [LocationEdge!]!
 }
 
+"""
+LocationEdge represents an edge of a location. It is used to provide the cursor
+for the previous and next location.
+"""
 type LocationEdge {
   node: Location
   cursor: Cursor!
 }
 
+"""
+LocationStats represents the statistics of the locations on a campus. It is used
+to know the number of locations currently active on a campus with a given
+identifier prefix.
+"""
 type LocationStats {
   campusID: UUID!
   prefix: String!
   occupiedWorkspace: Int!
 }
 
+"""
+Settings represents the settings of a user. It is used to represent the Settings
+gotype object stored on the User.
+"""
 type Settings {
   theme: Theme!
   clusterMapAvatarSize: ClusterMapAvatarSize!
 }
 
+####################################
+########### ROOT TYPES #############
+####################################
+
 type Query {
+  "me returns the current user"
   me: User! @authenticated
+  "searchUser returns a list of users matching the query"
   searchUser(query: String!, onlyOnline: Boolean = false): [User!]!
     @authenticated
-
+  "campus returns a campus by its ID"
   campus(id: UUID!): Campus @authenticated
+  "user returns a user by its ID"
   user(id: UUID!): User @authenticated
+  "location returns a location by its ID"
   location(id: UUID!): Location @authenticated
-
+  "locations returns a list of locations for the given campus"
   locations(page: PageInput!, campusID: UUID!): LocationConnection!
     @authenticated
+  "locationsByCampusName returns a list of locations for the given campus name"
   locationsByCampusName(
     page: PageInput!
     campusName: String!
   ): LocationConnection! @authenticated
+  """
+  locationsByCluster returns a list of locations for the given campus name and
+  identifier prefix (cluster)
+  """
   locationsByCluster(
     page: PageInput!
     campusName: String!
     identifierPrefix: String
   ): LocationConnection! @authenticated
+  """
+  locationsStatsByPrefixes returns a list of locations stats for the given
+  campus name and identifier prefixes (clusters). You can provide a list of
+  prefixes to get the stats for each of them.
+  """
   locationsStatsByPrefixes(
     campusName: String!
     identifierPrefixes: [String!]
   ): [LocationStats!]! @authenticated
-
+  "myFollowing returns a list of users the current user is following"
   myFollowing: [User!]! @authenticated
 
-  internalGetUserByAccount(provider: PROVIDER!, uid: String!): User!
+  """
+  internalGetUserByAccount returns a user by its account. This is used by the
+  oauth2 callback to get the user from the account. This is an internal query
+  and should not be used by the client.
+  """
+  internalGetUserByAccount(provider: Provider!, uid: String!): User!
     @authzByPolicy(policy: SERVICE_TOKEN)
+  """
+  internalGetUserByEmail returns a user by its email. This is used by the
+  oauth2 callback to get the user from the email. This is an internal query
+  and should not be used by the client.
+  """
   internalGetUserByEmail(email: String!): User!
     @authzByPolicy(policy: SERVICE_TOKEN)
+  """
+  internalGetUser returns a user by its ID. This is used by the oauth2 callback
+  to get the user from the ID. This is an internal query and should not be used
+  by the client.
+  """
   internalGetUser(id: UUID!): User! @authzByPolicy(policy: SERVICE_TOKEN)
 }
 
 type Mutation {
+  """
+  createFriendship creates a friendship between the current user and the given
+  user ID.
+  """
   createFriendship(userID: UUID!): Boolean! @authenticated
+  """
+  deleteFriendship deletes a friendship between the current user and the given
+  user ID.
+  """
   deleteFriendship(userID: UUID!): Boolean! @authenticated
-
+  "updateSettings updates the settings of the current user."
   updateSettings(input: SettingsInput!): Settings! @authenticated
-
+  """
+  internalCreateUser creates a user. This is used by the oauth2 callback to
+  create the user. This is an internal mutation and should not be used by the
+  client.
+  """
   internalCreateUser(input: CreateUserInput!): UUID!
     @authzByPolicy(policy: SERVICE_TOKEN)
+  """
+  internalLinkAccount links an account to a user. This is used by the oauth2
+  callback to link the account to the user. This is an internal mutation and
+  should not be used by the client.
+  """
   internalLinkAccount(input: LinkAccountInput!): Account!
     @authzByPolicy(policy: SERVICE_TOKEN)
+  """
+  inviteOnDiscord invites the current user on Discord to join the S42 Discord
+  server with custom invitation link or directly add the user to the server if
+  we have the permission to do so.
+  """
   inviteOnDiscord: Boolean! @authenticated
 }
 
+####################################
+############## INPUTS ##############
+####################################
+
+"""
+PageInput is used to provide pagination information to the queries.
+"""
 input PageInput {
   after: Cursor
   first: Int! = 100
@@ -187,6 +303,9 @@ input PageInput {
   last: Int
 }
 
+"""
+CreateUserInput is used to create a user with the internalCreateUser mutation.
+"""
 input CreateUserInput {
   email: String!
   duoID: Int!
@@ -202,9 +321,13 @@ input CreateUserInput {
   isStaff: Boolean!
 }
 
+"""
+LinkAccountInput is used to link an account to a user with the
+internalLinkAccount mutation.
+"""
 input LinkAccountInput {
-  provider: PROVIDER
-  type: ACCOUNT_TYPE
+  provider: Provider
+  type: AccountType
   providerAccountId: String!
   username: String!
   accessToken: String!
@@ -215,6 +338,9 @@ input LinkAccountInput {
   userID: String!
 }
 
+"""
+SettingsInput is used to update the settings of the current user.
+"""
 input SettingsInput {
   theme: Theme!
   clusterMapAvatarSize: ClusterMapAvatarSize!

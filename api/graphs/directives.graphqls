@@ -1,3 +1,17 @@
-directive @authzByPolicy(policy: POLICY) on FIELD_DEFINITION
+"""
+@authzByPolicy directive is used to secure a field behind a security Policy.
+The directive takes a policy name as an argument.
+"""
+directive @authzByPolicy(policy: SecurityPolicy) on FIELD_DEFINITION
+"""
+@authenticated directive is used to define a field that requires the user to be
+authenticated.
+"""
 directive @authenticated on FIELD_DEFINITION
+"""
+@extraStructTag directive is used to add extra struct tags on go type to a
+field. The directive takes a string as an argument which is the struct tag to
+add. The directive is skiped in the runtime due to the fact that it is only
+used in the code generation.
+"""
 directive @extraStructTag on FIELD_DEFINITION
