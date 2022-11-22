@@ -2,8 +2,8 @@
 ############## ENUMS ###############
 ####################################
 
-"Policy represents the required policy access for the directive @authzByPolicy"
-enum Policy {
+"SecurityPolicy represents the required policy access for the directive @authzByPolicy"
+enum SecurityPolicy {
   SERVICE_TOKEN
   NONE
 }

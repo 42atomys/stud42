@@ -2,7 +2,7 @@
 @authzByPolicy directive is used to secure a field behind a security Policy.
 The directive takes a policy name as an argument.
 """
-directive @authzByPolicy(policy: Policy) on FIELD_DEFINITION
+directive @authzByPolicy(policy: SecurityPolicy) on FIELD_DEFINITION
 """
 @authenticated directive is used to define a field that requires the user to be
 authenticated.
