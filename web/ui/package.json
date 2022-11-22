@@ -1,5 +1,5 @@
 {
-  "name": "stellar-ui",
+  "name": "s42-interface",
   "private": true,
   "engines": {
     "npm": ">=8.0.0",

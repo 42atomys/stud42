@@ -1,6 +1,6 @@
 module atomys.codes/stud42
 
-go 1.18
+go 1.19
 
 require (
 	entgo.io/contrib v0.3.0
