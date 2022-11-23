@@ -1,4 +1,4 @@
-import { CampusClusterMapData } from '@components/ClusterMap';
+import { CampusClusterMapData, CampusNames } from '@components/ClusterMap';
 import { MeWithFlagsDocument, MeWithFlagsQuery } from '@graphql.d';
 import { queryAuthenticatedSSR } from '@lib/apollo';
 import { clusterURL } from '@lib/searchEngine';
@@ -35,15 +35,20 @@ export const getServerSideProps: GetServerSideProps = async ({
   const myCampusNameLowerFromAPI = me?.currentCampus?.name?.toLowerCase() || '';
 
   if (Object.keys(CampusClusterMapData).includes(myCampusNameLowerFromAPI)) {
+    const clusterKey = Object.keys(
+      CampusClusterMapData[myCampusNameLowerFromAPI as CampusNames]
+    ).find((key) => key !== '_data');
+
     return {
       redirect: {
-        destination: `/clusters/${me?.currentCampus?.name.toLowerCase()}/e1`,
+        destination: `/clusters/${myCampusNameLowerFromAPI}/${clusterKey}`,
         permanent: false,
       },
       props: {},
     };
   }
 
+  // When no campus is found, redirect to the campus of Paris.
   return {
     redirect: {
       destination: `/clusters/paris/e1`,
