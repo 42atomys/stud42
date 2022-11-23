@@ -23,7 +23,7 @@ variable "appVersion" {
   description = "Version of the service"
 
   validation {
-    condition     = can(regex("^(latest|v?[0-9\\.]+)$", var.appVersion)) # disable v prefix for now
+    condition     = can(regex("^(latest|v?[0-9-\\.]+)$", var.appVersion)) # disable v prefix for now
     error_message = "The version must be numeric characters and periods only and start with a v. (or latest)"
   }
 }
