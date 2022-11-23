@@ -19,8 +19,7 @@ import {
 import { getServiceToken } from '@lib/config';
 import { captureException } from '@sentry/nextjs';
 import request from 'graphql-request';
-import { Account } from 'next-auth';
-import { AdapterUser } from 'next-auth/adapters';
+import { AdapterAccount, AdapterUser } from 'next-auth/adapters';
 import { ProviderType } from 'next-auth/providers';
 import type { DuoContext, S42Adapter } from './types';
 
@@ -74,14 +73,15 @@ export const GraphQLAdapter = (): S42Adapter => {
             poolMonth: typedUser.duo.poolMonth,
             phone: typedUser.duo.phone,
             isStaff: typedUser.duo.isStaff,
+            currentDuoCampusID: typedUser.duo.currentCampusID,
           },
           { Authorization: `ServiceToken ${getServiceToken()}` }
         );
 
         return {
           id: uuid,
-          emailVerified: null,
           ...user,
+          emailVerified: null,
         };
       } catch (error: any) {
         captureException(error);
@@ -141,7 +141,7 @@ export const GraphQLAdapter = (): S42Adapter => {
       providerAccountId,
       provider,
     }: Pick<
-      Account,
+      AdapterAccount,
       'provider' | 'providerAccountId'
     >): Promise<AdapterUser | null> => {
       try {
@@ -169,8 +169,8 @@ export const GraphQLAdapter = (): S42Adapter => {
      * about to be linked to an account from a different provider.
      */
     linkAccount: async (
-      account: Account
-    ): Promise<Account | null | undefined> => {
+      account: AdapterAccount
+    ): Promise<AdapterAccount | null | undefined> => {
       try {
         if (!account._profile?.login) {
           const err = new Error('Account must have a login');

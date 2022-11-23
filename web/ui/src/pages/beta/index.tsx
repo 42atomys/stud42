@@ -1,6 +1,5 @@
 import { Emoji } from '@components/Emoji';
 import {
-  Flag,
   MeWithFlagsDocument,
   MeWithFlagsQuery,
   Provider,
@@ -14,7 +13,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 
-const SponsorGithubPart = ({ hasSponsored }: { hasSponsored: boolean }) => {
+const FinalStep = () => {
   const [invited, setInvited] = useState(false);
   const [joinDiscordMutation] = useInviteOnDiscordMutation({
     onError: () => setInvited(false),
@@ -26,84 +25,41 @@ const SponsorGithubPart = ({ hasSponsored }: { hasSponsored: boolean }) => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center mb-6 text-center">
-      <div className="flex flex-col justify-center items-center mb-6 text-center">
-        <h2 className="text-4xl font-display font-bold mb-4 mt-20 bg-clip-text text-transparent bg-gradient-to-l from-emerald-500 to-cyan-500 w-fit">
-          You have unlocked a new feature!
-        </h2>
-        <small className="font-medium font-display text-xl text-slate-500 flex items-center">
-          <span className="mr-2">Just click and open Discord</span>
-          <Emoji emoji="👀" size={24} />
-        </small>
-        <button
-          onClick={joinDiscord}
-          disabled={invited}
-          className="disabled:border-emerald-500 disabled:bg-black disabled:px-8 disabled:text-emerald-500 my-10 py-4 px-6 rounded-lg h-[64px] text-white text-lg bg-black font-medium border-2 border-black hover:px-14 hover:bg-slate-900 hover:border-indigo-500 focus:px-14 focus:border-indigo-500 focus:bg-indigo-500 transition-all"
-        >
-          {invited ? (
-            <>
-              <i className="fa-duotone fa-party-horn" />{' '}
-              <span className="ml-2">You&apos;re inside !</span>
-            </>
-          ) : (
-            <>
-              <i className="fa-brands fa-discord" />{' '}
-              <span className="ml-2">Join the super secret Discord</span>
-            </>
-          )}
-        </button>
-      </div>
-
+    <div className="flex flex-col justify-center items-center mt-6 text-center">
       <h2
         className={classNames(
           'text-4xl font-display font-bold mb-4 mt-4 bg-clip-text text-transparent bg-gradient-to-l  w-fit',
-          hasSponsored
-            ? 'from-emerald-500 to-cyan-500'
-            : 'from-indigo-500 to-fuchsia-500'
+          'from-emerald-500 to-cyan-500'
         )}
       >
-        <span className="mr-2">
-          {(hasSponsored && 'You have the power !') ||
-            'Get early-access to the beta by becoming a sponsor'}
-        </span>
-        <Emoji emoji={hasSponsored ? '🚀' : '🎉'} size={28} />
+        <span className="mr-2">You have the power !</span>
+        <Emoji emoji="🚀" size={28} />
       </h2>
-      <small className="font-medium font-display text-xl text-slate-500">
-        Becoming a sponsor means access to the beta and the code
-        <br />
-        and to participate in new features before anyone else!
-      </small>
-      {(hasSponsored && (
-        <Link href="/" rel="noopener noreferrer">
-          <a className="my-10 py-4 px-6 rounded-lg text-white text-lg bg-black font-medium border-2 border-black hover:px-14 hover:bg-slate-900 hover:border-indigo-500 focus:px-14 focus:border-indigo-500 focus:bg-indigo-500 transition-all">
-            Go to the future
-          </a>
-        </Link>
-      )) || (
-        <a
-          href="https://github.com/sponsors/42Atomys"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="my-10 py-4 px-6 rounded-lg text-white text-lg bg-black font-medium border-2 border-black hover:px-14 hover:bg-slate-900 hover:border-indigo-500 focus:px-14 focus:border-indigo-500 focus:bg-indigo-500 transition-all"
-        >
-          Sponsor on Github
-        </a>
-      )}
+      <Link
+        href="/"
+        rel="noopener noreferrer"
+        className="my-10 py-4 px-6 rounded-lg text-white text-lg bg-black font-medium border-2 border-black hover:px-14 hover:bg-slate-900 hover:border-indigo-500 focus:px-14 focus:border-indigo-500 focus:bg-indigo-500 transition-all"
+      >
+        Go to the future
+      </Link>
 
-      <i className="block mt-2 text-sm">
-        After sponsoring come back on this page, refresh and see
-        <br />
-        GitHub Webhooks can takes 2-3 minutes to be sended to Nikolas Kage (our
-        impressive discord bot)
-        <br />
-        <span className="block mt-4 text-cyan-500 italic">
-          After the release Discord and Github Repository will be accessible
-          forever for free.
-          <br />
-          Sponsoring the project carry the hosting costs and share the love of
-          the project with her community.
-        </span>
-      </i>
+      <button
+        onClick={joinDiscord}
+        disabled={invited}
+        className="disabled:border-emerald-500 disabled:bg-black disabled:px-8 disabled:text-emerald-500 my-10 py-4 px-6 rounded-lg h-[64px] text-white text-lg bg-black font-medium border-2 border-black hover:px-14 hover:bg-slate-900 hover:border-indigo-500 focus:px-14 focus:border-indigo-500 focus:bg-indigo-500 transition-all"
+      >
+        {invited ? (
+          <>
+            <i className="fa-duotone fa-party-horn" />{' '}
+            <span className="ml-2">You&apos;re inside !</span>
+          </>
+        ) : (
+          <>
+            <i className="fa-brands fa-discord" />{' '}
+            <span className="ml-2">Join the Discord</span>
+          </>
+        )}
+      </button>
     </div>
   );
 };
@@ -162,22 +118,15 @@ const Steps = ({ currentStep }: { currentStep: number }) => {
         done={currentStep >= 2}
         next={currentStep == 1}
         step={2}
-        icon="fa-brands fa-discord"
-        title="Link your Discord account"
+        icon="fa-brands fa-github"
+        title="Link your Github account"
       />
       <Step
         done={currentStep >= 3}
         next={currentStep == 2}
         step={3}
-        icon="fa-brands fa-github"
-        title="Link your Github sponsors account"
-      />
-      <Step
-        done={currentStep >= 4}
-        next={currentStep == 3}
-        step={4}
-        icon="fa-regular fa-mug-hot pl-0.5"
-        title="Sponsor 42Atomys on Github"
+        icon="fa-brands fa-discord"
+        title="Link your Discord account (optional)"
       />
     </div>
   );
@@ -188,14 +137,12 @@ interface PageProps {
 }
 
 export const IndexPage: NextPage<PageProps, {}> = ({ me }) => {
-  const hasSponsored = me.flags?.some((f) => f === Flag.SPONSOR);
-
   let currentStep =
     (me.accounts?.filter(
       (a) => a?.provider === Provider.GITHUB || a?.provider === Provider.DISCORD
     ).length || 0) + 1;
 
-  if (currentStep == 3 && hasSponsored) currentStep = 4;
+  if (currentStep >= 3) currentStep = 4;
 
   if (!me) {
     return <>OUPS</>;
@@ -205,7 +152,7 @@ export const IndexPage: NextPage<PageProps, {}> = ({ me }) => {
     <div className="w-full min-h-[100vh] h-[100%] bg-repeat bg-slate-900 bg-grid-400">
       <div className="w-full min-h-[100vh] h-[100%] bg-gradient-to-b from-slate-900/80 to-transparent p-4">
         <div className="w-full min-h-[calc(100vh-2rem)] h-[calc(100%-2rem)] flex flex-col justify-center items-center text-center">
-          <div className="flex flex-col justify-center items-center mb-20">
+          <div className="flex flex-col justify-center items-center mb-10">
             <Image
               src="/assets/images/logo.svg"
               alt="logo"
@@ -213,11 +160,22 @@ export const IndexPage: NextPage<PageProps, {}> = ({ me }) => {
               height={128}
               quality={100}
             />
-            <h1 className="text-4xl sm:text-8xl font-display font-black my-6 bg-clip-text text-transparent bg-gradient-to-l from-indigo-500 to-fuchsia-500 w-fit">
-              Stud42 v3.0+beta
+            <h1 className="text-4xl sm:text-8xl font-display font-black my-6 bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-fuchsia-500 w-fit">
+              S
+              <span className="line-through font-bold text-4xl text-slate-800">
+                tud
+              </span>
+              42.app
             </h1>
             <small className="font-medium font-display text-2xl sm:text-4xl text-slate-500">
-              is comming soon™
+              <span className="underline decoration-1 underline-offset-4">
+                v3.0+beta
+              </span>{' '}
+              is now{' '}
+              <span className="text-emerald-500 font-bold">
+                available to everyone
+              </span>{' '}
+              !
             </small>
           </div>
 
@@ -243,7 +201,7 @@ export const IndexPage: NextPage<PageProps, {}> = ({ me }) => {
                   would be open source when he left 42 staff.
                 </span>
                 <span className="text-slate-100 block mb-6">
-                  3 years later, it&apos;s finally time, time to put the project
+                  4 years later, it&apos;s finally time, time to put the project
                   that doesn&apos;t need to prove itself anymore in open source,
                   so that this project becomes the project of every student of
                   every campus in the world.
@@ -252,58 +210,15 @@ export const IndexPage: NextPage<PageProps, {}> = ({ me }) => {
                   <span className="mr-2">Stud42 V3 Open-Source is born</span>
                   <Emoji emoji="🎉" size={20} />
                 </span>
-                <span className="flex items-center justify-center relative text-violet-500 font-bold">
-                  <Emoji emoji="🚀" size={20} />
-                  <span className="mx-2">
-                    Join us today to be a early supporter of the future
-                  </span>
-                  <Emoji emoji="🚀" size={20} />
-                </span>
               </code>
             </pre>
           </div>
 
-          {currentStep != 4 && <Steps currentStep={currentStep} />}
+          {currentStep <= 3 && <Steps currentStep={currentStep} />}
 
           {currentStep == 1 && (
-            <div className="flex flex-col justify-center items-center mb-6 text-center">
-              <h2 className="text-4xl font-display font-bold mb-4 mt-20 bg-clip-text text-transparent bg-gradient-to-l from-red-500 to-orange-500 w-fit">
-                Who are you ? Please tell us who you are !
-              </h2>
-              <small className="font-medium font-display text-xl text-slate-500">
-                To check your rights, please link your Discord account to your
-                account.
-                <br />
-                Your <b className="text-sky-400">GitHub</b> account{' '}
-                <b className="text-slate-400">must be linked</b> to your{' '}
-                <b className="text-indigo-400">Discord</b> account.
-              </small>
-              <div className="flex flex-col justify-around mt-10">
-                <button
-                  onClick={() => signIn('discord', { callbackUrl: '/beta' })}
-                  className="my-1 py-4 px-6 rounded-lg text-white text-lg bg-black font-medium border-2 border-black hover:px-14 hover:bg-slate-900 hover:border-indigo-500 focus:px-14 focus:border-indigo-500 focus:bg-indigo-500 transition-all"
-                >
-                  <i className="fa-brands fa-discord" />
-                  <span className="ml-2">Link your Discord account</span>
-                </button>
-              </div>
-            </div>
-          )}
-
-          {currentStep == 2 && (
-            <div className="flex flex-col justify-center items-center mb-6 text-center">
-              <h2 className="text-4xl font-display font-bold mb-4 mt-20 bg-clip-text text-transparent bg-gradient-to-l from-indigo-500 to-cyan-500 w-fit">
-                The last button ? Maybe
-              </h2>
-              <small className="font-medium font-display text-xl text-slate-500">
-                To check your rights, please link your Github account to your
-                account.
-                <br />
-                Your <b className="text-sky-400">GitHub</b> account{' '}
-                <b className="text-slate-400">must be linked</b> to your{' '}
-                <b className="text-indigo-400">Discord</b> account.
-              </small>
-              <div className="flex flex-col justify-around mt-10">
+            <div className="flex flex-col justify-center items-center mt-6 text-center">
+              <div className="flex flex-col justify-around mb-5">
                 <button
                   onClick={() => signIn('github', { callbackUrl: '/beta' })}
                   className="my-1 py-4 px-6 rounded-lg text-white text-lg bg-black font-medium border-2 border-black hover:px-14 hover:bg-slate-900 hover:border-indigo-500 focus:px-14 focus:border-indigo-500 focus:bg-indigo-500 transition-all"
@@ -312,12 +227,62 @@ export const IndexPage: NextPage<PageProps, {}> = ({ me }) => {
                   <span className="ml-2">Link your Github account</span>
                 </button>
               </div>
+
+              <small className="font-medium font-display text-xl text-slate-500">
+                Your <b className="text-sky-400">GitHub</b> account{' '}
+                <b className="text-slate-400">must be linked</b> to your{' '}
+                <b className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-pink-500">
+                  S42
+                </b>{' '}
+                account.
+              </small>
+
+              <i className="block mt-2 text-sm">
+                Link your GitHub account will star and follow project.
+              </i>
             </div>
           )}
 
-          {(currentStep == 3 || currentStep == 4) && (
-            <SponsorGithubPart hasSponsored={hasSponsored || false} />
+          {currentStep == 2 && (
+            <div className="flex flex-col justify-center items-center mt-6 text-center w-full md:w-1/4 lg:w-1/3">
+              <div className="flex flex-row justify-between mb-5 text-lg w-full">
+                <button
+                  onClick={() => signIn('discord', { callbackUrl: '/' })}
+                  className="py-4 px-6 flex items-center grow justify-center rounded-lg text-white mr-2 bg-black font-medium border-2 border-black hover:bg-slate-900 hover:border-indigo-500 focus:px-14 focus:border-indigo-500 focus:bg-indigo-500 transition-all"
+                >
+                  <i className="fa-brands fa-discord" />
+                  <span className="ml-2">Link Discord</span>
+                </button>
+                <Link href="/">
+                  <button className="py-4 px-6 flex items-center grow-0 hover:grow rounded-lg justify-center text-white bg-slate-900 font-medium border-2 border-slate-900 hover:bg-slate-900 hover:border-indigo-500 focus:px-14 focus:border-indigo-500 focus:bg-indigo-500 transition-all">
+                    <Image
+                      src="/assets/images/logo.svg"
+                      alt="logo"
+                      width={20}
+                      height={20}
+                      quality={100}
+                    />
+                    <span className="ml-2">Go to the app</span>
+                  </button>
+                </Link>
+              </div>
+
+              <small className="font-medium font-display text-xl text-slate-500">
+                Your <b className="text-indigo-400">Discord</b> account{' '}
+                <b className="text-slate-400">can be linked</b> to your{' '}
+                <b className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-pink-500">
+                  S42
+                </b>{' '}
+                account.
+              </small>
+
+              <i className="block mt-2 text-sm">
+                You can access the app without linking your Discord account.
+              </i>
+            </div>
           )}
+
+          {(currentStep == 3 || currentStep == 4) && <FinalStep />}
         </div>
       </div>
     </div>

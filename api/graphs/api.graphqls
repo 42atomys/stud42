@@ -319,6 +319,7 @@ input CreateUserInput {
   duoAvatarSmallURL: String
   phone: String
   isStaff: Boolean!
+  currentDuoCampusID: Int!
 }
 
 """

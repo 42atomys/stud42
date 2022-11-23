@@ -49,6 +49,12 @@
         },
         "editor.inlineSuggest.enabled": true,
         "editor.rulers": [80],
+        "eslint.packageManager": "yarn",
+        "eslint.workingDirectories": [
+          {
+            "directory": "web/ui"
+          }
+        ],
         "search.useGlobalIgnoreFiles": true,
         "search.useParentIgnoreFiles": true,
         "workbench.productIconTheme": "fluent-icons",

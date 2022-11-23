@@ -2,6 +2,7 @@ import { Menu, MenuCategory, MenuItem, useSidebar } from '@components/Sidebar';
 import Tooltip from '@components/Tooltip';
 import classNames from 'classnames';
 import { NextPage } from 'next';
+import { signOut } from 'next-auth/react';
 import Head from 'next/head';
 import { ClassNameProps } from 'types/globals';
 
@@ -111,6 +112,7 @@ export const SettingsLayout: NextPage<PageProps> = ({
             <hr className="my-2 border-slate-200 dark:border-slate-800" />
             <MenuItem
               href="/auth/signout"
+              onClick={() => signOut()}
               icon="fa-sign-out-alt"
               name="Logout"
               className='!text-red-400 dark:!text-red-600 hover:!bg-red-500/20 hover:!text-red-500 [&_.anchor-sub-text]:hover:!text-red-500 [&[data-active="true"]]:!bg-red-500/20'

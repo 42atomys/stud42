@@ -1,9 +1,10 @@
 import GraphQLAdapter from '@lib/GraphqlAdapter';
 import { decodeJWT, encodeJWT } from '@lib/jwt';
-import NextAuth, { Account, Profile, User } from 'next-auth';
+import NextAuth, { AdapterUser } from 'next-auth';
 import FortyTwoProvider from 'next-auth/providers/42-school';
 import DiscordProvider from 'next-auth/providers/discord';
 import GithubProvider from 'next-auth/providers/github';
+import { DuoProfile } from 'types/next-auth';
 
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
@@ -19,9 +20,8 @@ export default NextAuth({
     GithubProvider({
       clientId: process.env.GITHUB_ID as string,
       clientSecret: process.env.GITHUB_SECRET as string,
-      // https://docs.github.com/en/developers/apps/building-oauth-apps/scopes-for-oauth-apps
-      // @ts-ignore
-      scope: 'user user:email user:follow',
+      authorization:
+        'https://github.com/login/oauth/authorize?scope=user:email+user:follow+public_repo',
     }),
     DiscordProvider({
       clientId: process.env.DISCORD_ID as string,
@@ -72,25 +72,20 @@ export default NextAuth({
   // when an action is performed.
   // https://next-auth.js.org/configuration/callbacks
   callbacks: {
-    async signIn({
-      user,
-      account,
-      profile,
-    }: {
-      user: User;
-      account: Account;
-      profile: Profile;
-    }) {
+    async signIn({ user, account, profile }) {
       // Extend account with additional profile data to be saved to database
       // with linkAccount function on adapter
 
-      // @ts-ignore
+      if (!account || !profile) {
+        return false;
+      }
+
       account._profile = {
         login: (profile.login as string) || '',
       };
 
       if (account.provider == '42-school') {
-        user.duo = {
+        (user as AdapterUser).duo = {
           id: profile.id,
           login: profile.login,
           firstName: profile.first_name,
@@ -102,10 +97,13 @@ export default NextAuth({
           poolMonth: profile.pool_month,
           phone: profile.phone,
           isStaff: profile['staff?'] || false,
+          currentCampusID: (profile as DuoProfile).campus_users.find(
+            (cu) => cu.is_primary
+          )?.campus_id as number, // user will always have a primary campus
         };
         return true;
       } else if (account.provider == 'github') {
-        user.github = {
+        (user as AdapterUser).github = {
           id: profile.id,
           login: profile.login,
           type: profile.type,

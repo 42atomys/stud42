@@ -8,7 +8,6 @@ export const middleware: NextMiddleware = async (req) => {
   if (
     pathname.startsWith('/api') ||
     pathname.startsWith('/assets') ||
-    pathname.startsWith('/beta') ||
     pathname.startsWith('/_next')
   ) {
     return NextResponse.next();
