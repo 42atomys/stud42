@@ -1,6 +1,6 @@
 import GraphQLAdapter from '@lib/GraphqlAdapter';
 import { decodeJWT, encodeJWT } from '@lib/jwt';
-import NextAuth, { Account, Profile, User } from 'next-auth';
+import NextAuth, { AdapterUser } from 'next-auth';
 import FortyTwoProvider from 'next-auth/providers/42-school';
 import DiscordProvider from 'next-auth/providers/discord';
 import GithubProvider from 'next-auth/providers/github';
@@ -72,25 +72,20 @@ export default NextAuth({
   // when an action is performed.
   // https://next-auth.js.org/configuration/callbacks
   callbacks: {
-    async signIn({
-      user,
-      account,
-      profile,
-    }: {
-      user: User;
-      account: Account;
-      profile: Profile;
-    }) {
+    async signIn({ user, account, profile }) {
       // Extend account with additional profile data to be saved to database
       // with linkAccount function on adapter
 
-      // @ts-ignore
+      if (!account || !profile) {
+        return false;
+      }
+
       account._profile = {
         login: (profile.login as string) || '',
       };
 
       if (account.provider == '42-school') {
-        user.duo = {
+        (user as AdapterUser).duo = {
           id: profile.id,
           login: profile.login,
           firstName: profile.first_name,
@@ -104,11 +99,11 @@ export default NextAuth({
           isStaff: profile['staff?'] || false,
           currentCampusID: (profile as DuoProfile).campus_users.find(
             (cu) => cu.is_primary
-          )?.campus_id,
+          )?.campus_id as number, // user will always have a primary campus
         };
         return true;
       } else if (account.provider == 'github') {
-        user.github = {
+        (user as AdapterUser).github = {
           id: profile.id,
           login: profile.login,
           type: profile.type,
