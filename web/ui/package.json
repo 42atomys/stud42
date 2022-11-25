@@ -1,5 +1,5 @@
 {
-  "name": "stellar-ui",
+  "name": "s42-interface",
   "private": true,
   "engines": {
     "npm": ">=8.0.0",
@@ -47,6 +47,8 @@
     "@types/uuid": "^8.3.4",
     "axios": "^0.27.2",
     "classnames": "^2.3.1",
+    "dayjs": "^1.11.6",
+    "deepmerge": "^4.2.2",
     "google-protobuf": "^3.20.1-rc.1",
     "graphql": "^16.6.0",
     "graphql-request": "^5.0.0",
@@ -59,7 +61,7 @@
     "jsonwebtoken": "^8.5.1",
     "jwks-rsa": "^2.1.5",
     "next": "^12.2.5",
-    "next-auth": "^4.10.3",
+    "next-auth": "^4.17.0",
     "protoc-gen-ts": "^0.8.5",
     "react": "18",
     "react-burger-menu": "^3.0.6",

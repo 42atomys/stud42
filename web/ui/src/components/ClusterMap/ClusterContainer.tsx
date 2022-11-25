@@ -2,7 +2,7 @@ import Loader from '@components/Loader';
 import useSidebar from '@components/Sidebar';
 import { PopupConsumer, PopupProvider, UserPopup } from '@components/UserPopup';
 import { useClusterViewQuery, User } from '@graphql.d';
-import { isFirstLoading } from '@lib/apollo';
+import { isFetchLoading } from '@lib/apollo';
 import { useRouter } from 'next/router';
 import { createContext, useEffect, useState } from 'react';
 import { ClusterSidebar } from '../../containers/clusters/ClusterSidebar';
@@ -52,8 +52,13 @@ export const ClusterContainer: ClusterContainerComponent = ({
     replace,
   } = useRouter();
   const [highlight, setHighlight] = useState(false);
-  const { data, networkStatus, error } = useClusterViewQuery({
+  const { data, error, networkStatus } = useClusterViewQuery({
     variables: { campusName: campus, identifierPrefix: cluster },
+    fetchPolicy: 'network-only',
+    // This is a workaround due to missing websocket implementation.
+    // TODO: Remove this when websocket is implemented.
+    // See https://github.com/42Atomys/stud42/issues/259
+    pollInterval: 1000 * 60, // 1 minute
   });
 
   useEffect(() => {
@@ -91,10 +96,10 @@ export const ClusterContainer: ClusterContainerComponent = ({
                 'p-2 flex-1 flex justify-center min-h-screen items-center'
               }
             >
-              {isFirstLoading(networkStatus) && <Loader />}
+              {isFetchLoading(networkStatus) && <Loader />}
               {error && <div>Error!</div>}
 
-              {!isFirstLoading(networkStatus) && data && (
+              {!isFetchLoading(networkStatus) && data && (
                 <PopupConsumer>
                   {([state, dispatch]) => (
                     <>

@@ -18,7 +18,15 @@ export const CampusClusterMapData = {
        * the cluster identifier. The regex is used to extract the cluster
        * from the identifier.
        */
-      identifierValidator: /(e(?:1|2|3)).{4,5}/i
+      identifierValidator: /(e(?:1|2|3)).{4,5}/i,
+      /** 
+       * totalWorkspaces is the total number of workspaces in the cluster.
+       */
+      totalWorkspaces: {
+        e1: 271,
+        e2: 270,
+        e3: 270,
+      },
     },
     e1: {
       r13: [1, 2, 3, 4, 5, 6, 7, null, null, null, null, null, null, null, null, null, null, null, 8, 9, 10, 11, 12, 13, 14],
@@ -82,7 +90,15 @@ export const CampusClusterMapData = {
        * the cluster identifier. The regex is used to extract the cluster
        * from the identifier.
        */
-      identifierValidator: /(c(?:1|2|3)).{4,5}/i
+      identifierValidator: /(c(?:1|2|3)).{4,5}/i,
+      /** 
+       * totalWorkspaces is the total number of workspaces in the cluster.
+       */
+      totalWorkspaces: {
+        c1: 79,
+        c2: 76,
+        c3: 32,
+      },
     },
     c1: {
       r6: [1, 2, 3, 4, 5, 6, 7, 8, 9, null, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
@@ -124,7 +140,15 @@ export const CampusClusterMapData = {
        * the cluster identifier. The regex is used to extract the cluster
        * from the identifier.
        */
-      identifierValidator: /(c(?:1|2|3)).{4,5}/i
+      identifierValidator: /(c(?:1|2|3)).{4,5}/i,
+      /** 
+       * totalWorkspaces is the total number of workspaces in the cluster.
+       */
+       totalWorkspaces: {
+        c1: 90,
+        c2: 60,
+        c3: 60,
+      },
     },
     c1: {
       r15: [null, 1, 2, 3, 4, 5, 6, null],

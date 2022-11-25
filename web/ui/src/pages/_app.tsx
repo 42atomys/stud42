@@ -1,9 +1,8 @@
 import { ApolloProvider } from '@apollo/client';
 import useNotification from '@components/Notification';
 import { Theme } from '@graphql.d';
-import apolloClient from '@lib/apollo';
+import { useApollo } from '@lib/apollo';
 import useSettings, { useTheme } from '@lib/useSettings';
-import { NextComponentType, NextPageContext } from 'next';
 import { SessionProvider, SessionProviderProps } from 'next-auth/react';
 import { AppProps } from 'next/app';
 import Script from 'next/script';
@@ -13,15 +12,19 @@ import '../styles/globals.css';
 const Interface = ({
   Component,
   session,
-  pageProps,
-}: AppProps & {
-  Component: NextComponentType<NextPageContext, any, {}>;
-} & SessionProviderProps) => {
+  pageProps: props,
+}: AppProps & SessionProviderProps) => {
+  const { initialApolloState, ...pageProps } = props;
+  const apolloClient = useApollo(initialApolloState);
+
   const { NotificationProvider, NotificationContainer } = useNotification();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const MemorizedComponent = useMemo(() => Component, [pageProps]);
   const [settings] = useSettings({ apolloClient });
   useTheme(settings.theme || Theme.AUTO);
+
+  // Use the layout defined at the page level, if available
+  const getLayout = MemorizedComponent.getLayout || ((page) => page);
 
   return (
     <SessionProvider
@@ -31,7 +34,7 @@ const Interface = ({
     >
       <ApolloProvider client={apolloClient}>
         <NotificationProvider>
-          <MemorizedComponent {...pageProps} />
+          {getLayout(<MemorizedComponent {...pageProps} />)}
           <NotificationContainer />
         </NotificationProvider>
       </ApolloProvider>

@@ -22,27 +22,37 @@ const MenuItem = ({
   icon,
   name,
   tooltipColor: tooltipType = 'info',
+  className,
 }: {
   href: string;
   icon: string;
   name: string;
   tooltipColor?: TooltipProps['color'];
+  className?: string;
 }) => {
   const { pathname } = useRouter();
   const activeRoute = pathname.split('/')[1] == href.split('/')[1];
 
   return (
-    <Tooltip text={name} size="md" color={tooltipType} direction="right">
+    <Tooltip
+      text={name}
+      size="md"
+      color={tooltipType}
+      direction="right"
+      tooltipClassName="hidden md:flex"
+    >
       <Link href={href}>
         <a
           className={`duration-100 transition-all flex items-center justify-center my-3 text-xl`}
         >
           <div
-            className={`group relative flex items-center justify-center text-xl rounded-full w-[50px] h-[50px] ${
+            className={classNames(
+              'group relative flex items-center justify-center text-xl rounded-full w-[50px] h-[50px] border-2 outline-none shadow-outline',
               activeRoute
                 ? 'text-white bg-indigo-200 dark:bg-indigo-500/20 border-2 border-indigo-500'
-                : 'border-transparent hover:border-slate-600 dark:hover:border-slate-400 hover:bg-slate-900/10 dark:hover:bg-slate-100/10'
-            } border-2 outline-none shadow-outline`}
+                : 'border-transparent hover:border-slate-600 dark:hover:border-slate-400 hover:bg-slate-900/10 dark:hover:bg-slate-100/10',
+              className
+            )}
           >
             <i
               className={classNames(
@@ -136,6 +146,13 @@ export const Sidebar = ({
               name="Github"
             />
           )}
+          <MenuItem
+            href="https://github.com/sponsors/42Atomys"
+            icon="fa-light fa-heart !text-fuchsia-500"
+            className="border-transparent hover:border-fuchsia-500 dark:hover:border-fuchsia-400 hover:bg-fuchsia-500/20 dark:hover:bg-fuchsia-500/20"
+            name="Support the project"
+            tooltipColor="fuchsia"
+          />
           <MenuItem href="/settings" icon="fa-cog" name="Settings" />
           <span className="text-sm text-slate-400 dark:text-slate-600">
             {publicRuntimeConfig.appVersion}
@@ -145,15 +162,17 @@ export const Sidebar = ({
       {subSidebar && (
         <div
           className={`${
-            open ? 'block' : 'hidden md:block'
+            open ? 'block' : 'hidden md:flex'
           } flex flex-col w-full md:w-72 text-slate-600 dark:text-slate-400 bg-slate-200 dark:bg-slate-900/80 flex-shrink-0`}
+          // TODO: put into tailwind when the flex flow is added to tailwind
+          style={{ flexFlow: 'column' }}
         >
           <div className="flex my-6 w-full justify-evenly">
             <Star />
             <Contribute />
           </div>
 
-          <div className="p-4 flex flex-col h-full bg-slate-100/60 dark:bg-slate-800/40 rounded-tl-md relative">
+          <div className="p-4 flex flex-col flex-auto bg-slate-100/60 dark:bg-slate-800/40 rounded-tl-md relative">
             {React.Children.map(subSidebar, (c) => (
               <>{c}</>
             ))}

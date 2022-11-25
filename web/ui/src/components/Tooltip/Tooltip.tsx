@@ -23,6 +23,7 @@ export const Tooltip: TooltipComponent = ({
   showArrow = true,
   allowInteractions = false,
   className,
+  tooltipClassName,
 }) => {
   const [visible, setVisible] = useState(false);
 
@@ -95,7 +96,8 @@ export const Tooltip: TooltipComponent = ({
           'md:flex absolute rounded transition-all duration-150 text-slate-100 opacity-0',
           'max-w-[250px] flex-col w-max items-start m-1 z-10',
           'group-hover:pointer-events-auto group-hover:opacity-100 group-hover:ml-[var(--tooltip-ml)] group-hover:mr-[var(--tooltip-mr)] group-hover:mt-[var(--tooltip-mt)] group-hover:mb-[var(--tooltip-mb)]',
-          containerClasses
+          containerClasses,
+          tooltipClassName
         )}
         data-testid="tooltip"
         onMouseEnter={allowInteractions ? undefined : () => setVisible(false)}

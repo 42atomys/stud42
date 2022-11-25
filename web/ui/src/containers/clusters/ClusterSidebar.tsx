@@ -1,14 +1,13 @@
 import { CampusClusterMapData, CampusNames } from '@components/ClusterMap';
 import Search from '@components/Search';
 import useSidebar, { Menu, MenuCategory, MenuItem } from '@components/Sidebar';
-import { useMeWithFlagsQuery } from '@graphql.d';
-import { LocalStorageKeys } from '@lib/localStorageKeys';
+import { useClusterSidebarDataQuery } from '@graphql.d';
+import { isFirstLoading } from '@lib/apollo';
 import '@lib/prototypes/string';
 import { clusterURL } from '@lib/searchEngine';
-import useLocalStorage from '@lib/useLocalStorage';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
+import React from 'react';
 
 /**
  * ClusterSidebar is the sidebar for the cluster page. It contains the cluster
@@ -28,31 +27,40 @@ export const ClusterSidebar = ({
   const router = useRouter();
   const campusKeys = Object.keys(CampusClusterMapData) as Array<CampusNames>;
 
-  const { data: { me } = {}, loading } = useMeWithFlagsQuery();
-  const myCampusNameLowerFromAPI = me?.currentCampus?.name?.toLowerCase() || '';
+  const { data: { me, locationsStatsByPrefixes = [] } = {}, networkStatus } =
+    useClusterSidebarDataQuery({
+      variables: {
+        campusName: campus,
+        clusterPrefixes: Object.keys(
+          CampusClusterMapData[campus as CampusNames]
+        ).filter((e) => e !== '_data'),
+      },
+    });
+  const myCampusName = me?.currentCampus?.name?.toLowerCase() || '';
+  const freePlacesPerCluster: { [key: string]: number } =
+    locationsStatsByPrefixes
+      .map((l) => {
+        const totalWorkspaces =
+          CampusClusterMapData[campus as CampusNames]?._data?.totalWorkspaces;
+        // @ts-ignore
+        return [l.prefix, totalWorkspaces[l.prefix] - l.occupiedWorkspace];
+      })
+      .reduce(
+        (acc, [prefix, freePlaces]) => ({ ...acc, [prefix]: freePlaces }),
+        {}
+      );
 
-  const [myCampusNameCached, setMyCampusName] = useLocalStorage(
-    LocalStorageKeys.MyCurrentCampusName,
-    ''
-  );
-
-  useEffect(() => {
-    if (myCampusNameCached !== myCampusNameLowerFromAPI) {
-      setMyCampusName(myCampusNameLowerFromAPI);
-    }
-  }, [myCampusNameLowerFromAPI]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  if (loading && !myCampusNameCached) {
+  if (isFirstLoading(networkStatus)) {
     return (
       <Sidebar>
         <div className="animate-pulse flex w-full flex-col">
-          <span className="h-11 bg-slate-700 rounded mb-4"></span>
+          <span className="h-11 bg-slate-300 dark:bg-slate-700 rounded mb-4"></span>
           {[...Array(3)].map((_, i) => (
             <React.Fragment key={`loader-sidebar-${i}`}>
-              <span className="h-6 bg-slate-700 rounded mb-4"></span>
-              <span className="h-6 w-1/2 bg-slate-700 rounded mb-5 ml-4"></span>
-              <span className="h-6 w-1/3 bg-slate-700 rounded mb-5 ml-4"></span>
-              <span className="h-6 w-2/5 bg-slate-700 rounded mb-4 ml-4"></span>
+              <span className="h-6 bg-slate-300 dark:bg-slate-700 rounded mb-4"></span>
+              <span className="h-6 w-1/2 bg-slate-300 dark:bg-slate-700 rounded mb-5 ml-4"></span>
+              <span className="h-6 w-1/3 bg-slate-300 dark:bg-slate-700 rounded mb-5 ml-4"></span>
+              <span className="h-6 w-2/5 bg-slate-300 dark:bg-slate-700 rounded mb-4 ml-4"></span>
             </React.Fragment>
           ))}
         </div>
@@ -86,25 +94,25 @@ export const ClusterSidebar = ({
             .sort((a, b) => {
               // Sort the campus list in alphabetical order and put the current
               // campus at the top.
-              return a?.equalsIgnoreCase(myCampusNameCached)
+              return a?.equalsIgnoreCase(myCampusName)
                 ? -1
-                : b?.equalsIgnoreCase(myCampusNameCached)
+                : b?.equalsIgnoreCase(myCampusName)
                 ? 1
                 : a.localeCompare(b);
             })
             .map((campusName) => {
               const campusData = CampusClusterMapData[campusName]._data;
+              const isMyCampus = campusName?.equalsIgnoreCase(myCampusName);
+              const activeCampus = campus == campusName;
 
               return (
                 <MenuCategory
                   key={`sidebar-campus-${campusName}`}
                   emoji={campusData.emoji}
                   name={campusName}
-                  text={
-                    myCampusNameCached?.equalsIgnoreCase(campusName)
-                      ? 'Your campus'
-                      : undefined
-                  }
+                  text={isMyCampus ? 'Your campus' : undefined}
+                  isCollapsable={!isMyCampus}
+                  collapsed={!activeCampus}
                 >
                   {Object.keys(CampusClusterMapData[campusName])
                     .filter((a) => a !== '_data')
@@ -122,11 +130,19 @@ export const ClusterSidebar = ({
                         >
                           <a>
                             <MenuItem
-                              active={
-                                campus == campusName && cluster == clusterName
-                              }
+                              active={activeCampus && cluster == clusterName}
                               name={clusterNickname}
                               leftText={clusterName.toUpperCase()}
+                              rightText={
+                                activeCampus ? (
+                                  <>
+                                    <span className="pr-1">
+                                      {freePlacesPerCluster[clusterName]}
+                                    </span>
+                                    <i className="fa-light fa-computer"></i>
+                                  </>
+                                ) : undefined
+                              }
                             />
                           </a>
                         </Link>

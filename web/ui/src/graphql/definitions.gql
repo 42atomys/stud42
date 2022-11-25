@@ -32,8 +32,11 @@ mutation internalCreateUser(
   $lastName: String!
   $poolYear: String
   $poolMonth: String
+  $duoAvatarURL: String
+  $duoAvatarSmallURL: String
   $phone: String
   $isStaff: Boolean!
+  $currentDuoCampusID: Int!
 ) {
   internalCreateUser(
     input: {
@@ -45,14 +48,17 @@ mutation internalCreateUser(
       lastName: $lastName
       poolYear: $poolYear
       poolMonth: $poolMonth
+      duoAvatarURL: $duoAvatarURL
+      duoAvatarSmallURL: $duoAvatarSmallURL
       phone: $phone
       isStaff: $isStaff
+      currentDuoCampusID: $currentDuoCampusID
     }
   )
 }
 
 mutation internalLinkAccount(
-  $provider: PROVIDER!
+  $provider: Provider!
   $providerAccountId: String!
   $username: String!
   $token_type: String!
@@ -141,14 +147,30 @@ query myFollowings {
   myFollowing {
     id
     isFollowing
-    currentLocation {
+    lastLocation {
       ...LocationBasicData
       campus {
         ...CampusBasicData
       }
     }
     ...UserIdentyData
-    duoAvatarURL
+    duoAvatarSmallURL
+  }
+}
+
+query clusterSidebarData($campusName: String!, $clusterPrefixes: [String!]!) {
+  me {
+    currentCampus {
+      ...CampusBasicData
+    }
+  }
+
+  locationsStatsByPrefixes(
+    campusName: $campusName
+    identifierPrefixes: $clusterPrefixes
+  ) {
+    prefix
+    occupiedWorkspace
   }
 }
 
@@ -169,10 +191,11 @@ query clusterView($campusName: String!, $identifierPrefix: String!) {
       cursor
       node {
         identifier
+        endAt
         user {
           id
           ...UserIdentyData
-          duoAvatarURL
+          duoAvatarSmallURL
           isMe
           isSwimmer
           isFollowing
@@ -195,7 +218,7 @@ query internalGetUserByEmail($email: String!) {
 }
 
 query internalGetUserByAccount(
-  $provider: PROVIDER!
+  $provider: Provider!
   $providerAccountId: String!
 ) {
   user: internalGetUserByAccount(provider: $provider, uid: $providerAccountId) {

@@ -4,7 +4,7 @@ import { Location } from '@graphql.d';
 // Represents that state made available via this reducer
 type PopupState = {
   position: DOMRectReadOnly | null;
-  location: Pick<Location, 'identifier'> | null;
+  location: Pick<Location, 'identifier' | 'endAt'> | null;
   user: MapLocation['user'] | null;
 };
 

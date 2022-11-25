@@ -29,7 +29,7 @@ func main() {
 
 func generateEntc() {
 	ex, err := entgql.NewExtension(
-		entgql.WithSchemaPath("./api/graphs/api.graphqls"),
+		entgql.WithConfigPath("./gqlgen.yml"),
 	)
 	if err != nil {
 		log.Fatalf("creating entgql extension: %v", err)
@@ -38,6 +38,7 @@ func generateEntc() {
 	err = entc.Generate("./internal/models/schema", &gen.Config{
 		Features: []gen.Feature{
 			gen.FeaturePrivacy,
+			gen.FeatureModifier,
 			gen.FeatureSnapshot,
 			gen.FeatureUpsert,
 			gen.FeatureVersionedMigration,

@@ -3,12 +3,6 @@ import classNames from 'classnames';
 import type { AvatarProps } from './types';
 
 /**
- * URL of the 42 cdn to get the avatar of an User.
- * The placeholder for login is `{}`
- */
-const CDN_URL = 'https://cdn.intra.42.fr/users/{}.jpg';
-
-/**
  * Size classes to define the size of avatar from simplified props
  */
 const sizeClasses = {
@@ -24,7 +18,6 @@ const sizeClasses = {
 };
 
 export const Avatar = ({
-  login,
   duoAvatarURL,
   flags,
   size = 'sm',
@@ -34,7 +27,7 @@ export const Avatar = ({
   return (
     <div
       style={{
-        backgroundImage: `url(${duoAvatarURL || CDN_URL.replace('{}', login)})`,
+        backgroundImage: `url(${duoAvatarURL})`,
       }}
       className={classNames(
         className,

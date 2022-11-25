@@ -82,8 +82,7 @@ export const ClusterWorkspaceWithUser = ({
         >
           <span className="mb-1">
             <Avatar
-              login={location.user.duoLogin}
-              duoAvatarURL={location.user.duoAvatarURL}
+              duoAvatarURL={location.user.duoAvatarSmallURL}
               rounded={false}
               flags={location.user.flags}
               size={

@@ -70,7 +70,7 @@ func directiveAuthorization(client *modelgen.Client) func(ctx context.Context, o
 			return nil, err
 		}
 
-		tok, err := jwt.ParseString(jwtToken, jwt.WithKeySet(jwks))
+		tok, err := jwt.ParseString(jwtToken, jwt.WithKeySet(jwks), jwt.WithAcceptableSkew(5*time.Second))
 		if err != nil {
 			log.Error().Err(err).Msg("failed to parse JWT")
 			return nil, err

@@ -15,7 +15,6 @@ type AvatarSize =
   | 'auto-based-on-steps';
 
 export type AvatarProps = {
-  login: string;
   duoAvatarURL?: string | null;
   size?: AvatarSize;
   rounded?: boolean;

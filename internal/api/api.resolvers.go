@@ -23,6 +23,7 @@ import (
 	"atomys.codes/stud42/pkg/utils"
 	"entgo.io/ent/dialect/sql"
 	"github.com/google/uuid"
+	"github.com/rs/zerolog/log"
 )
 
 func (r *mutationResolver) CreateFriendship(ctx context.Context, userID uuid.UUID) (bool, error) {
@@ -67,6 +68,12 @@ func (r *mutationResolver) UpdateSettings(ctx context.Context, input typesgen.Se
 }
 
 func (r *mutationResolver) InternalCreateUser(ctx context.Context, input typesgen.CreateUserInput) (uuid.UUID, error) {
+	campusID, err := r.client.Campus.Query().Where(campus.DuoID(input.CurrentDuoCampusID)).FirstID(ctx)
+	if err != nil {
+		log.Error().Err(err).Msg("cannot find campus")
+		return uuid.Nil, err
+	}
+
 	return r.client.User.Create().
 		SetEmail(input.Email).
 		SetDuoLogin(input.DuoLogin).
@@ -77,8 +84,10 @@ func (r *mutationResolver) InternalCreateUser(ctx context.Context, input typesge
 		SetNillablePoolYear(input.PoolYear).
 		SetNillablePoolMonth(input.PoolMonth).
 		SetNillablePhone(input.Phone).
-		SetNillableDuoAvatarURL(input.ImageURL).
+		SetNillableDuoAvatarURL(input.DuoAvatarURL).
+		SetNillableDuoAvatarSmallURL(input.DuoAvatarSmallURL).
 		SetIsStaff(input.IsStaff).
+		SetNillableCurrentCampusID(&campusID).
 		SetIsAUser(true).
 		OnConflictColumns(user.FieldDuoID).
 		UpdateNewValues().
@@ -110,7 +119,7 @@ func (r *mutationResolver) InternalLinkAccount(ctx context.Context, input typesg
 		return nil, err
 	}
 
-	go accountLinkCallback(ctx, account)
+	go accountLinkCallback(ctx, r.client, account)
 
 	return account, nil
 }
@@ -223,15 +232,93 @@ func (r *queryResolver) LocationsByCluster(ctx context.Context, page typesgen.Pa
 		Paginate(ctx, page.After, &page.First, page.Before, page.Last)
 }
 
+func (r *queryResolver) LocationsStatsByPrefixes(ctx context.Context, campusName string, identifierPrefixes []string) ([]*typesgen.LocationStats, error) {
+	sqlResults := []*typesgen.LocationStats{}
+	prefixes := make([]any, len(identifierPrefixes))
+	identifierMaxSize := 2
+
+	// We need to convert the prefixes to any to be able to use them in the query
+	// and we also need to know the max size of the prefixes to be able to
+	// know how many characters we need to take from the identifier to filter
+	// after the request.
+	for i, prefix := range identifierPrefixes {
+		// Validate the length of the prefix.
+		if len(prefix) < 2 || len(prefix) > 4 {
+			return nil, fmt.Errorf("invalid prefix size. Must be between 2 and 4")
+		}
+
+		if len(prefix) > identifierMaxSize {
+			identifierMaxSize = len(prefix)
+		}
+		prefixes[i] = prefix
+	}
+
+	err := r.client.Location.Query().
+		Modify(func(s *sql.Selector) {
+			s.Select(
+				sql.As(sql.Table(campus.Table).C(campus.FieldID), "campusID"),
+				sql.As(sql.Count(sql.Table(location.Table).C(location.FieldID)), "occupiedWorkspace"),
+				sql.As(fmt.Sprintf("left(%s, %d)", sql.Table(location.Table).C(location.FieldIdentifier), identifierMaxSize), "prefix"),
+			).
+				Join(sql.Table(campus.Table).As(campus.Table)).
+				On(
+					sql.Table(campus.Table).C(campus.FieldID),
+					sql.Table(location.Table).C(location.FieldCampusID),
+				).
+				Where(
+					sql.And(
+						sql.EqualFold(sql.Table(campus.Table).C(campus.FieldName), campusName),
+						sql.IsNull(sql.Table(location.Table).C(location.FieldEndAt)),
+						sql.ExprP(
+							fmt.Sprintf(
+								"%q.%q ~ $2",
+								location.Table,
+								location.FieldIdentifier,
+							),
+							"^"+strings.Join(identifierPrefixes, "|"),
+						),
+					),
+				).
+				GroupBy("(campus.id, prefix)")
+		}).
+		Scan(ctx, &sqlResults)
+
+	// We need to loop over the result to calculate the total number of workspaces
+	// for each prefix. This is because we can't use group by sql instruction
+	// with the count function over a regex filter.
+	// Need more research on this topic. Maybe there is a better way to do this.
+	var finalLocationStats = make([]*typesgen.LocationStats, len(identifierPrefixes))
+	for i, prefix := range identifierPrefixes {
+		finalLocationStats[i] = &typesgen.LocationStats{
+			Prefix: prefix,
+		}
+
+		for _, locationStat := range sqlResults {
+			if finalLocationStats[i].CampusID == uuid.Nil {
+				finalLocationStats[i].CampusID = locationStat.CampusID
+			}
+
+			if strings.HasPrefix(locationStat.Prefix, prefix) {
+				finalLocationStats[i].OccupiedWorkspace += locationStat.OccupiedWorkspace
+			}
+		}
+	}
+
+	return finalLocationStats, err
+}
+
 func (r *queryResolver) MyFollowing(ctx context.Context) ([]*generated.User, error) {
 	cu, _ := CurrentUserFromContext(ctx)
+
+	withCampus := func(lq *generated.LocationQuery) {
+		lq.WithCampus()
+	}
 
 	return r.client.User.Query().
 		Where(user.ID(cu.ID)).
 		QueryFollowing().
-		WithCurrentLocation(func(lq *generated.LocationQuery) {
-			lq.WithCampus()
-		}).
+		WithCurrentLocation(withCampus).
+		WithLastLocation(withCampus).
 		// Unique is necessary because the query builder always add a DISTINCT clause
 		// and cannot order the query properly by location identifier
 		Unique(false).

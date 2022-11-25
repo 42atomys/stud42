@@ -1,24 +1,29 @@
 import ConditionalWrapper from '@components/ConditionalWrapper';
 import Emoji from '@components/Emoji';
+import Tooltip from '@components/Tooltip';
 import { Location } from '@graphql.d';
 import { clusterURL } from '@lib/searchEngine';
 import classNames from 'classnames';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import Link from 'next/link';
 import { NestedPartial } from 'types/utils';
 import { Badge } from './Badge';
 import { countryNameToEmoji } from './countryMap';
+
+dayjs.extend(relativeTime);
 
 export const LocationBadge = ({
   location,
 }: {
   location: NestedPartial<Location> | null | undefined;
 }) => {
-  const isConnected = location?.identifier ? true : false;
-
+  const isConnected = location?.endAt === null ? true : false;
+  const dayJsObject = location?.endAt ? dayjs(location.endAt as Date) : null;
   return (
     <ConditionalWrapper
       // `? true : false` mysterious workaround to prevent ts error
-      condition={location?.campus?.name && location?.identifier ? true : false}
+      condition={isConnected}
       trueWrapper={(children) => {
         const url = clusterURL(
           location?.campus?.name as string,
@@ -34,6 +39,19 @@ export const LocationBadge = ({
           </Link>
         );
       }}
+      falseWrapper={(children) => {
+        return dayJsObject ? (
+          <Tooltip
+            text={dayJsObject?.format('MMMM D, YYYY HH:mm')}
+            direction="bottom"
+            size="sm"
+          >
+            {children}
+          </Tooltip>
+        ) : (
+          <>{children}</>
+        );
+      }}
     >
       <Badge color={isConnected ? 'green' : 'gray'}>
         <span
@@ -43,7 +61,9 @@ export const LocationBadge = ({
           )}
         ></span>
         <span className="flex flex-row justify-center items-center text-sm mx-1">
-          {isConnected ? location?.identifier : 'Offline'}
+          {isConnected
+            ? location?.identifier
+            : dayJsObject?.fromNow() || 'offline'}
         </span>
         {isConnected && (
           <Emoji

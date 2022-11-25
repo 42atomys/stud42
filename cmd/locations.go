@@ -1,24 +1,3 @@
-/*
-Copyright © 2022 42Atomys
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-*/
 package cmd
 
 import (
@@ -72,9 +51,9 @@ For any closed locations, the location will be marked as inactive in the databas
 		log.Debug().Msgf("Found %d locations", len(locations))
 
 		// Create the new locations in the database
-		bulk := []*modelgen.LocationCreate{}
 		duoLocationIDs := []int{}
 		for _, l := range locations {
+			log.Debug().Msgf("Crawling location %d", l.ID)
 			duoLocationIDs = append(duoLocationIDs, l.ID)
 
 			u, err := modelsutils.UserFirstOrCreateFromComplexLocation(cmd.Context(), l)
@@ -82,17 +61,36 @@ For any closed locations, the location will be marked as inactive in the databas
 				log.Fatal().Err(err).Msg("Failed to create user")
 			}
 
-			bulk = append(bulk, db.Location.Create().
-				SetCampus(campus).
-				SetUser(u).
-				SetDuoID(l.ID).
-				SetBeginAt(l.BeginAt.Time()).
-				SetNillableEndAt(l.EndAt.NillableTime()).
-				SetIdentifier(l.Host).
-				SetUserDuoID(l.User.ID).
-				SetUserDuoLogin(l.User.Login))
+			if err = modelsutils.WithTx(cmd.Context(), db, func(tx *modelgen.Tx) error {
+				createdLocationID, err := db.Location.Create().
+					SetCampus(campus).
+					SetUser(u).
+					SetDuoID(l.ID).
+					SetBeginAt(l.BeginAt.Time()).
+					SetNillableEndAt(l.EndAt.NillableTime()).
+					SetIdentifier(l.Host).
+					SetUserDuoID(l.User.ID).
+					SetUserDuoLogin(l.User.Login).
+					OnConflictColumns(location.FieldDuoID).DoNothing().
+					ID(cmd.Context())
+				if err != nil {
+					log.Error().Err(err).Msg("Failed to create location")
+					return err
+				}
+
+				if err := db.User.UpdateOne(u).
+					SetCurrentLocationID(createdLocationID).
+					SetLastLocationID(createdLocationID).
+					Exec(cmd.Context()); err != nil {
+					log.Error().Err(err).Msg("Failed to update user")
+					return err
+				}
+
+				return nil
+			}); err != nil {
+				log.Fatal().Err(err).Msg("Failed to process location")
+			}
 		}
-		db.Location.CreateBulk(bulk...).OnConflictColumns(location.FieldDuoID).DoNothing().ExecX(cmd.Context())
 
 		// Mark all locations as inactive that are not in the list anymore
 		err = modelsutils.WithTx(cmd.Context(), db, func(tx *modelgen.Tx) error {

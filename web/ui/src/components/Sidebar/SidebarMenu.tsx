@@ -1,6 +1,5 @@
 import ConditionalWrapper from '@components/ConditionalWrapper';
 import Emoji from '@components/Emoji';
-import NewFeaturePing from '@components/NewFeaturePing';
 import classNames from 'classnames';
 import Link from 'next/link';
 import React from 'react';
@@ -58,6 +57,8 @@ export const MenuCategory = ({
   icon,
   name,
   text,
+  isCollapsable = false,
+  collapsed = false,
   children,
 }: {
   // The emoji to display before the category name.
@@ -68,9 +69,17 @@ export const MenuCategory = ({
   name: string;
   // The additional text to display
   text?: string;
+  // The menu category can be collapsed and expanded.
+  isCollapsable?: boolean;
+  // The menu is collapsed by default.
+  collapsed?: boolean;
   // The list of MenuItem.
   children: React.ReactNode[] | React.ReactNode;
 }) => {
+  const [isCollapsed, setIsCollapsed] = React.useState(
+    isCollapsable && collapsed
+  );
+
   return (
     <li>
       <span className="my-[var(--menu-padding-y)] ml-2 flex items-center flex-row justify-end text-slate-400 dark:text-slate-600 text-sm">
@@ -82,17 +91,33 @@ export const MenuCategory = ({
           />
         )}
         {icon && <i className={classNames('fa-fw fa-regular', icon, 'mr-2')} />}
-        <span className="flex grow items-baseline">
+        <span
+          className={classNames('flex grow items-baseline', {
+            'cursor-pointer': isCollapsable,
+          })}
+          onClick={
+            isCollapsable ? () => setIsCollapsed(!isCollapsed) : undefined
+          }
+        >
           <span className="grow first-letter:capitalize">{name}</span>
           {text && (
             <span className={classNames('items-stretch ml-2 text-xs')}>
               <span>{text}</span>
-              <NewFeaturePing featureName="dynamic-campus-assignment" />
             </span>
+          )}
+          {isCollapsable && (
+            <div
+              className={classNames(
+                'transition-all',
+                isCollapsed ? 'rotate-0' : 'rotate-90'
+              )}
+            >
+              <i className="fa-fw fa-light fa-chevron-right" />
+            </div>
           )}
         </span>
       </span>
-      <ul>
+      <ul className={classNames(isCollapsed ? 'hidden' : 'visible')}>
         {React.Children.map(children, (c) => (
           <>{c}</>
         ))}
@@ -116,6 +141,7 @@ export const MenuItem = ({
   icon,
   name,
   href,
+  onClick,
   leftText,
   rightText,
   className,
@@ -129,6 +155,8 @@ export const MenuItem = ({
   // The destination of the menu item. When provided, the menu item is wrapped
   // in a Link component.
   href?: string;
+  // onClick handler for the menu item, when is provided, the href is ignored.
+  onClick?: () => void;
   // The name of the menu item
   name: string;
   // The additional text to display on the left
@@ -138,7 +166,7 @@ export const MenuItem = ({
 } & ClassNameProps) => {
   return (
     <ConditionalWrapper
-      condition={!!href}
+      condition={!!href && !onClick}
       trueWrapper={(children) => (
         <Link href={href as string}>
           <a>{children}</a>
@@ -152,6 +180,7 @@ export const MenuItem = ({
           'group empty:hidden transition-all hover:cursor-pointer px-2 py-[var(--menu-padding-y)] my-1 rounded hover:bg-indigo-500/20 hover:text-indigo-500 flex flex-row items-center',
           className
         )}
+        onClick={onClick}
       >
         <span className="flex items-center w-full">
           {emoji && (

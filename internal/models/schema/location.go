@@ -40,5 +40,8 @@ func (Location) Indexes() []ent.Index {
 	return []ent.Index{
 		index.Fields("duo_id").Unique(),
 		index.Fields("identifier"),
+		index.Fields("end_at").StorageKey("locations_actives_idx").Annotations(
+			entsql.IndexWhere("end_at IS NULL"),
+		),
 	}
 }
