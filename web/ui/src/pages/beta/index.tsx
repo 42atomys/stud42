@@ -253,8 +253,8 @@ export const IndexPage: NextPage<PageProps, {}> = ({ me }) => {
                   <i className="fa-brands fa-discord" />
                   <span className="ml-2">Link Discord</span>
                 </button>
-                <Link href="/">
-                  <button className="py-4 px-6 flex items-center grow-0 hover:grow rounded-lg justify-center text-white bg-slate-900 font-medium border-2 border-slate-900 hover:bg-slate-900 hover:border-indigo-500 focus:px-14 focus:border-indigo-500 focus:bg-indigo-500 transition-all">
+                <Link href="/" passHref={true}>
+                  <button className="py-4 px-6 flex items-center grow-0 hover:grow rounded-lg justify-center text-white bg-slate-800/40 font-medium border-2 border-slate-900 hover:bg-slate-900 hover:border-indigo-500 focus:px-14 focus:border-indigo-500 focus:bg-indigo-500 transition-all">
                     <Image
                       src="/assets/images/logo.svg"
                       alt="logo"
@@ -262,7 +262,7 @@ export const IndexPage: NextPage<PageProps, {}> = ({ me }) => {
                       height={20}
                       quality={100}
                     />
-                    <span className="ml-2">Go to the app</span>
+                    <span className="ml-2">Go to the app now</span>
                   </button>
                 </Link>
               </div>
@@ -277,7 +277,7 @@ export const IndexPage: NextPage<PageProps, {}> = ({ me }) => {
               </small>
 
               <i className="block mt-2 text-sm">
-                You can access the app without linking your Discord account.
+                Link your Discord account will add you to the Discord server.
               </i>
             </div>
           )}
