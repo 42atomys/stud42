@@ -16,6 +16,13 @@ export default NextAuth({
     FortyTwoProvider({
       clientId: process.env.FORTY_TWO_ID as string,
       clientSecret: process.env.FORTY_TWO_SECRET as string,
+      // allowDangerousEmailAccountLinking
+      // https://next-auth.js.org/configuration/providers/oauth#allowdangerousemailaccountlinking-option
+      //
+      // We allow email linking to the account due to the fact of 42 email are
+      // unique and not editable by the user. The user is already present on database
+      // when he be connected on cluster before.
+      allowDangerousEmailAccountLinking: true,
     }),
     GithubProvider({
       clientId: process.env.GITHUB_ID as string,
