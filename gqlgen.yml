@@ -41,6 +41,7 @@ directives:
 autobind:
   - "atomys.codes/stud42/internal/models/generated"
   - "atomys.codes/stud42/internal/models/gotype"
+  - "go.opentelemetry.io/opentelemetry-go-contrib/instrumentation/github.com/99designs/gqlgen/otelgqlgen/example/graph/model"
 
 # This section declares type mapping between the GraphQL and go type systems
 #

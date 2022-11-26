@@ -31,6 +31,8 @@ services:
       NEXT_PUBLIC_GRAPHQL_API: http://localhost:4000/graphql
       NEXTAUTH_URL: http://localhost:3000
       NEXTAUTH_SECRET: private-secret-for-dev-only
+      # Tracing
+      JAEGER_ENDPOINT: http://jaeger:14268/api/traces
     volumes:
       - ..:/workspace:cached
 

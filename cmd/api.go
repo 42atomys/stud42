@@ -63,6 +63,7 @@ var apiCmd = &cobra.Command{
 			AllowCredentials: true,
 			Debug:            os.Getenv("DEBUG") == "true",
 		}).Handler)
+		router.Use(otelgql.PropagateHeadersMiddleware(tracer))
 		router.Use(api.AuthzByPolicyMiddleware)
 		router.Use(api.AuthenticationMiddleware)
 		if os.Getenv("DEBUG") == "true" {
