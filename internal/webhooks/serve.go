@@ -196,17 +196,9 @@ func (p *processor) githubHandler(data []byte) error {
 	var flagsList = user.FlagsList
 	switch webhookPayload.Action {
 	case "created", "edited":
-		if webhookPayload.Sponsorship.Tier.MonthlyPriceInDollars >= 5 {
-			flagsList = append(flagsList, typesgen.FlagBeta.String(), typesgen.FlagDiscord.String())
-		}
 		flagsList = append(flagsList, typesgen.FlagSponsor.String())
 	case "cancelled":
-		flagsList = utils.Remove(
-			flagsList,
-			typesgen.FlagSponsor.String(),
-			typesgen.FlagBeta.String(),
-			typesgen.FlagDiscord.String(),
-		)
+		flagsList = utils.Remove(flagsList, typesgen.FlagSponsor.String())
 	}
 
 	_, err = p.db.User.UpdateOne(user).SetFlagsList(utils.Uniq(flagsList)).Save(p.ctx)
