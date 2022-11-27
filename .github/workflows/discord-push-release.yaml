@@ -24,6 +24,7 @@ jobs:
             {
               "content": ${{ toJSON(fromJSON(env.GITHUB_CONTEXT).event.release.body) }},
               "tts": false,
+              "flags": 100,
               "components": [
                 {
                   "type": 1,
