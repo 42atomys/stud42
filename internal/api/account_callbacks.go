@@ -59,7 +59,7 @@ func duoLinkCallback(ctx context.Context, db *modelgen.Client, account *modelgen
 }
 
 // discordLinkCallback is the callback for Discord accounts when the account is
-// linked to a user. It will add the user to the Discord server.
+// linked to an user. It will add the user to the Discord server.
 func discordLinkCallback(ctx context.Context, db *modelgen.Client, account *modelgen.Account) {
 	// Invite the user to the S42 server using the Discord API
 	err := discord.
@@ -71,7 +71,7 @@ func discordLinkCallback(ctx context.Context, db *modelgen.Client, account *mode
 }
 
 // githubLinkCallback is the callback for Github accounts when the account is
-// linked to a user. It will follow the creator of the repository and star
+// linked to an user. It will follow the creator of the repository and star
 // the repository.
 func githubLinkCallback(ctx context.Context, db *modelgen.Client, account *modelgen.Account) {
 	client := github.NewClient(oauth2.NewClient(ctx, oauth2.StaticTokenSource(
