@@ -1,0 +1,63 @@
+name: Feature request
+description: Suggest an idea for this project
+title: "feat: "
+labels: ["state/triage 🚦", "type/feature ⭐"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        You have an idea to improve the project, go ahead! One of our staff or maintainers will discuss with you and accept or not your wonderful idea!
+
+        _If you feel like contributing and fixing this bug yourself, you can totally do it by adding a comment after your issue so we can assign you to it! Once the feature request is accepted, you can open a pull request_
+
+        🙏 Thanks in advance for your contribution
+
+  # Feature description
+  - type: textarea
+    id: describe
+    attributes:
+      label: Is your feature request related to a problem? Please describe
+      description: A clear and concise description of what the problem is
+      placeholder: "I'm always frustrated when ..."
+    validations:
+      required: true
+
+  # solution
+  - type: textarea
+    id: solution
+    attributes:
+      label: Describe the solution you'd like
+      description: A clear and concise description of what you want to happen
+      placeholder: "Add a new configuration to ..."
+    validations:
+      required: true
+
+  # alternatives
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Describe alternatives you've considered
+      description: A clear and concise description of any alternative solutions or features you've considered
+      placeholder: "Maybe allow it by a flag ..."
+    validations:
+      required: false
+
+  # additional
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context
+      description: Add any other context or screenshots about the feature request here
+      placeholder: "I'm a 42 network staff, is maybe ..."
+    validations:
+      required: false
+
+  # Code if Conduct
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our [Code of Conduct](https://github.com/42Atomys/stud42/blob/main/CODE_OF_CONDUCT.md)
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true

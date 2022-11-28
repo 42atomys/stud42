@@ -1,0 +1,30 @@
+name: Your issue
+description: Is your issue related to anything else? Tell us by writing your own issue
+title: "misc: "
+labels: ["state/triage 🚦"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        You have a question relative to the app, need answers about development ?
+
+        You can join and ask on [S42 Discord and ask](https://discord.gg/RjheCdau42)
+
+        If you feel better to open an issue and the issue don't exist yet, you can write it here !
+  # Describe
+  - type: textarea
+    id: describe
+    attributes:
+      label: Please exprime yourself
+      description: A clear and concise description of why you open this issue
+    validations:
+      required: true
+  # Code if Conduct
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our [Code of Conduct](https://github.com/42Atomys/stud42/blob/main/CODE_OF_CONDUCT.md)
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true
