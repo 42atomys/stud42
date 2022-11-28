@@ -35,9 +35,26 @@ func accountLinkCallback(ctx context.Context, db *modelgen.Client, account *mode
 	case string(typesgen.ProviderGithub):
 		githubLinkCallback(bgCtx, db, account)
 	case string(typesgen.ProviderDuo):
-		break
+		duoLinkCallback(bgCtx, db, account)
 	default:
 		log.Warn().Str("accountType", account.Type).Msg("no callback is defined")
+	}
+}
+
+// duoLinkCallback is the callback for 42 (DUO) accounts when the account is
+// linked to an user. Only happened when an User will connect itself for the
+// first time
+func duoLinkCallback(ctx context.Context, db *modelgen.Client, account *modelgen.Account) {
+	user, err := account.User(ctx)
+	if err != nil {
+		log.Error().Err(err).Msg("failed to retrieve user")
+		sentry.CaptureException(err)
+		return
+	}
+
+	if err := db.User.UpdateOne(user).SetIsAUser(true).Exec(ctx); err != nil {
+		log.Error().Err(err).Msg("failed to update user")
+		sentry.CaptureException(err)
 	}
 }
 
