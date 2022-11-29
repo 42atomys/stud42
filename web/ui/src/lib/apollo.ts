@@ -5,10 +5,11 @@ import {
   from,
   InMemoryCache,
   NetworkStatus,
-  QueryOptions,
+  QueryOptions
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
+import opentelemetry from '@opentelemetry/api';
 import merge from 'deepmerge';
 import Cookies from 'js-cookie';
 import { useMemo } from 'react';
@@ -45,14 +46,26 @@ const createApolloClient = () => {
 
   const authLink = setContext((_, context) => {
     let authToken = Cookies.get(tokenCookieName);
+    let tracingHeader = {};
 
     if (!authToken) {
       authToken = context.authToken;
     }
 
+    const spanContext = opentelemetry.trace
+      .getSpan(opentelemetry.context.active())
+      ?.spanContext();
+    if (spanContext) {
+      tracingHeader = {
+        'X-TraceID': spanContext.traceId,
+        'X-SpanID': spanContext.spanId,
+      };
+    }
+
     return {
       headers: {
         ...context.headers,
+        ...tracingHeader,
         Authorization: authToken ? `Bearer ${authToken}` : '',
       },
     };

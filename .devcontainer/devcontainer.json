@@ -130,7 +130,7 @@
     "5500": {
       "label": "JWTKS Service HTTP"
     },
-    "16686": {
+    "jaeger:16686": {
       "label": "Jaeger UI"
     }
   }

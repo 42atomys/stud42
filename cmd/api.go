@@ -59,10 +59,11 @@ var apiCmd = &cobra.Command{
 		router.Use(cors.New(cors.Options{
 			AllowedOrigins:   strings.Split(os.Getenv("CORS_ORIGIN"), ","),
 			AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-			AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token", "Sentry-Trace"},
+			AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token", "Sentry-Trace", "X-TraceID", "X-SpanID"},
 			AllowCredentials: true,
 			Debug:            os.Getenv("DEBUG") == "true",
 		}).Handler)
+		router.Use(otelgql.PropagateHeadersMiddleware(tracer))
 		router.Use(api.AuthzByPolicyMiddleware)
 		router.Use(api.AuthenticationMiddleware)
 		if os.Getenv("DEBUG") == "true" {
