@@ -20,7 +20,6 @@ import (
 
 	"atomys.codes/stud42/internal/api"
 	modelsutils "atomys.codes/stud42/internal/models"
-	_ "atomys.codes/stud42/internal/models/generated/runtime"
 	"atomys.codes/stud42/pkg/otelgql"
 )
 

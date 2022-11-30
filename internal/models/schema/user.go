@@ -1,13 +1,20 @@
 package schema
 
 import (
+	"context"
+
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
 	"github.com/google/uuid"
+	"github.com/meilisearch/meilisearch-go"
+	"github.com/rs/zerolog/log"
 
+	"atomys.codes/stud42/internal/models/generated"
+	"atomys.codes/stud42/internal/models/generated/hook"
+	"atomys.codes/stud42/internal/models/generated/user"
 	"atomys.codes/stud42/internal/models/gotype"
 )
 
@@ -75,5 +82,90 @@ func (User) Indexes() []ent.Index {
 		index.Fields("duo_login").Unique(),
 		index.Fields("duo_id").Unique(),
 		index.Fields("nickname").Unique(),
+	}
+}
+
+func (User) Hooks() []ent.Hook {
+	return []ent.Hook{
+		// First hook.
+		hook.On(
+			func(next ent.Mutator) ent.Mutator {
+				return hook.UserFunc(func(ctx context.Context, m *generated.UserMutation) (ent.Value, error) {
+					client := meilisearch.NewClient(meilisearch.ClientConfig{
+						Host:   "http://meilisearch:7700",
+						APIKey: "s42-dev-key",
+					})
+
+					client.Index("s42_users").UpdateSettings(&meilisearch.Settings{
+						TypoTolerance: &meilisearch.TypoTolerance{
+							Enabled: true,
+							MinWordSizeForTypos: meilisearch.MinWordSizeForTypos{
+								OneTypo:  1,
+								TwoTypos: 3,
+							},
+						},
+						Pagination: &meilisearch.Pagination{
+							MaxTotalHits: 10,
+						},
+						SearchableAttributes: []string{"duo_login", "first_name", "last_name", "usual_first_name"},
+						DisplayedAttributes:  []string{"id"},
+					})
+
+					v, err := next.Mutate(ctx, m)
+					if err == nil {
+
+						userID, _ := m.ID()
+
+						user, err := m.Client().User.Query().Where(user.ID(userID)).First(ctx)
+						if err != nil {
+							log.Error().Err(err).Msg("cannot found user in hook")
+						}
+
+						client.Index("s42_users").UpdateDocuments(struct {
+							ID              uuid.UUID  `json:"id"`
+							CurrentCampusID *uuid.UUID `json:"current_campus_id"`
+							DuoLogin        string     `json:"duo_login"`
+							FirstName       string     `json:"first_name"`
+							UsualFirstName  *string    `json:"usual_first_name"`
+							LastName        string     `json:"last_name"`
+						}{
+							ID:              user.ID,
+							CurrentCampusID: user.CurrentCampusID,
+							DuoLogin:        user.DuoLogin,
+							FirstName:       user.FirstName,
+							UsualFirstName:  user.UsualFirstName,
+							LastName:        user.LastName,
+						}, "id")
+					}
+
+					return v, err
+				})
+			},
+			// Limit the hook only for these operations.
+			ent.OpCreate|ent.OpUpdate|ent.OpUpdateOne,
+		),
+		// Delete
+		hook.On(
+			func(next ent.Mutator) ent.Mutator {
+				return hook.UserFunc(func(ctx context.Context, m *generated.UserMutation) (ent.Value, error) {
+					v, err := next.Mutate(ctx, m)
+					if err == nil {
+						client := meilisearch.NewClient(meilisearch.ClientConfig{
+							Host:   "http://meilisearch:7700",
+							APIKey: "s42-dev-key",
+						})
+
+						userID, _ := m.ID()
+						go func() {
+							client.Index("s42_users").DeleteDocument(userID.String())
+						}()
+					}
+
+					return v, err
+				})
+			},
+			// Limit the hook only for these operations.
+			ent.OpDelete|ent.OpDeleteOne,
+		),
 	}
 }

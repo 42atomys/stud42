@@ -15,7 +15,7 @@ export const Search: SearchComponent = ({
 }) => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [loader, setLoader] = useState(false);
-  const [query, setQuery] = useDebounce('', 600);
+  const [query, setQuery] = useDebounce('', 200);
 
   const { data } = useSearchUserQuery({
     skip: !query,
@@ -49,7 +49,6 @@ export const Search: SearchComponent = ({
                 onChange={(e) => {
                   setQuery(e.currentTarget.value);
                 }}
-                onFocus={() => {}}
                 type="text"
                 className="bg-transparent flex-1 focus:outline-none peer placeholder:text-slate-400 dark:placeholder:text-slate-600"
                 placeholder={placeholder}
@@ -74,10 +73,9 @@ export const Search: SearchComponent = ({
                       <Combobox.Option
                         key={user.id}
                         className={({ active }) =>
-                          `relative select-none py-2 px-4 cursor-pointer group ${
-                            active
-                              ? 'bg-indigo-600 text-white [&>span>span]:text-white'
-                              : 'text-slate-200'
+                          `relative select-none py-2 px-4 cursor-pointer group ${active
+                            ? 'bg-indigo-600 text-white [&>span>span]:text-white'
+                            : 'text-slate-200'
                           }`
                         }
                         value={user}
@@ -120,10 +118,10 @@ export const Search: SearchComponent = ({
         />
         <span
           className={
-            loader ? 'bg-white dark:bg-slate-900 px-2 fixed right-5 z-10' : ''
+            loader ? 'bg-white dark:bg-slate-900 px-2 fixed right-5 z-10' : 'hidden'
           }
         >
-          {loader && <LoaderSpinner />}
+          <LoaderSpinner />
         </span>
       </div>
     </div>
