@@ -11,11 +11,11 @@ import (
 // UserDocument is a struct that represents a user in the MeiliSearch index.
 type UserDocument struct {
 	ID              uuid.UUID  `json:"id"`
-	CurrentCampusID *uuid.UUID `json:"current_campus_id"`
-	DuoLogin        string     `json:"duo_login"`
-	FirstName       string     `json:"first_name"`
-	UsualFirstName  *string    `json:"usual_first_name"`
-	LastName        string     `json:"last_name"`
+	CurrentCampusID *uuid.UUID `json:"current_campus_id,omitempty"`
+	DuoLogin        string     `json:"duo_login,omitempty"`
+	FirstName       string     `json:"first_name,omitempty"`
+	UsualFirstName  *string    `json:"usual_first_name,omitempty"`
+	LastName        string     `json:"last_name,omitempty"`
 }
 
 const (
