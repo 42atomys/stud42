@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"context"
+	"strings"
 
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
@@ -23,7 +24,10 @@ func Execute(ctx context.Context) {
 }
 
 func init() {
-	cobra.OnInitialize(initConfig)
+	cobra.OnInitialize(
+		// initConfig reads in config file and ENV variables if set.
+		initConfig,
+	)
 
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
@@ -42,7 +46,14 @@ func initConfig() {
 		viper.AddConfigPath("./config")
 	}
 
-	viper.AutomaticEnv() // read in environment variables that match
+	replacer := strings.NewReplacer("-", "_", ".", "_")
+
+	// Replace dot and dash to underscore in env variables.
+	viper.SetEnvKeyReplacer(replacer)
+	// allow empty env variables to be set (e.g. for local development)
+	viper.AllowEmptyEnv(true)
+	// read in environment variables that match
+	viper.AutomaticEnv()
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {

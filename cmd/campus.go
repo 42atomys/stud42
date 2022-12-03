@@ -13,21 +13,26 @@ import (
 var campusCmd = &cobra.Command{
 	Use:   "campus",
 	Short: "Crawl all campus of 42 network and update the database",
-	Run: func(cmd *cobra.Command, args []string) {
-		log.Info().Msg("Start the crawling of all campus of 42 network")
-		if modelsutils.Connect() != nil {
-			log.Fatal().Msg("Failed to connect to database")
+	PreRun: func(cmd *cobra.Command, args []string) {
+		if err := modelsutils.Connect(); err != nil {
+			log.Fatal().Err(err).Msg("failed to connect to database")
 		}
 
+		if err := modelsutils.Migrate(); err != nil {
+			log.Fatal().Err(err).Msg("failed to migrate database")
+		}
+	},
+	Run: func(cmd *cobra.Command, args []string) {
+		log.Info().Msg("Start the crawling of all campus of 42 network")
 		campus, err := duoapi.CampusAll(cmd.Context())
 		if err != nil {
 			log.Fatal().Err(err).Msg("Failed to get duoapi response")
 		}
 
-		client := modelsutils.Client()
+		db := modelsutils.Client()
 		for _, c := range campus {
 			log.Debug().Msg("Creating campus " + c.Name)
-			err := client.Campus.Create().
+			err := db.Campus.Create().
 				SetActive(c.Active).
 				SetAddress(c.Address).
 				SetCity(c.City).

@@ -20,6 +20,7 @@ import (
 
 	"atomys.codes/stud42/internal/api"
 	modelsutils "atomys.codes/stud42/internal/models"
+	"atomys.codes/stud42/internal/pkg/searchengine"
 	"atomys.codes/stud42/pkg/otelgql"
 )
 
@@ -33,7 +34,7 @@ var apiCmd = &cobra.Command{
 	Use:   "api",
 	Short: "Serve the API in production",
 
-	Run: func(cmd *cobra.Command, args []string) {
+	PreRun: func(cmd *cobra.Command, args []string) {
 		if err := modelsutils.Connect(); err != nil {
 			log.Fatal().Err(err).Msg("failed to connect to database")
 		}
@@ -42,6 +43,10 @@ var apiCmd = &cobra.Command{
 			log.Fatal().Err(err).Msg("failed to migrate database")
 		}
 
+		searchengine.Initizialize()
+	},
+
+	Run: func(cmd *cobra.Command, args []string) {
 		tracer := otel.GetTracerProvider().Tracer("graphql-api")
 		srv := handler.NewDefaultServer(api.NewSchema(modelsutils.Client(), tracer))
 		// srv.SetRecoverFunc(func(ctx context.Context, err interface{}) error {

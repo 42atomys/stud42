@@ -43,3 +43,12 @@ jwtks:
 
 discord:
   guildID: "248936708379246593"
+
+# The configuration of the search engine
+searchengine:
+  # Meilisearch configuration for the search engine
+  meilisearch:
+    # The endpoint of the meilisearch server to use
+    host: http://meilisearch:7700
+    # The master key of the meilisearch server
+    apiKey: s42-dev-key

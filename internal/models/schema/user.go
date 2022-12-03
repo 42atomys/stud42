@@ -8,14 +8,14 @@ import (
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
+	"github.com/getsentry/sentry-go"
 	"github.com/google/uuid"
-	"github.com/meilisearch/meilisearch-go"
 	"github.com/rs/zerolog/log"
 
 	"atomys.codes/stud42/internal/models/generated"
 	"atomys.codes/stud42/internal/models/generated/hook"
-	"atomys.codes/stud42/internal/models/generated/user"
 	"atomys.codes/stud42/internal/models/gotype"
+	"atomys.codes/stud42/internal/pkg/searchengine"
 )
 
 type User struct {
@@ -87,85 +87,64 @@ func (User) Indexes() []ent.Index {
 
 func (User) Hooks() []ent.Hook {
 	return []ent.Hook{
-		// First hook.
-		hook.On(
-			func(next ent.Mutator) ent.Mutator {
-				return hook.UserFunc(func(ctx context.Context, m *generated.UserMutation) (ent.Value, error) {
-					client := meilisearch.NewClient(meilisearch.ClientConfig{
-						Host:   "http://meilisearch:7700",
-						APIKey: "s42-dev-key",
-					})
-
-					client.Index("s42_users").UpdateSettings(&meilisearch.Settings{
-						TypoTolerance: &meilisearch.TypoTolerance{
-							Enabled: true,
-							MinWordSizeForTypos: meilisearch.MinWordSizeForTypos{
-								OneTypo:  1,
-								TwoTypos: 3,
-							},
-						},
-						Pagination: &meilisearch.Pagination{
-							MaxTotalHits: 10,
-						},
-						SearchableAttributes: []string{"duo_login", "first_name", "last_name", "usual_first_name"},
-						DisplayedAttributes:  []string{"id"},
-					})
-
-					v, err := next.Mutate(ctx, m)
-					if err == nil {
-
-						userID, _ := m.ID()
-
-						user, err := m.Client().User.Query().Where(user.ID(userID)).First(ctx)
-						if err != nil {
-							log.Error().Err(err).Msg("cannot found user in hook")
-						}
-
-						client.Index("s42_users").UpdateDocuments(struct {
-							ID              uuid.UUID  `json:"id"`
-							CurrentCampusID *uuid.UUID `json:"current_campus_id"`
-							DuoLogin        string     `json:"duo_login"`
-							FirstName       string     `json:"first_name"`
-							UsualFirstName  *string    `json:"usual_first_name"`
-							LastName        string     `json:"last_name"`
-						}{
-							ID:              user.ID,
-							CurrentCampusID: user.CurrentCampusID,
-							DuoLogin:        user.DuoLogin,
-							FirstName:       user.FirstName,
-							UsualFirstName:  user.UsualFirstName,
-							LastName:        user.LastName,
-						}, "id")
-					}
-
-					return v, err
-				})
-			},
-			// Limit the hook only for these operations.
-			ent.OpCreate|ent.OpUpdate|ent.OpUpdateOne,
-		),
-		// Delete
-		hook.On(
-			func(next ent.Mutator) ent.Mutator {
-				return hook.UserFunc(func(ctx context.Context, m *generated.UserMutation) (ent.Value, error) {
-					v, err := next.Mutate(ctx, m)
-					if err == nil {
-						client := meilisearch.NewClient(meilisearch.ClientConfig{
-							Host:   "http://meilisearch:7700",
-							APIKey: "s42-dev-key",
-						})
-
-						userID, _ := m.ID()
-						go func() {
-							client.Index("s42_users").DeleteDocument(userID.String())
-						}()
-					}
-
-					return v, err
-				})
-			},
-			// Limit the hook only for these operations.
-			ent.OpDelete|ent.OpDeleteOne,
-		),
+		// Hooks related to MeiliSearch
+		hook.On(meilisearchUpdateHook, ent.OpCreate|ent.OpUpdate|ent.OpUpdateOne),
+		hook.On(meilisearchDeleteHook, ent.OpDelete|ent.OpDeleteOne),
 	}
+}
+
+// meilisearchUpdateHook is a hook that is triggered before an entity is created
+// or updated. It will update the MeiliSearch index.
+func meilisearchUpdateHook(next ent.Mutator) ent.Mutator {
+	return hook.UserFunc(func(ctx context.Context, m *generated.UserMutation) (ent.Value, error) {
+		v, err := next.Mutate(ctx, m)
+		if err != nil {
+			return v, err
+		}
+
+		userID, _ := m.ID()
+		go func() {
+			user, err := m.Client().User.Get(ctx, userID)
+			if err != nil {
+				log.Error().Err(err).Msg("failed to get user in meilisearchUpdateHook")
+				sentry.CaptureException(err)
+				return
+			}
+
+			err = searchengine.NewClient().UpdateUserDocument(ctx, &searchengine.UserDocument{
+				ID:              userID,
+				CurrentCampusID: user.CurrentCampusID,
+				DuoLogin:        user.DuoLogin,
+				FirstName:       user.FirstName,
+				LastName:        user.LastName,
+				UsualFirstName:  user.UsualFirstName,
+			})
+			if err != nil {
+				log.Error().Err(err).Msg("Failed to update user document in MeiliSearch")
+				sentry.CaptureException(err)
+			}
+		}()
+		return v, err
+	})
+}
+
+// meilisearchDeleteHook is a hook that is triggered before an entity is deleted.
+// It will delete the entity from the MeiliSearch index.
+func meilisearchDeleteHook(next ent.Mutator) ent.Mutator {
+	return hook.UserFunc(func(ctx context.Context, m *generated.UserMutation) (ent.Value, error) {
+		v, err := next.Mutate(ctx, m)
+		if err != nil {
+			return v, err
+		}
+
+		userID, _ := m.ID()
+		go func() {
+			err := searchengine.NewClient().DeleteUserDocument(userID)
+			if err != nil {
+				log.Error().Err(err).Msg("Failed to delete user document in MeiliSearch")
+				sentry.CaptureException(err)
+			}
+		}()
+		return v, err
+	})
 }

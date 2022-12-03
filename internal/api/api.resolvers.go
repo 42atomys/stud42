@@ -18,11 +18,12 @@ import (
 	"atomys.codes/stud42/internal/models/generated/account"
 	"atomys.codes/stud42/internal/models/generated/campus"
 	"atomys.codes/stud42/internal/models/generated/location"
+	modelspredicate "atomys.codes/stud42/internal/models/generated/predicate"
 	"atomys.codes/stud42/internal/models/generated/user"
 	"atomys.codes/stud42/internal/models/gotype"
+	"atomys.codes/stud42/internal/pkg/searchengine"
 	"entgo.io/ent/dialect/sql"
 	"github.com/google/uuid"
-	meilisearch "github.com/meilisearch/meilisearch-go"
 	"github.com/rs/zerolog/log"
 )
 
@@ -147,29 +148,17 @@ func (r *queryResolver) Me(ctx context.Context) (*generated.User, error) {
 }
 
 func (r *queryResolver) SearchUser(ctx context.Context, query string, onlyOnline *bool) ([]*generated.User, error) {
-	cu, _ := CurrentUserFromContext(ctx)
-	log.Debug().Msgf("%+v", cu)
-
-	client := meilisearch.NewClient(meilisearch.ClientConfig{
-		Host:   "http://meilisearch:7700",
-		APIKey: "s42-dev-key",
-	})
-
-	searchRes, err := client.Index("s42_users").Search(query,
-		&meilisearch.SearchRequest{
-			Limit: 10,
-		})
+	usersID, err := searchengine.NewClient().SearchUser(query)
 	if err != nil {
 		return nil, err
 	}
 
-	var usersID []uuid.UUID
-
-	for _, res := range searchRes.Hits {
-		usersID = append(usersID, uuid.MustParse(fmt.Sprint(res.(map[string]interface{})["id"])))
+	predicates := []modelspredicate.User{user.IDIn(usersID...)}
+	if onlyOnline != nil && *onlyOnline {
+		predicates = append(predicates, user.HasCurrentLocation())
 	}
 
-	return r.client.User.Query().Where(user.IDIn(usersID...)).All(ctx)
+	return r.client.User.Query().Where(predicates...).All(ctx)
 }
 
 func (r *queryResolver) Campus(ctx context.Context, id uuid.UUID) (*generated.Campus, error) {

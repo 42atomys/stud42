@@ -24,7 +24,6 @@ deps:
 	./build/install-dependencies.sh
 
 devcontainer-init: generate certs
-	curl -H 'Authorization: Bearer s42-dev-key' -H 'Content-Type: application/json' -d '{"uid": "s42_users"}' 'http://meilisearch:7700/indexes'
 	go mod download
 	yarn --cwd web/ui install
 	yarn --cwd web/ui generate
