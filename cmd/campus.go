@@ -26,7 +26,7 @@ var campusCmd = &cobra.Command{
 
 		client := modelsutils.Client()
 		for _, c := range campus {
-			log.Debug().Msg("Creating campus " + c.Name)
+			log.Debug().Msg("Insert data of campus " + c.Name)
 			err := client.Campus.Create().
 				SetActive(c.Active).
 				SetAddress(c.Address).
@@ -40,8 +40,8 @@ var campusCmd = &cobra.Command{
 				SetName(c.Name).
 				SetTimeZone(c.TimeZone).
 				SetLanguageCode(c.Language.Identifier).
-				OnConflict().
-				DoNothing().
+				OnConflict(sql.ConflictColumns("duo_id")).
+				UpdateNewValues().
 				Exec(cmd.Context())
 			if err != nil {
 				if modelgen.IsNotFound(err) {
