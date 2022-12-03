@@ -39,7 +39,6 @@ func generateEntc() {
 		Features: []gen.Feature{
 			gen.FeaturePrivacy,
 			gen.FeatureModifier,
-			gen.FeatureSnapshot,
 			gen.FeatureUpsert,
 			gen.FeatureVersionedMigration,
 		},

@@ -73,9 +73,10 @@ export const Search: SearchComponent = ({
                       <Combobox.Option
                         key={user.id}
                         className={({ active }) =>
-                          `relative select-none py-2 px-4 cursor-pointer group ${active
-                            ? 'bg-indigo-600 text-white [&>span>span]:text-white'
-                            : 'text-slate-200'
+                          `relative select-none py-2 px-4 cursor-pointer group ${
+                            active
+                              ? 'bg-indigo-600 text-white [&>span>span]:text-white'
+                              : 'text-slate-200'
                           }`
                         }
                         value={user}
@@ -118,7 +119,9 @@ export const Search: SearchComponent = ({
         />
         <span
           className={
-            loader ? 'bg-white dark:bg-slate-900 px-2 fixed right-5 z-10' : 'hidden'
+            loader
+              ? 'bg-white dark:bg-slate-900 px-2 fixed right-5 z-10'
+              : 'hidden'
           }
         >
           <LoaderSpinner />
