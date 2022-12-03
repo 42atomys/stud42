@@ -1,11 +1,13 @@
 package cmd
 
 import (
+	"entgo.io/ent/dialect/sql"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 
 	modelsutils "atomys.codes/stud42/internal/models"
 	modelgen "atomys.codes/stud42/internal/models/generated"
+	"atomys.codes/stud42/internal/models/generated/campus"
 	"atomys.codes/stud42/pkg/duoapi"
 )
 
@@ -19,13 +21,13 @@ var campusCmd = &cobra.Command{
 			log.Fatal().Msg("Failed to connect to database")
 		}
 
-		campus, err := duoapi.CampusAll(cmd.Context())
+		campuses, err := duoapi.CampusAll(cmd.Context())
 		if err != nil {
 			log.Fatal().Err(err).Msg("Failed to get duoapi response")
 		}
 
 		client := modelsutils.Client()
-		for _, c := range campus {
+		for _, c := range campuses {
 			log.Debug().Msg("Insert data of campus " + c.Name)
 			err := client.Campus.Create().
 				SetActive(c.Active).
@@ -40,7 +42,7 @@ var campusCmd = &cobra.Command{
 				SetName(c.Name).
 				SetTimeZone(c.TimeZone).
 				SetLanguageCode(c.Language.Identifier).
-				OnConflict(sql.ConflictColumns("duo_id")).
+				OnConflict(sql.ConflictColumns(campus.FieldDuoID)).
 				UpdateNewValues().
 				Exec(cmd.Context())
 			if err != nil {
@@ -53,7 +55,7 @@ var campusCmd = &cobra.Command{
 			}
 			log.Info().Msg("Successfully import the campus of " + c.Name)
 		}
-		log.Info().Msgf("Successfully imported %d campus", len(campus))
+		log.Info().Msgf("Successfully imported %d campus", len(campuses))
 	},
 }
 
