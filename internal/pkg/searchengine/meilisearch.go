@@ -24,19 +24,19 @@ func initMeilisearchDependency() {
 // NewClient creates a new MeiliSearch client and returns it.
 // It uses the configuration to get the host and the API key.
 func NewClient() *Client {
-	var host, apiKey string
+	var host, token string
 	if host = viper.GetString("searchengine.meilisearch.host"); host == "" {
 		log.Fatal().Msg("searchengine.meilisearch.host not set")
 	}
 
-	if apiKey = viper.GetString("searchengine.meilisearch.apiKey"); apiKey == "" {
-		log.Fatal().Msg("searchengine.meilisearch.apiKey not set")
+	if token = viper.GetString("searchengine.meilisearch.token"); token == "" {
+		log.Fatal().Msg("searchengine.meilisearch.token not set")
 	}
 
 	return &Client{
 		Client: meilisearch.NewClient(meilisearch.ClientConfig{
 			Host:   host,
-			APIKey: apiKey,
+			APIKey: token,
 		}),
 	}
 }

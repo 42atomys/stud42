@@ -45,11 +45,12 @@ module "api" {
   }
 
   env = {
-    GO_ENV        = var.namespace
-    CORS_ORIGIN   = "https://${var.rootDomain}"
-    DATABASE_HOST = "postgres.${var.namespace}.svc.cluster.local"
-    DATABASE_NAME = "s42"
-    DATABASE_URL  = "postgresql://postgres:$(DATABASE_PASSWORD)@$(DATABASE_HOST):5432/$(DATABASE_NAME)?sslmode=disable"
+    GO_ENV                        = var.namespace
+    CORS_ORIGIN                   = "https://${var.rootDomain}"
+    DATABASE_HOST                 = "postgres.${var.namespace}.svc.cluster.local"
+    DATABASE_NAME                 = "s42"
+    DATABASE_URL                  = "postgresql://postgres:$(DATABASE_PASSWORD)@$(DATABASE_HOST):5432/$(DATABASE_NAME)?sslmode=disable"
+    SEARCHENGINE_MEILISEARCH_HOST = "meilisearch.${var.namespace}.svc.cluster.local"
   }
 
   envFromSecret = {
@@ -75,6 +76,10 @@ module "api" {
     S42_SERVICE_TOKEN = {
       key  = "TOKEN"
       name = "s42-service-token"
+    }
+    SEARCHENGINE_MEILISEARCH_TOKEN = {
+      key  = "MEILI_MASTER_KEY"
+      name = "meilisearch-token"
     }
   }
 

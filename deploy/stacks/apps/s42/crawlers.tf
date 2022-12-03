@@ -125,11 +125,12 @@ module "crawler_locations" {
   }
 
   env = {
-    DEBUG         = "true"
-    GO_ENV        = var.namespace
-    DATABASE_HOST = "postgres.${var.namespace}.svc.cluster.local"
-    DATABASE_NAME = "s42"
-    DATABASE_URL  = "postgresql://postgres:$(DATABASE_PASSWORD)@$(DATABASE_HOST):5432/$(DATABASE_NAME)?sslmode=disable"
+    DEBUG                         = "true"
+    GO_ENV                        = var.namespace
+    DATABASE_HOST                 = "postgres.${var.namespace}.svc.cluster.local"
+    DATABASE_NAME                 = "s42"
+    DATABASE_URL                  = "postgresql://postgres:$(DATABASE_PASSWORD)@$(DATABASE_HOST):5432/$(DATABASE_NAME)?sslmode=disable"
+    SEARCHENGINE_MEILISEARCH_HOST = "meilisearch.${var.namespace}.svc.cluster.local"
   }
 
   envFromSecret = {
@@ -148,6 +149,10 @@ module "crawler_locations" {
     SENTRY_DSN = {
       key  = "API_DSN"
       name = "sentry-dsns"
+    }
+    SEARCHENGINE_MEILISEARCH_TOKEN = {
+      key  = "MEILI_MASTER_KEY"
+      name = "meilisearch-token"
     }
   }
 

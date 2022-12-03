@@ -27,6 +27,8 @@ services:
       DATABASE_URL: postgresql://postgres:postgres@database:5432/s42?sslmode=disable
       AMQP_URL: amqp://rabbitmq:rabbitmq@rabbitmq:5672
       CORS_ORIGIN: http://localhost:3000
+      SEARCHENGINE_MEILISEARCH_HOST: http://meilisearch:7700
+      SEARCHENGINE_MEILISEARCH_TOKEN: private-meilisearch-token-for-dev-only
       # Interface
       NEXT_PUBLIC_GRAPHQL_API: http://localhost:4000/graphql
       NEXTAUTH_URL: http://localhost:3000
@@ -70,16 +72,16 @@ services:
     restart: unless-stopped
     environment:
       MEILI_ENV: development
-      MEILI_MASTER_KEY: s42-dev-key
+      MEILI_MASTER_KEY: private-meilisearch-token-for-dev-only
       MEILI_LOG_LEVEL: debug
-
-    # Add "forwardPorts": ["5432"] to **devcontainer.json** to forward PostgreSQL locally.
-    # (Adding the "ports" property to this file will not forward from a Codespace.)
+    volumes:
+      - meilisearch-data:/meili_data
   jaeger:
     image: jaegertracing/all-in-one:latest
 
 volumes:
   postgres-data:
+  meilisearch-data:
 
 networks:
   s42-dev-network:

@@ -47,12 +47,13 @@ module "webhooks_processor" {
     # Enable the DEBUG mode for the webhooks processor to get more logs 
     # from the application itself
     # TODO : Remove this once the application is stable enough
-    DEBUG         = "true"
-    GO_ENV        = var.namespace
-    DATABASE_HOST = "postgres.${var.namespace}.svc.cluster.local"
-    DATABASE_NAME = "s42"
-    DATABASE_URL  = "postgresql://postgres:$(DATABASE_PASSWORD)@$(DATABASE_HOST):5432/$(DATABASE_NAME)?sslmode=disable"
-    AMQP_URL      = "amqp://$(RABBITMQ_USER):$(RABBITMQ_PASSWORD)@$(RABBITMQ_HOST).cluster.local:$(RABBITMQ_PORT)/"
+    DEBUG                         = "true"
+    GO_ENV                        = var.namespace
+    DATABASE_HOST                 = "postgres.${var.namespace}.svc.cluster.local"
+    DATABASE_NAME                 = "s42"
+    DATABASE_URL                  = "postgresql://postgres:$(DATABASE_PASSWORD)@$(DATABASE_HOST):5432/$(DATABASE_NAME)?sslmode=disable"
+    AMQP_URL                      = "amqp://$(RABBITMQ_USER):$(RABBITMQ_PASSWORD)@$(RABBITMQ_HOST).cluster.local:$(RABBITMQ_PORT)/"
+    SEARCHENGINE_MEILISEARCH_HOST = "meilisearch.${var.namespace}.svc.cluster.local"
   }
   envFromSecret = {
     # S42_SERVICE_TOKEN = {
@@ -92,6 +93,10 @@ module "webhooks_processor" {
     SENTRY_DSN = {
       key  = "WEBHOOKS_PROCESSOR_DSN"
       name = "sentry-dsns"
+    }
+    SEARCHENGINE_MEILISEARCH_TOKEN = {
+      key  = "MEILI_MASTER_KEY"
+      name = "meilisearch-token"
     }
   }
 
