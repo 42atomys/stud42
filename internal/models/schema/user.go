@@ -96,6 +96,8 @@ func (User) Hooks() []ent.Hook {
 func meilisearchUpdateHook(next ent.Mutator) ent.Mutator {
 	return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
 		v, err := next.Mutate(ctx, m)
+
+		log.Debug().Msgf("meilisearchUpdateHook: %s", m.Op().String())
 		if !m.Op().Is(ent.OpCreate|ent.OpUpdate|ent.OpUpdateOne) || err != nil {
 			return v, err
 		}
@@ -120,6 +122,7 @@ func meilisearchUpdateHook(next ent.Mutator) ent.Mutator {
 			CurrentCampusID() (currentCampusID uuid.UUID, exists bool)
 		})
 		if !ok {
+			log.Error().Err(err).Msg("cannot update MeiliSearch index: mutation is not a User")
 			return v, err
 		}
 
@@ -127,9 +130,11 @@ func meilisearchUpdateHook(next ent.Mutator) ent.Mutator {
 		// mutation is not really related to a Create or an Update.
 		userID, ok := userMutation.ID()
 		if !ok {
+			log.Error().Err(err).Msg("cannot update MeiliSearch index: mutation has no ID")
 			return v, err
 		}
 
+		log.Debug().Msgf("Update MeiliSearch index for user %s", userID)
 		// Create the base document that will be used to update the index.
 		document := &searchengine.UserDocument{
 			ID: userID,
@@ -160,6 +165,7 @@ func meilisearchUpdateHook(next ent.Mutator) ent.Mutator {
 
 		// Update the index.
 		go func() {
+			log.Debug().Interface("document", document).Msgf("Send request to update MeiliSearch index for user %s", userID)
 			err = searchengine.NewClient().UpdateUserDocument(ctx, document)
 			if err != nil {
 				log.Error().Err(err).Msg("Failed to update user document in MeiliSearch")
@@ -175,6 +181,8 @@ func meilisearchUpdateHook(next ent.Mutator) ent.Mutator {
 func meilisearchDeleteHook(next ent.Mutator) ent.Mutator {
 	return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
 		v, err := next.Mutate(ctx, m)
+
+		log.Debug().Msgf("meilisearchDeleteHook: %s", m.Op().String())
 		if !m.Op().Is(ent.OpDelete|ent.OpDeleteOne) || err != nil {
 			return v, err
 		}
@@ -194,17 +202,20 @@ func meilisearchDeleteHook(next ent.Mutator) ent.Mutator {
 			ID() (id uuid.UUID, exists bool)
 		})
 		if !ok {
+			log.Error().Err(err).Msg("cannot delete MeiliSearch index: mutation is not a User")
 			return v, err
 		}
 
 		// Get the ID of the entity.
 		userID, ok := userMutation.ID()
 		if !ok {
+			log.Error().Err(err).Msg("cannot delete MeiliSearch index: mutation has no ID")
 			return v, err
 		}
 
 		// Delete the entity from the index.
 		go func() {
+			log.Debug().Msgf("Send request to delete MeiliSearch index for user %s", userID)
 			err := searchengine.NewClient().DeleteUserDocument(userID)
 			if err != nil {
 				log.Error().Err(err).Msg("Failed to delete user document in MeiliSearch")
