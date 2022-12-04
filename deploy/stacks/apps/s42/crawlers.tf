@@ -3,11 +3,12 @@ module "crawler_campus" {
   enabled = var.crawlerEnabled
   kind    = "CronJob"
 
-  name       = "crawler-campus"
-  appName    = "crawler-campus"
-  appVersion = var.appVersion
-  namespace  = var.namespace
-  image      = "ghcr.io/42atomys/stud42:${var.appVersion}"
+  name            = "crawler-campus"
+  appName         = "crawler-campus"
+  appVersion      = var.appVersion
+  namespace       = var.namespace
+  image           = "ghcr.io/42atomys/stud42:${var.appVersion}"
+  imagePullPolicy = var.namespace == "previews" ? "Always" : "IfNotPresent"
 
   command = ["stud42cli"]
   args    = ["--config", "/config/stud42.yaml", "jobs", "crawler", "campus"]
@@ -86,11 +87,12 @@ module "crawler_locations" {
   enabled = var.crawlerEnabled
   kind    = "CronJob"
 
-  name       = "crawler-locations"
-  appName    = "crawler-locations"
-  appVersion = var.appVersion
-  namespace  = var.namespace
-  image      = "ghcr.io/42atomys/stud42:${var.appVersion}"
+  name            = "crawler-locations"
+  appName         = "crawler-locations"
+  appVersion      = var.appVersion
+  namespace       = var.namespace
+  image           = "ghcr.io/42atomys/stud42:${var.appVersion}"
+  imagePullPolicy = var.namespace == "previews" ? "Always" : "IfNotPresent"
 
   command = ["stud42cli"]
   args    = ["--config", "/config/stud42.yaml", "jobs", "crawler", "locations"]

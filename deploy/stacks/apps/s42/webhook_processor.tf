@@ -2,11 +2,12 @@ module "webhooks_processor" {
   source  = "../../../modules/service"
   enabled = var.webhookProcessorEnabled
 
-  name       = "webhooks-processor"
-  appName    = "webhooks-processor"
-  appVersion = var.appVersion
-  namespace  = var.namespace
-  image      = "ghcr.io/42atomys/stud42:${var.appVersion}"
+  name            = "webhooks-processor"
+  appName         = "webhooks-processor"
+  appVersion      = var.appVersion
+  namespace       = var.namespace
+  image           = "ghcr.io/42atomys/stud42:${var.appVersion}"
+  imagePullPolicy = var.namespace == "previews" ? "Always" : "IfNotPresent"
 
   command = ["stud42cli"]
   args    = ["--config", "/config/stud42.yaml", "jobs", "webhooks"]

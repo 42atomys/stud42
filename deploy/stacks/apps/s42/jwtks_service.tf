@@ -2,11 +2,12 @@
 module "jwtks_service" {
   source = "../../../modules/service"
 
-  name       = "jwtks-service"
-  appName    = "jwtks-service"
-  appVersion = var.appVersion
-  namespace  = var.namespace
-  image      = "ghcr.io/42atomys/stud42:${var.appVersion}"
+  name            = "jwtks-service"
+  appName         = "jwtks-service"
+  appVersion      = var.appVersion
+  namespace       = var.namespace
+  image           = "ghcr.io/42atomys/stud42:${var.appVersion}"
+  imagePullPolicy = var.namespace == "previews" ? "Always" : "IfNotPresent"
 
   command = ["stud42cli"]
   args    = ["--config", "/config/stud42.yaml", "serve", "jwtks"]
