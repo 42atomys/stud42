@@ -14,6 +14,7 @@ import (
 	"atomys.codes/stud42/internal/models/generated/campus"
 	"atomys.codes/stud42/internal/models/generated/location"
 	"atomys.codes/stud42/internal/models/generated/user"
+	"atomys.codes/stud42/internal/pkg/searchengine"
 	"atomys.codes/stud42/pkg/duoapi"
 )
 
@@ -23,12 +24,18 @@ var locationsCmd = &cobra.Command{
 	Short: "Crawl all active locations of specific campus and update the database",
 	Long: `Crawl all active locations of specific campus and update the database.
 For any closed locations, the location will be marked as inactive in the database.`,
+	PreRun: func(cmd *cobra.Command, args []string) {
+		if err := modelsutils.Connect(); err != nil {
+			log.Fatal().Err(err).Msg("failed to connect to database")
+		}
+
+		if err := modelsutils.Migrate(); err != nil {
+			log.Fatal().Err(err).Msg("failed to migrate database")
+		}
+		searchengine.Initizialize()
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		var campusID = cmd.Flag("campus_id").Value.String()
-
-		if modelsutils.Connect() != nil {
-			log.Fatal().Msg("Failed to connect to database")
-		}
 		db := modelsutils.Client()
 
 		// Retrieve the campus

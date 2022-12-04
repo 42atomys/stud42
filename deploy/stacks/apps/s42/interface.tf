@@ -21,11 +21,12 @@ resource "kubernetes_secret" "next_auth_secret" {
 module "interface" {
   source = "../../../modules/service"
 
-  name       = "interface"
-  appName    = "interface"
-  appVersion = var.appVersion
-  namespace  = var.namespace
-  image      = "ghcr.io/42atomys/stud42:${var.appVersion}"
+  name            = "interface"
+  appName         = "interface"
+  appVersion      = var.appVersion
+  namespace       = var.namespace
+  image           = "ghcr.io/42atomys/stud42:${var.appVersion}"
+  imagePullPolicy = var.namespace == "previews" ? "Always" : "IfNotPresent"
 
   args = ["server.js"]
 

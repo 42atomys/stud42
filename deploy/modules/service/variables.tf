@@ -23,7 +23,7 @@ variable "appVersion" {
   description = "Version of the service"
 
   validation {
-    condition     = can(regex("^(latest|v?[0-9\\.]+(?:-rc\\.[0-9]+)?)$", var.appVersion)) # disable v prefix for now
+    condition     = can(regex("^(latest|pr-[0-9]+|v?[0-9\\.]+(?:-rc\\.[0-9]+)?)$", var.appVersion)) # disable v prefix for now
     error_message = "The version must be respect the semver 2.0.0 convention (or latest). Got: ${var.appVersion}"
   }
 }

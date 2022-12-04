@@ -28,6 +28,7 @@ func WithTx(ctx context.Context, client *modelgen.Client, fn func(tx *modelgen.T
 				log.Error().Err(err).Msg("failed to rollback transaction")
 				sentry.CaptureException(err)
 			}
+			log.Error().Err(v.(error)).Msg("Error in transaction")
 			sentry.CaptureException(v.(error))
 		}
 	}()

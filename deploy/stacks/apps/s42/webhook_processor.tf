@@ -2,11 +2,12 @@ module "webhooks_processor" {
   source  = "../../../modules/service"
   enabled = var.webhookProcessorEnabled
 
-  name       = "webhooks-processor"
-  appName    = "webhooks-processor"
-  appVersion = var.appVersion
-  namespace  = var.namespace
-  image      = "ghcr.io/42atomys/stud42:${var.appVersion}"
+  name            = "webhooks-processor"
+  appName         = "webhooks-processor"
+  appVersion      = var.appVersion
+  namespace       = var.namespace
+  image           = "ghcr.io/42atomys/stud42:${var.appVersion}"
+  imagePullPolicy = var.namespace == "previews" ? "Always" : "IfNotPresent"
 
   command = ["stud42cli"]
   args    = ["--config", "/config/stud42.yaml", "jobs", "webhooks"]
@@ -47,12 +48,13 @@ module "webhooks_processor" {
     # Enable the DEBUG mode for the webhooks processor to get more logs 
     # from the application itself
     # TODO : Remove this once the application is stable enough
-    DEBUG         = "true"
-    GO_ENV        = var.namespace
-    DATABASE_HOST = "postgres.${var.namespace}.svc.cluster.local"
-    DATABASE_NAME = "s42"
-    DATABASE_URL  = "postgresql://postgres:$(DATABASE_PASSWORD)@$(DATABASE_HOST):5432/$(DATABASE_NAME)?sslmode=disable"
-    AMQP_URL      = "amqp://$(RABBITMQ_USER):$(RABBITMQ_PASSWORD)@$(RABBITMQ_HOST).cluster.local:$(RABBITMQ_PORT)/"
+    DEBUG                         = "true"
+    GO_ENV                        = var.namespace
+    DATABASE_HOST                 = "postgres.${var.namespace}.svc.cluster.local"
+    DATABASE_NAME                 = "s42"
+    DATABASE_URL                  = "postgresql://postgres:$(DATABASE_PASSWORD)@$(DATABASE_HOST):5432/$(DATABASE_NAME)?sslmode=disable"
+    AMQP_URL                      = "amqp://$(RABBITMQ_USER):$(RABBITMQ_PASSWORD)@$(RABBITMQ_HOST).cluster.local:$(RABBITMQ_PORT)/"
+    SEARCHENGINE_MEILISEARCH_HOST = "http://meilisearch.${var.namespace}.svc.cluster.local:7700"
   }
   envFromSecret = {
     # S42_SERVICE_TOKEN = {
@@ -92,6 +94,10 @@ module "webhooks_processor" {
     SENTRY_DSN = {
       key  = "WEBHOOKS_PROCESSOR_DSN"
       name = "sentry-dsns"
+    }
+    SEARCHENGINE_MEILISEARCH_TOKEN = {
+      key  = "MEILI_MASTER_KEY"
+      name = "meilisearch-token"
     }
   }
 

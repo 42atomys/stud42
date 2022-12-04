@@ -3,11 +3,12 @@ module "crawler_campus" {
   enabled = var.crawlerEnabled
   kind    = "CronJob"
 
-  name       = "crawler-campus"
-  appName    = "crawler-campus"
-  appVersion = var.appVersion
-  namespace  = var.namespace
-  image      = "ghcr.io/42atomys/stud42:${var.appVersion}"
+  name            = "crawler-campus"
+  appName         = "crawler-campus"
+  appVersion      = var.appVersion
+  namespace       = var.namespace
+  image           = "ghcr.io/42atomys/stud42:${var.appVersion}"
+  imagePullPolicy = var.namespace == "previews" ? "Always" : "IfNotPresent"
 
   command = ["stud42cli"]
   args    = ["--config", "/config/stud42.yaml", "jobs", "crawler", "campus"]
@@ -86,11 +87,12 @@ module "crawler_locations" {
   enabled = var.crawlerEnabled
   kind    = "CronJob"
 
-  name       = "crawler-locations"
-  appName    = "crawler-locations"
-  appVersion = var.appVersion
-  namespace  = var.namespace
-  image      = "ghcr.io/42atomys/stud42:${var.appVersion}"
+  name            = "crawler-locations"
+  appName         = "crawler-locations"
+  appVersion      = var.appVersion
+  namespace       = var.namespace
+  image           = "ghcr.io/42atomys/stud42:${var.appVersion}"
+  imagePullPolicy = var.namespace == "previews" ? "Always" : "IfNotPresent"
 
   command = ["stud42cli"]
   args    = ["--config", "/config/stud42.yaml", "jobs", "crawler", "locations"]
@@ -125,11 +127,12 @@ module "crawler_locations" {
   }
 
   env = {
-    DEBUG         = "true"
-    GO_ENV        = var.namespace
-    DATABASE_HOST = "postgres.${var.namespace}.svc.cluster.local"
-    DATABASE_NAME = "s42"
-    DATABASE_URL  = "postgresql://postgres:$(DATABASE_PASSWORD)@$(DATABASE_HOST):5432/$(DATABASE_NAME)?sslmode=disable"
+    DEBUG                         = "true"
+    GO_ENV                        = var.namespace
+    DATABASE_HOST                 = "postgres.${var.namespace}.svc.cluster.local"
+    DATABASE_NAME                 = "s42"
+    DATABASE_URL                  = "postgresql://postgres:$(DATABASE_PASSWORD)@$(DATABASE_HOST):5432/$(DATABASE_NAME)?sslmode=disable"
+    SEARCHENGINE_MEILISEARCH_HOST = "http://meilisearch.${var.namespace}.svc.cluster.local:7700"
   }
 
   envFromSecret = {
@@ -148,6 +151,10 @@ module "crawler_locations" {
     SENTRY_DSN = {
       key  = "API_DSN"
       name = "sentry-dsns"
+    }
+    SEARCHENGINE_MEILISEARCH_TOKEN = {
+      key  = "MEILI_MASTER_KEY"
+      name = "meilisearch-token"
     }
   }
 

@@ -18,9 +18,10 @@ import (
 	"atomys.codes/stud42/internal/models/generated/account"
 	"atomys.codes/stud42/internal/models/generated/campus"
 	"atomys.codes/stud42/internal/models/generated/location"
+	modelspredicate "atomys.codes/stud42/internal/models/generated/predicate"
 	"atomys.codes/stud42/internal/models/generated/user"
 	"atomys.codes/stud42/internal/models/gotype"
-	"atomys.codes/stud42/pkg/utils"
+	"atomys.codes/stud42/internal/pkg/searchengine"
 	"entgo.io/ent/dialect/sql"
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
@@ -147,48 +148,17 @@ func (r *queryResolver) Me(ctx context.Context) (*generated.User, error) {
 }
 
 func (r *queryResolver) SearchUser(ctx context.Context, query string, onlyOnline *bool) ([]*generated.User, error) {
-	cu, _ := CurrentUserFromContext(ctx)
-
-	sqlQuery := r.client.User.Query()
-
-	if onlyOnline != nil && *onlyOnline {
-		sqlQuery = sqlQuery.WithCurrentLocation(func(lq *generated.LocationQuery) {
-			lq.WithCampus()
-		})
+	usersID, err := searchengine.NewClient().SearchUser(query)
+	if err != nil {
+		return nil, err
 	}
 
-	return sqlQuery.Where(func(s *sql.Selector) {
-		t := sql.Table(user.Table)
+	predicates := []modelspredicate.User{user.IDIn(usersID...)}
+	if onlyOnline != nil && *onlyOnline {
+		predicates = append(predicates, user.HasCurrentLocation())
+	}
 
-		// predicates to know if the user is online
-		var onlinePredicate *sql.Predicate
-		if onlyOnline != nil && *onlyOnline {
-			onlinePredicate = sql.NotNull(t.C(user.FieldCurrentLocationID))
-		} else {
-			onlinePredicate = sql.IsNull(t.C(user.FieldCurrentLocationID))
-		}
-
-		s.Select(t.Columns(user.Columns...)...).
-			From(t).
-			Where(
-				sql.And(
-					sql.NEQ(t.C(user.FieldID), cu.ID),
-					sql.Like(t.C(user.FieldDuoLogin), query),
-					onlinePredicate,
-				),
-			).
-			UnionAll(
-				sql.Select(t.Columns(user.Columns...)...).
-					From(t).
-					Where(
-						sql.And(
-							sql.NEQ(t.C(user.FieldID), cu.ID),
-							onlinePredicate,
-							sql.ExprP("CONCAT(COALESCE(NULLIF(TRIM(usual_first_name), ''), first_name), ' ', last_name) ILIKE $4", fmt.Sprintf("%%%s%%", utils.StringLimiter(query, 20))),
-						),
-					),
-			)
-	}).Limit(10).All(ctx)
+	return r.client.User.Query().Where(predicates...).All(ctx)
 }
 
 func (r *queryResolver) Campus(ctx context.Context, id uuid.UUID) (*generated.Campus, error) {

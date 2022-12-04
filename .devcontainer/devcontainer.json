@@ -110,7 +110,8 @@
     4000, // api port
     5000, // jwtks-service grpc port
     5500, // jwtks-service http port
-    "jaeger:16686" // the jaeger port
+    "jaeger:16686", // the jaeger port
+    "meilisearch:7700" // the meilisearch port
   ],
   // Use 'postCreateCommand' to run commands after the container is created.
   "postCreateCommand": ".devcontainer/postStartCommand.sh",
@@ -132,6 +133,9 @@
     },
     "16686": {
       "label": "Jaeger UI"
+    },
+    "7700": {
+      "label": "MeiliSearch"
     }
   }
 }

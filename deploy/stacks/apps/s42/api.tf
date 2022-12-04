@@ -1,11 +1,12 @@
 module "api" {
   source = "../../../modules/service"
 
-  name       = "api"
-  appName    = "api"
-  appVersion = var.appVersion
-  namespace  = var.namespace
-  image      = "ghcr.io/42atomys/stud42:${var.appVersion}"
+  name            = "api"
+  appName         = "api"
+  appVersion      = var.appVersion
+  namespace       = var.namespace
+  image           = "ghcr.io/42atomys/stud42:${var.appVersion}"
+  imagePullPolicy = var.namespace == "previews" ? "Always" : "IfNotPresent"
 
   command = ["stud42cli"]
   args    = ["--config", "/config/stud42.yaml", "serve", "api", "-g"]
@@ -45,11 +46,12 @@ module "api" {
   }
 
   env = {
-    GO_ENV        = var.namespace
-    CORS_ORIGIN   = "https://${var.rootDomain}"
-    DATABASE_HOST = "postgres.${var.namespace}.svc.cluster.local"
-    DATABASE_NAME = "s42"
-    DATABASE_URL  = "postgresql://postgres:$(DATABASE_PASSWORD)@$(DATABASE_HOST):5432/$(DATABASE_NAME)?sslmode=disable"
+    GO_ENV                        = var.namespace
+    CORS_ORIGIN                   = "https://${var.rootDomain}"
+    DATABASE_HOST                 = "postgres.${var.namespace}.svc.cluster.local"
+    DATABASE_NAME                 = "s42"
+    DATABASE_URL                  = "postgresql://postgres:$(DATABASE_PASSWORD)@$(DATABASE_HOST):5432/$(DATABASE_NAME)?sslmode=disable"
+    SEARCHENGINE_MEILISEARCH_HOST = "http://meilisearch.${var.namespace}.svc.cluster.local:7700"
   }
 
   envFromSecret = {
@@ -75,6 +77,10 @@ module "api" {
     S42_SERVICE_TOKEN = {
       key  = "TOKEN"
       name = "s42-service-token"
+    }
+    SEARCHENGINE_MEILISEARCH_TOKEN = {
+      key  = "MEILI_MASTER_KEY"
+      name = "meilisearch-token"
     }
   }
 
