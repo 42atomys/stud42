@@ -60,6 +60,17 @@ const nextConfig = {
       exclude: /node_modules/,
       loader: 'graphql-tag/loader',
     });
+
+    // Configure watch mode for webpack to work with docker volumes on Windows
+    // and MacOS. Avoid watching node_modules to improve performance and avoid
+    // unnecessary rebuilds.
+    config.watchOptions = {
+      ignored: /node_modules/,
+      followSymlinks: true,
+      poll: 1000,
+      aggregateTimeout: 300,
+    };
+
     return config;
   },
 };

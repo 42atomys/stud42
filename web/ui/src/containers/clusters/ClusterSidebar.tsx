@@ -1,8 +1,8 @@
-import { CampusClusterMapData, CampusNames } from '@components/ClusterMap';
 import Search from '@components/Search';
 import useSidebar, { Menu, MenuCategory, MenuItem } from '@components/Sidebar';
 import { useClusterSidebarDataQuery } from '@graphql.d';
 import { isFirstLoading } from '@lib/apollo';
+import Campuses, { CampusNames } from '@lib/clustersMap';
 import '@lib/prototypes/string';
 import { clusterURL } from '@lib/searchEngine';
 import Link from 'next/link';
@@ -12,28 +12,29 @@ import React from 'react';
 /**
  * ClusterSidebar is the sidebar for the cluster page. It contains the cluster
  * menu statically defined. Used accross all cluster pages.
- * @param {string} campus - The campus used to match the current campus
- * @param {string} cluster - The cluster used to match the current cluster
+ * @param {string} activeCampusName - The campus used to match the current campus
+ * @param {string} activeClusterIdentifier - The cluster used to match the current cluster
  * @returns {JSX.Element} The sub sidebar component
  */
 export const ClusterSidebar = ({
-  campus,
-  cluster,
+  activeCampusName,
+  activeClusterIdentifier,
 }: {
-  campus: string;
-  cluster: string;
+  activeCampusName: CampusNames;
+  activeClusterIdentifier: string;
 }) => {
   const { Sidebar } = useSidebar();
   const router = useRouter();
-  const campusKeys = Object.keys(CampusClusterMapData) as Array<CampusNames>;
+  const campusKeys = Object.keys(Campuses) as Array<CampusNames>;
+  const currentCampusData = Campuses[activeCampusName];
 
   const { data: { me, locationsStatsByPrefixes = [] } = {}, networkStatus } =
     useClusterSidebarDataQuery({
       variables: {
-        campusName: campus,
-        clusterPrefixes: Object.keys(
-          CampusClusterMapData[campus as CampusNames]
-        ).filter((e) => e !== '_data'),
+        campusName: activeCampusName,
+        clusterPrefixes: currentCampusData
+          .clusters()
+          .map((c) => c.identifier()),
       },
     });
   const myCampusName = me?.currentCampus?.name?.toLowerCase() || '';
@@ -41,9 +42,8 @@ export const ClusterSidebar = ({
     locationsStatsByPrefixes
       .map((l) => {
         const totalWorkspaces =
-          CampusClusterMapData[campus as CampusNames]?._data?.totalWorkspaces;
-        // @ts-ignore
-        return [l.prefix, totalWorkspaces[l.prefix] - l.occupiedWorkspace];
+          currentCampusData.cluster(l.prefix)?.totalWorkspaces() || 0;
+        return [l.prefix, totalWorkspaces - l.occupiedWorkspace];
       })
       .reduce(
         (acc, [prefix, freePlaces]) => ({ ...acc, [prefix]: freePlaces }),
@@ -101,53 +101,50 @@ export const ClusterSidebar = ({
                 : a.localeCompare(b);
             })
             .map((campusName) => {
-              const campusData = CampusClusterMapData[campusName]._data;
+              const campusData = Campuses[campusName];
               const isMyCampus = campusName?.equalsIgnoreCase(myCampusName);
-              const activeCampus = campus == campusName;
+              const activeCampus = activeCampusName == campusName;
 
               return (
                 <MenuCategory
                   key={`sidebar-campus-${campusName}`}
-                  emoji={campusData.emoji}
+                  emoji={campusData.emoji()}
                   name={campusName}
                   text={isMyCampus ? 'Your campus' : undefined}
                   isCollapsable={!isMyCampus}
                   collapsed={!activeCampus}
                 >
-                  {Object.keys(CampusClusterMapData[campusName])
-                    .filter((a) => a !== '_data')
-                    .map((clusterName) => {
-                      const clusterNickname =
-                        // @ts-ignore
-                        // prettier-ignore
-                        CampusClusterMapData[campusName]._data.clusterNames[clusterName];
-
-                      return (
-                        <Link
-                          href={`/clusters/${campusName}/${clusterName}`}
-                          passHref={true}
-                          key={`sidebar-clusters-${campusName}-${clusterName}`}
-                        >
-                          <a>
-                            <MenuItem
-                              active={activeCampus && cluster == clusterName}
-                              name={clusterNickname}
-                              leftText={clusterName.toUpperCase()}
-                              rightText={
-                                activeCampus ? (
-                                  <>
-                                    <span className="pr-1">
-                                      {freePlacesPerCluster[clusterName]}
-                                    </span>
-                                    <i className="fa-light fa-computer"></i>
-                                  </>
-                                ) : undefined
-                              }
-                            />
-                          </a>
-                        </Link>
-                      );
-                    })}
+                  {campusData.clusters().map((cluster) => {
+                    const clusterIdentifier = cluster.identifier();
+                    return (
+                      <Link
+                        href={`/clusters/${campusName}/${clusterIdentifier}`}
+                        passHref={true}
+                        key={`sidebar-clusters-${campusName}-${clusterIdentifier}`}
+                      >
+                        <a>
+                          <MenuItem
+                            active={
+                              activeCampus &&
+                              clusterIdentifier == activeClusterIdentifier
+                            }
+                            name={cluster.name()}
+                            leftText={clusterIdentifier.toUpperCase()}
+                            rightText={
+                              activeCampus ? (
+                                <>
+                                  <span className="pr-1">
+                                    {freePlacesPerCluster[clusterIdentifier]}
+                                  </span>
+                                  <i className="fa-light fa-computer"></i>
+                                </>
+                              ) : undefined
+                            }
+                          />
+                        </a>
+                      </Link>
+                    );
+                  })}
                 </MenuCategory>
               );
             })}
