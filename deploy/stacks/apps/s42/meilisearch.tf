@@ -59,7 +59,7 @@ module "meilisearch" {
 
   volumesFromPVC = {
     "data" = {
-      claimName = "data"
+      claimName = "meilisearch-data"
       readOnly  = false
     }
   }
