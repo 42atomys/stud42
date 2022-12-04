@@ -18,9 +18,9 @@ import { CampusNames, ICampus } from './types';
 export const Campuses: {
   [key in CampusNames]: ICampus;
 } = {
-  paris: new Paris(),
   helsinki: new Helsinki(),
   malaga: new Malaga(),
+  paris: new Paris(),
   vienna: new Vienna(),
 };
 
