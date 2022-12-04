@@ -97,7 +97,6 @@ func meilisearchUpdateHook(next ent.Mutator) ent.Mutator {
 	return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
 		v, err := next.Mutate(ctx, m)
 
-		log.Debug().Msgf("meilisearchUpdateHook: %s", m.Op().String())
 		if !m.Op().Is(ent.OpCreate|ent.OpUpdate|ent.OpUpdateOne) || err != nil {
 			return v, err
 		}
@@ -130,7 +129,8 @@ func meilisearchUpdateHook(next ent.Mutator) ent.Mutator {
 		// mutation is not really related to a Create or an Update.
 		userID, ok := userMutation.ID()
 		if !ok {
-			log.Error().Err(err).Msg("cannot update MeiliSearch index: mutation has no ID")
+			// No ID means that the mutation is not really related to an entity
+			// is more like a "bulk" mutation.
 			return v, err
 		}
 
@@ -182,7 +182,6 @@ func meilisearchDeleteHook(next ent.Mutator) ent.Mutator {
 	return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
 		v, err := next.Mutate(ctx, m)
 
-		log.Debug().Msgf("meilisearchDeleteHook: %s", m.Op().String())
 		if !m.Op().Is(ent.OpDelete|ent.OpDeleteOne) || err != nil {
 			return v, err
 		}
@@ -209,7 +208,8 @@ func meilisearchDeleteHook(next ent.Mutator) ent.Mutator {
 		// Get the ID of the entity.
 		userID, ok := userMutation.ID()
 		if !ok {
-			log.Error().Err(err).Msg("cannot delete MeiliSearch index: mutation has no ID")
+			// No ID means that the mutation is not really related to an entity
+			// is more like a "bulk" mutation.
 			return v, err
 		}
 
