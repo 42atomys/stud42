@@ -53,6 +53,16 @@ export class Vienna extends Campus implements ICampus {
         totalWorkspaces: 64,
         // prettier-ignore
         map: [
+          [null, 'T:r10',     'T:r9',     null, null,   null,       null,       null,       null,       null,       null,      null,    null, 'T:r8', 'W:c3r8p1', 'W:c3r8p2', 'W:c3r8p3', 'W:c3r8p4', 'W:c3r8p5', 'W:c3r8p6', 'T:r8'],
+          [null, 'W:c3r10p1', 'W:c3r9p1', null, null,   null,       null,       null,       null,       null,       null,      null,    null, 'T:r7', 'W:c3r7p1', 'W:c3r7p2', 'W:c3r7p3', 'W:c3r7p4', 'W:c3r7p5', 'W:c3r7p6', 'T:r7'],
+          [null, 'W:c3r10p2', 'W:c3r9p2', null, 'T:r5', 'W:c3r5p1', 'W:c3r5p2', 'W:c3r5p3', 'W:c3r5p4', 'W:c3r5p5', 'W:c3r5p6', 'T:r5', null, null,   null,       null,       null,       null,       null,       null,       null  ],
+          [null, 'W:c3r10p3', 'W:c3r9p3', null, 'T:r4', 'W:c3r4p1', 'W:c3r4p2', 'W:c3r4p3', 'W:c3r4p4', 'W:c3r4p5', 'W:c3r4p6', 'T:r4', null, null,   null,       null,       null,       null,       null,       null,       null  ],
+          [null, 'W:c3r10p4', 'W:c3r9p4', null, 'T:r3', 'W:c3r3p1', 'W:c3r3p2', 'W:c3r3p3', 'W:c3r3p4', 'W:c3r3p5', 'W:c3r3p6', 'T:r3', null, 'T:r6', 'W:c3r6p1', 'W:c3r6p2', 'W:c3r6p3', 'W:c3r6p4', 'W:c3r6p5', 'W:c3r6p6', 'T:r6'],
+          [null, 'W:c3r10p5', 'W:c3r9p5', null, 'T:r2', 'W:c3r2p1', 'W:c3r2p2', 'W:c3r2p3', 'W:c3r2p4', 'W:c3r2p5', 'W:c3r2p6', 'T:r2', null, null,   null,       null,       null,       null,       null,       null,       null  ],
+          [null, 'W:c3r10p6', 'W:c3r9p6', null, 'T:r1', 'W:c3r1p1', 'W:c3r1p2', 'W:c3r1p3', 'W:c3r1p4', 'W:c3r1p5', 'W:c3r1p6', 'T:r1', null, null,   null,       null,       null,       null,       null,       null,       null  ],
+          [null, 'W:c3r10p7', 'W:c3r9p7', null, null,   null,       null,       null,       null,       null,       null,      null,    null, null,   null,       null,       null,       null,       null,       null,       null  ],
+          [null, 'W:c3r10p8', 'W:c3r9p8', null, null,   null,       null,       null,       null,       null,       null,      null,    null, null,   null,       null,       null,       null,       null,       null,       null  ],
+          [null, 'T:r10',     'T:r9',     null, null,   null,       null,       null,       null,       null,       null,      null,    null, null,   null,       null,       null,       null,       null,       null,       null  ],
         ],
       }),
     ];
