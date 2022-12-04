@@ -57,20 +57,24 @@ module "meilisearch" {
     }
   ]
 
-  volumesFromPVC = {
+  volumesFromPVC = var.hasPersistentStorage ? {
     "data" = {
       claimName = "meilisearch-data"
       readOnly  = false
     }
-  }
+  } : {}
 
-  persistentVolumeClaims = {
+  volumesFromEmptyDir = !var.hasPersistentStorage ? {
+    data = {}
+  } : {}
+
+  persistentVolumeClaims = var.hasPersistentStorage ? {
     "data" = {
       accessModes      = ["ReadWriteOnce"]
       storage          = "1Gi"
       storageClassName = "csi-cinder-high-speed"
     }
-  }
+  } : {}
 
   secrets = {
     "token" = {
