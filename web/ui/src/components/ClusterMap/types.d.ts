@@ -1,7 +1,7 @@
 import type { Actions, PayloadOf } from '@components/UserPopup';
 import type { ClusterViewQuery } from '@graphql.d';
+import { CampusNames } from '@lib/clustersMap';
 import { NonNullable } from 'types/utils';
-import { CampusClusterMapData } from './data';
 
 // ClusterMap.tsx
 export type MapLocation = NonNullable<
@@ -29,23 +29,11 @@ type ClusterContainerChildrenProps = {
   hidePopup: () => void;
 };
 
-type CampusNames = keyof typeof CampusClusterMapData;
-type ClusterPrefixes<T extends CampusNames> = typeof CampusClusterMapData[T];
-type ClusterMap = {
-  [key: string]: (number | 'pillar' | null)[];
-};
-
-export type AllClusterPrefixes = {
-  [Key in CampusNames as readonly Key]: Exclude<
-    keyof ClusterPrefixes<Key>,
-    '_data'
-  >;
-}[CampusNames];
-
 export type ClusterContainerProps = {
   [Key in CampusNames as readonly Key]: {
     campus: Key;
-    cluster: Exclude<keyof ClusterPrefixes<Key>, '_data'>;
+    // TODO Found a way to make this type more specific than `string`?
+    cluster: string;
     children: (props: ClusterContainerChildrenProps) => JSX.Element;
   };
 }[CampusNames];

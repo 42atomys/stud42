@@ -50,7 +50,7 @@ For any closed locations, the location will be marked as inactive in the databas
 		log.Info().Msgf("Start the crawling of active locations of campus %s (%s)", campus.Name, campusID)
 
 		// Fetch all active locations of the campus
-		locations, err := duoapi.LocationsActive(cmd.Context(), "1")
+		locations, err := duoapi.LocationsActive(cmd.Context(), campusID)
 		if err != nil {
 			log.Fatal().Err(err).Msg("Failed to get duoapi response")
 		}
@@ -78,7 +78,7 @@ For any closed locations, the location will be marked as inactive in the databas
 					SetIdentifier(l.Host).
 					SetUserDuoID(l.User.ID).
 					SetUserDuoLogin(l.User.Login).
-					OnConflictColumns(location.FieldDuoID).DoNothing().
+					OnConflictColumns(location.FieldDuoID).UpdateNewValues().
 					ID(cmd.Context())
 				if err != nil {
 					log.Error().Err(err).Msg("Failed to create location")
