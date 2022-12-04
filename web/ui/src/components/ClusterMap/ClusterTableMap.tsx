@@ -153,7 +153,7 @@ export const ClusterRow = ({
   displayText,
   children,
 }: {
-  displayText: string;
+  displayText?: string;
   children: React.ReactNode[] | React.ReactNode;
 }) => {
   return (

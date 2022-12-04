@@ -1,4 +1,4 @@
-import { CampusClusterMapData, CampusNames } from '@components/ClusterMap';
+import Campuses, { CampusNames } from './clustersMap';
 
 /**
  * retrieve the cluster url for the given campus and identifier
@@ -10,22 +10,16 @@ export const clusterURL = (
   const campusLower = campus?.toLowerCase();
   const identifierLower = identifier?.toLowerCase();
 
-  if (
-    !campusLower ||
-    !Object.keys(CampusClusterMapData).includes(campusLower)
-  ) {
+  if (!campusLower || !Object.keys(Campuses).includes(campusLower)) {
     return null;
   }
 
   if (campusLower && identifierLower) {
-    const [, cluster] =
-      identifierLower.match(
-        CampusClusterMapData[campusLower as CampusNames]._data
-          .identifierValidator
-      ) || [];
+    const { clusterWithLetter } =
+      Campuses[campusLower as CampusNames].extractor(identifierLower);
 
-    if (cluster) {
-      return `/clusters/${campusLower}/${cluster}?identifier=${identifierLower}`;
+    if (clusterWithLetter) {
+      return `/clusters/${campusLower}/${clusterWithLetter}?identifier=${identifierLower}`;
     }
   }
   return null;

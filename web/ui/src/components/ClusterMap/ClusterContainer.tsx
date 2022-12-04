@@ -88,8 +88,8 @@ export const ClusterContainer: ClusterContainerComponent = ({
             }}
           >
             <ClusterSidebar
-              campus={campus.toLowerCase()}
-              cluster={cluster as string}
+              activeCampusName={campus}
+              activeClusterIdentifier={cluster}
             />
             <PageContent
               className={
