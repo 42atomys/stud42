@@ -54,7 +54,7 @@ module "webhooks_processor" {
     DATABASE_NAME                 = "s42"
     DATABASE_URL                  = "postgresql://postgres:$(DATABASE_PASSWORD)@$(DATABASE_HOST):5432/$(DATABASE_NAME)?sslmode=disable"
     AMQP_URL                      = "amqp://$(RABBITMQ_USER):$(RABBITMQ_PASSWORD)@$(RABBITMQ_HOST).cluster.local:$(RABBITMQ_PORT)/"
-    SEARCHENGINE_MEILISEARCH_HOST = "meilisearch.${var.namespace}.svc.cluster.local"
+    SEARCHENGINE_MEILISEARCH_HOST = "http://meilisearch.${var.namespace}.svc.cluster.local:7700"
   }
   envFromSecret = {
     # S42_SERVICE_TOKEN = {
