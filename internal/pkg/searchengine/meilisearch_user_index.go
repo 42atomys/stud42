@@ -65,7 +65,8 @@ func (c *Client) EnsureUserIndex() error {
 // should be called when a user is created or updated. It will create the
 // document if it doesn't exist. It will update it if it does.
 func (c *Client) UpdateUserDocument(ctx context.Context, document *UserDocument) error {
-	// Update user document
+	log.Debug().Interface("document", document).Msg("updating user document")
+
 	_, err := c.Client.Index(IndexUser).UpdateDocuments(document, IndexUserPrimaryKey)
 	return err
 }
@@ -74,6 +75,8 @@ func (c *Client) UpdateUserDocument(ctx context.Context, document *UserDocument)
 // should be called when a user is deleted. It will do nothing if the document
 
 func (c *Client) DeleteUserDocument(userID uuid.UUID) error {
+	log.Debug().Str("docuemntId", userID.String()).Msgf("deleting user document")
+
 	_, err := c.Client.Index(IndexUser).DeleteDocument(userID.String())
 	return err
 }

@@ -165,7 +165,6 @@ func meilisearchUpdateHook(next ent.Mutator) ent.Mutator {
 
 		// Update the index.
 		go func() {
-			log.Debug().Interface("document", document).Msgf("Send request to update MeiliSearch index for user %s", userID)
 			err = searchengine.NewClient().UpdateUserDocument(ctx, document)
 			if err != nil {
 				log.Error().Err(err).Msg("Failed to update user document in MeiliSearch")
@@ -215,7 +214,6 @@ func meilisearchDeleteHook(next ent.Mutator) ent.Mutator {
 
 		// Delete the entity from the index.
 		go func() {
-			log.Debug().Msgf("Send request to delete MeiliSearch index for user %s", userID)
 			err := searchengine.NewClient().DeleteUserDocument(userID)
 			if err != nil {
 				log.Error().Err(err).Msg("Failed to delete user document in MeiliSearch")
