@@ -1227,14 +1227,14 @@
     "@graphql-tools/utils" "^8.8.0"
     tslib "~2.4.0"
 
-"@graphql-codegen/typescript-operations@2.5.3":
-  version "2.5.3"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript-operations/-/typescript-operations-2.5.3.tgz#c6fd3f209e3482b86b08050685af8fa45ab14297"
-  integrity sha512-s+pA+Erm0HeBb/D5cNrflwRM5KWhkiA5cbz4uA99l3fzFPveoQBPfRCBu0XAlJLP/kBDy64+o4B8Nfc7wdRtmA==
+"@graphql-codegen/typescript-operations@2.5.7":
+  version "2.5.7"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript-operations/-/typescript-operations-2.5.7.tgz#324bec408ef1ab26eece9d0ace1d5780a2f9dd42"
+  integrity sha512-4TRyQy/GizcjkZsvN176C5O5bULyGB/lMXDWqg58A9AGf/P0n5n4QjgrMd2EG6tA3Xzg1tiBWhxYEFSmlPVETQ==
   dependencies:
-    "@graphql-codegen/plugin-helpers" "^2.6.2"
-    "@graphql-codegen/typescript" "^2.7.3"
-    "@graphql-codegen/visitor-plugin-common" "2.12.1"
+    "@graphql-codegen/plugin-helpers" "^2.7.2"
+    "@graphql-codegen/typescript" "^2.8.2"
+    "@graphql-codegen/visitor-plugin-common" "2.13.2"
     auto-bind "~4.0.0"
     tslib "~2.4.0"
 
@@ -1260,7 +1260,7 @@
     auto-bind "~4.0.0"
     tslib "~2.4.0"
 
-"@graphql-codegen/typescript@^2.7.3":
+"@graphql-codegen/typescript@^2.8.2":
   version "2.8.2"
   resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript/-/typescript-2.8.2.tgz#88d5b916d9b6c93b17d2300a0ddddda5696581c1"
   integrity sha512-FWyEcJTHSxkImNgDRfsg4yBMJ11qPA6sPJ7v8Kviv5MaOFybclVSZ8WWfp7D8Dc6ix4zWfMd4dIl9ZIL/AJu8A==
@@ -7994,10 +7994,10 @@ prelude-ls@~1.1.2:
   resolved "https://registry.yarnpkg.com/prelude-ls/-/prelude-ls-1.1.2.tgz#21932a549f5e52ffd9a827f570e04be62a97da54"
   integrity sha512-ESF23V4SKG6lVSGZgYNpbsiaAkdab6ZgOxe52p7+Kid3W3u3bxR4Vfd/o21dmN7jSt0IwgZ4v5MUd26FEtXE9w==
 
-prettier@2.7.1:
-  version "2.7.1"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.7.1.tgz#e235806850d057f97bb08368a4f7d899f7760c64"
-  integrity sha512-ujppO+MkdPqoVINuDFDRLClm7D78qbDt0/NR+wp5FqEZOoTNAjPHWj17QRhu7geIHJfcNhRk1XVQmF8Bp3ye+g==
+prettier@2.8.0:
+  version "2.8.0"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.8.0.tgz#c7df58393c9ba77d6fba3921ae01faf994fb9dc9"
+  integrity sha512-9Lmg8hTFZKG0Asr/kW9Bp8tJjRVluO8EJQVfY2T7FMw9T5jy4I/Uvx0Rca/XWf50QQ1/SS48+6IJWnrb+2yemA==
 
 pretty-bytes@^5.6.0:
   version "5.6.0"
