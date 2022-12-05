@@ -18,6 +18,10 @@ Like say before, you needs to add some credentials listed on the file `.devconta
 
 **DO NOT GIT ADD THE `.devcontainer/.env` FILE. NEVER PUSH YOUR CREDENTIALS ON ANY COMMITS**
 
+> :warning: After setup your credentials on the file, you need to rebuild the container to apply it on the devcontainer.
+>
+> To do that : [Command Palette](https://code.visualstudio.com/docs/getstarted/userinterface#_command-palette) (⇧⌘P) and execute `Dev Containers: Rebuild Container`
+
 ### Oauth2 credentials
 
 To develop on S42, you need to have your OAuth2 applications with her credentials. Each OAuth2 provide to you an ID and a SECRET. In the next sub section, we give you the endpoint for each provider.
