@@ -8,6 +8,7 @@ import (
 	modelsutils "atomys.codes/stud42/internal/models"
 	modelgen "atomys.codes/stud42/internal/models/generated"
 	"atomys.codes/stud42/internal/pkg/searchengine"
+	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
@@ -51,16 +52,17 @@ all the users.`,
 			log.Fatal().Err(err).Msg("Cannot cast batch_size flag. batch_size msut be a positive integer")
 		}
 		usersCount := modelsutils.Client().User.Query().CountX(cmd.Context())
+		batchCount := int(math.Ceil(float64(usersCount) / float64(batchSize)))
 		log.Info().
 			Int("usersCount", usersCount).
 			Int("batchSize", batchSize).
-			Float64("batchCount", math.Ceil(float64(usersCount)/float64(batchSize))).
+			Int("batchCount", batchCount).
 			Msg("Start the re-indexation of the users")
 
-		for i := 0; i < usersCount; i += batchSize {
-			users := modelsutils.Client().User.Query().Offset(i).Limit(batchSize).AllX(cmd.Context())
+		for i := 0; i*batchSize < usersCount; i += 1 {
+			users := modelsutils.Client().User.Query().Offset(i * batchSize).Limit(batchSize).AllX(cmd.Context())
 
-			log.Info().Int("batchId", i).Int("usersCount", len(users)).Msg("Reindexing users in batch")
+			log.Info().Int("batch", i+1).Int("batchCount", batchCount).Int("usersCount", len(users)).Msg("Reindexing users in batch")
 
 			var wg sync.WaitGroup
 			for _, user := range users {
@@ -68,6 +70,7 @@ all the users.`,
 				go func(user *modelgen.User) {
 					defer wg.Done()
 
+					hasOnline := user.CurrentLocationID != nil && *user.CurrentLocationID != uuid.Nil
 					document := &searchengine.UserDocument{
 						ID:              user.ID,
 						CurrentCampusID: user.CurrentCampusID,
@@ -75,6 +78,7 @@ all the users.`,
 						FirstName:       user.FirstName,
 						UsualFirstName:  user.UsualFirstName,
 						LastName:        user.LastName,
+						HasOnline:       &hasOnline,
 					}
 
 					if err := meiliClient.UpdateUserDocument(cmd.Context(), document); err != nil {

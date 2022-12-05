@@ -2,6 +2,7 @@ package searchengine
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/meilisearch/meilisearch-go"
@@ -12,6 +13,7 @@ import (
 type UserDocument struct {
 	ID              uuid.UUID  `json:"id"`
 	CurrentCampusID *uuid.UUID `json:"current_campus_id,omitempty"`
+	HasOnline       *bool      `json:"has_online,omitempty"`
 	DuoLogin        string     `json:"duo_login,omitempty"`
 	FirstName       string     `json:"first_name,omitempty"`
 	UsualFirstName  *string    `json:"usual_first_name,omitempty"`
@@ -53,12 +55,38 @@ func (c *Client) EnsureUserIndex() error {
 		SearchableAttributes: []string{"duo_login", "first_name", "last_name", "usual_first_name"},
 		// Only display the user id in the search results to avoid leaking information
 		// about the user.
-		DisplayedAttributes: []string{IndexUserPrimaryKey},
+		DisplayedAttributes:  []string{IndexUserPrimaryKey},
+		FilterableAttributes: []string{"has_online", "current_campus_id"},
 	})
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+// SearchUser searches for a user in the MeiliSearch index.
+// It returns a slice of UUIDs of the users found.
+func (c *Client) SearchUser(query string, onlyOnline bool) ([]uuid.UUID, error) {
+	req := &meilisearch.SearchRequest{
+		Limit: 10,
+	}
+
+	if onlyOnline {
+		req.Filter = "current_location_id != null"
+	}
+
+	results, err := c.Client.Index(IndexUser).Search(query, req)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var usersIDs []uuid.UUID
+
+	for _, res := range results.Hits {
+		usersIDs = append(usersIDs, uuid.MustParse(fmt.Sprint(res.(map[string]interface{})["id"])))
+	}
+	return usersIDs, nil
 }
 
 // UpdateUserDocument updates the MeiliSearch document for the given user. It

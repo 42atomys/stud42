@@ -18,10 +18,10 @@ import (
 	"atomys.codes/stud42/internal/models/generated/account"
 	"atomys.codes/stud42/internal/models/generated/campus"
 	"atomys.codes/stud42/internal/models/generated/location"
-	modelspredicate "atomys.codes/stud42/internal/models/generated/predicate"
 	"atomys.codes/stud42/internal/models/generated/user"
 	"atomys.codes/stud42/internal/models/gotype"
 	"atomys.codes/stud42/internal/pkg/searchengine"
+	"atomys.codes/stud42/pkg/utils"
 	"entgo.io/ent/dialect/sql"
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
@@ -148,17 +148,23 @@ func (r *queryResolver) Me(ctx context.Context) (*generated.User, error) {
 }
 
 func (r *queryResolver) SearchUser(ctx context.Context, query string, onlyOnline *bool) ([]*generated.User, error) {
-	usersID, err := searchengine.NewClient().SearchUser(query)
+	usersID, err := searchengine.NewClient().SearchUser(query, *onlyOnline)
 	if err != nil {
 		return nil, err
 	}
 
-	predicates := []modelspredicate.User{user.IDIn(usersID...)}
-	if onlyOnline != nil && *onlyOnline {
-		predicates = append(predicates, user.HasCurrentLocation())
-	}
-
-	return r.client.User.Query().Where(predicates...).All(ctx)
+	return r.client.User.Query().Modify(func(s *sql.Selector) {
+		s.
+			Select("users.*").
+			SetDistinct(false).
+			FromExpr(sql.Expr("unnest($1::uuid[]) WITH ORDINALITY AS x(id, order_nr)", "{"+strings.Join(utils.StringifySlice(usersID), ", ")+"}")).
+			Join(sql.Table(user.Table).As(user.Table)).
+			On(
+				sql.Table(user.Table).C(user.FieldID),
+				sql.Table("x").C(user.FieldID),
+			).
+			OrderExpr(sql.Expr("x.order_nr"))
+	}).All(ctx)
 }
 
 func (r *queryResolver) Campus(ctx context.Context, id uuid.UUID) (*generated.Campus, error) {
