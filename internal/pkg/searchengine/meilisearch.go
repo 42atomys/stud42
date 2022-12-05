@@ -3,7 +3,6 @@ package searchengine
 import (
 	"fmt"
 
-	"github.com/google/uuid"
 	"github.com/meilisearch/meilisearch-go"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
@@ -48,24 +47,4 @@ func (c *Client) EnsureAllIndexes() error {
 		return fmt.Errorf("failed to ensure user index: %w", err)
 	}
 	return nil
-}
-
-// SearchUser searches for a user in the MeiliSearch index.
-// It returns a slice of UUIDs of the users found.
-func (c *Client) SearchUser(query string) ([]uuid.UUID, error) {
-	results, err := c.Client.Index(IndexUser).Search(query,
-		&meilisearch.SearchRequest{
-			Limit: 10,
-		})
-
-	if err != nil {
-		return nil, err
-	}
-
-	var usersIDs []uuid.UUID
-
-	for _, res := range results.Hits {
-		usersIDs = append(usersIDs, uuid.MustParse(fmt.Sprint(res.(map[string]interface{})["id"])))
-	}
-	return usersIDs, nil
 }

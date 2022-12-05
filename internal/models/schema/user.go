@@ -119,6 +119,7 @@ func meilisearchUpdateHook(next ent.Mutator) ent.Mutator {
 			LastName() (lastName string, exists bool)
 			DuoLogin() (duoLogin string, exists bool)
 			CurrentCampusID() (currentCampusID uuid.UUID, exists bool)
+			CurrentLocationID() (currentLocationID uuid.UUID, exists bool)
 		})
 		if !ok {
 			log.Error().Err(err).Msg("cannot update MeiliSearch index: mutation is not a User")
@@ -161,6 +162,10 @@ func meilisearchUpdateHook(next ent.Mutator) ent.Mutator {
 
 		if currentCampusID, ok := userMutation.CurrentCampusID(); ok {
 			document.CurrentCampusID = &currentCampusID
+		}
+
+		if currentLocationID, ok := userMutation.CurrentLocationID(); ok {
+			document.HasOnline = currentLocationID != uuid.Nil
 		}
 
 		// Update the index.
