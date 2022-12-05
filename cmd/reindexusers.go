@@ -32,7 +32,7 @@ all the users.`,
 		searchengine.Initizialize()
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		log.Info().Msg("Start the re-indexation of the users")
+		log.Info().Msg("Prepare the re-indexation of the users")
 
 		meiliClient := searchengine.NewClient()
 
@@ -53,6 +53,7 @@ all the users.`,
 		usersCount := modelsutils.Client().User.Query().CountX(cmd.Context())
 		log.Info().
 			Int("usersCount", usersCount).
+			Int("batchSize", batchSize).
 			Float64("batchCount", math.Ceil(float64(usersCount)/float64(batchSize))).
 			Msg("Start the re-indexation of the users")
 
@@ -91,6 +92,6 @@ all the users.`,
 
 func init() {
 	operationsCmd.AddCommand(reindexusersCmd)
-	
-	operationsCmd.Flags().StringP("batch_size", "b", "50", "Batch size of the reindex")
+
+	operationsCmd.PersistentFlags().IntP("batch_size", "b", 50, "Batch size of the reindex")
 }
