@@ -8,19 +8,8 @@ export class Seoul extends Campus implements ICampus {
 
   name = (): CampusNames => 'seoul';
 
-  extractor = (identifier: string) => {
-    const regex =
+  extractorRegExp = (): RegExp =>
       /(?<clusterWithLetter>c(?<cluster>\d+))(?<rowWithLetter>r(?<row>\d+))(?<workspaceWithLetter>s(?<workspace>\d+))/i;
-
-    const result = regex.exec(identifier);
-    if (!result || !result.groups) {
-      throw new Error(
-        `Invalid identifier: ${identifier}. Expected format: c1r2s3`
-      );
-    }
-
-    return result.groups as ReturnType<ICampus['extractor']>;
-  };
 
   clusters(): Cluster[] {
     return [
@@ -140,23 +129,23 @@ export class Seoul extends Campus implements ICampus {
         totalWorkspaces: 110,
         // prettier-ignore
         map: [
-					['T:r8',      'T:r7',      'T:r6'     , 'T:r5',      'T:r4',      'T:r3',      'T:r2',      'T:r1'     ],
-					['W:c8r8s1',  'W:c8r7s1',  'W:c8r6s1',  'W:c8r5s1',  'W:c8r4s1',  'W:c8r3s1',  'W:c8r2s1',  'W:c8r1s1' ],
-					['W:c8r8s2',  'W:c8r7s2',  'W:c8r6s2',  'W:c8r5s2',  'W:c8r4s2',  'W:c8r3s2',  'W:c8r2s2',  'W:c8r1s2' ],
-					['W:c8r8s3',  'W:c8r7s3',  'W:c8r6s3',  'W:c8r5s3',  'W:c8r4s3',  'W:c8r3s3',  'W:c8r2s3',  'W:c8r1s3' ],
-					['W:c8r8s4',  'W:c8r7s4',  'W:c8r6s4',  'W:c8r5s4',  'W:c8r4s4',  'W:c8r3s4',  'W:c8r2s4',  'W:c8r1s4' ],
-					['W:c8r8s5',  'W:c8r7s5',  'W:c8r6s5',  'W:c8r5s5',  'W:c8r4s5',  'W:c8r3s5',  'W:c8r2s5',  'W:c8r1s5' ],
-					['W:c8r8s6',  'W:c8r7s6',  'W:c8r6s6',  'W:c8r5s6',  'W:c8r4s6',  'W:c8r3s6',  'W:c8r2s6',  'W:c8r1s6' ],
-					['W:c8r8s7',  'W:c8r7s7',  'W:c8r6s7',  'W:c8r5s7',  'W:c8r4s7',  'W:c8r3s7',  'W:c8r2s7',  'W:c8r1s7' ],
-					['W:c8r8s8',  'W:c8r7s8',  'W:c8r6s8',  'W:c8r5s8',  'W:c8r4s8',  'W:c8r3s8',  'W:c8r2s8',  'W:c8r1s8' ],
-					[null,        'W:c8r7s9',  'W:c8r6s9',  'W:c8r5s9',  'W:c8r4s9',  'W:c8r3s9',  'W:c8r2s9',  'W:c8r1s9' ],
-					[null,        'W:c8r7s10', 'W:c8r6s10', 'W:c8r5s10', 'W:c8r4s10', 'W:c8r3s10', 'W:c8r2s10', 'W:c8r1s10'],
-					['W:c8r8s9' , 'W:c8r7s11', 'W:c8r6s11', 'W:c8r5s11', 'W:c8r4s11', 'W:c8r3s11', 'W:c8r2s11', 'W:c8r1s11'],
-					['W:c8r8s10', 'W:c8r7s12', 'W:c8r6s12', 'W:c8r5s12', 'W:c8r4s12', 'W:c8r3s12', 'W:c8r2s12', 'W:c8r1s12'],
-					['W:c8r8s11', 'W:c8r7s13', 'W:c8r6s13', 'W:c8r5s13', 'W:c8r4s13', 'W:c8r3s13', 'W:c8r2s13', 'W:c8r1s13'],
-					['W:c8r8s12', 'W:c8r7s14', 'W:c8r6s14', 'W:c8r5s14', 'W:c8r4s14', 'W:c8r3s14', 'W:c8r2s14', 'W:c8r1s14'],
-					['T:r8',      'T:r7',      'T:r6',      'T:r5',      'T:r4',      'T:r3',      'T:r2',      'T:r1'     ],
-					[null,        null,        null,        null,        null,        null,        null,        null       ],
+          ['T:r8',      'T:r7',      'T:r6'     , 'T:r5',      'T:r4',      'T:r3',      'T:r2',      'T:r1'     ],
+          ['W:c8r8s1',  'W:c8r7s1',  'W:c8r6s1',  'W:c8r5s1',  'W:c8r4s1',  'W:c8r3s1',  'W:c8r2s1',  'W:c8r1s1' ],
+          ['W:c8r8s2',  'W:c8r7s2',  'W:c8r6s2',  'W:c8r5s2',  'W:c8r4s2',  'W:c8r3s2',  'W:c8r2s2',  'W:c8r1s2' ],
+          ['W:c8r8s3',  'W:c8r7s3',  'W:c8r6s3',  'W:c8r5s3',  'W:c8r4s3',  'W:c8r3s3',  'W:c8r2s3',  'W:c8r1s3' ],
+          ['W:c8r8s4',  'W:c8r7s4',  'W:c8r6s4',  'W:c8r5s4',  'W:c8r4s4',  'W:c8r3s4',  'W:c8r2s4',  'W:c8r1s4' ],
+          ['W:c8r8s5',  'W:c8r7s5',  'W:c8r6s5',  'W:c8r5s5',  'W:c8r4s5',  'W:c8r3s5',  'W:c8r2s5',  'W:c8r1s5' ],
+          ['W:c8r8s6',  'W:c8r7s6',  'W:c8r6s6',  'W:c8r5s6',  'W:c8r4s6',  'W:c8r3s6',  'W:c8r2s6',  'W:c8r1s6' ],
+          ['W:c8r8s7',  'W:c8r7s7',  'W:c8r6s7',  'W:c8r5s7',  'W:c8r4s7',  'W:c8r3s7',  'W:c8r2s7',  'W:c8r1s7' ],
+          ['W:c8r8s8',  'W:c8r7s8',  'W:c8r6s8',  'W:c8r5s8',  'W:c8r4s8',  'W:c8r3s8',  'W:c8r2s8',  'W:c8r1s8' ],
+          [null,        'W:c8r7s9',  'W:c8r6s9',  'W:c8r5s9',  'W:c8r4s9',  'W:c8r3s9',  'W:c8r2s9',  'W:c8r1s9' ],
+          [null,        'W:c8r7s10', 'W:c8r6s10', 'W:c8r5s10', 'W:c8r4s10', 'W:c8r3s10', 'W:c8r2s10', 'W:c8r1s10'],
+          ['W:c8r8s9' , 'W:c8r7s11', 'W:c8r6s11', 'W:c8r5s11', 'W:c8r4s11', 'W:c8r3s11', 'W:c8r2s11', 'W:c8r1s11'],
+          ['W:c8r8s10', 'W:c8r7s12', 'W:c8r6s12', 'W:c8r5s12', 'W:c8r4s12', 'W:c8r3s12', 'W:c8r2s12', 'W:c8r1s12'],
+          ['W:c8r8s11', 'W:c8r7s13', 'W:c8r6s13', 'W:c8r5s13', 'W:c8r4s13', 'W:c8r3s13', 'W:c8r2s13', 'W:c8r1s13'],
+          ['W:c8r8s12', 'W:c8r7s14', 'W:c8r6s14', 'W:c8r5s14', 'W:c8r4s14', 'W:c8r3s14', 'W:c8r2s14', 'W:c8r1s14'],
+          ['T:r8',      'T:r7',      'T:r6',      'T:r5',      'T:r4',      'T:r3',      'T:r2',      'T:r1'     ],
+          [null,        null,        null,        null,        null,        null,        null,        null       ],
         ],
       }),
       new Cluster({
@@ -176,23 +165,23 @@ export class Seoul extends Campus implements ICampus {
         totalWorkspaces: 110,
         // prettier-ignore
         map: [
-					['T:r8',       'T:r7',       'T:r6',       'T:r5',       'T:r4',       'T:r3',       'T:r2',       'T:r1'      ],
-					['W:c10r8s1',  'W:c10r7s1',  'W:c10r6s1',  'W:c10r5s1',  'W:c10r4s1',  'W:c10r3s1',  'W:c10r2s1',  'W:c10r1s1' ],
-					['W:c10r8s2',  'W:c10r7s2',  'W:c10r6s2',  'W:c10r5s2',  'W:c10r4s2',  'W:c10r3s2',  'W:c10r2s2',  'W:c10r1s2' ],
-					['W:c10r8s3',  'W:c10r7s3',  'W:c10r6s3',  'W:c10r5s3',  'W:c10r4s3',  'W:c10r3s3',  'W:c10r2s3',  'W:c10r1s3' ],
-					['W:c10r8s4',  'W:c10r7s4',  'W:c10r6s4',  'W:c10r5s4',  'W:c10r4s4',  'W:c10r3s4',  'W:c10r2s4',  'W:c10r1s4' ],
-					['W:c10r8s5',  'W:c10r7s5',  'W:c10r6s5',  'W:c10r5s5',  'W:c10r4s5',  'W:c10r3s5',  'W:c10r2s5',  'W:c10r1s5' ],
-					['W:c10r8s6',  'W:c10r7s6',  'W:c10r6s6',  'W:c10r5s6',  'W:c10r4s6',  'W:c10r3s6',  'W:c10r2s6',  'W:c10r1s6' ],
-					['W:c10r8s7',  'W:c10r7s7',  'W:c10r6s7',  'W:c10r5s7',  'W:c10r4s7',  'W:c10r3s7',  'W:c10r2s7',  'W:c10r1s7' ],
-					['W:c10r8s8',  'W:c10r7s8',  'W:c10r6s8',  'W:c10r5s8',  'W:c10r4s8',  'W:c10r3s8',  'W:c10r2s8',  'W:c10r1s8' ],
-					[null,         'W:c10r7s9',  'W:c10r6s9',  'W:c10r5s9',  'W:c10r4s9',  'W:c10r3s9',  'W:c10r2s9',  'W:c10r1s9' ],
-					[null,         'W:c10r7s10', 'W:c10r6s10', 'W:c10r5s10', 'W:c10r4s10', 'W:c10r3s10', 'W:c10r2s10', 'W:c10r1s10'],
-					['W:c10r8s9',  'W:c10r7s11', 'W:c10r6s11', 'W:c10r5s11', 'W:c10r4s11', 'W:c10r3s11', 'W:c10r2s11', 'W:c10r1s11'],
-					['W:c10r8s10', 'W:c10r7s12', 'W:c10r6s12', 'W:c10r5s12', 'W:c10r4s12', 'W:c10r3s12', 'W:c10r2s12', 'W:c10r1s12'],
-					['W:c10r8s11', 'W:c10r7s13', 'W:c10r6s13', 'W:c10r5s13', 'W:c10r4s13', 'W:c10r3s13', 'W:c10r2s13', 'W:c10r1s13'],
-					['W:c10r8s12', 'W:c10r7s14', 'W:c10r6s14', 'W:c10r5s14', 'W:c10r4s14', 'W:c10r3s14', 'W:c10r2s14', 'W:c10r1s14'],
-					['T:r8',       'T:r7',       'T:r6',       'T:r5',       'T:r4',       'T:r3',       'T:r2',       'T:r1'      ],
-					[null,         null,         null,         null,         null,         null,         null,         null        ],
+          ['T:r8',       'T:r7',       'T:r6',       'T:r5',       'T:r4',       'T:r3',       'T:r2',       'T:r1'      ],
+          ['W:c10r8s1',  'W:c10r7s1',  'W:c10r6s1',  'W:c10r5s1',  'W:c10r4s1',  'W:c10r3s1',  'W:c10r2s1',  'W:c10r1s1' ],
+          ['W:c10r8s2',  'W:c10r7s2',  'W:c10r6s2',  'W:c10r5s2',  'W:c10r4s2',  'W:c10r3s2',  'W:c10r2s2',  'W:c10r1s2' ],
+          ['W:c10r8s3',  'W:c10r7s3',  'W:c10r6s3',  'W:c10r5s3',  'W:c10r4s3',  'W:c10r3s3',  'W:c10r2s3',  'W:c10r1s3' ],
+          ['W:c10r8s4',  'W:c10r7s4',  'W:c10r6s4',  'W:c10r5s4',  'W:c10r4s4',  'W:c10r3s4',  'W:c10r2s4',  'W:c10r1s4' ],
+          ['W:c10r8s5',  'W:c10r7s5',  'W:c10r6s5',  'W:c10r5s5',  'W:c10r4s5',  'W:c10r3s5',  'W:c10r2s5',  'W:c10r1s5' ],
+          ['W:c10r8s6',  'W:c10r7s6',  'W:c10r6s6',  'W:c10r5s6',  'W:c10r4s6',  'W:c10r3s6',  'W:c10r2s6',  'W:c10r1s6' ],
+          ['W:c10r8s7',  'W:c10r7s7',  'W:c10r6s7',  'W:c10r5s7',  'W:c10r4s7',  'W:c10r3s7',  'W:c10r2s7',  'W:c10r1s7' ],
+          ['W:c10r8s8',  'W:c10r7s8',  'W:c10r6s8',  'W:c10r5s8',  'W:c10r4s8',  'W:c10r3s8',  'W:c10r2s8',  'W:c10r1s8' ],
+          [null,         'W:c10r7s9',  'W:c10r6s9',  'W:c10r5s9',  'W:c10r4s9',  'W:c10r3s9',  'W:c10r2s9',  'W:c10r1s9' ],
+          [null,         'W:c10r7s10', 'W:c10r6s10', 'W:c10r5s10', 'W:c10r4s10', 'W:c10r3s10', 'W:c10r2s10', 'W:c10r1s10'],
+          ['W:c10r8s9',  'W:c10r7s11', 'W:c10r6s11', 'W:c10r5s11', 'W:c10r4s11', 'W:c10r3s11', 'W:c10r2s11', 'W:c10r1s11'],
+          ['W:c10r8s10', 'W:c10r7s12', 'W:c10r6s12', 'W:c10r5s12', 'W:c10r4s12', 'W:c10r3s12', 'W:c10r2s12', 'W:c10r1s12'],
+          ['W:c10r8s11', 'W:c10r7s13', 'W:c10r6s13', 'W:c10r5s13', 'W:c10r4s13', 'W:c10r3s13', 'W:c10r2s13', 'W:c10r1s13'],
+          ['W:c10r8s12', 'W:c10r7s14', 'W:c10r6s14', 'W:c10r5s14', 'W:c10r4s14', 'W:c10r3s14', 'W:c10r2s14', 'W:c10r1s14'],
+          ['T:r8',       'T:r7',       'T:r6',       'T:r5',       'T:r4',       'T:r3',       'T:r2',       'T:r1'      ],
+          [null,         null,         null,         null,         null,         null,         null,         null        ],
         ],
       }),
     ];
