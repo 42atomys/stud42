@@ -45,7 +45,10 @@ all the users.`,
 		}
 
 		// Re-index all the users
-		batchSize := 1000
+		batchSize, err := strconv.Atoi(cmd.Flag("batch_size").Value.String())
+		if err != nil || batchSize < 1 {
+			log.Fatal().Err(err).Msg("Cannot cast batch_size flag. batch_size msut be a positive integer")
+		}
 		usersCount := modelsutils.Client().User.Query().CountX(cmd.Context())
 		log.Info().
 			Int("usersCount", usersCount).
@@ -87,4 +90,6 @@ all the users.`,
 
 func init() {
 	operationsCmd.AddCommand(reindexusersCmd)
+	
+	operationsCmd.Flags().StringP("batch_size", "b", "50", "Batch size of the reindex")
 }
