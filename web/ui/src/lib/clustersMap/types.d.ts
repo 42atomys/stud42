@@ -65,6 +65,10 @@ export interface ICampus {
     workspaceWithLetter: string;
   };
 
+  // extractorRegexp contain a regexp to extract data from identifier used on
+  // extractor function. See extractor function for more details.
+  extractorRegexp(): RegExp;
+
   // List of clusters for this campus
   clusters(): ICluster[];
 

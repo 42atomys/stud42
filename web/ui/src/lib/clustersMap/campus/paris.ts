@@ -8,19 +8,8 @@ export class Paris extends Campus implements ICampus {
 
   name = (): CampusNames => 'paris';
 
-  extractor = (identifier: string) => {
-    const regex =
-      /(?<clusterWithLetter>e(?<cluster>\d+))(?<rowWithLetter>r(?<row>\d+))(?<workspaceWithLetter>p(?<workspace>\d+))/i;
-
-    const result = regex.exec(identifier);
-    if (!result || !result.groups) {
-      throw new Error(
-        `Invalid identifier: ${identifier}. Expected format: e1r2p3`
-      );
-    }
-
-    return result.groups as ReturnType<ICampus['extractor']>;
-  };
+  extractorRegexp = (): RegExp =>
+    /(?<clusterWithLetter>e(?<cluster>\d+))(?<rowWithLetter>r(?<row>\d+))(?<workspaceWithLetter>p(?<workspace>\d+))/i;
 
   clusters(): Cluster[] {
     return [
