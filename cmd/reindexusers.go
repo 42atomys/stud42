@@ -70,6 +70,7 @@ all the users.`,
 				go func(user *modelgen.User) {
 					defer wg.Done()
 
+					hasOnline := user.CurrentLocationID != nil && *user.CurrentLocationID != uuid.Nil
 					document := &searchengine.UserDocument{
 						ID:              user.ID,
 						CurrentCampusID: user.CurrentCampusID,
@@ -77,7 +78,7 @@ all the users.`,
 						FirstName:       user.FirstName,
 						UsualFirstName:  user.UsualFirstName,
 						LastName:        user.LastName,
-						HasOnline:       user.CurrentLocationID != nil && *user.CurrentLocationID != uuid.Nil,
+						HasOnline:       &hasOnline,
 					}
 
 					if err := meiliClient.UpdateUserDocument(cmd.Context(), document); err != nil {

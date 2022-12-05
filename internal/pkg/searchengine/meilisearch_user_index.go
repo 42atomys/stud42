@@ -13,7 +13,7 @@ import (
 type UserDocument struct {
 	ID              uuid.UUID  `json:"id"`
 	CurrentCampusID *uuid.UUID `json:"current_campus_id,omitempty"`
-	HasOnline       bool       `json:"has_online,omitempty"`
+	HasOnline       *bool      `json:"has_online,omitempty"`
 	DuoLogin        string     `json:"duo_login,omitempty"`
 	FirstName       string     `json:"first_name,omitempty"`
 	UsualFirstName  *string    `json:"usual_first_name,omitempty"`
@@ -56,7 +56,7 @@ func (c *Client) EnsureUserIndex() error {
 		// Only display the user id in the search results to avoid leaking information
 		// about the user.
 		DisplayedAttributes:  []string{IndexUserPrimaryKey},
-		FilterableAttributes: []string{"current_location_id", "current_campus_id"},
+		FilterableAttributes: []string{"has_online", "current_campus_id"},
 	})
 	if err != nil {
 		return err
