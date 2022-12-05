@@ -1,7 +1,7 @@
 /**
  * List of all campus names present in the application (interface only)
  */
-export type CampusNames = 'paris' | 'helsinki' | 'malaga' | 'vienna';
+export type CampusNames = 'paris' | 'helsinki' | 'malaga' | 'vienna' | 'seoul';
 
 /**
  * Types of Cluster Map entities
