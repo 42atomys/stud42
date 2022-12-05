@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"math"
+	"strconv"
 	"sync"
 
 	modelsutils "atomys.codes/stud42/internal/models"
@@ -31,7 +32,7 @@ all the users.`,
 		searchengine.Initizialize()
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		log.Info().Msg("Start the re-indexation of the users")
+		log.Info().Msg("Prepare the re-indexation of the users")
 
 		meiliClient := searchengine.NewClient()
 
@@ -45,10 +46,14 @@ all the users.`,
 		}
 
 		// Re-index all the users
-		batchSize := 1000
+		batchSize, err := strconv.Atoi(cmd.Flag("batch_size").Value.String())
+		if err != nil || batchSize < 1 {
+			log.Fatal().Err(err).Msg("Cannot cast batch_size flag. batch_size msut be a positive integer")
+		}
 		usersCount := modelsutils.Client().User.Query().CountX(cmd.Context())
 		log.Info().
 			Int("usersCount", usersCount).
+			Int("batchSize", batchSize).
 			Float64("batchCount", math.Ceil(float64(usersCount)/float64(batchSize))).
 			Msg("Start the re-indexation of the users")
 
@@ -87,4 +92,6 @@ all the users.`,
 
 func init() {
 	operationsCmd.AddCommand(reindexusersCmd)
+
+	operationsCmd.PersistentFlags().IntP("batch_size", "b", 50, "Batch size of the reindex")
 }
