@@ -1,10 +1,41 @@
-import { ICampus, ICluster } from './types';
+import { CampusNames, ICampus, ICluster } from './types';
 
 /**
  * Campus class represents a campus in the cluster map. It contains the
  * campus name, emoji, extractor function, and the list of clusters.
  */
-export class Campus implements Pick<ICampus, 'clusters'> {
+export class Campus implements ICampus {
+  emoji(): string {
+    throw new Error('Method not implemented.');
+  }
+
+  name(): CampusNames {
+    throw new Error('Method not implemented.');
+  }
+
+  extractorRegexp(): RegExp {
+    throw new Error('Method not implemented.');
+  }
+
+  extractor(identifier: string) {
+    const result = this.extractorRegexp().exec(identifier);
+    if (!result || !result.groups) {
+      const err = new Error(
+        `Invalid identifier for ${this.name()}: ${identifier}. Expected format: c1r2p3`
+      );
+      return {
+        cluster: err.message,
+        row: err.message,
+        workspace: err.message,
+        clusterWithLetter: err.message,
+        rowWithLetter: err.message,
+        workspaceWithLetter: err.message,
+      };
+    }
+
+    return result.groups as ReturnType<ICampus['extractor']>;
+  }
+
   /**
    * List of clusters for this campus
    */
