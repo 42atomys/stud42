@@ -72,7 +72,7 @@ func (c *Client) SearchUser(query string, onlyOnline bool) ([]uuid.UUID, error) 
 	}
 
 	if onlyOnline {
-		req.Filter = "current_location_id != null"
+		req.Filter = "has_online = true"
 	}
 
 	results, err := c.Client.Index(IndexUser).Search(query, req)
