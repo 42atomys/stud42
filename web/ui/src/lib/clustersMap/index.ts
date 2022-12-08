@@ -1,6 +1,7 @@
 import { Helsinki } from './campus/helsinki';
 import { Malaga } from './campus/malaga';
 import { Paris } from './campus/paris';
+import { Seoul } from './campus/seoul';
 import { Vienna } from './campus/vienna';
 import { CampusNames, ICampus } from './types';
 
@@ -21,6 +22,7 @@ export const Campuses: {
   helsinki: new Helsinki(),
   malaga: new Malaga(),
   paris: new Paris(),
+  seoul: new Seoul(),
   vienna: new Vienna(),
 };
 
