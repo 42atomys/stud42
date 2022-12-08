@@ -8,8 +8,8 @@ export class Seoul extends Campus implements ICampus {
 
   name = (): CampusNames => 'seoul';
 
-  extractorRegExp = (): RegExp =>
-      /(?<clusterWithLetter>c(?<cluster>\d+))(?<rowWithLetter>r(?<row>\d+))(?<workspaceWithLetter>s(?<workspace>\d+))/i;
+  extractorRegexp = (): RegExp =>
+    /(?<clusterWithLetter>c(?<cluster>\d+))(?<rowWithLetter>r(?<row>\d+))(?<workspaceWithLetter>s(?<workspace>\d+))/i;
 
   clusters(): Cluster[] {
     return [
@@ -145,7 +145,6 @@ export class Seoul extends Campus implements ICampus {
           ['W:c8r8s11', 'W:c8r7s13', 'W:c8r6s13', 'W:c8r5s13', 'W:c8r4s13', 'W:c8r3s13', 'W:c8r2s13', 'W:c8r1s13'],
           ['W:c8r8s12', 'W:c8r7s14', 'W:c8r6s14', 'W:c8r5s14', 'W:c8r4s14', 'W:c8r3s14', 'W:c8r2s14', 'W:c8r1s14'],
           ['T:r8',      'T:r7',      'T:r6',      'T:r5',      'T:r4',      'T:r3',      'T:r2',      'T:r1'     ],
-          [null,        null,        null,        null,        null,        null,        null,        null       ],
         ],
       }),
       new Cluster({
@@ -181,7 +180,6 @@ export class Seoul extends Campus implements ICampus {
           ['W:c10r8s11', 'W:c10r7s13', 'W:c10r6s13', 'W:c10r5s13', 'W:c10r4s13', 'W:c10r3s13', 'W:c10r2s13', 'W:c10r1s13'],
           ['W:c10r8s12', 'W:c10r7s14', 'W:c10r6s14', 'W:c10r5s14', 'W:c10r4s14', 'W:c10r3s14', 'W:c10r2s14', 'W:c10r1s14'],
           ['T:r8',       'T:r7',       'T:r6',       'T:r5',       'T:r4',       'T:r3',       'T:r2',       'T:r1'      ],
-          [null,         null,         null,         null,         null,         null,         null,         null        ],
         ],
       }),
     ];
