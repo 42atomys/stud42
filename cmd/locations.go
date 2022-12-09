@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 
@@ -119,11 +120,14 @@ For any closed locations, the location will be marked as inactive in the databas
 			}
 
 			// Unassign current location from user
-			if err := db.User.Update().
-				Where(user.CurrentLocationIDIn(locationUUIDsToClose...)).
-				ClearCurrentLocation().
-				Exec(cmd.Context()); err != nil {
+			var uuids []uuid.UUID
+			if uuids, err = db.User.Query().Where(user.CurrentLocationIDIn(locationUUIDsToClose...)).IDs(cmd.Context()); err != nil {
 				return err
+			}
+			for _, uuid := range uuids {
+				if err := db.User.UpdateOneID(uuid).ClearCurrentLocationID().Exec(cmd.Context()); err != nil {
+					return err
+				}
 			}
 			log.Info().Msgf("Successfully close %d inactive locations", len(locationUUIDsToClose))
 			return nil
