@@ -8,11 +8,15 @@ The devcontainer allow us to have a full permission workspace and a developement
 
 Inside the devcontainers, the database, rabbitmq and others dependencies is automatically setup and linked with the app. You dont need to do boring env setup or docker-compose, devcontainers already do that for you. You needs to do some edit to your env config to add credentials to external services like Github, Discord, 42, ...
 
-## Setup your credentials
+## 1. Setup your credentials
 
 Like say before, you needs to add some credentials listed on the file `.devcontainer/.env` file (this file is hard ignored but be careful to never force add this file).
 
 **DO NOT GIT ADD THE `.devcontainer/.env` FILE. NEVER PUSH YOUR CREDENTIALS ON ANY COMMITS**
+
+> :warning: After setup your credentials on the file, you need to rebuild the container to apply it on the devcontainer.
+>
+> To do that : [Command Palette](https://code.visualstudio.com/docs/getstarted/userinterface#_command-palette) (⇧⌘P) and execute `Dev Containers: Rebuild Container`
 
 ### Oauth2 credentials
 
@@ -24,11 +28,15 @@ To develop on S42, you need to have your OAuth2 applications with her credential
 
 **Environment keys**: `FORTY_TWO_ID` and `FORTY_TWO_SECRET`
 
+**Callback Url to provide**: `http://localhost:3000/api/auth/callback/42-school`
+
 #### Github
 
 **Endpoint**: https://github.com/settings/applications/new
 
 **Environment keys**: `GITHUB_ID` and `GITHUB_SECRET`
+
+**Callback Url to provide**: `http://localhost:3000/api/auth/callback/github`
 
 #### Discord
 
@@ -36,7 +44,15 @@ To develop on S42, you need to have your OAuth2 applications with her credential
 
 **Environment keys**: `DISCORD_ID` and `DISCORD_SECRET`
 
+**Callback Url to provide**: `http://localhost:3000/api/auth/callback/discord`
+
 _Discord bot needs to have a token generated and given on `DISCORD_TOKEN` key. To generate your bot token, see bot section on your discord developer application page._
+
+## 2. Configure the app
+
+This is simple, just copy the file `config/stud42.example.yaml` and rename the copy as `config/stud42.yaml` !
+
+To start using the devcontainer, you need to populate your database. You can do that with the tasks `Populate DB with campus` and `Populate DB with active locations (Paris)` (see [#Tasks](#Tasks) to know how to launch task in vscode).
 
 ## Launch and debug
 

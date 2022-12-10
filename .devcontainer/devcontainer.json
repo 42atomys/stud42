@@ -24,7 +24,6 @@
         "editor.renderWhitespace": "all",
         "gopls": {
           "ui.completion.usePlaceholders": true,
-          "build.experimentalWorkspaceModule": true,
           // Experimental settings
           "completeUnimported": true, // autocomplete unimported packages
           "deepCompletion": true, // enable deep completion
