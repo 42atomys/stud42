@@ -153,9 +153,9 @@ export class Seoul extends Campus implements ICampus {
         // prettier-ignore
         map: [
           ['T:r5', 'W:c9r5s8',  'W:c9r5s7',  'W:c9r5s6',  'W:c9r5s5', 'W:c9r5s4', 'W:c9r5s3', 'W:c9r5s2', 'W:c9r5s1', 'T:r5',     null,       null,       null,       null  ],
-          ['T:r4', 'W:c9r5s12', 'W:c9r5s11', 'W:c9r5s10', 'W:c9r5s9', 'W:c9r5s8', 'W:c9r5s7', 'W:c9r5s6', 'W:c9r5s5', 'W:c9r5s4', 'W:c9r5s3', 'W:c9r5s2', 'W:c9r5s1', 'T:r4'],
-          ['T:r3', 'W:c9r5s12', 'W:c9r5s11', 'W:c9r5s10', 'W:c9r5s9', 'W:c9r5s8', 'W:c9r5s7', 'W:c9r5s6', 'W:c9r5s5', 'W:c9r5s4', 'W:c9r5s3', 'W:c9r5s2', 'W:c9r5s1', 'T:r3'],
-          ['T:r2', 'W:c9r5s12', 'W:c9r5s11', 'W:c9r5s10', 'W:c9r5s9', 'W:c9r5s8', 'W:c9r5s7', 'W:c9r5s6', 'W:c9r5s5', 'W:c9r5s4', 'W:c9r5s3', 'W:c9r5s2', 'W:c9r5s1', 'T:r2'],
+          ['T:r4', 'W:c9r4s12', 'W:c9r4s11', 'W:c9r4s10', 'W:c9r4s9', 'W:c9r4s8', 'W:c9r4s7', 'W:c9r4s6', 'W:c9r4s5', 'W:c9r4s4', 'W:c9r4s3', 'W:c9r4s2', 'W:c9r4s1', 'T:r4'],
+          ['T:r3', 'W:c9r3s12', 'W:c9r3s11', 'W:c9r3s10', 'W:c9r3s9', 'W:c9r3s8', 'W:c9r3s7', 'W:c9r3s6', 'W:c9r3s5', 'W:c9r3s4', 'W:c9r3s3', 'W:c9r3s2', 'W:c9r3s1', 'T:r3'],
+          ['T:r2', 'W:c9r2s12', 'W:c9r2s11', 'W:c9r2s10', 'W:c9r2s9', 'W:c9r2s8', 'W:c9r2s7', 'W:c9r2s6', 'W:c9r2s5', 'W:c9r2s4', 'W:c9r2s3', 'W:c9r2s2', 'W:c9r2s1', 'T:r2'],
           [null,   null,        null,        null,        'T:r1',     'W:c9r1s8', 'W:c9r1s7', 'W:c9r1s6', 'W:c9r1s5', 'W:c9r1s4', 'W:c9r1s3', 'W:c9r1s2', 'W:c9r1s1', 'T:r1'],
         ],
       }),
