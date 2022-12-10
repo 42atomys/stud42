@@ -142,6 +142,58 @@
         "focus": true,
         "panel": "dedicated"
       }
+    },
+    {
+      "label": "Populate DB with campus",
+      "detail": "Execute the campus crawler to populate your development database with campus (need 42 credentials)",
+      "type": "process",
+      "isBackground": true,
+      "command": "env",
+      "args": [
+        "APP_NAME=api",
+        "go",
+        "run",
+        "main.go",
+        "jobs",
+        "crawler",
+        "campus"
+      ],
+      "problemMatcher": ["$go"],
+      "icon": {
+        "id": "debug-start",
+        "color": "terminal.ansiRed"
+      },
+      "presentation": {
+        "focus": true,
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "Populate DB with active locations (Paris)",
+      "detail": "Execute the locations crawler to populate your development database with locations of paris (need 42 credentials)",
+      "type": "process",
+      "isBackground": true,
+      "command": "env",
+      "args": [
+        "APP_NAME=api",
+        "go",
+        "run",
+        "main.go",
+        "jobs",
+        "crawler",
+        "locations",
+        "-c",
+        "1"
+      ],
+      "problemMatcher": ["$go"],
+      "icon": {
+        "id": "debug-start",
+        "color": "terminal.ansiRed"
+      },
+      "presentation": {
+        "focus": true,
+        "panel": "dedicated"
+      }
     }
   ]
 }
