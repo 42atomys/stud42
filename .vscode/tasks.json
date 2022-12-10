@@ -146,7 +146,7 @@
     {
       "label": "Populate DB with campus",
       "detail": "Execute the campus crawler to populate your development database with campus (need 42 credentials)",
-      "type": "process",
+      "type": "shell",
       "isBackground": true,
       "command": "env",
       "args": [
@@ -160,8 +160,8 @@
       ],
       "problemMatcher": ["$go"],
       "icon": {
-        "id": "debug-start",
-        "color": "terminal.ansiRed"
+        "id": "database",
+        "color": "terminal.ansiGreen"
       },
       "presentation": {
         "focus": true,
@@ -171,7 +171,7 @@
     {
       "label": "Populate DB with active locations (Paris)",
       "detail": "Execute the locations crawler to populate your development database with locations of paris (need 42 credentials)",
-      "type": "process",
+      "type": "shell",
       "isBackground": true,
       "command": "env",
       "args": [
@@ -187,8 +187,8 @@
       ],
       "problemMatcher": ["$go"],
       "icon": {
-        "id": "debug-start",
-        "color": "terminal.ansiRed"
+        "id": "database",
+        "color": "terminal.ansiGreen"
       },
       "presentation": {
         "focus": true,
