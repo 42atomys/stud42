@@ -30,14 +30,10 @@ export const LocationBadge = ({
           location?.identifier as string
         );
         if (!url) {
-          return <></>;
+          return <>{children}</>;
         }
 
-        return (
-          <Link href={url}>
-            <a>{children}</a>
-          </Link>
-        );
+        return <Link href={url}>{children}</Link>;
       }}
       falseWrapper={(children) => {
         return dayJsObject ? (
@@ -53,14 +49,14 @@ export const LocationBadge = ({
         );
       }}
     >
-      <Badge color={isConnected ? 'green' : 'gray'}>
+      <Badge color={isConnected ? 'green' : 'gray'} className="max-w-full">
         <span
           className={classNames(
             'inline-flex rounded-full w-2 h-2',
             isConnected ? 'bg-emerald-500' : 'bg-slate-500'
           )}
         ></span>
-        <span className="flex flex-row justify-center items-center text-sm mx-1">
+        <span className="text-sm mx-1 flex-1 truncate">
           {isConnected
             ? location?.identifier
             : dayJsObject?.fromNow() || 'offline'}

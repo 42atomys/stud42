@@ -1,5 +1,7 @@
 package utils
 
+import "fmt"
+
 // Remove an item from a slice
 func Remove[T comparable](slice []T, items ...T) []T {
 	var result = make([]T, 0)
@@ -33,4 +35,13 @@ func Uniq[T comparable](slice []T) []T {
 		unique = append(unique, element)
 	}
 	return unique
+}
+
+// StringifySlice transform a slice of Stringer into a slice of string
+func StringifySlice[T fmt.Stringer](slice []T) []string {
+	strSlice := make([]string, len(slice))
+	for i, element := range slice {
+		strSlice[i] = element.String()
+	}
+	return strSlice
 }

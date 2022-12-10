@@ -1,7 +1,7 @@
 /**
  * List of all campus names present in the application (interface only)
  */
-export type CampusNames = 'paris' | 'helsinki' | 'malaga' | 'vienna';
+export type CampusNames = 'paris' | 'helsinki' | 'malaga' | 'vienna' | 'seoul';
 
 /**
  * Types of Cluster Map entities
@@ -64,6 +64,10 @@ export interface ICampus {
     rowWithLetter: string;
     workspaceWithLetter: string;
   };
+
+  // extractorRegexp contain a regexp to extract data from identifier used on
+  // extractor function. See extractor function for more details.
+  extractorRegexp(): RegExp;
 
   // List of clusters for this campus
   clusters(): ICluster[];

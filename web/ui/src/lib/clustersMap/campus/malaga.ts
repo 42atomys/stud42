@@ -8,19 +8,8 @@ export class Malaga extends Campus implements ICampus {
 
   name = (): CampusNames => 'malaga';
 
-  extractor = (identifier: string) => {
-    const regex =
-      /(?<clusterWithLetter>c(?<cluster>\d+))(?<rowWithLetter>r(?<row>\d+))(?<workspaceWithLetter>p(?<workspace>\d+))/i;
-
-    const result = regex.exec(identifier);
-    if (!result || !result.groups) {
-      throw new Error(
-        `Invalid identifier: ${identifier}. Expected format: c1r2p3`
-      );
-    }
-
-    return result.groups as ReturnType<ICampus['extractor']>;
-  };
+  extractorRegexp = (): RegExp =>
+    /(?<clusterWithLetter>c(?<cluster>\d+))(?<rowWithLetter>r(?<row>\d+))(?<workspaceWithLetter>p(?<workspace>\d+))/i;
 
   clusters(): Cluster[] {
     return [
