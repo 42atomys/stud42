@@ -23,7 +23,8 @@ certs:
 deps:
 	./build/install-dependencies.sh
 
-devcontainer-init: generate certs
+devcontainer-init: generate certs deps
+	cp config/stud42.example.yaml config/stud42.yaml
 	go mod download
 	yarn --cwd web/ui install
 	yarn --cwd web/ui generate

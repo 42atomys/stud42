@@ -19,19 +19,21 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
   # Register helm source list
   curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | tee /usr/share/keyrings/helm.gpg > /dev/null && \
   echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | tee /etc/apt/sources.list.d/helm-stable-debian.list && \
-  # Register terraform source list
-  wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | tee /usr/share/keyrings/hashicorp-archive-keyring.gpg > /dev/null && \
-  echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/hashicorp.list && \
   # Run install of kubectl, helm and terraform
   apt-get update && \
-  apt-get install kubectl helm terraform
+  apt-get install kubectl helm && \
+  # Install terraform from binaries
+  # See: https://github.com/42Atomys/stud42/issues/298
+  # if $(uname -m) == "aarch64" set TERRAFORM_ARCH to "arm64" in shell format
+  wget -O /tmp/terraform.zip "https://releases.hashicorp.com/terraform/1.3.6/terraform_1.3.6_linux_$([ "`uname -m`" = "aarch64" ] && echo "arm64" ||  uname -m).zip" && \
+  unzip /tmp/terraform.zip -d /usr/local/bin/
 
 # Install global node packages.
 RUN npm install --location=global tslint-to-eslint-config typescript \
   @commitlint/cli @commitlint/config-conventional && \
   # Install dependencies
   wget -qO /tmp/protoc.zip $(curl -s https://api.github.com/repos/protocolbuffers/protobuf/releases/latest | \
-  jq -c ".assets | map(select( .name | contains(\"protoc\") and contains(\"$(uname -m)\") and contains(\"linux\"))) | .[].browser_download_url" | \
+  jq -c ".assets | map(select( .name | contains(\"protoc\") and contains(\"$([ "`uname -m`" = "aarch64" ] && echo "aarch_64" ||  uname -m)\") and contains(\"linux\"))) | .[].browser_download_url" | \
   tr -d '\"') && \
   unzip -uo /tmp/protoc -d /usr/local bin/protoc && \
   # Workarround due toyarn dont have permission to write on node_modules
