@@ -9,6 +9,7 @@ resource "random_password" "meilisearch_token" {
 
 module "meilisearch" {
   source = "../../../modules/service"
+  kind   = "StatefulSet"
 
   name       = "meilisearch"
   appName    = "meilisearch"
