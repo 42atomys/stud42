@@ -1,3 +1,7 @@
+locals {
+  meilisearchVersion = "v0.30"
+}
+
 resource "random_password" "meilisearch_token" {
   length  = 64
   special = true
@@ -5,12 +9,13 @@ resource "random_password" "meilisearch_token" {
 
 module "meilisearch" {
   source = "../../../modules/service"
+  kind   = "StatefulSet"
 
   name       = "meilisearch"
   appName    = "meilisearch"
-  appVersion = "v0.30"
+  appVersion = local.meilisearchVersion
   namespace  = var.namespace
-  image      = "getmeili/meilisearch:v0.30"
+  image      = "getmeili/meilisearch:${local.meilisearchVersion}"
 
   nodeSelector = local.nodepoolSelector["services"]
 
@@ -81,6 +86,41 @@ module "meilisearch" {
       data = {
         "MEILI_MASTER_KEY" = random_password.meilisearch_token.result
       }
+    }
+  }
+}
+
+module "meilisearch_clean_tasks" {
+  source = "../../../modules/service"
+  kind   = "CronJob"
+
+  jobSchedule                = "0 0 * * *" # Every day at the midnight
+  jobTTLSecondsAfterFinished = 0
+  restartPolicy              = "OnFailure"
+
+  name       = "meilisearch-clean-tasks"
+  appName    = "meilisearch-clean-tasks"
+  appVersion = local.meilisearchVersion
+  namespace  = var.namespace
+  image      = "curlimages/curl:7.86.0"
+
+  args = [
+    "--fail",
+    "-X",
+    "DELETE",
+    "http://meilisearch:7700/tasks?statuses=failed,canceled,succeeded",
+    "-H",
+    "Authorization: Bearer $(MEILI_MASTER_KEY)",
+    "-H",
+    "Content-Type: application/json"
+  ]
+
+  nodeSelector = local.nodepoolSelector["services"]
+
+  envFromSecret = {
+    MEILI_MASTER_KEY = {
+      key  = "MEILI_MASTER_KEY"
+      name = "meilisearch-token"
     }
   }
 }
