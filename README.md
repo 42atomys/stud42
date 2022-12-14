@@ -43,7 +43,7 @@
 - **Community** : The project is made for the community, by the community. Ideas and suggestions are welcome and will be voted by the community.
 - **Transparency** : The project is transparent, and will always be transparent. No secrets, no lies, no bullshit. (Except the production credentials :wink:)
 - **No commercial tracking, no analytics** : The project is not a business, it is a community project, and it will always be a community project.
-- **Education** : The project have to be educational, any code added to the project must be understandable by any student, and must be commented to be learnable ny any student by herself.
+- **Education** : The project have to be educational, any code added to the project must be understandable by any student, and must be commented to be learnable by any student on his/her own.
 
 ## 📚 Documentation
 
