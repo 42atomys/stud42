@@ -50,7 +50,7 @@
     "jwks-rsa": "^3.0.0",
     "next": "^13.0.7",
     "next-auth": "^4.18.6",
-    "protoc-gen-ts": "^0.8.5",
+    "protoc-gen-ts": "0.8.6-rc1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "sass": "^1.57.0",

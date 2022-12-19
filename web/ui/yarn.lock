@@ -8056,10 +8056,10 @@ protobufjs@^7.0.0:
     "@types/node" ">=13.7.0"
     long "^5.0.0"
 
-protoc-gen-ts@^0.8.5:
-  version "0.8.5"
-  resolved "https://registry.yarnpkg.com/protoc-gen-ts/-/protoc-gen-ts-0.8.5.tgz#5c277ff90b6b38f52313b1b0ad69e6c825305b29"
-  integrity sha512-LHZ+w/+DqmdgnhPtShgqtPtdv+hJ9bAXEIqNU0kkY2bPcCVIEWz5seOv20FCw6gbKorriTGP8xgz2RsIcrRvVw==
+protoc-gen-ts@0.8.6-rc1:
+  version "0.8.6-rc1"
+  resolved "https://registry.yarnpkg.com/protoc-gen-ts/-/protoc-gen-ts-0.8.6-rc1.tgz#6c0a247ec4e67bbaf09546263b1ec18b52c2638d"
+  integrity sha512-UfnuENo5T32nKC/jEEpobDeQQU94xtSe3ku4CH3q2/xGLcZ9KpIsUChdh5PK+Yl5Ed7KemU895ZmqeZex4nB5w==
 
 proxy-from-env@1.0.0:
   version "1.0.0"
