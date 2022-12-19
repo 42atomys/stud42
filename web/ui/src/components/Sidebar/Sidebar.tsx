@@ -41,31 +41,30 @@ const MenuItem = ({
       direction="right"
       tooltipClassName="hidden md:flex"
     >
-      <Link href={href}>
-        <a
-          className={`duration-100 transition-all flex items-center justify-center my-3 text-xl`}
+      <Link
+        href={href}
+        className={`duration-100 transition-all flex items-center justify-center my-3 text-xl`}
+      >
+        <div
+          className={classNames(
+            'group relative flex items-center justify-center text-xl rounded-full w-[50px] h-[50px] border-2 outline-none shadow-outline',
+            activeRoute
+              ? 'text-white bg-indigo-200 dark:bg-indigo-500/20 border-2 border-indigo-500'
+              : 'border-transparent hover:border-slate-600 dark:hover:border-slate-400 hover:bg-slate-900/10 dark:hover:bg-slate-100/10',
+            className
+          )}
         >
-          <div
+          <i
             className={classNames(
-              'group relative flex items-center justify-center text-xl rounded-full w-[50px] h-[50px] border-2 outline-none shadow-outline',
+              'relative fa-light',
               activeRoute
-                ? 'text-white bg-indigo-200 dark:bg-indigo-500/20 border-2 border-indigo-500'
-                : 'border-transparent hover:border-slate-600 dark:hover:border-slate-400 hover:bg-slate-900/10 dark:hover:bg-slate-100/10',
-              className
+                ? 'text-indigo-500'
+                : 'text-slate-600 dark:text-slate-400',
+              icon
             )}
-          >
-            <i
-              className={classNames(
-                'relative fa-light',
-                activeRoute
-                  ? 'text-indigo-500'
-                  : 'text-slate-600 dark:text-slate-400',
-                icon
-              )}
-            />
-          </div>
-          <span className="visible md:hidden ml-3 md:ml-0">{name}</span>
-        </a>
+          />
+        </div>
+        <span className="visible md:hidden ml-3 md:ml-0">{name}</span>
       </Link>
     </Tooltip>
   );

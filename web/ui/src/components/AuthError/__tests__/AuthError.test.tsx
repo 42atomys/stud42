@@ -1,5 +1,5 @@
-import { render } from '@testing-library/react';
 import { AuthError } from '@components/AuthError';
+import { render } from '@testing-library/react';
 
 it('snapshot: renders Tooltip unchanged', () => {
   const { container } = render(<AuthError error="default" />);

@@ -122,26 +122,24 @@ export const ClusterSidebar = ({
                         passHref={true}
                         key={`sidebar-clusters-${campusName}-${clusterIdentifier}`}
                       >
-                        <a>
-                          <MenuItem
-                            active={
-                              activeCampus &&
-                              clusterIdentifier == activeClusterIdentifier
-                            }
-                            name={cluster.name()}
-                            leftText={clusterIdentifier.toUpperCase()}
-                            rightText={
-                              activeCampus ? (
-                                <>
-                                  <span className="pr-1">
-                                    {freePlacesPerCluster[clusterIdentifier]}
-                                  </span>
-                                  <i className="fa-light fa-computer"></i>
-                                </>
-                              ) : undefined
-                            }
-                          />
-                        </a>
+                        <MenuItem
+                          active={
+                            activeCampus &&
+                            clusterIdentifier == activeClusterIdentifier
+                          }
+                          name={cluster.name()}
+                          leftText={clusterIdentifier.toUpperCase()}
+                          rightText={
+                            activeCampus ? (
+                              <>
+                                <span className="pr-1">
+                                  {freePlacesPerCluster[clusterIdentifier]}
+                                </span>
+                                <i className="fa-light fa-computer"></i>
+                              </>
+                            ) : undefined
+                          }
+                        />
                       </Link>
                     );
                   })}

@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`snapshots renders Badge unchanged 1`] = `
+<div>
+  <div
+    class="transition-colors flex w-fit text-gray items-center rounded-full border py-1 px-2 mt-2 text-sm bg-gray-900/20 border-gray-900 text-gray-700 dark:text-gray-300 hover:bg-gray-900/50"
+    data-testid="badge"
+  >
+    <span>
+      Testing
+    </span>
+  </div>
+</div>
+`;
+
+exports[`snapshots renders Badge with children unchanged 1`] = `
+<div>
+  <div
+    class="transition-colors flex w-fit text-gray items-center rounded-full border py-1 px-2 mt-2 text-sm bg-gray-900/20 border-gray-900 text-gray-700 dark:text-gray-300 hover:bg-gray-900/50"
+    data-testid="badge"
+  >
+    <i>
+      Testing
+    </i>
+  </div>
+</div>
+`;
+
+exports[`snapshots renders Badge with className unchanged 1`] = `
+<div>
+  <div
+    class="transition-colors flex w-fit text-gray items-center rounded-full border py-1 px-2 mt-2 text-sm bg-gray-900/20 border-gray-900 text-gray-700 dark:text-gray-300 hover:bg-gray-900/50 test"
+    data-testid="badge"
+  >
+    <span>
+      Testing
+    </span>
+  </div>
+</div>
+`;

@@ -6,7 +6,7 @@ ENV TERM xterm
 ENV SHELL /usr/bin/zsh
 
 # [Choice] Node.js version: none, lts/*, 16, 14, 12, 10
-ARG NODE_VERSION="none"
+ARG NODE_VERSION="16"
 RUN if [ "${NODE_VERSION}" != "none" ]; then su vscode -c "umask 0002 && . /usr/local/share/nvm/nvm.sh && nvm install ${NODE_VERSION} 2>&1"; fi
 
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
@@ -25,7 +25,7 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
   # Install terraform from binaries
   # See: https://github.com/42Atomys/stud42/issues/298
   # if $(uname -m) == "aarch64" set TERRAFORM_ARCH to "arm64" in shell format
-  wget -O /tmp/terraform.zip "https://releases.hashicorp.com/terraform/1.3.6/terraform_1.3.6_linux_$([ "`uname -m`" = "aarch64" ] && echo "arm64" ||  uname -m).zip" && \
+  wget -O /tmp/terraform.zip "https://releases.hashicorp.com/terraform/1.3.6/terraform_1.3.6_linux_$([ "`uname -m`" = "aarch64" ] && echo "arm64" || echo "amd64").zip" && \
   unzip /tmp/terraform.zip -d /usr/local/bin/
 
 # Install global node packages.

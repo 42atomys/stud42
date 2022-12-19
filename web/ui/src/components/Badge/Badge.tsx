@@ -32,6 +32,7 @@ export const Badge = ({ ...props }: BadgeProps) => {
 
   return (
     <div
+      data-testid="badge"
       className={classNames(
         'transition-colors flex w-fit text-gray items-center rounded-full border py-1 px-2 mt-2 text-sm',
         colorClasses[color],

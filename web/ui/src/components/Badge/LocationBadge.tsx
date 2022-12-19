@@ -33,7 +33,11 @@ export const LocationBadge = ({
           return <>{children}</>;
         }
 
-        return <Link href={url}>{children}</Link>;
+        return (
+          <Link data-testid="location-badge-link" href={url}>
+            {children}
+          </Link>
+        );
       }}
       falseWrapper={(children) => {
         return dayJsObject ? (

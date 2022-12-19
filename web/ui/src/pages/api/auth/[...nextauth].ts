@@ -4,7 +4,7 @@ import NextAuth, { AdapterUser } from 'next-auth';
 import FortyTwoProvider from 'next-auth/providers/42-school';
 import DiscordProvider from 'next-auth/providers/discord';
 import GithubProvider from 'next-auth/providers/github';
-import { DuoProfile } from 'types/next-auth';
+import { DuoProfile, JWT } from 'types/next-auth';
 
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
@@ -127,7 +127,7 @@ export default NextAuth({
 
     async session({ session, token }) {
       delete session.user;
-      if (token) session.token = token;
+      if (token) session.token = token as JWT;
       return session;
     },
 
