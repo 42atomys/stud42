@@ -1,0 +1,91 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`snapshots renders LocationBadge unchanged 1`] = `
+<div>
+  <div
+    class="transition-colors flex w-fit text-gray items-center rounded-full border py-1 px-2 mt-2 text-sm bg-slate-500/20 border-slate-500 text-slate-700 dark:text-slate-300 hover:bg-slate-500/50 max-w-full"
+    data-testid="badge"
+  >
+    <span
+      class="inline-flex rounded-full w-2 h-2 bg-slate-500"
+    />
+    <span
+      class="text-sm mx-1 flex-1 truncate"
+    >
+      offline
+    </span>
+  </div>
+</div>
+`;
+
+exports[`snapshots renders LocationBadge with offline location unchanged 1`] = `
+<div>
+  <div
+    class="relative flex items-center justify-center group"
+    data-testid="hover-target"
+  >
+    <div
+      class="invisible md:flex absolute rounded transition-all duration-150 text-slate-100 opacity-0 max-w-[250px] flex-col w-max items-start m-1 z-10 group-hover:pointer-events-auto group-hover:opacity-100 group-hover:ml-[var(--tooltip-ml)] group-hover:mr-[var(--tooltip-mr)] group-hover:mt-[var(--tooltip-mt)] group-hover:mb-[var(--tooltip-mb)] bg-black px-3 py-1 text-sm top-full [--tooltip-mt:0.5rem] bg-gradient-to-t dark:bg-gradient-to-b pointer-events-none"
+      data-testid="tooltip"
+    >
+      <div
+        class="absolute whitespace-nowrap rotate-45 w-[var(--tooltip-size)] h-[var(--tooltip-size)] bg-black text-slate-100 dark:text-slate-300 [--tooltip-size:0.5rem] top-[calc(var(--tooltip-size)/2*-1)] left-[calc((100%-var(--tooltip-size))/2)]"
+      />
+      <span
+        class=""
+      >
+        October 10, 2022 00:00
+      </span>
+    </div>
+    <div
+      class="transition-colors flex w-fit text-gray items-center rounded-full border py-1 px-2 mt-2 text-sm bg-slate-500/20 border-slate-500 text-slate-700 dark:text-slate-300 hover:bg-slate-500/50 max-w-full"
+      data-testid="badge"
+    >
+      <span
+        class="inline-flex rounded-full w-2 h-2 bg-slate-500"
+      />
+      <span
+        class="text-sm mx-1 flex-1 truncate"
+      >
+        2 months ago
+      </span>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`snapshots renders LocationBadge with online location unchanged 1`] = `
+<div>
+  <a
+    data-testid="location-badge-link"
+    href="/clusters/paris/e1?identifier=e1r4p21"
+  >
+    <div
+      class="transition-colors flex w-fit text-gray items-center rounded-full border py-1 px-2 mt-2 text-sm bg-emerald-500/20 border-emerald-500 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-500/50 max-w-full"
+      data-testid="badge"
+    >
+      <span
+        class="inline-flex rounded-full w-2 h-2 bg-emerald-500"
+      />
+      <span
+        class="text-sm mx-1 flex-1 truncate"
+      >
+        e1r4p21
+      </span>
+      <img
+        alt="🇫🇷"
+        class="mx-1 visible"
+        data-nimg="1"
+        decoding="async"
+        height="14"
+        loading="lazy"
+        src="https://twemoji.maxcdn.com/v/latest/svg/1f1eb-1f1f7.svg"
+        srcset="https://twemoji.maxcdn.com/v/latest/svg/1f1eb-1f1f7.svg 1x, https://twemoji.maxcdn.com/v/latest/svg/1f1eb-1f1f7.svg 2x"
+        style="color: transparent;"
+        title="Paris"
+        width="14"
+      />
+    </div>
+  </a>
+</div>
+`;

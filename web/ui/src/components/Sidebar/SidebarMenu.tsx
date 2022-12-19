@@ -167,11 +167,7 @@ export const MenuItem = ({
   return (
     <ConditionalWrapper
       condition={!!href && !onClick}
-      trueWrapper={(children) => (
-        <Link href={href as string}>
-          <a>{children}</a>
-        </Link>
-      )}
+      trueWrapper={(children) => <Link href={href as string}>{children}</Link>}
     >
       <li
         data-active={active}

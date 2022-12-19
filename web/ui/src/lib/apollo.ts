@@ -43,7 +43,7 @@ const createApolloClient = () => {
     credentials: 'include',
   });
 
-  const authLink = setContext((_, context) => {
+  const authLink = setContext(async (_, context) => {
     let authToken = Cookies.get(tokenCookieName);
 
     if (!authToken) {
@@ -129,7 +129,7 @@ export const queryAuthenticatedSSR = async <T = any>(
   return client.query<T, any>({
     query,
     context: {
-      authToken: token,
+      authToken: token?.value || token,
       ...context,
     },
     ...rest,

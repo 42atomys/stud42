@@ -24,7 +24,7 @@ const nextConfig = {
     disableClientWebpackPlugin: true,
   },
 
-  webpack: (config) => {
+  webpack: (config, options) => {
     const fileLoaderRule = config.module.rules.find(
       (rule) => rule.test && rule.test.test('.svg')
     );
@@ -33,8 +33,9 @@ const nextConfig = {
     config.module.rules.push({
       test: /\.svg$/,
       issuer: /\.tsx?$/,
+      include: [options.dir],
       use: [
-        'next-swc-loader',
+        options.defaultLoaders.babel,
         {
           loader: '@svgr/webpack',
           options: { babel: false },

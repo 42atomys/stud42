@@ -1,7 +1,7 @@
 import { ImageProps } from 'next/image';
 
 // Props of EmojiWrapper
-interface Props extends Omit<ImageProps, 'src' | 'width' | 'height'> {
+interface Props extends Omit<ImageProps, 'alt' | 'src' | 'width' | 'height'> {
   // The emoji to display
   emoji: string;
   // Size of the svg rendered
