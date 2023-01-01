@@ -34,7 +34,7 @@ exports[`snapshots renders LocationBadge with offline location unchanged 1`] = `
       <span
         class=""
       >
-        October 10, 2022 00:00
+        October 25, 2022 00:00
       </span>
     </div>
     <div
