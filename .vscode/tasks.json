@@ -127,6 +127,61 @@
       "problemMatcher": ["$tsc"]
     },
     {
+      "label": "Test Interface",
+      "detail": "Run the test suite on the Interface (CI Mode)",
+      "type": "shell",
+      "command": "yarn",
+      "args": ["--cwd", "web/ui", "test:ci"],
+      "icon": {
+        "id": "beaker",
+        "color": "terminal.ansiBlue"
+      },
+      "presentation": {
+        "focus": true,
+        "panel": "dedicated"
+      },
+      "problemMatcher": ["$tsc"]
+    },
+    {
+      "label": "Test Interface",
+      "detail": "Run the test suite on the Interface (Watch Mode)",
+      "type": "shell",
+      "command": "yarn",
+      "args": ["--cwd", "web/ui", "test"],
+      "icon": {
+        "id": "beaker",
+        "color": "terminal.ansiBlue"
+      },
+      "presentation": {
+        "focus": true,
+        "panel": "dedicated"
+      },
+      "problemMatcher": ["$tsc"]
+    },
+    {
+      "label": "Test API",
+      "detail": "Run the test suite on the backend",
+      "type": "shell",
+      "command": "go",
+      "args": [
+        "test",
+        "./...",
+        "-coverprofile",
+        "coverage.out",
+        "-covermode",
+        "count"
+      ],
+      "icon": {
+        "id": "beaker",
+        "color": "terminal.ansiBlue"
+      },
+      "presentation": {
+        "focus": true,
+        "panel": "dedicated"
+      },
+      "problemMatcher": ["$tsc"]
+    },
+    {
       "label": "Run postgresql cli (psql)",
       "detail": "Execute psql on container",
       "type": "process",

@@ -2,7 +2,7 @@ import { LocationBadge } from '@components/Badge';
 import { render } from '@testing-library/react';
 
 const validLocation = {
-  beginAt: '2022-10-10T00:00:00Z',
+  beginAt: '2022-10-25T00:00:00Z',
   endAt: null,
   identifier: 'e1r4p21',
   campus: {
@@ -12,6 +12,9 @@ const validLocation = {
 };
 
 describe('snapshots', () => {
+  beforeAll(() => {
+    jest.useFakeTimers().setSystemTime(new Date('2022-12-25T00:00:00Z'));
+  });
   it('renders LocationBadge unchanged', () => {
     const { container } = render(<LocationBadge location={null} />);
     expect(container).toMatchSnapshot();
@@ -19,7 +22,7 @@ describe('snapshots', () => {
 
   it('renders LocationBadge with offline location unchanged', () => {
     const { container } = render(
-      <LocationBadge location={{ endAt: '2022-10-10T00:00:00Z' }} />
+      <LocationBadge location={{ endAt: '2022-10-25T00:00:00Z' }} />
     );
     expect(container).toMatchSnapshot();
   });
@@ -31,9 +34,12 @@ describe('snapshots', () => {
 });
 
 describe('contexts', () => {
+  beforeAll(() => {
+    jest.useFakeTimers().setSystemTime(new Date('2022-12-25T00:00:00Z'));
+  });
   it('renders offline location', async () => {
     const { findByTestId } = render(
-      <LocationBadge location={{ endAt: '2022-10-10T00:00:00Z' }} />
+      <LocationBadge location={{ endAt: '2022-10-25T00:00:00Z' }} />
     );
     const container = await findByTestId('badge');
 
@@ -41,7 +47,7 @@ describe('contexts', () => {
     expect(container.childNodes).toHaveLength(2);
 
     const tooltip = await findByTestId('tooltip');
-    expect(tooltip).toHaveTextContent('October 10, 2022 00:00');
+    expect(tooltip).toHaveTextContent('October 25, 2022 00:00');
   });
 
   it('renders offline location without location information', async () => {

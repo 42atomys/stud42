@@ -31,6 +31,9 @@ internal/models/generated/*
 internal/models/structs_generated.go
 internal/**/*.pb.go
 
+# testing
+coverage.out
+
 # =================================================
 # Frontned ignores 🕹
 # =================================================
