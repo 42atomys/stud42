@@ -183,7 +183,7 @@ export class Seoul extends Campus implements ICampus {
         ],
       }),
       new Cluster({
-        identifier: 'cX-1',
+        identifier: 'cx1',
         totalWorkspaces: 28,
         // prettier-ignore
         map: [
@@ -208,7 +208,7 @@ export class Seoul extends Campus implements ICampus {
         ],
       }),
       new Cluster({
-        identifier: 'cX-2',
+        identifier: 'cx2',
         totalWorkspaces: 56,
         // prettier-ignore
         map: [
