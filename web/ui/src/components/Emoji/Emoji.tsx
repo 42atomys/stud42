@@ -38,7 +38,7 @@ export const Emoji = ({
     // @ts-ignore
     containerProps,
     <Image
-      src={`https://twemoji.maxcdn.com/v/latest/svg/${emojiCode.join('-')}.svg`}
+      src={`https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/${emojiCode.join('-')}.svg`}
       height={size}
       width={size}
       alt={emoji}
