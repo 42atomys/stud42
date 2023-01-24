@@ -73,7 +73,7 @@ describe('contexts', () => {
     expect(icon).toBeTruthy();
     expect(icon).toHaveProperty(
       'src',
-      'https://twemoji.maxcdn.com/v/latest/svg/1f1eb-1f1f7.svg'
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1eb-1f1f7.svg'
     );
     expect(icon).toHaveProperty('alt', '🇫🇷');
 
