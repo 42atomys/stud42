@@ -81,6 +81,7 @@ jobs:
           exempt-assignees: "42Atomys"
 
           enable-statistics: true
+          operations-per-run: 100
 
           days-before-issue-stale: 28
           days-before-issue-close: 14
@@ -99,8 +100,8 @@ jobs:
           close-pr-label: "stale/dead 💀"
           close-pr-message: "This pull request was closed because it has been inactive for 14 days since being marked as stale."
 
-          exempt-issue-labels: "state/confirmed 💜,slate/lock 🔒"
-          exempt-pr-labels: "state/confirmed 💜,slate/lock 🔒"
+          exempt-issue-labels: "state/confirmed 💜,stale/lock 🔒"
+          exempt-pr-labels: "state/confirmed 💜,stale/lock 🔒"
 
           labels-to-add-when-unstale: "stale/unstale 🍖"
           labels-to-remove-when-unstale: "stale/stale 🦴,stale/dead 💀"
