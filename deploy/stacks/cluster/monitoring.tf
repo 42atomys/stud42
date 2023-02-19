@@ -380,7 +380,7 @@ module "loki" {
   persistentVolumeClaims = {
     data = {
       accessModes      = ["ReadWriteMany"]
-      storage          = "10Gi"
+      storage          = "15Gi"
       storageClassName = "csi-cinder-classic"
     }
   }

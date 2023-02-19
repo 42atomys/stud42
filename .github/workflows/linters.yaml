@@ -32,12 +32,22 @@ jobs:
         with:
           go-version: "1.18"
           check-latest: true
+      - name: Setup protoc
+        uses: arduino/setup-protoc@v1
+        with:
+          # TODO: Update to latest version when the issue
+          # https://github.com/arduino/setup-protoc/issues/33
+          # has been fixed
+          version: "3.x"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Generate code
-        run: make -f build/Makefile deps generate
+        run: make -f build/Makefile generate
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@v3.3.1
+        uses: golangci/golangci-lint-action@v3.4.0
         with:
           version: latest
+          skip-pkg-cache: true
+          args: -v
 
   frontend:
     runs-on: ubuntu-latest

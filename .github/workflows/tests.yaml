@@ -3,14 +3,16 @@ on:
   workflow_call:
     secrets:
       TERRAFORM_AWS_ACCESS_KEY_ID:
-        required: true
+        required: false
         description: "AWS access key id"
       TERRAFORM_AWS_SECRET_ACCESS_KEY:
-        required: true
+        required: false
         description: "AWS secret access key"
 jobs:
   terraform:
     runs-on: ubuntu-latest
+    # Allow crash due to fork policy
+    continue-on-error: true
     env:
       # Sandbox is not deployed to the production workspace.
       # Compare the changes when plan with production
@@ -59,7 +61,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.stack }}-tfplan
-          path: ${{ matrix.stack }}-tfplan
+          path: deploy/stacks/${{ matrix.stack }}/${{ matrix.stack }}-tfplan
           retention-days: 7
       # On pull request, build or change infrastructure according
       # to Terraform configuration files
@@ -113,6 +115,9 @@ jobs:
                 body: output
               })
             }
+      - name: Terraform Plan Status
+        if: steps.plan.outcome == 'failure'
+        run: exit 1
   backend:
     runs-on: ubuntu-latest
     steps:
@@ -123,8 +128,16 @@ jobs:
         with:
           go-version: "1.18"
           check-latest: true
+      - name: Setup protoc
+        uses: arduino/setup-protoc@v1
+        with:
+          # TODO: Update to latest version when the issue
+          # https://github.com/arduino/setup-protoc/issues/33
+          # has been fixed
+          version: "3.x"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Generate code
-        run: make -f build/Makefile deps generate
+        run: make -f build/Makefile generate
       - name: Run Unit tests
         run: |
           go test ./... -coverprofile coverage.out -covermode count

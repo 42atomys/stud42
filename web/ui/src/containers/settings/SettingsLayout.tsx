@@ -18,7 +18,7 @@ const SettingsPages = [
 ] as const;
 
 type PageProps = {
-  page: typeof SettingsPages[number];
+  page: (typeof SettingsPages)[number];
   children: React.ReactNode;
 } & ClassNameProps;
 
