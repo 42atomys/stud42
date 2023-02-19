@@ -228,6 +228,21 @@ export const IndexPage: NextPage<PageProps, {}> = ({ me }) => {
                 </button>
               </div>
 
+              <div className="flex p-2 italic border-yellow-500 border rounded-lg text-yellow-100 bg-yellow-800/20 mt-2 mb-5 text-sm">
+                <Emoji emoji="🛠" size={64} className="mx-4" />
+                <i className="text-left">
+                  Link your GitHub account, star and follow project is a
+                  requirement to access the beta.
+                  <br />
+                  You can accept it, and access to the app or not and you will
+                  need to wait the end of the beta, when this requirement will
+                  ne be exist anymore.
+                  <br />
+                  This action has automatize to not be boring with 2 extra step
+                  for me and you.
+                </i>
+              </div>
+
               <small className="font-medium font-display text-xl text-slate-500">
                 Your <b className="text-sky-400">GitHub</b> account{' '}
                 <b className="text-slate-400">must be linked</b> to your{' '}
@@ -236,10 +251,6 @@ export const IndexPage: NextPage<PageProps, {}> = ({ me }) => {
                 </b>{' '}
                 account.
               </small>
-
-              <i className="block mt-2 text-sm">
-                Link your GitHub account will star and follow project.
-              </i>
             </div>
           )}
 
