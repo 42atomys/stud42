@@ -240,6 +240,15 @@ export const IndexPage: NextPage<PageProps, {}> = ({ me }) => {
                   <br />
                   This action has automatize to not be boring with 2 extra step
                   for me and you.
+                  <br />
+                  See FAQ issue for more information{' '}
+                  <Link
+                    className="text-blue-500"
+                    href="https://github.com/42Atomys/stud42/issues/364"
+                    target="_blank"
+                  >
+                    #364
+                  </Link>
                 </i>
               </div>
 
