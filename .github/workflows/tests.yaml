@@ -10,8 +10,9 @@ on:
         description: "AWS secret access key"
 jobs:
   terraform:
-    if: (secrets.TERRAFORM_AWS_ACCESS_KEY_ID != "" && TERRAFORM_AWS_SECRET_ACCESS_KEY != "") || (secrets.TERRAFORM_AWS_ACCESS_KEY_ID != null && TERRAFORM_AWS_SECRET_ACCESS_KEY != null)
     runs-on: ubuntu-latest
+    # Allow crash due to fork policy
+    continue-on-error: true
     env:
       # Sandbox is not deployed to the production workspace.
       # Compare the changes when plan with production
@@ -114,6 +115,9 @@ jobs:
                 body: output
               })
             }
+      - name: Terraform Plan Status
+        if: steps.plan.outcome == 'failure'
+        run: exit 1
   backend:
     runs-on: ubuntu-latest
     steps:
