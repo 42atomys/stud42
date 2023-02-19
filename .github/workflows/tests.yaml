@@ -59,7 +59,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.stack }}-tfplan
-          path: ${{ matrix.stack }}-tfplan
+          path: deploy/stacks/${{ matrix.stack }}/${{ matrix.stack }}-tfplan
           retention-days: 7
       # On pull request, build or change infrastructure according
       # to Terraform configuration files
