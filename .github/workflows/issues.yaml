@@ -1,11 +1,11 @@
 name: Plan Management 📝
 on:
   pull_request:
-    types: [opened, reopened, synchronize, unlabeled]
+    types: [opened, reopened]
   issues:
-    types: [opened, reopened, edited, unlabeled]
+    types: [opened, reopened]
   schedule:
-    - cron: "42 8,23 * * *"
+    - cron: "42 */2 * * *"
 
 permissions:
   contents: read

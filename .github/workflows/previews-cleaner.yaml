@@ -1,6 +1,6 @@
 name: "Previews cleaner 🗑"
 on:
-  pull_request:
+  pull_request_target:
     types: [closed, unlabeled]
 
 jobs:
@@ -8,8 +8,8 @@ jobs:
     name: "delete ${{ format('pr-{0}', github.event.number) }} terraform"
     runs-on: ubuntu-latest
     if: |
-      (github.event_name == 'pull_request' && github.event.action == 'closed') ||
-      !contains(github.event.pull_request.labels.*.name, 'needs-preview-deploy')
+      (github.event_name == 'pull_request' && github.event.action == 'closed' && contains(github.event.pull_request.labels.*.name, 'needs-preview-deploy')) ||
+      (github.event.action == 'unlabeled' && !contains(github.event.pull_request.labels.*.name, 'needs-preview-deploy'))
     environment:
       name: previews
     env:
@@ -65,8 +65,8 @@ jobs:
     name: "delete ${{ format('pr-{0}', github.event.number) }} deployment"
     runs-on: ubuntu-latest
     if: |
-      (github.event_name == 'pull_request' && github.event.action == 'closed') ||
-      !contains(github.event.pull_request.labels.*.name, 'needs-preview-deploy')
+      (github.event_name == 'pull_request' && github.event.action == 'closed' && contains(github.event.pull_request.labels.*.name, 'needs-preview-deploy')) ||
+      (github.event.action == 'unlabeled' && !contains(github.event.pull_request.labels.*.name, 'needs-preview-deploy'))
     environment:
       name: previews
     env:
