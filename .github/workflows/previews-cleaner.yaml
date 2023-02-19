@@ -8,7 +8,7 @@ jobs:
     name: "delete ${{ format('pr-{0}', github.event.number) }} terraform"
     runs-on: ubuntu-latest
     if: |
-      (github.event_name == 'pull_request' && github.event.action == 'closed') ||
+      (github.event_name == 'pull_request' && github.event.action == 'closed' && contains(github.event.pull_request.labels.*.name, 'needs-preview-deploy')) ||
       !contains(github.event.pull_request.labels.*.name, 'needs-preview-deploy')
     environment:
       name: previews
@@ -65,7 +65,7 @@ jobs:
     name: "delete ${{ format('pr-{0}', github.event.number) }} deployment"
     runs-on: ubuntu-latest
     if: |
-      (github.event_name == 'pull_request' && github.event.action == 'closed') ||
+      (github.event_name == 'pull_request' && github.event.action == 'closed' && contains(github.event.pull_request.labels.*.name, 'needs-preview-deploy')) ||
       !contains(github.event.pull_request.labels.*.name, 'needs-preview-deploy')
     environment:
       name: previews
