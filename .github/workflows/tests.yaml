@@ -3,13 +3,14 @@ on:
   workflow_call:
     secrets:
       TERRAFORM_AWS_ACCESS_KEY_ID:
-        required: true
+        required: false
         description: "AWS access key id"
       TERRAFORM_AWS_SECRET_ACCESS_KEY:
-        required: true
+        required: false
         description: "AWS secret access key"
 jobs:
   terraform:
+    if: (secrets.TERRAFORM_AWS_ACCESS_KEY_ID != "" && TERRAFORM_AWS_SECRET_ACCESS_KEY != "") || (secrets.TERRAFORM_AWS_ACCESS_KEY_ID != null && TERRAFORM_AWS_SECRET_ACCESS_KEY != null)
     runs-on: ubuntu-latest
     env:
       # Sandbox is not deployed to the production workspace.
