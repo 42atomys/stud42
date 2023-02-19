@@ -55,7 +55,7 @@ export const extractandRemoveNode: NodeFinderFunc = (
   let index = findIndexForNode(connection, identifier);
   if (index === -1) return null;
 
-  const location = edges[index] as NonNullable<typeof edges[number]>;
+  const location = edges[index] as NonNullable<(typeof edges)[number]>;
   connection.edges = connection.edges.slice(index, 1).concat([]);
 
   return location.node;
