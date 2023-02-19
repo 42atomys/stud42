@@ -63,11 +63,11 @@ func (User) Edges() []ent.Edge {
 		edge.To("current_location", Location.Type).
 			Unique().
 			Field("current_location_id").
-			Annotations(entsql.Annotation{OnDelete: entsql.Cascade}),
+			Annotations(entsql.Annotation{OnDelete: entsql.SetNull}),
 		edge.To("last_location", Location.Type).
 			Unique().
 			Field("last_location_id").
-			Annotations(entsql.Annotation{OnDelete: entsql.Cascade}),
+			Annotations(entsql.Annotation{OnDelete: entsql.SetNull}),
 		edge.To("current_campus", Campus.Type).
 			Unique().
 			Field("current_campus_id"),

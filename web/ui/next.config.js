@@ -5,7 +5,7 @@ const { withSentryConfig } = require('@sentry/nextjs');
 
 const nextConfig = {
   images: {
-    domains: ['cdn.intra.42.fr', 'twemoji.maxcdn.com'],
+    domains: ['cdn.intra.42.fr', 'cdn.jsdelivr.net'],
     minimumCacheTTL: 300,
   },
   reactStrictMode: true,
