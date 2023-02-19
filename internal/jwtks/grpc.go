@@ -132,7 +132,9 @@ func (s *server) ValidateToken(ctx context.Context, r *ValidateRequest) (*Reply,
 	}
 
 	if r.Regenerate {
-		tok.Set(jwt.ExpirationKey, tok.Expiration().Add(s.tokenValidity))
+		if err := tok.Set(jwt.ExpirationKey, tok.Expiration().Add(s.tokenValidity)); err != nil {
+			return nil, status.Errorf(codes.Internal, "failed to regenerate token: %s", err)
+		}
 
 		jwkKey := getGlobalSigningJWK()
 		signed, err := jwt.Sign(tok, jwt.WithKey(jwkKey.Algorithm(), jwkKey))
