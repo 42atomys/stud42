@@ -36,11 +36,11 @@ module "webhooks_processor" {
 
   resources = {
     limits = {
-      memory = "25Mi"
+      memory = "60Mi"
     }
     requests = {
       cpu    = "20m"
-      memory = "15Mi"
+      memory = "30Mi"
     }
   }
 

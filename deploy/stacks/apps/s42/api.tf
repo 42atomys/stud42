@@ -31,11 +31,11 @@ module "api" {
 
   resources = {
     limits = {
-      memory = "60Mi"
+      memory = "96Mi"
     }
     requests = {
-      cpu    = "100m"
-      memory = "40Mi"
+      cpu    = var.namespace == "production" ? "100m" : "10mi"
+      memory = var.namespace == "production" ? "48Mi" : "24Mi"
     }
   }
 

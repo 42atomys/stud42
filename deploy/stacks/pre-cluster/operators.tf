@@ -96,22 +96,22 @@ resource "helm_release" "istiod" {
 
   set {
     name  = "components.pilot.k8s.resources.requests.cpu"
-    value = "500m"
+    value = "50m"
   }
 
   set {
     name  = "components.pilot.k8s.resources.requests.memory"
-    value = "1Gi"
+    value = "256Mi"
   }
 
   set {
     name  = "components.pilot.k8s.resources.limits.cpu"
-    value = "500m"
+    value = "200m"
   }
 
   set {
     name  = "components.pilot.k8s.resources.limits.memory"
-    value = "2Gi"
+    value = "512Mi"
   }
 
   set {
@@ -161,17 +161,17 @@ resource "helm_release" "sealed_secret" {
 
   set {
     name  = "resources.requests.cpu"
-    value = "100m"
+    value = "10m"
   }
 
   set {
     name  = "resources.requests.memory"
-    value = "128Mi"
+    value = "24Mi"
   }
 
   set {
     name  = "resources.limits.memory"
-    value = "256Mi"
+    value = "48Mi"
   }
 
   set {
@@ -208,4 +208,20 @@ resource "helm_release" "reflector" {
     name  = "nodeSelector.nodepool"
     value = "small"
   }
+
+  set {
+    name  = "resources.requests.cpu"
+    value = "10m"
+  }
+
+  set {
+    name  = "resources.requests.memory"
+    value = "128Mi"
+  }
+
+  set {
+    name  = "resources.limits.memory"
+    value = "256Mi"
+  }
+
 }

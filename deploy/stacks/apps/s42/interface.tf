@@ -50,11 +50,11 @@ module "interface" {
 
   resources = {
     limits = {
-      memory = "1Gi"
+      memory = "512Mi"
     }
     requests = {
-      cpu    = "500m"
-      memory = "512Mi"
+      cpu    = var.namespace == "production" ? "100m" : "10mi"
+      memory = var.namespace == "production" ? "256Mi" : "128Mi"
     }
   }
 

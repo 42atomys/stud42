@@ -157,11 +157,11 @@ module "prometheus" {
 
   resources = {
     limits = {
-      memory = "2Gi"
+      memory = "3Gi"
     }
     requests = {
-      cpu    = "400m"
-      memory = "1Gi"
+      cpu    = "300m"
+      memory = "2Gi"
     }
   }
 
@@ -322,11 +322,11 @@ module "loki" {
 
   resources = {
     limits = {
-      memory = "300Mi"
+      memory = "512Mi"
     }
     requests = {
-      cpu    = "100m"
-      memory = "250Mi"
+      cpu    = "42m"
+      memory = "300Mi"
     }
   }
 
@@ -480,11 +480,11 @@ module "tempo" {
 
   resources = {
     limits = {
-      memory = "300Mi"
+      memory = "256Mi"
     }
     requests = {
-      cpu    = "100m"
-      memory = "250Mi"
+      cpu    = "10m"
+      memory = "96Mi"
     }
   }
 
@@ -626,11 +626,11 @@ module "promtail" {
 
   resources = {
     limits = {
-      memory = "100Mi"
+      memory = "256Mi"
     }
     requests = {
-      cpu    = "50m"
-      memory = "40Mi"
+      cpu    = "42m"
+      memory = "128Mi"
     }
   }
 
@@ -784,11 +784,11 @@ module "grafana" {
 
   resources = {
     limits = {
-      memory = "750Mi"
+      memory = "768Mi"
     }
     requests = {
-      cpu    = "100m"
-      memory = "500Mi"
+      cpu    = "50m"
+      memory = "256Mi"
     }
   }
 
