@@ -46,11 +46,11 @@ module "webhooked" {
 
   resources = {
     limits = {
-      memory = "25Mi"
+      memory = "50Mi"
     }
     requests = {
-      cpu    = "20m"
-      memory = "15Mi"
+      cpu    = "10m"
+      memory = "25Mi"
     }
   }
 
