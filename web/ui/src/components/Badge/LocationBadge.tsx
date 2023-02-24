@@ -19,7 +19,9 @@ export const LocationBadge = ({
   location: NestedPartial<Location> | null | undefined;
 }) => {
   const isConnected = location?.endAt === null ? true : false;
-  const dayJsObject = location?.endAt ? dayjs(location.endAt as Date) : null;
+  const dayJsObject = location?.endAt
+    ? dayjs(location.endAt as Date, { locale: '' })
+    : null;
   return (
     <ConditionalWrapper
       // `? true : false` mysterious workaround to prevent ts error

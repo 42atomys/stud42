@@ -185,7 +185,7 @@ export const MenuItem = ({
           {icon && <i className={classNames('fa-fw fa-light', icon)} />}
           <span className="ml-2 flex items-baseline flex-1 justify-between">
             <span>
-              <span>{name}</span>
+              <span className="[word-break:break-word]">{name}</span>
               {leftText && (
                 <span
                   data-active={active}

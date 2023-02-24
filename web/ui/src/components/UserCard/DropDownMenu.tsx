@@ -51,7 +51,7 @@ const DropdownMenu: DropdownMenuComponent = ({
                   rel="noreferrer"
                 >
                   <i className="fa-light fa-fw fa-address-card pr-2"></i>
-                  <span>Show Intranet profile</span>
+                  <span>Show Intranet Profile</span>
                 </a>
               </Menu.Item>
               <Menu.Item>
@@ -84,20 +84,33 @@ const DropdownMenu: DropdownMenuComponent = ({
                 </Menu.Item>
               )}
               {isFriend && (
-                <Menu.Item>
-                  <button
-                    onClick={() => {
-                      deleteFriendship({
-                        variables: { userID: user.id },
-                        refetchQueries: refetchQueries,
-                      });
-                    }}
-                    className="hover:bg-red-500 hover:text-white text-red-500 group flex rounded-md items-center w-full px-2 py-2 text-sm"
-                  >
-                    <i className="fa-light fa-fw fa-user-xmark pr-2"></i>
-                    <span>Remove Friend</span>
-                  </button>
-                </Menu.Item>
+                <>
+                  <Menu.Item>
+                    <button
+                      className="hover:bg-indigo-500 hover:text-white group flex rounded-md items-center w-full px-2 py-2 text-sm"
+                      onClick={() => {
+                        alert('@TODO');
+                      }}
+                    >
+                      <i className="fa-light fa-fw fa-user-group pr-2"></i>
+                      <span>Manage Friends Groups</span>
+                    </button>
+                  </Menu.Item>
+                  <Menu.Item>
+                    <button
+                      onClick={() => {
+                        deleteFriendship({
+                          variables: { userID: user.id },
+                          refetchQueries: refetchQueries,
+                        });
+                      }}
+                      className="hover:bg-red-500 hover:text-white text-red-500 group flex rounded-md items-center w-full px-2 py-2 text-sm"
+                    >
+                      <i className="fa-light fa-fw fa-user-xmark pr-2"></i>
+                      <span>Remove Friend</span>
+                    </button>
+                  </Menu.Item>
+                </>
               )}
             </div>
           </Menu.Items>
