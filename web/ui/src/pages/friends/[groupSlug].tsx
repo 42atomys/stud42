@@ -3,10 +3,9 @@ import { Search } from '@components/Search';
 import { Menu, MenuCategory, MenuItem, useSidebar } from '@components/Sidebar';
 import UserCard from '@components/UserCard';
 import {
+  FriendsPageQuery,
   MyFollowingsDocument,
-  useCreateFriendshipMutation,
-  useMyFollowingsQuery,
-  User,
+  useCreateFriendshipMutation, User
 } from '@graphql.d';
 import { isFirstLoading } from '@lib/apollo';
 import classNames from 'classnames';
@@ -15,6 +14,30 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 
 type PageProps = {};
+type GroupType = NonNullable<FriendsPageQuery['myFollowsGroups']>[number];
+
+const DefaultEmoji = '👥';
+
+const MenuGroupItem = ({
+  currentGroup,
+  group,
+}: {
+  currentGroup: GroupType | undefined;
+  group: GroupType;
+}) => {
+  if (!group) return null;
+
+  return (
+    <MenuItem
+      key={`group-${group.id}`}
+      href="/friends/[groupSlug]"
+      linkAs={`/friends/${group.slug}`}
+      active={currentGroup?.slug === group.slug}
+      emoji={group.emoji || DefaultEmoji}
+      name={group.name}
+    />
+  );
+};
 
 const IndexPage: NextPage<PageProps> = () => {
   const { SidebarProvider, Sidebar, PageContainer, PageContent } = useSidebar();
@@ -23,21 +46,24 @@ const IndexPage: NextPage<PageProps> = () => {
   } = useRouter();
 
   const [createFriendship] = useCreateFriendshipMutation();
-  const { data, networkStatus, refetch } = useMyFollowingsQuery({
+  const { data, networkStatus, refetch } = useFriendsPageQuery({
     fetchPolicy: 'network-only', // Used for first execution
-    nextFetchPolicy: 'cache-and-network', // Used for subsequent executions
+    nextFetchPolicy: 'cache-first', // Used for subsequent executions
     variables: {
-      // TODO(@42Atomys): plug to the backend
-      // groupSlug: groupSlug === 'all' ? groupSlug as string : null
+      followsGroupSlug: groupSlug === 'all' ? null : (groupSlug as string),
     },
   });
-  const { myFollowing } = data || {};
-  const hasFollowing = (myFollowing?.length || 0) > 0;
-
+  const { myFollowings, myFollowsGroups } = data || {};
+  const hasFollowing = (myFollowings?.length || 0) > 0;
+  const currentGroup = myFollowsGroups?.find((g) => g?.slug === groupSlug);
   return (
     <SidebarProvider>
       <Head>
-        <title>Friendship - Stud42</title>
+        {(currentGroup && (
+          <title>
+            {currentGroup.emoji} {currentGroup.name} - Friendship - Stud42
+          </title>
+        )) || <title>All Friendship - Stud42</title>}
       </Head>
       <PageContainer>
         <Sidebar>
@@ -56,51 +82,45 @@ const IndexPage: NextPage<PageProps> = () => {
               <MenuItem
                 href="/friends/all"
                 active={groupSlug === 'all'}
-                emoji="👥"
+                emoji={DefaultEmoji}
                 name="All friends"
               />
-              {/* // TODO(@42Atomys): plug to the backend */}
-              <MenuCategory name="Friends groups">
-                {/* {50 chars max} */}
-                <MenuItem
-                  href="/friends/groupies"
-                  active={groupSlug === 'groupies'}
-                  emoji="🔥"
-                  name="Groupies"
-                />
-                <MenuItem
-                  href="/friends/bons-gars-avec-qui-trainer-a-00h-en-e1-surtout-le"
-                  active={
-                    groupSlug ===
-                    'bons-gars-avec-qui-trainer-a-00h-en-e1-surtout-le'
-                  }
-                  emoji="🔮"
-                  name="Bons gars avec qui trainer a 00h en E1 surtout le."
-                />
-                <MenuItem
-                  href="/friends/oooooooooooooooooooooooooooooooooooooooooooooooooo"
-                  active={
-                    groupSlug ===
-                    'oooooooooooooooooooooooooooooooooooooooooooooooooo'
-                  }
-                  emoji="💥"
-                  name="OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
-                />
+              <MenuCategory
+                name="Friends groups"
+                isCollapsable={true}
+                collapsed={false}
+              >
+                {myFollowsGroups
+                  ?.filter((x) => x?.kind === FollowsGroupKind.MANUAL)
+                  .map((group) => (
+                    <MenuGroupItem
+                      key={`group-${group?.id}`}
+                      currentGroup={currentGroup}
+                      group={group}
+                    />
+                  ))}
               </MenuCategory>
-              {/* // TODO(@42Atomys): TBD if we want to split it or merge it */}
-              <MenuCategory name="Dynamic friend groups">
-                <MenuItem
-                  href="/friends/fake-group"
-                  active={groupSlug === 'fake-group'}
-                  emoji="🛠"
-                  name="Fake group"
-                  rightText="Dynamic"
-                />
+              <MenuCategory
+                name="Dynamic friends groups"
+                isCollapsable={true}
+                collapsed={true}
+              >
+                {myFollowsGroups
+                  ?.filter((x) => x?.kind === FollowsGroupKind.DYNAMIC)
+                  .map((group) => (
+                    <MenuGroupItem
+                      key={`group-${group?.id}`}
+                      currentGroup={currentGroup}
+                      group={group}
+                    />
+                  ))}
+
+                <span className="flex p-2 text-xs text-slate-400 dark:text-slate-600 italic">
+                  ⚡️ Dynamic groups are automatically generated based on your
+                  cursus, current projects, etc.
+                </span>
               </MenuCategory>
             </Menu>
-            {/* <span className="flex p-2 text-xs text-slate-400 dark:text-slate-600 italic">
-              You can create and manage custom groups in the future
-            </span> */}
           </div>
         </Sidebar>
         <PageContent
@@ -123,9 +143,9 @@ const IndexPage: NextPage<PageProps> = () => {
             </div>
           )}
           {!isFirstLoading(networkStatus) &&
-            myFollowing?.map((user) => (
+            myFollowings?.map((user, i) => (
               <UserCard
-                key={user?.duoLogin}
+                key={`user-${user.id}-${i}`}
                 user={user as User}
                 location={user?.lastLocation}
                 refetchQueries={[MyFollowingsDocument]}
@@ -137,22 +157,5 @@ const IndexPage: NextPage<PageProps> = () => {
     </SidebarProvider>
   );
 };
-
-// export const getServerSideProps: GetServerSideProps<PageProps> = async ({ query: { groupSlug }, req, res }) => {
-//   res.setHeader(
-//     'Cache-Control',
-//     'public, s-maxage=10, stale-while-revalidate=59'
-//   )
-
-//   const { data, } = await queryAuthenticatedSSR<MyFollowingsQuery>(req, {
-//     query: MyFollowingsDocument,
-//   });
-
-//   return {
-//     props: {
-//       friends: data.myFollowing
-//     },
-//   }
-// }
 
 export default IndexPage;

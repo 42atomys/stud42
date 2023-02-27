@@ -143,8 +143,9 @@ query meWithFlags {
   }
 }
 
-query myFollowings {
-  myFollowing {
+# @deprecated
+query myFollowings($followsGroupSlug: String) {
+  myFollowings(followsGroupSlug: $followsGroupSlug) {
     id
     isFollowing
     lastLocation {
@@ -155,6 +156,30 @@ query myFollowings {
     }
     ...UserIdentyData
     duoAvatarSmallURL
+  }
+}
+
+query friendsPage($followsGroupSlug: String) {
+  myFollowings(followsGroupSlug: $followsGroupSlug) {
+    id
+    isFollowing
+    lastLocation {
+      ...LocationBasicData
+      campus {
+        ...CampusBasicData
+      }
+    }
+    ...UserIdentyData
+    duoAvatarSmallURL
+  }
+
+  myFollowsGroups {
+    id
+    kind
+    name
+    slug
+    color
+    emoji
   }
 }
 
