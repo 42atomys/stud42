@@ -1,4 +1,4 @@
-import { Flag, MeWithFlagsDocument, MeWithFlagsQuery } from '@graphql.d';
+import { UserFlag, MeWithFlagsDocument, MeWithFlagsQuery } from '@graphql.d';
 import { queryAuthenticatedSSR } from '@lib/apollo';
 import { NextMiddleware, NextResponse } from 'next/server';
 
@@ -33,7 +33,7 @@ export const middleware: NextMiddleware = async (req) => {
   }
 
   const { flags = [] } = data?.me || {};
-  if (flags?.includes(Flag.STAFF) || flags?.includes(Flag.BETA)) {
+  if (flags?.includes(UserFlag.STAFF) || flags?.includes(UserFlag.BETA)) {
     return NextResponse.next();
   }
 

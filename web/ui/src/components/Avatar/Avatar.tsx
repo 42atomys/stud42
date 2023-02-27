@@ -1,4 +1,4 @@
-import { Flag } from '@graphql.d';
+import { UserFlag } from '@graphql.d';
 import classNames from 'classnames';
 import type { AvatarProps } from './types';
 
@@ -36,7 +36,7 @@ export const Avatar = ({
         'outline-offset-2 outline-2',
         sizeClasses[size],
         {
-          'outline outline-fuchsia-500': flags?.includes(Flag.SPONSOR),
+          'outline outline-fuchsia-500': flags?.includes(UserFlag.SPONSOR),
         }
       )}
     />

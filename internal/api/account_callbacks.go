@@ -7,6 +7,7 @@ import (
 	"atomys.codes/stud42/internal/discord"
 	modelgen "atomys.codes/stud42/internal/models/generated"
 	"atomys.codes/stud42/internal/models/generated/user"
+	"atomys.codes/stud42/internal/models/gotype"
 	"atomys.codes/stud42/pkg/utils"
 	"github.com/getsentry/sentry-go"
 	"github.com/google/go-github/v47/github"
@@ -106,8 +107,8 @@ func githubLinkCallback(ctx context.Context, db *modelgen.Client, account *model
 		return
 	}
 
-	u.FlagsList = append(u.FlagsList, typesgen.FlagBeta.String())
-	err = db.User.UpdateOne(u).SetFlagsList(utils.Uniq(u.FlagsList)).Exec(ctx)
+	u.Flags = append(u.Flags, gotype.UserFlagBeta)
+	err = db.User.UpdateOne(u).SetFlags(utils.Uniq(u.Flags)).Exec(ctx)
 	if err != nil {
 		log.Error().Err(err).Msg("failed to give beta access to the user")
 		sentry.CaptureException(err)

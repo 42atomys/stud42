@@ -2,7 +2,7 @@ import Avatar from '@components/Avatar';
 import { LocationBadge } from '@components/Badge';
 import Name from '@components/Name';
 import Tooltip from '@components/Tooltip';
-import { Flag } from '@graphql.d';
+import { UserFlag } from '@graphql.d';
 import classNames from 'classnames';
 import DropdownMenu from './DropDownMenu';
 import { UserCardComponent } from './types';
@@ -34,11 +34,11 @@ export const UserCard: UserCardComponent = ({
       />
       <h2
         className={classNames('flex flex-row font-bold uppercase', {
-          'text-fuchsia-500': user.flags?.includes(Flag.SPONSOR),
+          'text-fuchsia-500': user.flags?.includes(UserFlag.SPONSOR),
         })}
       >
         <span>{user.duoLogin}</span>
-        {user.flags?.includes(Flag.SPONSOR) && (
+        {user.flags?.includes(UserFlag.SPONSOR) && (
           <Tooltip
             allowInteractions={false}
             text="Github Sponsor"
