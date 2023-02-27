@@ -1,5 +1,6 @@
+import useSessionStorage from '@lib/useSessionStorage';
 import axios from 'axios';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 
 export interface Repository {
   id?: number;
@@ -131,12 +132,12 @@ export const Star = (): JSX.Element => {
     }
   }, []);
 
-  const [stars, setStars] = useState(0);
+  const [stars, setStars] = useSessionStorage('github-stars', 0);
   useEffect(() => {
     getRepo().then(({ stargazers_count }) => {
       setStars(isNaN(Number(stargazers_count)) ? 0 : Number(stargazers_count));
     });
-  }, [getRepo]);
+  }, [getRepo, setStars]);
 
   return (
     <a
@@ -147,7 +148,9 @@ export const Star = (): JSX.Element => {
     >
       <i className="fa-regular fa-star"></i>
       <span className="pl-3 font-medium">Star</span>
-      <span className="pl-3 font-medium">{stars}</span>
+      <span className="pl-3 font-medium" suppressHydrationWarning>
+        {stars}
+      </span>
     </a>
   );
 };
