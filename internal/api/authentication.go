@@ -83,8 +83,7 @@ func directiveAuthorization(client *modelgen.Client) func(ctx context.Context, o
 		if ctx.Value(currentUserContextKey) == nil {
 			user, err := client.User.Query().
 				Where(user.ID(uuid.MustParse(tok.Subject()))).
-				WithFollowing().
-				WithFollowers().
+				WithFollowings().
 				WithCurrentLocation().
 				Only(ctx)
 			if err != nil {

@@ -50,7 +50,7 @@ func (User) Fields() []ent.Field {
 		field.UUID("current_campus_id", uuid.UUID{}).Nillable().Optional(),
 		field.Bool("is_staff").Default(false),
 		field.Bool("is_a_user").Default(false),
-		field.JSON("flags_list", []string{}).Default([]string{}).Optional(),
+		field.JSON("flags", []gotype.UserFlag{}).Default(gotype.DefaultUserFlag).Optional().StorageKey("flags_list"),
 		field.JSON("settings", gotype.Settings{}).Default(gotype.DefaultSettings).Optional(),
 	}
 }
@@ -58,7 +58,17 @@ func (User) Fields() []ent.Field {
 func (User) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("accounts", Account.Type).Annotations(entsql.Annotation{OnDelete: entsql.Cascade}),
-		edge.To("following", User.Type).From("followers").Annotations(entsql.Annotation{OnDelete: entsql.Cascade}),
+		// Friends / Follows related
+		edge.To("follows_groups", FollowsGroup.Type).Annotations(entsql.Annotation{OnDelete: entsql.Cascade}),
+		// edge.From("follows", Follow.Type).Ref("user").Annotations(entsql.Annotation{OnDelete: entsql.Cascade}),
+
+		edge.To("followings", User.Type).
+			Through("follows", Follow.Type).
+			StorageKey(edge.Table("follows"), edge.Columns("user_id", "follow_id")),
+
+		edge.From("followers", User.Type).Ref("followings"),
+
+		// Locations related
 		edge.To("locations", Location.Type).Annotations(entsql.Annotation{OnDelete: entsql.Cascade}),
 		edge.To("current_location", Location.Type).
 			Unique().

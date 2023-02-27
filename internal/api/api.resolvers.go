@@ -13,10 +13,11 @@ import (
 	apigen "atomys.codes/stud42/internal/api/generated"
 	typesgen "atomys.codes/stud42/internal/api/generated/types"
 	"atomys.codes/stud42/internal/discord"
-	modelsutils "atomys.codes/stud42/internal/models"
 	"atomys.codes/stud42/internal/models/generated"
 	"atomys.codes/stud42/internal/models/generated/account"
 	"atomys.codes/stud42/internal/models/generated/campus"
+	"atomys.codes/stud42/internal/models/generated/follow"
+	"atomys.codes/stud42/internal/models/generated/followsgroup"
 	"atomys.codes/stud42/internal/models/generated/location"
 	"atomys.codes/stud42/internal/models/generated/user"
 	"atomys.codes/stud42/internal/models/gotype"
@@ -37,7 +38,10 @@ func (r *mutationResolver) CreateFriendship(ctx context.Context, userID uuid.UUI
 		return false, fmt.Errorf("cannot befriend yourself")
 	}
 
-	if _, err := r.client.User.UpdateOne(cu).AddFollowingIDs(userID).Save(ctx); err != nil {
+	if _, err := r.client.Follow.Create().
+		SetUser(cu).
+		SetFollowID(userID).
+		Save(ctx); err != nil {
 		return false, err
 	}
 	return true, nil
@@ -49,7 +53,8 @@ func (r *mutationResolver) DeleteFriendship(ctx context.Context, userID uuid.UUI
 		return false, err
 	}
 
-	if _, err := r.client.User.UpdateOne(cu).RemoveFollowingIDs(userID).Save(ctx); err != nil {
+	if _, err := r.client.Follow.Delete().
+		Where(follow.UserID(cu.ID), follow.FollowID(userID)).Exec(ctx); err != nil {
 		return false, err
 	}
 	return true, nil
@@ -283,7 +288,7 @@ func (r *queryResolver) LocationsStatsByPrefixes(ctx context.Context, campusName
 	return finalLocationStats, err
 }
 
-func (r *queryResolver) MyFollowing(ctx context.Context) ([]*generated.User, error) {
+func (r *queryResolver) MyFollowings(ctx context.Context, followsGroupID *uuid.UUID, followsGroupSlug *string) ([]*generated.User, error) {
 	cu, _ := CurrentUserFromContext(ctx)
 
 	withCampus := func(lq *generated.LocationQuery) {
@@ -292,7 +297,29 @@ func (r *queryResolver) MyFollowing(ctx context.Context) ([]*generated.User, err
 
 	return r.client.User.Query().
 		Where(user.ID(cu.ID)).
-		QueryFollowing().
+		QueryFollows().
+		Where(func(s *sql.Selector) {
+			jt := sql.Table(followsgroup.FollowsTable)
+			gt := sql.Table(followsgroup.Table)
+
+			s.LeftJoin(jt).On(s.C(follow.FieldID), jt.C(followsgroup.FollowsPrimaryKey[1]))
+			s.LeftJoin(gt).On(jt.C(followsgroup.FollowsPrimaryKey[0]), gt.C(followsgroup.FieldID))
+
+			predicates := []*sql.Predicate{}
+
+			if followsGroupID != nil {
+				predicates = append(predicates, sql.EQ(gt.C(followsgroup.FieldID), *followsGroupID))
+			}
+
+			if followsGroupSlug != nil {
+				predicates = append(predicates, sql.EQ(gt.C(followsgroup.FieldSlug), *followsGroupSlug))
+			}
+
+			if len(predicates) > 0 {
+				s.Where(predicates[0])
+			}
+		}).
+		QueryFollow().
 		WithCurrentLocation(withCampus).
 		WithLastLocation(withCampus).
 		// Unique is necessary because the query builder always add a DISTINCT clause
@@ -305,6 +332,16 @@ func (r *queryResolver) MyFollowing(ctx context.Context) ([]*generated.User, err
 			s.OrderBy(t.C(location.FieldUserDuoLogin), s.C(user.FieldDuoLogin))
 			//: Hack to order the friends as A -> Z over the connected status
 		}).
+		All(ctx)
+}
+
+func (r *queryResolver) MyFollowsGroups(ctx context.Context) ([]*generated.FollowsGroup, error) {
+	cu, _ := CurrentUserFromContext(ctx)
+
+	return r.client.User.Query().
+		Where(user.ID(cu.ID)).
+		QueryFollowsGroups().
+		Order(generated.Asc(followsgroup.FieldName)).
 		All(ctx)
 }
 
@@ -341,14 +378,10 @@ func (r *userResolver) IsMe(ctx context.Context, obj *generated.User) (bool, err
 	return cu.ID == obj.ID, nil
 }
 
-func (r *userResolver) Flags(ctx context.Context, obj *generated.User) ([]typesgen.Flag, error) {
-	return modelsutils.TranslateFlagFromORM(obj.FlagsList), nil
-}
-
 func (r *userResolver) IsFollowing(ctx context.Context, obj *generated.User) (bool, error) {
 	cu, _ := CurrentUserFromContext(ctx)
 
-	for _, f := range cu.Edges.Following {
+	for _, f := range cu.Edges.Followings {
 		if f.ID == obj.ID {
 			return true, nil
 		}
