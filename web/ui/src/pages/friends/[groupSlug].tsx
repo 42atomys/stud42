@@ -6,7 +6,9 @@ import {
   FollowsGroupKind,
   FriendsPageQuery,
   MyFollowingsDocument,
-  useCreateFriendshipMutation, useFriendsPageQuery, User
+  useCreateFriendshipMutation,
+  useFriendsPageQuery,
+  User,
 } from '@graphql.d';
 import { isFirstLoading } from '@lib/apollo';
 import classNames from 'classnames';
