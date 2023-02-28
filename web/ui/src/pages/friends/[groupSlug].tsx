@@ -3,9 +3,10 @@ import { Search } from '@components/Search';
 import { Menu, MenuCategory, MenuItem, useSidebar } from '@components/Sidebar';
 import UserCard from '@components/UserCard';
 import {
+  FollowsGroupKind,
   FriendsPageQuery,
   MyFollowingsDocument,
-  useCreateFriendshipMutation, User
+  useCreateFriendshipMutation, useFriendsPageQuery, User
 } from '@graphql.d';
 import { isFirstLoading } from '@lib/apollo';
 import classNames from 'classnames';
@@ -30,8 +31,8 @@ const MenuGroupItem = ({
   return (
     <MenuItem
       key={`group-${group.id}`}
-      href="/friends/[groupSlug]"
-      linkAs={`/friends/${group.slug}`}
+      href={`/friends/${group.slug}`}
+      linkAs="/friends/[groupSlug]"
       active={currentGroup?.slug === group.slug}
       emoji={group.emoji || DefaultEmoji}
       name={group.name}
@@ -47,8 +48,8 @@ const IndexPage: NextPage<PageProps> = () => {
 
   const [createFriendship] = useCreateFriendshipMutation();
   const { data, networkStatus, refetch } = useFriendsPageQuery({
-    fetchPolicy: 'network-only', // Used for first execution
-    nextFetchPolicy: 'cache-first', // Used for subsequent executions
+    fetchPolicy: 'cache-and-network', // Used for first execution
+    nextFetchPolicy: 'cache-and-network', // Used for subsequent executions
     variables: {
       followsGroupSlug: groupSlug === 'all' ? null : (groupSlug as string),
     },
