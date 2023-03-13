@@ -325,10 +325,15 @@ func (r *queryResolver) MyFollowings(ctx context.Context, followsGroupID *uuid.U
 		// Unique is necessary because the query builder always add a DISTINCT clause
 		// and cannot order the query properly by location identifier
 		Unique(false).
-		Order(func(s *sql.Selector) {
+		Modify(func(s *sql.Selector) {
 			//: Hack to order the friends as A -> Z over the connected status
-			t := sql.Table(location.Table)
+			t := sql.Table(location.Table).As("cl")
 			s.LeftJoin(t).On(s.C(user.FieldCurrentLocationID), t.C(location.FieldID))
+			s.SelectExpr(
+				sql.Expr(
+					"DISTINCT ON (cl.user_duo_login, users.duo_login) duo_login, users.*",
+				),
+			)
 			s.OrderBy(t.C(location.FieldUserDuoLogin), s.C(user.FieldDuoLogin))
 			//: Hack to order the friends as A -> Z over the connected status
 		}).
