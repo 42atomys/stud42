@@ -4,8 +4,8 @@ import { Menu, MenuCategory, MenuItem, useSidebar } from '@components/Sidebar';
 import UserCard from '@components/UserCard';
 import {
   FollowsGroupKind,
+  FriendsPageDocument,
   FriendsPageQuery,
-  MyFollowingsDocument,
   useCreateFriendshipMutation,
   useFriendsPageQuery,
   User,
@@ -151,7 +151,7 @@ const IndexPage: NextPage<PageProps> = () => {
                 key={`user-${user.id}-${i}`}
                 user={user as User}
                 location={user?.lastLocation}
-                refetchQueries={[MyFollowingsDocument]}
+                refetchQueries={[FriendsPageDocument]}
                 className="m-2 hover:scale-[102%] hover:border-indigo-500"
               />
             ))}
