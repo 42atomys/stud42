@@ -4,6 +4,7 @@ import { Malaga } from './campus/malaga';
 import { Paris } from './campus/paris';
 import { Seoul } from './campus/seoul';
 import { Vienna } from './campus/vienna';
+import { Nice } from './campus/nice';
 import { CampusNames, ICampus } from './types';
 
 /**
@@ -26,6 +27,7 @@ export const Campuses: {
   paris: new Paris(),
   seoul: new Seoul(),
   vienna: new Vienna(),
+  nice: new Nice(),
 };
 
 export type { CampusNames, ClusterMapEntity } from './types';
