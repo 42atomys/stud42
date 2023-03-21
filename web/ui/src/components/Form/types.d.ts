@@ -1,12 +1,28 @@
 import { Dispatch } from 'react';
-import { ClassNameProps } from 'types/globals';
 
-type SelectInputFunc = <S>(
-  props: SelectInputProps<S extends string ? S : never> & ClassNameProps
-) => JSX.Element;
+interface InputProps<S> {
+  label?: string;
+  name?: string;
+  defaultValue?: S;
+  onChange: Dispatch<S>;
+  placeholder?: string;
+  disabled?: boolean;
+}
 
-type SelectInputProps<S> = {
+type InputTextType =
+  | 'text'
+  | 'password'
+  | 'email'
+  | 'number'
+  | 'tel'
+  | 'url'
+  | 'search';
+
+interface SelectInputProps<S> extends InputProps<S> {
   selectedValue: S;
   objects: S[];
-  onChange: Dispatch<S>;
-};
+}
+
+interface TextInputProps<S> extends InputProps<S> {
+  type: InputTextType = 'text';
+}

@@ -57,7 +57,11 @@ const ApparenceSettingPage: NextPage<PageProps> = () => {
               className="flex-1"
               objects={Object.values(ClusterMapAvatarSize)}
               selectedValue={settings.clusterMapAvatarSize}
-              onChange={(value) => setSettings({ clusterMapAvatarSize: value })}
+              onChange={(value) =>
+                setSettings({
+                  clusterMapAvatarSize: value as ClusterMapAvatarSize,
+                })
+              }
             />
           </SettingsTableRow>
         </SettingsTable>
