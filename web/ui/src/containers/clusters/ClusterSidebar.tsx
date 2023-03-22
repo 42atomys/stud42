@@ -128,14 +128,14 @@ export const ClusterSidebar = ({
                             clusterIdentifier == activeClusterIdentifier
                           }
                           name={cluster.name()}
-                          leftText={clusterIdentifier.toUpperCase()}
-                          rightText={
+                          leftChildren={clusterIdentifier.toUpperCase()}
+                          rightChildren={
                             activeCampus ? (
                               <>
-                                <span className="pr-1">
+                                <span className="pr-1 text-xs">
                                   {freePlacesPerCluster[clusterIdentifier]}
                                 </span>
-                                <i className="fa-light fa-computer"></i>
+                                <i className="fa-light fa-computer text-inherit"></i>
                               </>
                             ) : undefined
                           }
