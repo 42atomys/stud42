@@ -5,10 +5,13 @@ import { ClassNameProps } from 'types/globals';
 import { InputProps } from './types';
 
 export const ColorDisplay: React.FC<
-  { color: DataType.Color | undefined } & ClassNameProps
-> = ({ color }) => (
+  { color: DataType.Color | null | undefined } & ClassNameProps
+> = ({ color, className }) => (
   <div
-    className="w-3 h-3 mt-2 rounded-full outline outline-2 outline-offset-2"
+    className={classNames(
+      'w-3 h-3 rounded-full outline outline-2 outline-offset-2',
+      className
+    )}
     style={{
       backgroundColor: color || 'transparent',
       outlineColor: color || '#64748b',
@@ -43,7 +46,7 @@ export const ColorInput: React.FC<
     >
       <label htmlFor={inputId} className="flex text-xs text-slate-500">
         <span>{labelName}</span>
-        <ColorDisplay color={value} />
+        <ColorDisplay className="mt-2" color={value} />
       </label>
       <input
         type="color"
