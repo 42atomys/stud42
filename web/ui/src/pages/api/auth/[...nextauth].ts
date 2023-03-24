@@ -28,7 +28,7 @@ export default NextAuth({
       clientId: process.env.GITHUB_ID as string,
       clientSecret: process.env.GITHUB_SECRET as string,
       authorization:
-        'https://github.com/login/oauth/authorize?scope=user:email+user:follow+public_repo',
+        'https://github.com/login/oauth/authorize?scope=user:email',
     }),
     DiscordProvider({
       clientId: process.env.DISCORD_ID as string,
