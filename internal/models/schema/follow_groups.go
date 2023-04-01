@@ -33,8 +33,10 @@ func (FollowsGroup) Fields() []ent.Field {
 			}
 			return nil
 		}),
-		field.String("color").MaxLen(8),
-		field.String("emoji").MaxLen(2),
+		field.String("color").Nillable().DefaultFunc(func() string {
+			return utils.GetRandomHexColor()
+		}).MaxLen(8),
+		field.String("emoji").Nillable().Optional().MaxLen(2),
 	}
 }
 
