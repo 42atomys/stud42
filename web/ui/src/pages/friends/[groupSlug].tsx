@@ -3,7 +3,10 @@ import Loader from '@components/Loader';
 import { Search } from '@components/Search';
 import { Menu, MenuCategory, MenuItem, useSidebar } from '@components/Sidebar';
 import UserCard from '@components/UserCard';
-import { FriendsGroupAddModal } from '@containers/friends';
+import {
+  FriendsGroupAddOrEditModal,
+  FriendsGroupDeleteModal,
+} from '@containers/friends';
 import {
   FollowsGroupKind,
   FriendsPageDocument,
@@ -38,6 +41,7 @@ const MenuGroupItem = ({
       href={`/friends/${group.slug}`}
       active={currentGroup?.slug === group.slug}
       className="[&_#right-text]:text-base"
+      emoji={group.emoji}
       leftChildren={
         <>
           <ColorDisplay color={group.color} />
@@ -46,9 +50,20 @@ const MenuGroupItem = ({
       }
       rightChildren={
         (group.kind === FollowsGroupKind.MANUAL && (
-          <span className="invisible group-hover:visible opacity-50 hover:opacity-100">
-            <i className="fa-fw fa-light fa-pencil" />
-          </span>
+          <>
+            <FriendsGroupAddOrEditModal {...group}>
+              <span className="invisible group-hover:visible opacity-50 hover:opacity-100">
+                <i className="fa-fw fa-light fa-pencil" />
+                edit
+              </span>
+            </FriendsGroupAddOrEditModal>
+            <FriendsGroupDeleteModal {...group}>
+              <span className="invisible group-hover:visible opacity-50 hover:opacity-100">
+                <i className="fa-fw fa-light fa-trash" />
+                delete
+              </span>
+            </FriendsGroupDeleteModal>
+          </>
         )) ||
         ''
       }
@@ -57,14 +72,14 @@ const MenuGroupItem = ({
 };
 
 const NewFriendGroupMenuItem: React.FC<{}> = () => (
-  <FriendsGroupAddModal>
+  <FriendsGroupAddOrEditModal>
     <MenuItem
       key={`add-friend-group`}
       name="New group"
       icon="[--fa-fw-width:24px] fa-kit fa-fw fa-regular-user-group-circle-plus"
       className="mt-4 bg-slate-200 hover:bg-indigo-100/10 dark:bg-slate-800 dark:hover:bg-indigo-900/10 ring-2 ring-transparent hover:ring-indigo-500 [&>span]:justify-center [&>span>span]:flex-none"
     />
-  </FriendsGroupAddModal>
+  </FriendsGroupAddOrEditModal>
 );
 
 const IndexPage: NextPage<PageProps> = () => {
@@ -118,6 +133,7 @@ const IndexPage: NextPage<PageProps> = () => {
                 isCollapsable={true}
                 collapsed={false}
               >
+                <NewFriendGroupMenuItem />
                 {myFollowsGroups
                   ?.filter((x) => x?.kind === FollowsGroupKind.MANUAL)
                   .map((group) => (
@@ -127,7 +143,6 @@ const IndexPage: NextPage<PageProps> = () => {
                       group={group}
                     />
                   ))}
-                <NewFriendGroupMenuItem />
               </MenuCategory>
               <MenuCategory
                 name="Dynamic friends groups"

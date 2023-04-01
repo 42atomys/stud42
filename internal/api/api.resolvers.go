@@ -60,6 +60,68 @@ func (r *mutationResolver) DeleteFriendship(ctx context.Context, userID uuid.UUI
 	return true, nil
 }
 
+// CreateOrUpdateFollowsGroup creates or updates a follows group.
+//
+// This function creates a follows group if the input does not contain an ID,
+// and updates the follows group with the corresponding ID if it does.
+func (r *mutationResolver) CreateOrUpdateFollowsGroup(ctx context.Context, input typesgen.FollowsGroupInput) (fg *generated.FollowsGroup, err error) {
+	cu, err := CurrentUserFromContext(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	// If the input contains an ID, try to update the follows group with that ID.
+	if input.ID != nil {
+		// Update an existing FollowsGroup
+		fg, err = r.client.FollowsGroup.Query().Where(followsgroup.UserID(cu.ID), followsgroup.ID(*input.ID)).First(ctx)
+		if generated.IsNotFound(err) {
+			// If we can't find the FollowsGroup, create a new one
+			goto CREATE
+		} else if err != nil {
+			return nil, err
+		}
+
+		fg, err = fg.Update().
+			SetName(input.Name).
+			SetNillableColor(input.Color).
+			Save(ctx)
+		if err != nil {
+			return nil, err
+		}
+		return fg, nil
+	}
+
+	// If it does not exist, create a new follows group.
+CREATE:
+	fg, err = r.client.FollowsGroup.Create().
+		SetUserID(cu.ID).
+		SetName(input.Name).
+		SetNillableColor(input.Color).
+		Save(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return fg, nil
+}
+
+// DeleteFollowsGroup deletes a FollowsGroup given the ID, and returns
+// true if the deletion was successful. It returns false if the deletion
+// was unsuccessful.
+func (r *mutationResolver) DeleteFollowsGroup(ctx context.Context, id uuid.UUID) (bool, error) {
+	cu, err := CurrentUserFromContext(ctx)
+	if err != nil {
+		return false, err
+	}
+
+	// Delete the relationship between the current user and the group.
+	if _, err := r.client.FollowsGroup.Delete().
+		Where(followsgroup.UserID(cu.ID), followsgroup.ID(id)).Exec(ctx); err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
 func (r *mutationResolver) UpdateSettings(ctx context.Context, input typesgen.SettingsInput) (*gotype.Settings, error) {
 	cu, err := CurrentUserFromContext(ctx)
 	if err != nil {

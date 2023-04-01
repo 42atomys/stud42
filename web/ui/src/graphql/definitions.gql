@@ -118,6 +118,16 @@ mutation deleteFriendship($userID: UUID!) {
   deleteFriendship(userID: $userID)
 }
 
+mutation createOrUpdateFollowsGroup($input: FollowsGroupInput!) {
+  createOrUpdateFollowsGroup(input: $input) {
+    ...FollowsGroup
+  }
+}
+
+mutation deleteFollowsGroup($id: UUID!) {
+  deleteFollowsGroup(id: $id)
+}
+
 mutation updateSettings($input: SettingsInput!) {
   updateSettings(input: $input) {
     ...ApparenceSettings
@@ -174,12 +184,7 @@ query friendsPage($followsGroupSlug: String) {
   }
 
   myFollowsGroups {
-    id
-    kind
-    name
-    slug
-    color
-    emoji
+    ...FollowsGroup
   }
 }
 
@@ -290,4 +295,13 @@ fragment CampusBasicData on Campus {
 fragment ApparenceSettings on Settings {
   theme
   clusterMapAvatarSize
+}
+
+fragment FollowsGroup on FollowsGroup {
+  id
+  kind
+  name
+  slug
+  color
+  emoji
 }

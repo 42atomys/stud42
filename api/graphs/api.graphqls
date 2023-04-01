@@ -286,6 +286,19 @@ type Mutation {
   user ID.
   """
   deleteFriendship(userID: UUID!): Boolean! @authenticated
+  """
+  createOrUpdateFollowsGroup creates a follow groups for the current User or
+  update an existing one if an ID is provided in the FollowsGroupInput
+  """
+  createOrUpdateFollowsGroup(input: FollowsGroupInput!): FollowsGroup!
+    @authenticated
+
+  """
+  deleteFollowsGroup deletes a follow groups for the current User with the
+  given ID
+  """
+  deleteFollowsGroup(id: UUID!): Boolean! @authenticated
+
   "updateSettings updates the settings of the current user."
   updateSettings(input: SettingsInput!): Settings! @authenticated
   """
@@ -366,4 +379,10 @@ SettingsInput is used to update the settings of the current user.
 input SettingsInput {
   theme: Theme!
   clusterMapAvatarSize: ClusterMapAvatarSize!
+}
+
+input FollowsGroupInput {
+  id: UUID
+  name: String!
+  color: String
 }

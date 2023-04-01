@@ -1,5 +1,10 @@
 import { ColorInput, TextInput } from '@components/Form';
-import { FollowsGroup } from '@graphql.d';
+import {
+  FollowsGroup,
+  FollowsGroupInput,
+  FriendsPageDocument,
+  useCreateOrUpdateFollowsGroupMutation,
+} from '@graphql.d';
 import { Dialog } from '@headlessui/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
@@ -11,10 +16,24 @@ import { useState } from 'react';
  *                       handled by this component.
  * @returns
  */
-export const FriendsGroupAddModal: React.FC<
+export const FriendsGroupAddOrEditModal: React.FC<
   React.PropsWithChildren<Partial<FollowsGroup>>
 > = ({ children, ...props }) => {
+  const defaultInputState = {
+    name: props.name || '',
+    color: props.color,
+    id: props.id,
+  };
   const [isOpen, setIsOpen] = useState(false);
+  const [input, setInput] = useState<FollowsGroupInput>(defaultInputState);
+  const isAnUpdate = typeof props.id === 'string';
+  const [submitMutation, { loading, error }] =
+    useCreateOrUpdateFollowsGroupMutation({
+      variables: { input },
+      onCompleted: () => setIsOpen(false),
+      refetchQueries: [FriendsPageDocument],
+      awaitRefetchQueries: true,
+    });
 
   return (
     <>
@@ -56,7 +75,20 @@ export const FriendsGroupAddModal: React.FC<
                         as="h3"
                         className="text-base font-semibold leading-6 text-gray-900 dark:text-gray-100"
                       >
-                        Create a new friends group
+                        {isAnUpdate ? (
+                          <>
+                            Update
+                            <span
+                              className="px-1"
+                              style={{ color: props.color as string }}
+                            >
+                              {props.name}
+                            </span>
+                            group
+                          </>
+                        ) : (
+                          'Create a new friends group'
+                        )}
                       </Dialog.Title>
                       <div className="my-4 text-sm">
                         <p className="text-slate-600 dark:text-slate-400">
@@ -72,7 +104,9 @@ export const FriendsGroupAddModal: React.FC<
                             name="group-color"
                             defaultValue={props?.color ?? undefined}
                             className="[&>label]:flex-col [&>label]:items-center"
-                            onChange={() => {}}
+                            onChange={(color) => {
+                              setInput({ ...input, color });
+                            }}
                           />
                           <TextInput
                             type="text"
@@ -80,24 +114,48 @@ export const FriendsGroupAddModal: React.FC<
                             name="group-name"
                             defaultValue={props.name}
                             className="flex-1"
-                            onChange={() => {}}
+                            onChange={(name) => {
+                              setInput({ ...input, name });
+                            }}
+                            onKeyDown={(e) => {
+                              if (e.code === 'Enter') submitMutation();
+                            }}
                           />
                         </div>
                       </div>
+                      {error && (
+                        <div className="my-4 text-sm">
+                          <p className="text-red-600 dark:text-red-400">
+                            You cannot use this color or this name. The color
+                            must be a hex value and name must be slugged and
+                            have a max of 50 characters.
+                          </p>
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div className="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
                     <button
                       type="button"
-                      className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 sm:col-start-2"
-                      onClick={() => setIsOpen(false)}
+                      className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 sm:col-start-2 disabled:opacity-50 disabled:pointer-events-none"
+                      onClick={() => submitMutation()}
+                      disabled={loading}
                     >
-                      Create
+                      {loading
+                        ? isAnUpdate
+                          ? 'Updating...'
+                          : 'Creating...'
+                        : isAnUpdate
+                        ? 'Update'
+                        : 'Create'}
                     </button>
                     <button
                       type="button"
                       className="mt-3 inline-flex w-full justify-center rounded-md bg-white dark:bg-slate-800 px-3 py-2 text-sm font-semibold text-slate-900 dark:text-slate-100 shadow-sm ring-1 ring-inset ring-slate-300 dark:ring-0 hover:bg-slate-50 dark:hover:bg-slate-700 sm:col-start-1 sm:mt-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-700"
-                      onClick={() => setIsOpen(false)}
+                      onClick={() => {
+                        setInput(defaultInputState);
+                        setIsOpen(false);
+                      }}
                     >
                       Cancel
                     </button>
@@ -112,4 +170,4 @@ export const FriendsGroupAddModal: React.FC<
   );
 };
 
-export default FriendsGroupAddModal;
+export default FriendsGroupAddOrEditModal;

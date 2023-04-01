@@ -1,2 +1,2 @@
-export { FriendsGroupAddModal } from './FriendsGroupAddModal';
+export { FriendsGroupAddOrEditModal } from './FriendsGroupAddOrEditModal';
 export { FriendsGroupDeleteModal } from './FriendsGroupDeleteModal';

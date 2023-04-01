@@ -1,10 +1,11 @@
-import { Dispatch } from 'react';
+import { Dispatch, KeyboardEventHandler } from 'react';
 
 interface InputProps<S> {
   label?: string;
   name?: string;
   defaultValue?: S;
   onChange: Dispatch<S>;
+  onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
   placeholder?: string;
   disabled?: boolean;
 }

@@ -1,4 +1,4 @@
-import { UserFlag, MeWithFlagsDocument, MeWithFlagsQuery } from '@graphql.d';
+import { MeWithFlagsDocument, MeWithFlagsQuery, UserFlag } from '@graphql.d';
 import { queryAuthenticatedSSR } from '@lib/apollo';
 import { NextMiddleware, NextResponse } from 'next/server';
 
