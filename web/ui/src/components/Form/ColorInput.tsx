@@ -9,12 +9,12 @@ export const ColorDisplay: React.FC<
 > = ({ color, className }) => (
   <div
     className={classNames(
-      'w-3 h-3 rounded-full outline outline-2 outline-offset-2',
+      'w-3 h-3 rounded-full outline outline-2 outline-offset-2 outline-slate-300 dark:outline-slate-700',
       className
     )}
     style={{
       backgroundColor: color || 'transparent',
-      outlineColor: color || '#64748b',
+      outlineColor: color || undefined,
     }}
   />
 );
@@ -41,7 +41,7 @@ export const ColorInput: React.FC<
     <div
       className={classNames(
         className,
-        'rounded-md relative text-left px-3 pt-2.5 pb-1.5 shadow-sm ring-1 ring-inset ring-slate-800 focus-within:ring-2 focus-within:ring-indigo-600'
+        'rounded-md relative text-left px-3 pt-2.5 pb-1.5 shadow-sm ring-1 ring-inset ring-slate-200 dark:ring-slate-800 focus-within:ring-2 focus-within:ring-indigo-500'
       )}
     >
       <label htmlFor={inputId} className="flex text-xs text-slate-500">
