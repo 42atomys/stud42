@@ -5,6 +5,7 @@ package api
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -60,16 +61,13 @@ func (r *mutationResolver) DeleteFriendship(ctx context.Context, userID uuid.UUI
 	return true, nil
 }
 
-// CreateOrUpdateFollowsGroup creates or updates a follows group.
-//
-// This function creates a follows group if the input does not contain an ID,
-// and updates the follows group with the corresponding ID if it does.
-func (r *mutationResolver) CreateOrUpdateFollowsGroup(ctx context.Context, input typesgen.FollowsGroupInput) (fg *generated.FollowsGroup, err error) {
+func (r *mutationResolver) CreateOrUpdateFollowsGroup(ctx context.Context, input typesgen.FollowsGroupInput) (*generated.FollowsGroup, error) {
 	cu, err := CurrentUserFromContext(ctx)
 	if err != nil {
 		return nil, err
 	}
 
+	var fg *generated.FollowsGroup
 	// If the input contains an ID, try to update the follows group with that ID.
 	if input.ID != nil {
 		// Update an existing FollowsGroup
@@ -104,9 +102,6 @@ CREATE:
 	return fg, nil
 }
 
-// DeleteFollowsGroup deletes a FollowsGroup given the ID, and returns
-// true if the deletion was successful. It returns false if the deletion
-// was unsuccessful.
 func (r *mutationResolver) DeleteFollowsGroup(ctx context.Context, id uuid.UUID) (bool, error) {
 	cu, err := CurrentUserFromContext(ctx)
 	if err != nil {
@@ -117,6 +112,46 @@ func (r *mutationResolver) DeleteFollowsGroup(ctx context.Context, id uuid.UUID)
 	if _, err := r.client.FollowsGroup.Delete().
 		Where(followsgroup.UserID(cu.ID), followsgroup.ID(id)).Exec(ctx); err != nil {
 		return false, err
+	}
+
+	return true, nil
+}
+
+func (r *mutationResolver) AssignFollowsGroupToUser(ctx context.Context, userID uuid.UUID, followsGroupID uuid.UUID, assign bool) (bool, error) {
+	// Get the current user from the context
+	cu, err := CurrentUserFromContext(ctx)
+	if err != nil {
+		return false, err
+	}
+
+	// If the current user ID is the same as the user ID, return an error
+	if cu.ID == userID {
+		return false, errors.New("cannot assign a follows group to yourself")
+	}
+
+	// Count the number of follows groups that the current user owns that match the follows group ID
+	if r.client.FollowsGroup.Query().Where(followsgroup.UserID(cu.ID), followsgroup.ID(followsGroupID)).CountX(ctx) == 0 {
+		return false, errors.New("you don't own this follows group or it doesn't exist")
+	}
+
+	// Get the follow relationship between the current user and the user ID
+	follow, err := r.client.Follow.Query().Where(follow.UserID(cu.ID), follow.FollowID(userID)).First(ctx)
+	if err != nil {
+		if generated.IsNotFound(err) {
+			return false, errors.New("you are not following this user")
+		}
+		return false, err
+	}
+
+	// If assign is true, add the follows group to the user; otherwise, remove it
+	if assign {
+		if _, err := follow.Update().AddFollowGroupIDs(followsGroupID).Save(ctx); err != nil {
+			return false, err
+		}
+	} else {
+		if _, err := follow.Update().RemoveFollowGroupIDs(followsGroupID).Save(ctx); err != nil {
+			return false, err
+		}
 	}
 
 	return true, nil
@@ -408,6 +443,31 @@ func (r *queryResolver) MyFollowsGroups(ctx context.Context) ([]*generated.Follo
 	return r.client.User.Query().
 		Where(user.ID(cu.ID)).
 		QueryFollowsGroups().
+		Order(generated.Asc(followsgroup.FieldName)).
+		All(ctx)
+}
+
+func (r *queryResolver) FollowsGroupsForUser(ctx context.Context, userID uuid.UUID) ([]*generated.FollowsGroup, error) {
+	// Get the current user from the context
+	cu, err := CurrentUserFromContext(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	// Make sure the current user is not trying to assign itself to a group.
+	if cu.ID == userID {
+		return nil, errors.New("you can't do that on yourself")
+	}
+
+	// Return all the FollowsGroups for the given user, ordered by the FollowsGroup name.
+	// It includes only for the requesting user.
+	return r.client.User.Query().
+		Where(user.ID(cu.ID)).
+		QueryFollowsGroups().
+		Where(
+			followsgroup.KindNotIn(gotype.FollowsGroupKindDynamic),
+			followsgroup.HasFollowsWith(follow.FollowID(userID)),
+		).
 		Order(generated.Asc(followsgroup.FieldName)).
 		All(ctx)
 }

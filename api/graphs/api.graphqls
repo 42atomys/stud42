@@ -250,8 +250,14 @@ type Query {
   myFollowings(followsGroupId: UUID, followsGroupSlug: String): [User!]!
     @authenticated
 
-  "myFollowsGroups retourns a list of friends groups for the current user"
-  myFollowsGroups: [FollowsGroup] @authenticated
+  "myFollowsGroups retourns a list of follows groups for the current user"
+  myFollowsGroups: [FollowsGroup!]! @authenticated
+
+  """
+  followsGroupsForUser returns a list of follows groups assigned to a user by
+  its ID based on the current logged in user.
+  """
+  followsGroupsForUser(userID: UUID!): [FollowsGroup!]! @authenticated
 
   """
   internalGetUserByAccount returns a user by its account. This is used by the
@@ -298,6 +304,16 @@ type Mutation {
   given ID
   """
   deleteFollowsGroup(id: UUID!): Boolean! @authenticated
+
+  """
+  assignFollowsGroupToUser assigns a follows group to a user. If assign is true,
+  the user will be added to the group, otherwise it will be removed.
+  """
+  assignFollowsGroupToUser(
+    userID: UUID!
+    followsGroupID: UUID!
+    assign: Boolean!
+  ): Boolean! @authenticated
 
   "updateSettings updates the settings of the current user."
   updateSettings(input: SettingsInput!): Settings! @authenticated
