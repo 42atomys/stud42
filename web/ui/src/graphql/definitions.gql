@@ -124,6 +124,24 @@ mutation createOrUpdateFollowsGroup($input: FollowsGroupInput!) {
   }
 }
 
+mutation assignFollowsGroupToUser(
+  $userID: UUID!
+  $followsGroupID: UUID!
+  $assign: Boolean!
+) {
+  assignFollowsGroupToUser(
+    userID: $userID
+    followsGroupID: $followsGroupID
+    assign: $assign
+  )
+}
+
+query followsGroupsForUser($userID: UUID!) {
+  followsGroupsForUser(userID: $userID) {
+    ...FollowsGroup
+  }
+}
+
 mutation deleteFollowsGroup($id: UUID!) {
   deleteFollowsGroup(id: $id)
 }
@@ -181,6 +199,16 @@ query friendsPage($followsGroupSlug: String) {
     }
     ...UserIdentyData
     duoAvatarSmallURL
+  }
+
+  myFollowsGroups {
+    ...FollowsGroup
+  }
+}
+
+query followsGroupManageModal($userID: UUID!) {
+  followsGroupsForUser(userID: $userID) {
+    ...FollowsGroup
   }
 
   myFollowsGroups {
