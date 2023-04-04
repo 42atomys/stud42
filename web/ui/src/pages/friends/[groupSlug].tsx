@@ -52,15 +52,13 @@ const MenuGroupItem = ({
         (group.kind === FollowsGroupKind.MANUAL && (
           <>
             <FriendsGroupAddOrEditModal {...group}>
-              <span className="invisible group-hover:visible opacity-50 hover:opacity-100">
+              <span className="visible md:invisible group-hover:visible opacity-50 hover:opacity-100 px-1">
                 <i className="fa-fw fa-light fa-pencil" />
-                edit
               </span>
             </FriendsGroupAddOrEditModal>
             <FriendsGroupDeleteModal {...group}>
-              <span className="invisible group-hover:visible opacity-50 hover:opacity-100">
+              <span className="visible md:invisible group-hover:visible opacity-50 hover:opacity-100 px-1">
                 <i className="fa-fw fa-light fa-trash" />
-                delete
               </span>
             </FriendsGroupDeleteModal>
           </>
