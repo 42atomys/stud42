@@ -1,27 +1,11 @@
+import { ColorDisplay } from '@components/ColorDisplay';
 import classNames from 'classnames';
 import type { DataType } from 'csstype';
 import { useState } from 'react';
-import { ClassNameProps } from 'types/globals';
+import { PropsWithClassName } from 'types/globals';
 import { InputProps } from './types';
 
-export const ColorDisplay: React.FC<
-  { color: DataType.Color | null | undefined } & ClassNameProps
-> = ({ color, className }) => (
-  <div
-    className={classNames(
-      'w-3 h-3 rounded-full outline outline-2 outline-offset-2 outline-slate-300 dark:outline-slate-700',
-      className
-    )}
-    style={{
-      backgroundColor: color || 'transparent',
-      outlineColor: color || undefined,
-    }}
-  />
-);
-
-export const ColorInput: React.FC<
-  InputProps<DataType.Color> & ClassNameProps
-> = ({
+export const ColorInput: React.FC<PropsWithClassName<InputProps<DataType.Color>>> = ({
   onChange,
   className,
   defaultValue,

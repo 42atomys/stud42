@@ -1,4 +1,4 @@
-import { ColorDisplay } from '@components/Form';
+import { ColorDisplay } from '@components/ColorDisplay';
 import Loader from '@components/Loader';
 import { Search } from '@components/Search';
 import { Menu, MenuCategory, MenuItem, useSidebar } from '@components/Sidebar';
@@ -11,9 +11,9 @@ import {
   FollowsGroupKind,
   FriendsPageDocument,
   FriendsPageQuery,
+  User,
   useCreateFriendshipMutation,
   useFriendsPageQuery,
-  User,
 } from '@graphql.d';
 import { isFirstLoading } from '@lib/apollo';
 import classNames from 'classnames';
