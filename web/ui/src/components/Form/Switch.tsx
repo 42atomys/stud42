@@ -1,20 +1,11 @@
 import classNames from 'classnames';
-import { ButtonHTMLAttributes, useState } from 'react';
+import { useState } from 'react';
+import { SwitchProps } from './types';
 
-type SwitchProps = {
-  defaultChecked?: boolean;
-  color?: string;
-  onChange?: (checked: boolean) => void;
-} & Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'onChange' | 'color'>;
-
-export const Switch: React.FC<React.PropsWithChildren<SwitchProps>> = ({
-  children,
-  defaultChecked,
-  onChange,
-  color,
-  ...props
-}) => {
-  const [isChecked, setIsChecked] = useState(defaultChecked);
+export const Switch: React.FC<
+  React.PropsWithChildren<SwitchProps<boolean>>
+> = ({ children, defaultValue, onChange, color, ...props }) => {
+  const [isChecked, setIsChecked] = useState(defaultValue);
   const toggle = () => {
     setIsChecked(!isChecked);
     onChange?.(!isChecked);
@@ -24,7 +15,7 @@ export const Switch: React.FC<React.PropsWithChildren<SwitchProps>> = ({
     <>
       <button
         onClick={toggle}
-        style={color && isChecked ? switchColorStyle : undefined}
+        style={color && isChecked ? switchColorStyle : {}}
         className={`${
           isChecked
             ? classNames({ 'bg-indigo-500': !color })
@@ -32,10 +23,10 @@ export const Switch: React.FC<React.PropsWithChildren<SwitchProps>> = ({
         } relative inline-flex h-6 w-12 p-0.5 shrink-0 cursor-pointer rounded-full transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75`}
         {...props}
       >
-        <input type="checkbox" className="sr-only" />
+        <input type="checkbox" className="sr-only" checked={isChecked} />
         <span
           aria-hidden="true"
-          style={color && !isChecked ? switchColorStyle : undefined}
+          style={color && !isChecked ? switchColorStyle : {}}
           className={`${
             isChecked
               ? 'translate-x-6 bg-white'
