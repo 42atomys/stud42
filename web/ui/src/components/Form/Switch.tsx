@@ -5,7 +5,7 @@ import { SwitchProps } from './types';
 export const Switch: React.FC<
   React.PropsWithChildren<SwitchProps<boolean>>
 > = ({ children, defaultValue, onChange, color, ...props }) => {
-  const [isChecked, setIsChecked] = useState(defaultValue);
+  const [isChecked, setIsChecked] = useState(defaultValue || false);
   const toggle = () => {
     setIsChecked(!isChecked);
     onChange?.(!isChecked);
