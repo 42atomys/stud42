@@ -1,9 +1,10 @@
 import { Dispatch, KeyboardEventHandler } from 'react';
+import { Maybe } from 'types/globals';
 
 interface InputProps<S> {
   label?: string;
   name?: string;
-  defaultValue?: S;
+  defaultValue?: Maybe<S>;
   onChange: Dispatch<S>;
   placeholder?: string;
   disabled?: boolean;

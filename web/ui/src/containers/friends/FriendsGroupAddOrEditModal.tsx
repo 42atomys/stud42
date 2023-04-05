@@ -102,7 +102,7 @@ export const FriendsGroupAddOrEditModal: React.FC<
                           <ColorInput
                             label="Color"
                             name="group-color"
-                            defaultValue={props?.color ?? undefined}
+                            defaultValue={props?.color}
                             className="[&>label]:flex-col [&>label]:items-center"
                             onChange={(color) => {
                               setInput({ ...input, color });

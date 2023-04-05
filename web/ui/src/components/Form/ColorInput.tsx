@@ -14,7 +14,9 @@ export const ColorInput: React.FC<
   label: labelName,
   ...inputProps
 }) => {
-  const [value, setValue] = useState<DataType.Color | undefined>(defaultValue);
+  const [value, setValue] = useState<DataType.Color>(
+    defaultValue || 'transparent'
+  );
   const onChangeCallback = (newValue: DataType.Color) => {
     setValue(newValue);
     onChange(newValue);
