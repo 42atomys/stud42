@@ -9,7 +9,7 @@ describe('ColorDisplay', () => {
     expect(divElement).toHaveStyle({
       backgroundColor: color,
       outlineColor: color,
-    })
+    });
   });
 
   it('renders the div with transparent background color when color prop is not given', () => {
@@ -18,7 +18,7 @@ describe('ColorDisplay', () => {
     expect(divElement).toHaveStyle({
       backgroundColor: 'transparent',
       outlineColor: '',
-    })
+    });
   });
 
   it('renders the div with transparent background color when color prop is not a valid color', () => {

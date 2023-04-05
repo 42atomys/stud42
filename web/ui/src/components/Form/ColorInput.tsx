@@ -5,7 +5,9 @@ import { useState } from 'react';
 import { PropsWithClassName } from 'types/globals';
 import { InputProps } from './types';
 
-export const ColorInput: React.FC<PropsWithClassName<InputProps<DataType.Color>>> = ({
+export const ColorInput: React.FC<
+  PropsWithClassName<InputProps<DataType.Color>>
+> = ({
   onChange,
   className,
   defaultValue,

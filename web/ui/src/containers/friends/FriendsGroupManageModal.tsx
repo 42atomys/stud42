@@ -23,7 +23,7 @@ const FriendGroupItem: React.FC<{
   return (
     <div className="flex flex-row items-center my-1">
       <Switch
-        defaultChecked={assigned}
+        defaultValue={assigned}
         disabled={loading}
         color={group.color || undefined}
         onChange={(checked) => {
