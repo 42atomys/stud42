@@ -98,7 +98,8 @@
         "bradlc.vscode-tailwindcss",
         "zxh404.vscode-proto3",
         "redhat.vscode-yaml",
-        "hashicorp.terraform"
+        "hashicorp.terraform",
+        "orta.vscode-jest"
       ]
     }
   },
