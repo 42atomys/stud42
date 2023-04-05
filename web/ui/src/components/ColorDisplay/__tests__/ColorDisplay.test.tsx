@@ -21,7 +21,7 @@ describe('ColorDisplay', () => {
     })
   });
 
-  it('throws an error when color prop is not a valid color', () => {
+  it('renders the div with transparent background color when color prop is not a valid color', () => {
     const { container } = render(<ColorDisplay color={'invalid'} />);
     const divElement = container.firstChild as HTMLDivElement;
     expect(divElement.style.backgroundColor).toBe('');
