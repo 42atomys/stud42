@@ -12,14 +12,14 @@ export const TextInput: React.FC<
   label: labelName,
   ...inputProps
 }) => {
-  const [value, setValue] = useState(defaultValue);
+  const [value, setValue] = useState(defaultValue || '');
   const onChangeCallback = (newValue: string) => {
     setValue(newValue);
     onChange(newValue);
   };
 
   // set an identifier for the input name as url-safe slug
-  const inputId = inputProps.name?.replace(/[^a-z0-9]/gi, '-').toLowerCase();
+  const inputId = labelName?.replace(/[^a-z0-9]/gi, '-').toLowerCase();
 
   return (
     <div
