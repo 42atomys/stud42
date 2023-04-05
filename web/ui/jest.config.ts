@@ -20,6 +20,7 @@ const customJestConfig = {
     '^@styles/(.*)$': '<rootDir>/src/styles/$1',
     '^@pages/(.*)$': '<rootDir>/src/pages/$1',
     '^@lib/(.*)$': '<rootDir>/src/lib/$1',
+    '^@graphql.d$': '<rootDir>/src/graphql/generated.ts',
 
     // Handle CSS imports (with CSS modules)
     // https://jestjs.io/docs/webpack#mocking-css-modules
