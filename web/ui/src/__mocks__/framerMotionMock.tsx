@@ -3,9 +3,9 @@ import * as React from 'react';
 const actual = jest.requireActual('framer-motion');
 
 // https://github.com/framer/motion/blob/main/src/render/dom/motion.ts
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const custom = (
   Component: string | React.ComponentType<React.PropsWithChildren<any>>,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _customMotionComponentConfig = {}
 ) => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
