@@ -1,17 +1,13 @@
-import {
-  CustomDomComponent,
-  CustomMotionComponentConfig,
-} from 'framer-motion/types/render/dom/motion-proxy';
 import * as React from 'react';
 
 const actual = jest.requireActual('framer-motion');
 
 // https://github.com/framer/motion/blob/main/src/render/dom/motion.ts
-function custom<Props>(
-  Component: string | React.ComponentType<Props>,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _customMotionComponentConfig: CustomMotionComponentConfig = {}
-): CustomDomComponent<Props> {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const custom = (
+  Component: string | React.ComponentType<React.PropsWithChildren<any>>,
+  _customMotionComponentConfig = {}
+) => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const c = React.forwardRef((props, ref) => {
@@ -35,7 +31,7 @@ function custom<Props>(
       : Component.displayName || Component.name
   })`;
   return c;
-}
+};
 
 const componentCache = new Map<string, unknown>();
 const motion = new Proxy(custom, {

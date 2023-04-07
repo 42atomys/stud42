@@ -3,7 +3,9 @@ import Switch from '../Switch';
 
 describe('Switch', () => {
   it('renders the switch with defaultChecked value', () => {
-    const { container } = render(<Switch defaultValue={true} />);
+    const { container } = render(
+      <Switch name="test-switch" defaultValue={true} onChange={() => {}} />
+    );
     const inputElement = container.querySelector(
       'input[type="checkbox"]'
     ) as HTMLInputElement;
@@ -12,14 +14,18 @@ describe('Switch', () => {
 
   it('calls the onChange callback with the new checked value when clicked', () => {
     const onChange = jest.fn();
-    const { container } = render(<Switch onChange={onChange} />);
+    const { container } = render(
+      <Switch name="test-switch" onChange={onChange} />
+    );
     const buttonElement = container.firstChild as HTMLButtonElement;
     fireEvent.click(buttonElement);
     expect(onChange).toHaveBeenCalledWith(true);
   });
 
   it('changes the checked value when clicked', () => {
-    const { container } = render(<Switch />);
+    const { container } = render(
+      <Switch name="test-switch" onChange={() => {}} />
+    );
     const buttonElement = container.firstChild as HTMLButtonElement;
     fireEvent.click(buttonElement);
     const inputElement = container.querySelector(
@@ -30,7 +36,9 @@ describe('Switch', () => {
 
   it('applies color style when provided', () => {
     const color = 'red';
-    const { container } = render(<Switch color={color} />);
+    const { container } = render(
+      <Switch name="test-switch" color={color} onChange={() => {}} />
+    );
     const buttonElement = container.firstChild as HTMLButtonElement;
     const spanElement = buttonElement.querySelector('span') as HTMLSpanElement;
 
