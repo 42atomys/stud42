@@ -1,5 +1,5 @@
+import { ColorInput } from '@components/Form';
 import { fireEvent, render, waitFor } from '@testing-library/react';
-import ColorInput from '../ColorInput';
 
 const defaultValue = '#ff0000';
 const updatedValue = '#00ff00';

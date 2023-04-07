@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { ColorDisplay } from '../ColorDisplay';
+import { ColorDisplay } from '../';
 
 describe('ColorDisplay', () => {
   it('renders the div with the given background color', () => {

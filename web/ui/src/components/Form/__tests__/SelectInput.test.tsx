@@ -1,5 +1,5 @@
+import { SelectInput } from '@components/Form';
 import { fireEvent, render } from '@testing-library/react';
-import SelectInput from '../SelectInput';
 
 describe('SelectInput', () => {
   const objects = ['Object 1', 'Object 2', 'Object 3'];

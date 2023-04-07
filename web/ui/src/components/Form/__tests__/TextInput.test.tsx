@@ -1,5 +1,5 @@
+import { TextInput } from '@components/Form';
 import { fireEvent, render, waitFor } from '@testing-library/react';
-import TextInput from '../TextInput';
 
 const defaultValue = 'Hello, world!';
 const updatedValue = 'Hello, you!';

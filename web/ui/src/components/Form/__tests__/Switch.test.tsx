@@ -1,5 +1,5 @@
+import { Switch } from '@components/Form';
 import { fireEvent, render } from '@testing-library/react';
-import Switch from '../Switch';
 
 describe('Switch', () => {
   it('renders the switch with defaultChecked value', () => {
