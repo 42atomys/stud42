@@ -9,11 +9,12 @@ const actual = jest.requireActual('framer-motion');
 // https://github.com/framer/motion/blob/main/src/render/dom/motion.ts
 function custom<Props>(
   Component: string | React.ComponentType<Props>,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _customMotionComponentConfig: CustomMotionComponentConfig = {}
 ): CustomDomComponent<Props> {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  return React.forwardRef((props, ref) => {
+  const c = React.forwardRef((props, ref) => {
     const regularProps = Object.fromEntries(
       // do not pass framer props to DOM element
       Object.entries(props).filter(([key]) => !actual.isValidMotionProp(key))
@@ -28,6 +29,12 @@ function custom<Props>(
       <Component ref={ref} {...regularProps} />
     );
   });
+  c.displayName = `motion.mock(${
+    typeof Component === 'string'
+      ? Component
+      : Component.displayName || Component.name
+  })`;
+  return c;
 }
 
 const componentCache = new Map<string, unknown>();

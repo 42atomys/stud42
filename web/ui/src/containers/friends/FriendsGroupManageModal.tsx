@@ -62,8 +62,6 @@ export const FriendsGroupManageModal: React.FC<
     },
   });
 
-  console.log('data', data);
-
   const { myFollowsGroups = [], followsGroupsForUser = [] } = data || {};
 
   return (
