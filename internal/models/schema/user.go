@@ -60,12 +60,9 @@ func (User) Edges() []ent.Edge {
 		edge.To("accounts", Account.Type).Annotations(entsql.Annotation{OnDelete: entsql.Cascade}),
 		// Friends / Follows related
 		edge.To("follows_groups", FollowsGroup.Type).Annotations(entsql.Annotation{OnDelete: entsql.Cascade}),
-		// edge.From("follows", Follow.Type).Ref("user").Annotations(entsql.Annotation{OnDelete: entsql.Cascade}),
-
 		edge.To("followings", User.Type).
 			Through("follows", Follow.Type).
 			StorageKey(edge.Table("follows"), edge.Columns("user_id", "follow_id")),
-
 		edge.From("followers", User.Type).Ref("followings"),
 
 		// Locations related

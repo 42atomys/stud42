@@ -33,8 +33,7 @@
     "**/*.ts",
     "**/*.tsx",
     "next.config.ts",
-    "src/lib/prototypes/string.js",
-    "src/__mocks__/framerMotionMock.tss"
+    "src/lib/prototypes/string.js"
   ],
   "exclude": ["node_modules"]
 }
