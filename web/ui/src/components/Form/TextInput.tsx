@@ -10,6 +10,7 @@ export const TextInput: React.FC<
   className,
   defaultValue,
   label: labelName,
+  name,
   ...inputProps
 }) => {
   const [value, setValue] = useState(defaultValue || '');
@@ -19,7 +20,7 @@ export const TextInput: React.FC<
   };
 
   // set an identifier for the input name as url-safe slug
-  const inputId = labelName?.replace(/[^a-z0-9]/gi, '-').toLowerCase();
+  const inputId = name.replace(/[^a-z0-9]/gi, '-').toLowerCase();
 
   return (
     <div

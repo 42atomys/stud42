@@ -43,6 +43,7 @@ describe('FriendsGroupDeleteModal', () => {
       </MockedProvider>
     );
     expect(container.firstChild).not.toContain('friends-group-delete-modal');
+    expect(container.firstChild).toHaveTextContent('Delete Group');
 
     // Open the modal
     await waitFor(() => {

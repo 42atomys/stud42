@@ -23,7 +23,12 @@ export const Switch: React.FC<
         } relative inline-flex h-6 w-12 p-0.5 shrink-0 cursor-pointer rounded-full transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75`}
         {...props}
       >
-        <input type="checkbox" className="sr-only" checked={isChecked} />
+        <input
+          type="checkbox"
+          className="sr-only"
+          readOnly={true}
+          checked={isChecked}
+        />
         <span
           aria-hidden="true"
           style={color && !isChecked ? switchColorStyle : {}}

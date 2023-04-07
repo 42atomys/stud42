@@ -37,7 +37,9 @@ export const FriendsGroupAddOrEditModal: React.FC<
 
   return (
     <>
-      <a onClick={() => setIsOpen(true)}>{children}</a>
+      <a data-testid="modal-opener" onClick={() => setIsOpen(true)}>
+        {children}
+      </a>
       <AnimatePresence>
         {isOpen && (
           <Dialog
@@ -46,6 +48,7 @@ export const FriendsGroupAddOrEditModal: React.FC<
             open={isOpen}
             onClose={() => setIsOpen(false)}
             className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm backdrop-brightness-50"
+            data-testid="friends-group-add-edit-modal"
           >
             <div className="fixed inset-0 z-10 overflow-y-auto">
               <motion.div
@@ -137,6 +140,7 @@ export const FriendsGroupAddOrEditModal: React.FC<
                   <div className="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
                     <button
                       type="button"
+                      data-testid="modal-action-1"
                       className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 sm:col-start-2 disabled:opacity-50 disabled:pointer-events-none"
                       onClick={() => submitMutation()}
                       disabled={loading}
@@ -151,6 +155,7 @@ export const FriendsGroupAddOrEditModal: React.FC<
                     </button>
                     <button
                       type="button"
+                      data-testid="modal-action-2"
                       className="mt-3 inline-flex w-full justify-center rounded-md bg-white dark:bg-slate-800 px-3 py-2 text-sm font-semibold text-slate-900 dark:text-slate-100 shadow-sm ring-1 ring-inset ring-slate-300 dark:ring-0 hover:bg-slate-50 dark:hover:bg-slate-700 sm:col-start-1 sm:mt-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-700"
                       onClick={() => {
                         setInput(defaultInputState);

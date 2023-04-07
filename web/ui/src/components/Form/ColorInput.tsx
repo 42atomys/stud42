@@ -12,6 +12,7 @@ export const ColorInput: React.FC<
   className,
   defaultValue,
   label: labelName,
+  name,
   ...inputProps
 }) => {
   const [value, setValue] = useState<DataType.Color>(
@@ -23,7 +24,7 @@ export const ColorInput: React.FC<
   };
 
   // set an identifier for the input name as url-safe slug
-  const inputId = inputProps.name?.replace(/[^a-z0-9]/gi, '-').toLowerCase();
+  const inputId = name?.replace(/[^a-z0-9]/gi, '-').toLowerCase();
 
   return (
     <div
