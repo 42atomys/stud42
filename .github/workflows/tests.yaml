@@ -177,7 +177,14 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
-
+      - name: Setup protoc
+        uses: arduino/setup-protoc@v1
+        with:
+          # TODO: Update to latest version when the issue
+          # https://github.com/arduino/setup-protoc/issues/33
+          # has been fixed
+          version: "3.x"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Cache node_modules
         uses: actions/cache@v3
         with:
