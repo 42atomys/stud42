@@ -9,6 +9,7 @@ import {
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
+import { persistCache, SessionStorageWrapper } from 'apollo3-cache-persist';
 import merge from 'deepmerge';
 import Cookies from 'js-cookie';
 import { useMemo } from 'react';
@@ -28,6 +29,7 @@ let apolloClient: ApolloClient<any>;
  * @returns {ApolloClient} The ApolloClient instance.
  */
 const createApolloClient = () => {
+  // Create the error link to handle errors
   const errorLink = onError(({ graphQLErrors }) => {
     if (graphQLErrors)
       graphQLErrors.forEach(
@@ -38,11 +40,15 @@ const createApolloClient = () => {
       );
   });
 
+  // Create the http link used to connect to the server
   const httpLink = createHttpLink({
     uri: process.env.NEXT_PUBLIC_GRAPHQL_API,
     credentials: 'include',
   });
 
+  // Add the authorization token to the headers if it exists
+  // This is used to authenticate the user on the server side
+  // and to send the token to the server
   const authLink = setContext(async (_, context) => {
     let authToken = Cookies.get(tokenCookieName);
 
@@ -58,12 +64,28 @@ const createApolloClient = () => {
     };
   });
 
+  // Create the apollo cache instance with the default config (see the docs)
+  // https://www.apollographql.com/docs/react/caching/cache-configuration/
+  const cache = new InMemoryCache({});
+
+  // await before instantiating ApolloClient, else queries might run before the cache is persisted
+  if (
+    typeof window !== 'undefined' &&
+    process.env.NEXT_PUBLIC_ENABLE_PERSIST_CACHE_ON_CLIENT === 'true'
+  ) {
+    persistCache({
+      cache,
+      storage: new SessionStorageWrapper(window.sessionStorage),
+    });
+  }
+
+  // Create the Apollo Client instance with the defined config
   return new ApolloClient({
     link: from([authLink, errorLink, httpLink]),
     version: process.env.NEXT_PUBLIC_VERSION,
     ssrMode: typeof window === 'undefined',
     connectToDevTools: process.env.NODE_ENV === 'development',
-    cache: new InMemoryCache(),
+    cache: cache,
     credentials: 'include',
     defaultOptions: {},
   });

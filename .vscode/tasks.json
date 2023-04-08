@@ -34,7 +34,7 @@
     {
       "label": "Generate all",
       "detail": "Generate the code on API and on the Interface",
-      "dependsOrder": "sequence",
+      "dependsOrder": "parallel",
       "dependsOn": ["Generate API code", "Generate Interface code"],
       "icon": {
         "id": "rocket",

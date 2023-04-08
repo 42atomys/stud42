@@ -43,7 +43,7 @@ export const SettingsLayout: NextPage<PageProps> = ({
                 // href="/settings/profile"
                 icon="fa-user"
                 name="Public profile"
-                rightText="Soon"
+                rightChildren="Soon"
               />
               <MenuItem
                 active={page === 'apparence'}
@@ -56,7 +56,7 @@ export const SettingsLayout: NextPage<PageProps> = ({
                 // href="/settings/awesomeness"
                 icon="fa-sparkles"
                 name="Awesomess"
-                rightText={
+                rightChildren={
                   <Tooltip
                     text="Sponsors Only"
                     subText="This feature is only accessible for Github Sponsors."
@@ -76,7 +76,7 @@ export const SettingsLayout: NextPage<PageProps> = ({
                 // href="/settings/accounts"
                 icon="fa-shield-check"
                 name="Accounts"
-                rightText="Soon"
+                rightChildren="Soon"
               />
             </MenuCategory>
             <MenuCategory name="About">
@@ -85,28 +85,28 @@ export const SettingsLayout: NextPage<PageProps> = ({
                 // href="/settings/about"
                 icon="fa-info-circle"
                 name="About"
-                rightText="Soon"
+                rightChildren="Soon"
               />
               <MenuItem
                 active={page === 'help'}
                 // href="/settings/help"
                 icon="fa-question-circle"
                 name="Help"
-                rightText="Soon"
+                rightChildren="Soon"
               />
               <MenuItem
                 active={page === 'terms'}
                 // href="/settings/terms"
                 icon="fa-file-alt"
                 name="Terms"
-                rightText="Soon"
+                rightChildren="Soon"
               />
               <MenuItem
                 active={page === 'privacy'}
                 // href="/settings/privacy"
                 icon="fa-file-alt"
                 name="Privacy"
-                rightText="Soon"
+                rightChildren="Soon"
               />
             </MenuCategory>
             <hr className="my-2 border-slate-200 dark:border-slate-800" />

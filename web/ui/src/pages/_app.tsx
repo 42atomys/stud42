@@ -29,8 +29,8 @@ const Interface = ({
   return (
     <SessionProvider
       session={session}
-      refetchOnWindowFocus={true}
-      refetchInterval={60}
+      refetchOnWindowFocus={false}
+      refetchInterval={300}
     >
       <ApolloProvider client={apolloClient}>
         <NotificationProvider>

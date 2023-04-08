@@ -5,6 +5,7 @@ package api
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -13,10 +14,11 @@ import (
 	apigen "atomys.codes/stud42/internal/api/generated"
 	typesgen "atomys.codes/stud42/internal/api/generated/types"
 	"atomys.codes/stud42/internal/discord"
-	modelsutils "atomys.codes/stud42/internal/models"
 	"atomys.codes/stud42/internal/models/generated"
 	"atomys.codes/stud42/internal/models/generated/account"
 	"atomys.codes/stud42/internal/models/generated/campus"
+	"atomys.codes/stud42/internal/models/generated/follow"
+	"atomys.codes/stud42/internal/models/generated/followsgroup"
 	"atomys.codes/stud42/internal/models/generated/location"
 	"atomys.codes/stud42/internal/models/generated/user"
 	"atomys.codes/stud42/internal/models/gotype"
@@ -37,7 +39,10 @@ func (r *mutationResolver) CreateFriendship(ctx context.Context, userID uuid.UUI
 		return false, fmt.Errorf("cannot befriend yourself")
 	}
 
-	if _, err := r.client.User.UpdateOne(cu).AddFollowingIDs(userID).Save(ctx); err != nil {
+	if _, err := r.client.Follow.Create().
+		SetUser(cu).
+		SetFollowID(userID).
+		Save(ctx); err != nil {
 		return false, err
 	}
 	return true, nil
@@ -49,9 +54,106 @@ func (r *mutationResolver) DeleteFriendship(ctx context.Context, userID uuid.UUI
 		return false, err
 	}
 
-	if _, err := r.client.User.UpdateOne(cu).RemoveFollowingIDs(userID).Save(ctx); err != nil {
+	if _, err := r.client.Follow.Delete().
+		Where(follow.UserID(cu.ID), follow.FollowID(userID)).Exec(ctx); err != nil {
 		return false, err
 	}
+	return true, nil
+}
+
+func (r *mutationResolver) CreateOrUpdateFollowsGroup(ctx context.Context, input typesgen.FollowsGroupInput) (*generated.FollowsGroup, error) {
+	cu, err := CurrentUserFromContext(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	var fg *generated.FollowsGroup
+	// If the input contains an ID, try to update the follows group with that ID.
+	if input.ID != nil {
+		// Update an existing FollowsGroup
+		fg, err = r.client.FollowsGroup.Query().Where(followsgroup.UserID(cu.ID), followsgroup.ID(*input.ID)).First(ctx)
+		if generated.IsNotFound(err) {
+			// If we can't find the FollowsGroup, create a new one
+			goto CREATE
+		} else if err != nil {
+			return nil, err
+		}
+
+		fg, err = fg.Update().
+			SetName(input.Name).
+			SetNillableColor(input.Color).
+			Save(ctx)
+		if err != nil {
+			return nil, err
+		}
+		return fg, nil
+	}
+
+	// If it does not exist, create a new follows group.
+CREATE:
+	fg, err = r.client.FollowsGroup.Create().
+		SetUserID(cu.ID).
+		SetName(input.Name).
+		SetNillableColor(input.Color).
+		Save(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return fg, nil
+}
+
+func (r *mutationResolver) DeleteFollowsGroup(ctx context.Context, id uuid.UUID) (bool, error) {
+	cu, err := CurrentUserFromContext(ctx)
+	if err != nil {
+		return false, err
+	}
+
+	// Delete the relationship between the current user and the group.
+	if _, err := r.client.FollowsGroup.Delete().
+		Where(followsgroup.UserID(cu.ID), followsgroup.ID(id)).Exec(ctx); err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
+func (r *mutationResolver) AssignFollowsGroupToUser(ctx context.Context, userID uuid.UUID, followsGroupID uuid.UUID, assign bool) (bool, error) {
+	// Get the current user from the context
+	cu, err := CurrentUserFromContext(ctx)
+	if err != nil {
+		return false, err
+	}
+
+	// If the current user ID is the same as the user ID, return an error
+	if cu.ID == userID {
+		return false, errors.New("cannot assign a follows group to yourself")
+	}
+
+	// Count the number of follows groups that the current user owns that match the follows group ID
+	if r.client.FollowsGroup.Query().Where(followsgroup.UserID(cu.ID), followsgroup.ID(followsGroupID)).CountX(ctx) == 0 {
+		return false, errors.New("you don't own this follows group or it doesn't exist")
+	}
+
+	// Get the follow relationship between the current user and the user ID
+	follow, err := r.client.Follow.Query().Where(follow.UserID(cu.ID), follow.FollowID(userID)).First(ctx)
+	if err != nil {
+		if generated.IsNotFound(err) {
+			return false, errors.New("you are not following this user")
+		}
+		return false, err
+	}
+
+	// If assign is true, add the follows group to the user; otherwise, remove it
+	if assign {
+		if _, err := follow.Update().AddFollowGroupIDs(followsGroupID).Save(ctx); err != nil {
+			return false, err
+		}
+	} else {
+		if _, err := follow.Update().RemoveFollowGroupIDs(followsGroupID).Save(ctx); err != nil {
+			return false, err
+		}
+	}
+
 	return true, nil
 }
 
@@ -283,7 +385,7 @@ func (r *queryResolver) LocationsStatsByPrefixes(ctx context.Context, campusName
 	return finalLocationStats, err
 }
 
-func (r *queryResolver) MyFollowing(ctx context.Context) ([]*generated.User, error) {
+func (r *queryResolver) MyFollowings(ctx context.Context, followsGroupID *uuid.UUID, followsGroupSlug *string) ([]*generated.User, error) {
 	cu, _ := CurrentUserFromContext(ctx)
 
 	withCampus := func(lq *generated.LocationQuery) {
@@ -292,19 +394,81 @@ func (r *queryResolver) MyFollowing(ctx context.Context) ([]*generated.User, err
 
 	return r.client.User.Query().
 		Where(user.ID(cu.ID)).
-		QueryFollowing().
+		QueryFollows().
+		Where(func(s *sql.Selector) {
+			jt := sql.Table(followsgroup.FollowsTable)
+			gt := sql.Table(followsgroup.Table)
+
+			s.LeftJoin(jt).On(s.C(follow.FieldID), jt.C(followsgroup.FollowsPrimaryKey[1]))
+			s.LeftJoin(gt).On(jt.C(followsgroup.FollowsPrimaryKey[0]), gt.C(followsgroup.FieldID))
+
+			predicates := []*sql.Predicate{}
+
+			if followsGroupID != nil {
+				predicates = append(predicates, sql.EQ(gt.C(followsgroup.FieldID), *followsGroupID))
+			}
+
+			if followsGroupSlug != nil {
+				predicates = append(predicates, sql.EQ(gt.C(followsgroup.FieldSlug), *followsGroupSlug))
+			}
+
+			if len(predicates) > 0 {
+				s.Where(predicates[0])
+			}
+		}).
+		QueryFollow().
 		WithCurrentLocation(withCampus).
 		WithLastLocation(withCampus).
 		// Unique is necessary because the query builder always add a DISTINCT clause
 		// and cannot order the query properly by location identifier
 		Unique(false).
-		Order(func(s *sql.Selector) {
+		Modify(func(s *sql.Selector) {
 			//: Hack to order the friends as A -> Z over the connected status
-			t := sql.Table(location.Table)
+			t := sql.Table(location.Table).As("cl")
 			s.LeftJoin(t).On(s.C(user.FieldCurrentLocationID), t.C(location.FieldID))
+			s.SelectExpr(
+				sql.Expr(
+					"DISTINCT ON (cl.user_duo_login, users.duo_login) duo_login, users.*",
+				),
+			)
 			s.OrderBy(t.C(location.FieldUserDuoLogin), s.C(user.FieldDuoLogin))
 			//: Hack to order the friends as A -> Z over the connected status
 		}).
+		All(ctx)
+}
+
+func (r *queryResolver) MyFollowsGroups(ctx context.Context) ([]*generated.FollowsGroup, error) {
+	cu, _ := CurrentUserFromContext(ctx)
+
+	return r.client.User.Query().
+		Where(user.ID(cu.ID)).
+		QueryFollowsGroups().
+		Order(generated.Asc(followsgroup.FieldName)).
+		All(ctx)
+}
+
+func (r *queryResolver) FollowsGroupsForUser(ctx context.Context, userID uuid.UUID) ([]*generated.FollowsGroup, error) {
+	// Get the current user from the context
+	cu, err := CurrentUserFromContext(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	// Make sure the current user is not trying to assign itself to a group.
+	if cu.ID == userID {
+		return nil, errors.New("you can't do that on yourself")
+	}
+
+	// Return all the FollowsGroups for the given user, ordered by the FollowsGroup name.
+	// It includes only for the requesting user.
+	return r.client.User.Query().
+		Where(user.ID(cu.ID)).
+		QueryFollowsGroups().
+		Where(
+			followsgroup.KindNotIn(gotype.FollowsGroupKindDynamic),
+			followsgroup.HasFollowsWith(follow.FollowID(userID)),
+		).
+		Order(generated.Asc(followsgroup.FieldName)).
 		All(ctx)
 }
 
@@ -341,14 +505,10 @@ func (r *userResolver) IsMe(ctx context.Context, obj *generated.User) (bool, err
 	return cu.ID == obj.ID, nil
 }
 
-func (r *userResolver) Flags(ctx context.Context, obj *generated.User) ([]typesgen.Flag, error) {
-	return modelsutils.TranslateFlagFromORM(obj.FlagsList), nil
-}
-
 func (r *userResolver) IsFollowing(ctx context.Context, obj *generated.User) (bool, error) {
 	cu, _ := CurrentUserFromContext(ctx)
 
-	for _, f := range cu.Edges.Following {
+	for _, f := range cu.Edges.Followings {
 		if f.ID == obj.ID {
 			return true, nil
 		}

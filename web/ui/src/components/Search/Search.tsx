@@ -107,20 +107,20 @@ export const Search: SearchComponent = ({
           className={classNames(
             loader
               ? 'hidden'
-              : `${icon} fa-light px-2 cursor-pointer transition-all fixed right-5 opacity-100 peer-focus:opacity-0 peer-focus:scale-125 peer-focus:text-indigo-500`
+              : `${icon} absolute right-0 px-2 fa-light cursor-pointer transition-all opacity-100 peer-focus:opacity-0 peer-focus:scale-125 peer-focus:text-indigo-500`
           )}
         />
         <i
           className={classNames(
             loader
               ? 'hidden'
-              : 'fa-regular fa-arrow-turn-down-left px-[0.6rem] pt-[0.1rem] cursor-pointer transition-all fixed right-5 opacity-0 peer-focus:opacity-100 peer-focus:scale-125 peer-focus:text-indigo-500'
+              : 'absolute right-0 fa-regular fa-arrow-turn-down-left px-[0.6rem] pt-[0.1rem] cursor-pointer transition-all opacity-0 peer-focus:opacity-100 peer-focus:scale-125 peer-focus:text-indigo-500'
           )}
         />
         <span
           className={
             loader
-              ? 'bg-white dark:bg-slate-900 px-2 fixed right-5 z-10'
+              ? 'absolute right-0 bg-white dark:bg-slate-900 z-10'
               : 'hidden'
           }
         >

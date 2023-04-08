@@ -8,8 +8,8 @@ enum SecurityPolicy {
   NONE
 }
 
-"Flag represents the special feature/access for an User (like a role)"
-enum Flag {
+"UserFlag represents the special feature/access for an User (like a role)"
+enum UserFlag {
   STAFF
   COLLABORATOR
   CONTRIBUTOR
@@ -47,6 +47,11 @@ enum ClusterMapAvatarSize {
   LARGE
 }
 
+enum FollowsGroupKind {
+  MANUAL
+  DYNAMIC
+}
+
 ####################################
 ############## TYPES ###############
 ####################################
@@ -80,18 +85,18 @@ type User {
   poolYear: String
   poolMonth: String
   isSwimmer: Boolean!
-  isMe: Boolean!
+  isMe: Boolean! @deprecated(reason: "Use the me query instead")
   nickname: String
   avatarURL: String
   coverURL: String
   accounts: [Account]
-  flags: [Flag!]!
+  flags: [UserFlag!]!
   currentLocation: Location
   lastLocation: Location
   currentCampus: Campus
-  isFollowing: Boolean!
-  isFollower: Boolean!
-  following: [User]!
+  isFollowing: Boolean! @deprecated(reason: "Use the following query instead")
+  isFollower: Boolean! @deprecated(reason: "Not used for privacy reasons")
+  followings: [User]!
   followers: [User]!
   settings: Settings! @authenticated
 }
@@ -145,6 +150,15 @@ type Location {
 
   user: User!
   campus: Campus!
+}
+
+type FollowsGroup {
+  id: UUID!
+  kind: FollowsGroupKind!
+  name: String!
+  slug: String!
+  color: String
+  emoji: String
 }
 
 """
@@ -229,8 +243,21 @@ type Query {
     campusName: String!
     identifierPrefixes: [String!]
   ): [LocationStats!]! @authenticated
-  "myFollowing returns a list of users the current user is following"
-  myFollowing: [User!]! @authenticated
+  """
+  myFollowings returns a list of users the current user is following in a group
+  by its ID or slug.
+  """
+  myFollowings(followsGroupId: UUID, followsGroupSlug: String): [User!]!
+    @authenticated
+
+  "myFollowsGroups retourns a list of follows groups for the current user"
+  myFollowsGroups: [FollowsGroup!]! @authenticated
+
+  """
+  followsGroupsForUser returns a list of follows groups assigned to a user by
+  its ID based on the current logged in user.
+  """
+  followsGroupsForUser(userID: UUID!): [FollowsGroup!]! @authenticated
 
   """
   internalGetUserByAccount returns a user by its account. This is used by the
@@ -265,6 +292,29 @@ type Mutation {
   user ID.
   """
   deleteFriendship(userID: UUID!): Boolean! @authenticated
+  """
+  createOrUpdateFollowsGroup creates a follow groups for the current User or
+  update an existing one if an ID is provided in the FollowsGroupInput
+  """
+  createOrUpdateFollowsGroup(input: FollowsGroupInput!): FollowsGroup!
+    @authenticated
+
+  """
+  deleteFollowsGroup deletes a follow groups for the current User with the
+  given ID
+  """
+  deleteFollowsGroup(id: UUID!): Boolean! @authenticated
+
+  """
+  assignFollowsGroupToUser assigns a follows group to a user. If assign is true,
+  the user will be added to the group, otherwise it will be removed.
+  """
+  assignFollowsGroupToUser(
+    userID: UUID!
+    followsGroupID: UUID!
+    assign: Boolean!
+  ): Boolean! @authenticated
+
   "updateSettings updates the settings of the current user."
   updateSettings(input: SettingsInput!): Settings! @authenticated
   """
@@ -345,4 +395,10 @@ SettingsInput is used to update the settings of the current user.
 input SettingsInput {
   theme: Theme!
   clusterMapAvatarSize: ClusterMapAvatarSize!
+}
+
+input FollowsGroupInput {
+  id: UUID
+  name: String!
+  color: String
 }

@@ -1,4 +1,4 @@
-import { Flag, MeWithFlagsDocument, MeWithFlagsQuery } from '@graphql.d';
+import { MeWithFlagsDocument, MeWithFlagsQuery, UserFlag } from '@graphql.d';
 import { queryAuthenticatedSSR } from '@lib/apollo';
 import type { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
@@ -20,7 +20,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   });
 
   const { flags = [] } = data?.me || {};
-  if (flags?.includes(Flag.STAFF) || flags?.includes(Flag.BETA)) {
+  if (flags?.includes(UserFlag.STAFF) || flags?.includes(UserFlag.BETA)) {
     return {
       redirect: {
         destination: '/clusters',

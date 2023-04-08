@@ -1,14 +1,12 @@
 import { Listbox, Transition } from '@headlessui/react';
 import classNames from 'classnames';
 import { Fragment, useState } from 'react';
-import { SelectInputFunc } from './types';
+import { ClassNameProps } from 'types/globals';
+import { SelectInputProps } from './types';
 
-export const SelectInput: SelectInputFunc = ({
-  objects,
-  selectedValue,
-  onChange,
-  className,
-}) => {
+export const SelectInput: React.FC<
+  SelectInputProps<string> & ClassNameProps
+> = ({ objects, selectedValue, onChange, className }) => {
   const [value, setValue] = useState(selectedValue);
   const onChangeCallback = (newValue: typeof selectedValue) => {
     setValue(newValue);

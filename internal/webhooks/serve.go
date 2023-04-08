@@ -17,6 +17,7 @@ import (
 	modelgen "atomys.codes/stud42/internal/models/generated"
 	"atomys.codes/stud42/internal/models/generated/account"
 	"atomys.codes/stud42/internal/models/generated/user"
+	"atomys.codes/stud42/internal/models/gotype"
 	"atomys.codes/stud42/pkg/duoapi"
 	"atomys.codes/stud42/pkg/utils"
 )
@@ -193,15 +194,15 @@ func (p *processor) githubHandler(data []byte) error {
 		return nil
 	}
 
-	var flagsList = user.FlagsList
+	var flags = user.Flags
 	switch webhookPayload.Action {
 	case "created", "edited":
-		flagsList = append(flagsList, typesgen.FlagSponsor.String())
+		flags = append(flags, gotype.UserFlagSponsor)
 	case "cancelled":
-		flagsList = utils.Remove(flagsList, typesgen.FlagSponsor.String())
+		flags = utils.Remove(flags, gotype.UserFlagSponsor)
 	}
 
-	_, err = p.db.User.UpdateOne(user).SetFlagsList(utils.Uniq(flagsList)).Save(p.ctx)
+	_, err = p.db.User.UpdateOne(user).SetFlags(utils.Uniq(flags)).Save(p.ctx)
 	return err
 }
 

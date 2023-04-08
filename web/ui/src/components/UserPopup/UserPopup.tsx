@@ -1,5 +1,5 @@
 import UserCard from '@components/UserCard';
-import { ClusterViewDocument, Flag, User } from '@graphql.d';
+import { ClusterViewDocument, User, UserFlag } from '@graphql.d';
 import classNames from 'classnames';
 import { createRef, useEffect } from 'react';
 
@@ -64,7 +64,7 @@ export const UserPopup = ({
         location={location}
         className={classNames('max-h-[250px] h-[250px] border-0', {
           'bg-gradient-to-b from-fuchsia-500/20 to-transparent':
-            user.flags?.includes(Flag.SPONSOR),
+            user.flags?.includes(UserFlag.SPONSOR),
         })}
         buttonAlwaysShow={true}
         refetchQueries={[ClusterViewDocument]}
