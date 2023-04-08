@@ -75,7 +75,7 @@ jobs:
     if: ${{ github.event_name == 'schedule' }}
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/stale@v7
+      - uses: actions/stale@v8
         with:
           exempt-all-milestones: true
           exempt-assignees: "42Atomys"
