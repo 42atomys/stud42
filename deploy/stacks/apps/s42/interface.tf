@@ -53,7 +53,7 @@ module "interface" {
       memory = "512Mi"
     }
     requests = {
-      cpu    = var.namespace == "production" ? "100m" : "10mi"
+      cpu    = var.namespace == "production" ? "100m" : "10m"
       memory = var.namespace == "production" ? "256Mi" : "128Mi"
     }
   }
