@@ -23,6 +23,11 @@ export default NextAuth({
       // unique and not editable by the user. The user is already present on database
       // when he be connected on cluster before.
       allowDangerousEmailAccountLinking: true,
+      // 42 API is slow sometimes and we need to increase the timeout
+      // to avoid 500 Gateway Timeout error.
+      httpOptions: {
+        timeout: 10000,
+      },
     }),
     GithubProvider({
       clientId: process.env.GITHUB_ID as string,
