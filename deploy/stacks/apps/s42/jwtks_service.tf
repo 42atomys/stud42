@@ -42,11 +42,11 @@ module "jwtks_service" {
 
   resources = {
     limits = {
-      memory = "60Mi"
+      memory = "40Mi"
     }
     requests = {
-      cpu    = "100m"
-      memory = "40Mi"
+      cpu    = var.namespace == "production" ? "60m" : "10m"
+      memory = "20Mi"
     }
   }
 

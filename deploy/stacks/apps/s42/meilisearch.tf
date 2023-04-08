@@ -30,11 +30,11 @@ module "meilisearch" {
 
   resources = {
     limits = {
-      memory = "256Mi"
+      memory = var.namespace == "production" ? "512Mi" : "128Mi"
     }
     requests = {
-      cpu    = "100m"
-      memory = "128Mi"
+      cpu    = var.namespace == "production" ? "300m" : "10m"
+      memory = var.namespace == "production" ? "352Mi" : "50Mi"
     }
   }
 

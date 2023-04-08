@@ -41,6 +41,17 @@ resource "kubernetes_manifest" "rabbitmq" {
         }
       }
 
+      resources = {
+        requests = {
+          cpu    = "50m"
+          memory = "300Mi"
+        }
+
+        limits = {
+          memory = "2Gi"
+        }
+      }
+
       persistence = var.hasPersistentStorage ? {
         storageClassName = "csi-cinder-high-speed"
         storage          = var.namespace == "production" ? "5Gi" : "1Gi"
@@ -116,11 +127,11 @@ module "postgres" {
 
   resources = {
     requests = {
-      cpu    = "250m"
-      memory = "200Mi"
+      cpu    = var.namespace == "production" ? "100m" : "10m"
+      memory = var.namespace == "production" ? "1200Mi" : "50Mi"
     }
     limits = {
-      memory = "1Gi"
+      memory = "2Gi"
     }
   }
 
