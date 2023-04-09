@@ -1,7 +1,9 @@
 package cmd
 
 import (
+	"bytes"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"strings"
@@ -81,27 +83,30 @@ var apiCmd = &cobra.Command{
 			router.Mount("/debug", middleware.Profiler())
 		}
 
-		// Limit the request body size to 1MB for all requests to the
+		// Limit the request body size for all requests to the
 		// This is based on the chi middleware.RequestSize. Way this middleware is
 		// added to the router to use it
 		// https://github.com/go-chi/chi/blob/master/middleware/request_size.go
 		router.Use(func(h http.Handler) http.Handler {
 			fn := func(w http.ResponseWriter, r *http.Request) {
 
-				// When image transfer is enabled, the request body size is limited to
-				// 10MB or 25MB depending on the configuration. This is done to prevent
-				// the server from being overloaded by large DoS attack over the network.
-				const _1MB = (1 << 20) * 1
+				// When image transfer is enabled, the request body size is limited.
+				// This is done to prevent the server from being overloaded by large
+				// DoS attack over the network.
+				const _50KB = (1 << 10) * 50
 
-				r.Body = http.MaxBytesReader(w, r.Body, _1MB)
+				limitedBody := http.MaxBytesReader(w, r.Body, _50KB)
+				bodyBytes, err := ioutil.ReadAll(limitedBody)
+				limitedBody.Close()
 
 				// if r.Body reach the max size limit, the request will be canceled
 				// and the error will be returned to the client
-				if r.ContentLength > _1MB {
+				if r.ContentLength > _50KB || err != nil {
 					http.Error(w, http.StatusText(http.StatusRequestEntityTooLarge), http.StatusRequestEntityTooLarge)
 					return
 				}
 
+				r.Body = ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
 				h.ServeHTTP(w, r)
 			}
 			return http.HandlerFunc(fn)
