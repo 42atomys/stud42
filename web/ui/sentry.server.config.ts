@@ -2,8 +2,8 @@
 // The config you add here will be used whenever the server handles a request.
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
+import { BrowserTracing } from '@sentry/browser';
 import * as Sentry from '@sentry/nextjs';
-import { BrowserTracing } from '@sentry/tracing';
 
 const SENTRY_DSN = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
 
