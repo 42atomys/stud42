@@ -35,7 +35,7 @@ module "interface" {
   replicas = 1
   autoscaling = {
     enabled     = true
-    minReplicas = 1
+    minReplicas = 2
     maxReplicas = 10
     metrics = {
       cpu = {
