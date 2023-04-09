@@ -7,7 +7,7 @@ import (
 	"net/http"
 
 	sentryhttp "github.com/getsentry/sentry-go/http"
-	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/v5"
 	"github.com/rs/cors"
 	"github.com/rs/zerolog/log"
 )
