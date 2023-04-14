@@ -24,7 +24,7 @@ specs:
           databaseUrl:
             valueFrom:
               envRef: RABBITMQ_DATABASE_URL
-          queueName: webhooks-deliveries
+          queueName: webhooks.processing
           contentType: application/json
           durable: true
   - name: users-update
@@ -49,7 +49,7 @@ specs:
           databaseUrl:
             valueFrom:
               envRef: RABBITMQ_DATABASE_URL
-          queueName: webhooks-deliveries
+          queueName: webhooks.processing
           contentType: application/json
           durable: true
   - name: locations-create
@@ -74,7 +74,7 @@ specs:
           databaseUrl:
             valueFrom:
               envRef: RABBITMQ_DATABASE_URL
-          queueName: webhooks-deliveries
+          queueName: webhooks.processing
           contentType: application/json
           durable: true
   - name: locations-close
@@ -99,7 +99,7 @@ specs:
           databaseUrl:
             valueFrom:
               envRef: RABBITMQ_DATABASE_URL
-          queueName: webhooks-deliveries
+          queueName: webhooks.processing
           contentType: application/json
           durable: true
   - name: locations-destroy
@@ -124,7 +124,7 @@ specs:
           databaseUrl:
             valueFrom:
               envRef: RABBITMQ_DATABASE_URL
-          queueName: webhooks-deliveries
+          queueName: webhooks.processing
           contentType: application/json
           durable: true
   - name: campus-users-create
@@ -149,7 +149,7 @@ specs:
           databaseUrl:
             valueFrom:
               envRef: RABBITMQ_DATABASE_URL
-          queueName: webhooks-deliveries
+          queueName: webhooks.processing
           contentType: application/json
           durable: true
   - name: campus-users-update
@@ -174,7 +174,7 @@ specs:
           databaseUrl:
             valueFrom:
               envRef: RABBITMQ_DATABASE_URL
-          queueName: webhooks-deliveries
+          queueName: webhooks.processing
           contentType: application/json
           durable: true
   - name: campus-users-destroy
@@ -199,7 +199,7 @@ specs:
           databaseUrl:
             valueFrom:
               envRef: RABBITMQ_DATABASE_URL
-          queueName: webhooks-deliveries
+          queueName: webhooks.processing
           contentType: application/json
           durable: true
   - name: github-sponsorships
@@ -230,6 +230,6 @@ specs:
           databaseUrl:
             valueFrom:
               envRef: RABBITMQ_DATABASE_URL
-          queueName: webhooks-deliveries
+          queueName: webhooks.processing
           contentType: application/json
           durable: true
