@@ -86,6 +86,12 @@ func (p *processor) Serve(amqpUrl, channel string) error {
 	for d := range msgs {
 		err := p.handler(d.Body)
 		if err != nil {
+			if errors.Is(err, ErrInvalidWebhook) {
+				goto ACK
+			}
+
+			// Send the message to the dead letter queue if the error is not a
+			// ErrInvalidWebhook
 			sentry.CaptureEvent(&sentry.Event{
 				Level: sentry.LevelError,
 				Contexts: map[string]interface{}{
@@ -94,11 +100,7 @@ func (p *processor) Serve(amqpUrl, channel string) error {
 				Message: err.Error(),
 			})
 
-			if errors.Is(err, ErrInvalidWebhook) {
-				goto ACK
-			}
-
-			if err = d.Nack(false, true); err != nil {
+			if err = d.Nack(false, false); err != nil {
 				sentry.CaptureException(err)
 				log.Error().Err(err).Msg("Cannot nack the message")
 			}

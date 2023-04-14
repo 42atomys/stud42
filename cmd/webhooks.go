@@ -14,7 +14,7 @@ import (
 // webhooksCmd represents the webhooks command
 var webhooksCmd = &cobra.Command{
 	Use:   "webhooks",
-	Short: "webhooks process incoming webhooks from AMQP queue \"webhooks-deliveries\"",
+	Short: "webhooks process incoming webhooks from AMQP queue \"webhooks\"",
 	PreRun: func(cmd *cobra.Command, args []string) {
 		searchengine.Initizialize()
 	},
@@ -25,7 +25,7 @@ var webhooksCmd = &cobra.Command{
 			log.Fatal().Msg("AMQP_URL not set")
 		}
 
-		if err := webhooks.New().Serve(amqpURL, "webhooks-deliveries"); err != nil {
+		if err := webhooks.New().Serve(amqpURL, "webhooks.processing"); err != nil {
 			sentry.CaptureException(err)
 			log.Fatal().Err(err).Msg("failed to start rabbitmq consumer")
 		}

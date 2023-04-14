@@ -11,6 +11,9 @@
 .devcontainer/codespace_workaround
 .devcontainer/.env
 
+# Binaries
+./bin/rabbitmqadmin
+
 # Configuration Files
 config/*
 !config/*example.yaml

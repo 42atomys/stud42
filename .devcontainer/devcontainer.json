@@ -111,7 +111,8 @@
     5000, // jwtks-service grpc port
     5500, // jwtks-service http port
     "jaeger:16686", // the jaeger port
-    "meilisearch:7700" // the meilisearch port
+    "meilisearch:7700", // the meilisearch port
+    "rabbitmq:15672" // the rabbitmq management ui port
   ],
   // Use 'postCreateCommand' to run commands after the container is created.
   "postCreateCommand": ".devcontainer/postStartCommand.sh",
@@ -136,6 +137,9 @@
     },
     "7700": {
       "label": "MeiliSearch"
+    },
+    "15672": {
+      "label": "RabbitMQ Management UI"
     }
   }
 }
