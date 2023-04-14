@@ -92,7 +92,6 @@ func (p *processor) Serve(amqpUrl, channel string) error {
 
 			// Send the message to the dead letter queue if the error is not a
 			// ErrInvalidWebhook
-			sentry.CaptureException(err)
 			sentry.CaptureEvent(&sentry.Event{
 				Level: sentry.LevelError,
 				Contexts: map[string]interface{}{
