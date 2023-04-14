@@ -1,11 +1,11 @@
-name: 'Package images build 🐳'
+name: 'Packages 🐳'
 on:
   workflow_dispatch:
   push:
     branches:
     - main
     paths:
-    - build/packages/*
+    - build/packages/**
 jobs:
   build_packages:
     name: 'Build ${{ matrix.package }} image & push to ghcr.io 🐳'
