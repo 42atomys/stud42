@@ -1,3 +1,10 @@
+locals {
+  rabbitmqClusterName = "rabbitmq"
+  rabbitmqClusterReference = {
+    name = local.rabbitmqClusterName
+  }
+}
+
 resource "kubernetes_manifest" "rabbitmq" {
   field_manager {
     force_conflicts = true
@@ -7,7 +14,7 @@ resource "kubernetes_manifest" "rabbitmq" {
     apiVersion = "rabbitmq.com/v1beta1"
     kind       = "RabbitmqCluster"
     metadata = {
-      name      = "rabbitmq"
+      name      = local.rabbitmqClusterName
       namespace = var.namespace
     }
 
@@ -61,7 +68,9 @@ resource "kubernetes_manifest" "rabbitmq" {
         additionalPlugins = [
           "rabbitmq_delayed_message_exchange",
           "rabbitmq_prometheus",
-          "rabbitmq_tracing"
+          "rabbitmq_tracing",
+          "rabbitmq_shovel",
+          "rabbitmq_shovel_management"
         ]
       }
     }
@@ -74,7 +83,7 @@ resource "kubernetes_pod_disruption_budget" "rabbitmq" {
   ]
 
   metadata {
-    name      = "rabbitmq"
+    name      = local.rabbitmqClusterName
     namespace = var.namespace
   }
 
@@ -82,7 +91,7 @@ resource "kubernetes_pod_disruption_budget" "rabbitmq" {
     max_unavailable = 0
     selector {
       match_labels = {
-        "app.kubernetes.io/name" = "rabbitmq"
+        "app.kubernetes.io/name" = local.rabbitmqClusterName
       }
     }
   }
