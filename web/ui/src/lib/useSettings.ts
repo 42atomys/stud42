@@ -14,7 +14,7 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { LocalStorageKeys } from './localStorageKeys';
+import { LocalStorageKeys } from './storageKeys';
 import useLocalStorage from './useLocalStorage';
 
 type UseSettingsFunc = (props?: {

@@ -1,5 +1,6 @@
 import { ApolloProvider } from '@apollo/client';
 import useNotification from '@components/Notification';
+import { MeProvider } from '@ctx/currentUserContext';
 import { Theme } from '@graphql.d';
 import { useApollo } from '@lib/apollo';
 import useSettings, { useTheme } from '@lib/useSettings';
@@ -33,10 +34,12 @@ const Interface = ({
       refetchInterval={300}
     >
       <ApolloProvider client={apolloClient}>
-        <NotificationProvider>
-          {getLayout(<MemorizedComponent {...pageProps} />)}
-          <NotificationContainer />
-        </NotificationProvider>
+        <MeProvider apolloClient={apolloClient}>
+          <NotificationProvider>
+            {getLayout(<MemorizedComponent {...pageProps} />)}
+            <NotificationContainer />
+          </NotificationProvider>
+        </MeProvider>
       </ApolloProvider>
       <Script
         src="https://kit.fontawesome.com/a8d6f88c41.js"

@@ -68,10 +68,10 @@ type PageInfo {
 }
 
 """
-User represents a user of the app. It is the main entity of the app and is
-used to represent the User model.
+Me represents the user currently connected. Is basically an User with more
+data and informations relative to himself only
 """
-type User {
+type Me {
   id: UUID!
   email: String!
   duoLogin: String!
@@ -85,7 +85,6 @@ type User {
   poolYear: String
   poolMonth: String
   isSwimmer: Boolean!
-  isMe: Boolean! @deprecated(reason: "Use the me query instead")
   nickname: String
   avatarURL: String
   coverURL: String
@@ -94,11 +93,35 @@ type User {
   currentLocation: Location
   lastLocation: Location
   currentCampus: Campus
-  isFollowing: Boolean! @deprecated(reason: "Use the following query instead")
-  isFollower: Boolean! @deprecated(reason: "Not used for privacy reasons")
   followings: [User]!
   followers: [User]!
-  settings: Settings! @authenticated
+  settings: Settings!
+}
+
+"""
+User represents a user of the app. It is the main entity of the app and is
+used to represent the User model.
+"""
+type User {
+  id: UUID!
+  duoLogin: String!
+  duoID: Int!
+  duoAvatarURL: String
+  duoAvatarSmallURL: String
+  firstName: String!
+  usualFirstName: String
+  lastName: String!
+  poolYear: String
+  poolMonth: String
+  isSwimmer: Boolean!
+  nickname: String
+  avatarURL: String
+  coverURL: String
+  accounts: [Account]
+  flags: [UserFlag!]!
+  currentLocation: Location
+  lastLocation: Location
+  currentCampus: Campus
 }
 
 """
@@ -111,11 +134,6 @@ type Account {
   provider: String!
   providerAccountId: String!
   username: String!
-  expires_at: Int
-  token_type: String
-  refresh_token: String @authzByPolicy(policy: SERVICE_TOKEN)
-  access_token: String @authzByPolicy(policy: SERVICE_TOKEN)
-  scope: String
   userID: UUID!
   user: User!
 }
@@ -207,7 +225,7 @@ type Settings {
 
 type Query {
   "me returns the current user"
-  me: User! @authenticated
+  me: Me! @authenticated
   "searchUser returns a list of users matching the query"
   searchUser(query: String!, onlyOnline: Boolean = false): [User!]!
     @authenticated

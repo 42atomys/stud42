@@ -2,6 +2,7 @@ import Avatar from '@components/Avatar';
 import { LocationBadge } from '@components/Badge';
 import Name from '@components/Name';
 import Tooltip from '@components/Tooltip';
+import { useMe } from '@ctx/currentUserContext';
 import { UserFlag } from '@graphql.d';
 import classNames from 'classnames';
 import DropdownMenu from './DropDownMenu';
@@ -14,6 +15,8 @@ export const UserCard: UserCardComponent = ({
   buttonAlwaysShow,
   refetchQueries,
 }) => {
+  const { isMe, isFollowed } = useMe();
+
   if (!user) return null;
 
   return (
@@ -53,10 +56,10 @@ export const UserCard: UserCardComponent = ({
       </h2>
       <Name className="font-light min-w-0 w-full" user={user} />
       <LocationBadge location={location} />
-      {!user.isMe && (
+      {!isMe(user) && (
         <DropdownMenu
           user={user}
-          isFriend={user.isFollowing}
+          isFriend={isFollowed(user)}
           buttonAlwaysShow={buttonAlwaysShow}
           refetchQueries={refetchQueries}
         />

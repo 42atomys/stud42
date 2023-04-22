@@ -1,4 +1,5 @@
 import UserCard from '@components/UserCard';
+import { useMe } from '@ctx/currentUserContext';
 import { ClusterViewDocument, User, UserFlag } from '@graphql.d';
 import classNames from 'classnames';
 import { createRef, useEffect } from 'react';
@@ -18,6 +19,7 @@ export const UserPopup = ({
   position: DOMRectReadOnly | null;
   onClickOutside: () => void;
 }) => {
+  const { isFollowed } = useMe();
   const ref = createRef<HTMLDivElement>();
 
   const handleClickOutside = (event: MouseEvent) => {
@@ -50,7 +52,7 @@ export const UserPopup = ({
       ref={ref}
       className={classNames(
         'bg-slate-200 dark:bg-slate-900 dark:to-slate-900 shadow-2xl shadow-slate-400/50 dark:shadow-black/50 rounded fixed left-0 top-0',
-        user?.isFollowing
+        isFollowed(user)
           ? 'border-blue-200 dark:border-blue-800'
           : 'border-emerald-200 dark:border-emerald-800'
       )}

@@ -1,5 +1,5 @@
 import Tooltip from '@components/Tooltip';
-import { LocalStorageKeys } from '@lib/localStorageKeys';
+import { LocalStorageKeys } from '@lib/storageKeys';
 import useLocalStorage from '@lib/useLocalStorage';
 
 // To use the ping component, the parent of the component must be have the

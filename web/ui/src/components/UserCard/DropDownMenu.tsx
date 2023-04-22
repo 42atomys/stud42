@@ -1,4 +1,5 @@
 import { FriendsGroupManageModal } from '@containers/friends';
+import { useMe } from '@ctx/currentUserContext';
 import {
   useCreateFriendshipMutation,
   useDeleteFriendshipMutation,
@@ -15,6 +16,7 @@ const DropdownMenu: DropdownMenuComponent = ({
 }) => {
   const [deleteFriendship] = useDeleteFriendshipMutation();
   const [addFriendship] = useCreateFriendshipMutation();
+  const { refetchMe } = useMe();
 
   return (
     <div className="text-right absolute top-2 right-2">
@@ -70,6 +72,9 @@ const DropdownMenu: DropdownMenuComponent = ({
                         addFriendship({
                           variables: { userID: user.id },
                           refetchQueries: refetchQueries,
+                          onCompleted: () => {
+                            refetchMe();
+                          },
                         });
                       }}
                       className="hover:bg-indigo-500 hover:text-white text-indigo-500 group flex rounded-md items-center w-full px-2 py-2 text-sm"
@@ -98,6 +103,9 @@ const DropdownMenu: DropdownMenuComponent = ({
                           deleteFriendship({
                             variables: { userID: user.id },
                             refetchQueries: refetchQueries,
+                            onCompleted: () => {
+                              refetchMe();
+                            },
                           });
                         }}
                         className="hover:bg-red-500 hover:text-white text-red-500 group flex rounded-md items-center w-full px-2 py-2 text-sm"

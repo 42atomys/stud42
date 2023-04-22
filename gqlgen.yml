@@ -51,3 +51,7 @@ models:
   UUID:
     model:
       - atomys.codes/stud42/internal/models.UUID
+  # Cast Me to User type to avoid circular dependency
+  Me:
+    model:
+      - atomys.codes/stud42/internal/models/generated.User

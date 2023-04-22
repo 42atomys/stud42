@@ -1,4 +1,5 @@
 import Avatar from '@components/Avatar';
+import { useMe } from '@ctx/currentUserContext';
 import { ClusterMapAvatarSize } from '@graphql.d';
 import useSettings from '@lib/useSettings';
 import classNames from 'classnames';
@@ -54,16 +55,17 @@ export const ClusterWorkspaceWithUser = ({
   ) => void;
 }) => {
   const [settings] = useSettings();
+  const { isMe, isFollowed } = useMe();
 
   return (
     <ClusterContext.Consumer>
       {({ highlight, hightlightVisibility }) => (
         <div
           className={classNames(
-            'flex flex-1 flex-col justify-center items-center m-0.5 rounded text-slate-500 cursor-pointer transition ease-in-out duration-200',
-            location.user.isMe
+            'flex flex-1 flex-col justify-center items-center m-0.5 rounded cursor-pointer transition ease-in-out duration-200',
+            isMe(location.user)
               ? 'bg-cyan-300/60 dark:bg-cyan-700/60 text-cyan-500'
-              : location.user.isFollowing
+              : isFollowed(location.user)
               ? 'bg-blue-300/60 dark:bg-blue-700/60 text-blue-500'
               : location.user.isSwimmer
               ? 'bg-yellow-300/30 dark:bg-yellow-700/30 text-yellow-500'

@@ -12,7 +12,7 @@
 .devcontainer/.env
 
 # Binaries
-./bin/rabbitmqadmin
+bin/rabbitmqadmin
 
 # Configuration Files
 config/*
