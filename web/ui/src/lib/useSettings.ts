@@ -14,7 +14,7 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { LocalStorageKeys } from './localStorageKeys';
+import { LocalStorageKeys } from './storageKeys';
 import useLocalStorage from './useLocalStorage';
 
 type UseSettingsFunc = (props?: {
@@ -80,6 +80,10 @@ export const useSettings: UseSettingsFunc = ({
         // Allow val ue to be a function so we have the same API as useState
         const newSettingsEntry =
           value instanceof Function ? value(localSettings) : value;
+
+        if (newSettingsEntry === localSettings) {
+          return;
+        }
 
         const newSettings = {
           ...localSettings,

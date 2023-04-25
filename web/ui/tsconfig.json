@@ -20,6 +20,7 @@
     "paths": {
       "@components/*": ["components/*"],
       "@containers/*": ["containers/*"],
+      "@ctx/*": ["contexts/*"],
       "@styles/*": ["styles/*"],
       "@pages/*": ["pages/*"],
       "@lib/*": ["lib/*"],

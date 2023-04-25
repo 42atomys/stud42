@@ -13,7 +13,7 @@ import { NextPage } from 'next';
 type PageProps = {};
 
 const ApparenceSettingPage: NextPage<PageProps> = () => {
-  const [settings, setSettings] = useSettings({ forceRemoteUpdate: true });
+  const [settings, setSettings] = useSettings();
 
   return (
     <SettingsLayout page="apparence">

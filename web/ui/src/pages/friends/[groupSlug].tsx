@@ -7,9 +7,9 @@ import {
   FriendsGroupAddOrEditModal,
   FriendsGroupDeleteModal,
 } from '@containers/friends';
+import { useMe } from '@ctx/currentUser';
 import {
   FollowsGroupKind,
-  FriendsPageDocument,
   FriendsPageQuery,
   User,
   useCreateFriendshipMutation,
@@ -85,9 +85,13 @@ const IndexPage: NextPage<PageProps> = () => {
   const {
     query: { groupSlug },
   } = useRouter();
-
+  const { refetchMe } = useMe();
   const [createFriendship] = useCreateFriendshipMutation();
-  const { data, networkStatus, refetch } = useFriendsPageQuery({
+  const {
+    data,
+    networkStatus,
+    refetch: refetchFriends,
+  } = useFriendsPageQuery({
     fetchPolicy: 'cache-and-network', // Used for first execution
     nextFetchPolicy: 'cache-and-network', // Used for subsequent executions
     variables: {
@@ -114,7 +118,10 @@ const IndexPage: NextPage<PageProps> = () => {
             action={async (user) => {
               return createFriendship({
                 variables: { userID: user?.id },
-                onCompleted: () => refetch(),
+                onCompleted: () => {
+                  refetchFriends();
+                  refetchMe();
+                },
               });
             }}
           />
@@ -190,7 +197,6 @@ const IndexPage: NextPage<PageProps> = () => {
                 key={`user-${user.id}-${i}`}
                 user={user as User}
                 location={user?.lastLocation}
-                refetchQueries={[FriendsPageDocument]}
                 className="m-2 hover:scale-[102%] hover:border-indigo-500"
               />
             ))}

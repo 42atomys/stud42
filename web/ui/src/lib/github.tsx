@@ -1,6 +1,7 @@
 import useSessionStorage from '@lib/useSessionStorage';
 import axios from 'axios';
 import { useCallback, useEffect } from 'react';
+import { SessionStorageKeys } from './storageKeys';
 
 export interface Repository {
   id?: number;
@@ -132,7 +133,10 @@ export const Star = (): JSX.Element => {
     }
   }, []);
 
-  const [stars, setStars] = useSessionStorage('github-stars', 0);
+  const [stars, setStars] = useSessionStorage(
+    SessionStorageKeys.GithubStars,
+    0
+  );
   useEffect(() => {
     getRepo().then(({ stargazers_count }) => {
       setStars(isNaN(Number(stargazers_count)) ? 0 : Number(stargazers_count));

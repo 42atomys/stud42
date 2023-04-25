@@ -30,6 +30,11 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
+// IsSwimmer is the resolver for the isSwimmer field.
+func (r *meResolver) IsSwimmer(ctx context.Context, obj *generated.User) (bool, error) {
+	return r.User().IsSwimmer(ctx, obj)
+}
+
 // CreateFriendship is the resolver for the createFriendship field.
 func (r *mutationResolver) CreateFriendship(ctx context.Context, userID uuid.UUID) (bool, error) {
 	cu, err := CurrentUserFromContext(ctx)
@@ -525,38 +530,8 @@ func (r *userResolver) IsSwimmer(ctx context.Context, obj *generated.User) (bool
 		strings.EqualFold(*obj.PoolMonth, now.Format("January"))), nil
 }
 
-// IsMe is the resolver for the isMe field.
-func (r *userResolver) IsMe(ctx context.Context, obj *generated.User) (bool, error) {
-	cu, _ := CurrentUserFromContext(ctx)
-
-	return cu.ID == obj.ID, nil
-}
-
-// IsFollowing is the resolver for the isFollowing field.
-func (r *userResolver) IsFollowing(ctx context.Context, obj *generated.User) (bool, error) {
-	cu, _ := CurrentUserFromContext(ctx)
-
-	for _, f := range cu.Edges.Followings {
-		if f.ID == obj.ID {
-			return true, nil
-		}
-	}
-
-	return false, nil
-}
-
-// IsFollower is the resolver for the isFollower field.
-func (r *userResolver) IsFollower(ctx context.Context, obj *generated.User) (bool, error) {
-	cu, _ := CurrentUserFromContext(ctx)
-
-	for _, f := range cu.Edges.Followers {
-		if f.ID == obj.ID {
-			return true, nil
-		}
-	}
-
-	return false, nil
-}
+// Me returns apigen.MeResolver implementation.
+func (r *Resolver) Me() apigen.MeResolver { return &meResolver{r} }
 
 // Mutation returns apigen.MutationResolver implementation.
 func (r *Resolver) Mutation() apigen.MutationResolver { return &mutationResolver{r} }
@@ -567,6 +542,7 @@ func (r *Resolver) Query() apigen.QueryResolver { return &queryResolver{r} }
 // User returns apigen.UserResolver implementation.
 func (r *Resolver) User() apigen.UserResolver { return &userResolver{r} }
 
+type meResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type userResolver struct{ *Resolver }

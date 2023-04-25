@@ -1,20 +1,31 @@
 import { FriendsGroupManageModal } from '@containers/friends';
+import { useMe } from '@ctx/currentUser';
 import {
+  FriendsPageDocument,
   useCreateFriendshipMutation,
   useDeleteFriendshipMutation,
 } from '@graphql.d';
 import { Menu } from '@headlessui/react';
 import classNames from 'classnames';
-import { DropdownMenuComponent } from './types';
+import { useRouter } from 'next/router';
+import { PropsWithClassName } from 'types/globals';
+import { DropdownMenuProps } from './types';
 
-const DropdownMenu: DropdownMenuComponent = ({
+const DropdownMenu: React.FC<PropsWithClassName<DropdownMenuProps>> = ({
   user,
-  isFriend = false,
   buttonAlwaysShow = false,
-  refetchQueries = [],
 }) => {
-  const [deleteFriendship] = useDeleteFriendshipMutation();
-  const [addFriendship] = useCreateFriendshipMutation();
+  // TODO: use a better way to prevent usage of refetchQueries in the future
+  const isFriendsPage = useRouter().asPath.startsWith('/friends');
+  const [deleteFriendship] = useDeleteFriendshipMutation({
+    refetchQueries: isFriendsPage ? [FriendsPageDocument] : [],
+    awaitRefetchQueries: true,
+  });
+  const [addFriendship] = useCreateFriendshipMutation({
+    refetchQueries: isFriendsPage ? [FriendsPageDocument] : [],
+    awaitRefetchQueries: true,
+  });
+  const { isFollowed, refetchMe } = useMe();
 
   return (
     <div className="text-right absolute top-2 right-2">
@@ -63,13 +74,15 @@ const DropdownMenu: DropdownMenuComponent = ({
                 </Menu.Item>
               </div>
               <div className="px-1 py-1">
-                {!isFriend && (
+                {!isFollowed(user) && (
                   <Menu.Item as={'div'}>
                     <button
                       onClick={() => {
                         addFriendship({
                           variables: { userID: user.id },
-                          refetchQueries: refetchQueries,
+                          onCompleted: () => {
+                            refetchMe();
+                          },
                         });
                       }}
                       className="hover:bg-indigo-500 hover:text-white text-indigo-500 group flex rounded-md items-center w-full px-2 py-2 text-sm"
@@ -79,7 +92,7 @@ const DropdownMenu: DropdownMenuComponent = ({
                     </button>
                   </Menu.Item>
                 )}
-                {isFriend && (
+                {isFollowed(user) && (
                   <>
                     <Menu.Item as={'div'}>
                       <FriendsGroupManageModal
@@ -97,7 +110,9 @@ const DropdownMenu: DropdownMenuComponent = ({
                         onClick={() => {
                           deleteFriendship({
                             variables: { userID: user.id },
-                            refetchQueries: refetchQueries,
+                            onCompleted: () => {
+                              refetchMe();
+                            },
                           });
                         }}
                         className="hover:bg-red-500 hover:text-white text-red-500 group flex rounded-md items-center w-full px-2 py-2 text-sm"

@@ -161,9 +161,44 @@ query myApparenceSettings {
   }
 }
 
+query me {
+  me {
+    id
+    duoLogin
+    firstName
+    usualFirstName
+    lastName
+    flags
+    duoAvatarSmallURL
+    accounts {
+      provider
+      uid: providerAccountId
+      username
+    }
+    currentCampus {
+      ...CampusBasicData
+    }
+
+    currentLocation {
+      ...LocationBasicData
+    }
+  }
+
+  myFollowings {
+    id
+    ...UserIdentyData
+  }
+}
+
+# @deprecated
 query meWithFlags {
   me {
-    ...UserAccountsData
+    id
+    accounts {
+      provider
+      uid: providerAccountId
+      username
+    }
     flags
     currentCampus {
       ...CampusBasicData
@@ -175,7 +210,6 @@ query meWithFlags {
 query myFollowings($followsGroupSlug: String) {
   myFollowings(followsGroupSlug: $followsGroupSlug) {
     id
-    isFollowing
     lastLocation {
       ...LocationBasicData
       campus {
@@ -183,14 +217,12 @@ query myFollowings($followsGroupSlug: String) {
       }
     }
     ...UserIdentyData
-    duoAvatarSmallURL
   }
 }
 
 query friendsPage($followsGroupSlug: String) {
   myFollowings(followsGroupSlug: $followsGroupSlug) {
     id
-    isFollowing
     lastLocation {
       ...LocationBasicData
       campus {
@@ -198,7 +230,6 @@ query friendsPage($followsGroupSlug: String) {
       }
     }
     ...UserIdentyData
-    duoAvatarSmallURL
   }
 
   myFollowsGroups {
@@ -253,10 +284,7 @@ query clusterView($campusName: String!, $identifierPrefix: String!) {
         user {
           id
           ...UserIdentyData
-          duoAvatarSmallURL
-          isMe
           isSwimmer
-          isFollowing
         }
       }
     }
@@ -299,6 +327,7 @@ fragment UserIdentyData on User {
   usualFirstName
   lastName
   flags
+  duoAvatarSmallURL
 }
 
 fragment LocationBasicData on Location {
