@@ -7,7 +7,7 @@ import {
   FriendsGroupAddOrEditModal,
   FriendsGroupDeleteModal,
 } from '@containers/friends';
-import { useMe } from '@ctx/currentUserContext';
+import { useMe } from '@ctx/currentUser';
 import {
   FollowsGroupKind,
   FriendsPageQuery,

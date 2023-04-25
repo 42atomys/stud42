@@ -1,6 +1,6 @@
 import { ApolloProvider } from '@apollo/client';
 import useNotification from '@components/Notification';
-import { MeProvider } from '@ctx/currentUserContext';
+import { MeProvider } from '@ctx/currentUser';
 import { Theme } from '@graphql.d';
 import { useApollo } from '@lib/apollo';
 import useSettings, { useTheme } from '@lib/useSettings';

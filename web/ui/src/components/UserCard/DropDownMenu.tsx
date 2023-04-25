@@ -1,5 +1,5 @@
 import { FriendsGroupManageModal } from '@containers/friends';
-import { useMe } from '@ctx/currentUserContext';
+import { useMe } from '@ctx/currentUser';
 import {
   FriendsPageDocument,
   useCreateFriendshipMutation,

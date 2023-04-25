@@ -1,5 +1,5 @@
 import UserCard from '@components/UserCard';
-import { useMe } from '@ctx/currentUserContext';
+import { useMe } from '@ctx/currentUser';
 import { User, UserFlag } from '@graphql.d';
 import classNames from 'classnames';
 import { createRef, useEffect } from 'react';

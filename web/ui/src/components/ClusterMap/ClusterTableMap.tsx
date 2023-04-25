@@ -1,5 +1,5 @@
 import Avatar from '@components/Avatar';
-import { useMe } from '@ctx/currentUserContext';
+import { useMe } from '@ctx/currentUser';
 import { ClusterMapAvatarSize } from '@graphql.d';
 import useSettings from '@lib/useSettings';
 import classNames from 'classnames';

@@ -2,7 +2,7 @@ import Avatar from '@components/Avatar';
 import { LocationBadge } from '@components/Badge';
 import Name from '@components/Name';
 import Tooltip from '@components/Tooltip';
-import { useMe } from '@ctx/currentUserContext';
+import { useMe } from '@ctx/currentUser';
 import { UserFlag } from '@graphql.d';
 import classNames from 'classnames';
 import { PropsWithClassName } from 'types/globals';

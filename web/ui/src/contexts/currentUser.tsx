@@ -1,7 +1,6 @@
-import { ApolloClient, ApolloQueryResult } from '@apollo/client';
+import { ApolloQueryResult } from '@apollo/client';
 import { ConditionalWrapper } from '@components/ConditionalWrapper';
 import { MeQuery, User, useMeLazyQuery } from '@graphql.d';
-import { Session } from 'next-auth';
 import React, {
   createContext,
   useCallback,
@@ -9,24 +8,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-
-interface MeContextValue extends Omit<MeQuery, '__typename'> {
-  // Function to update the current user in the session storage
-  refetchMe: () => Promise<ApolloQueryResult<MeQuery>>;
-  // Function that takes an entity object or string
-  // and returns true or false depending on whether the entity is the current
-  // user or not.
-  isMe: (entity: Pick<User, 'id'> | string) => boolean;
-  // Function that takes an entity object or
-  // string and returns true or false depending on whether the entity is followed
-  // by the current user or not.
-  isFollowed: (entity: Pick<User, 'id'> | string) => boolean;
-}
-
-type MeProviderProps = React.PropsWithChildren<{
-  apolloClient?: ApolloClient<any>;
-  session?: Session | null;
-}>;
+import type { MeContextValue, MeProviderProps } from './types';
 
 const MeContext = createContext<MeContextValue>({
   me: {} as MeQuery['me'],
@@ -36,6 +18,11 @@ const MeContext = createContext<MeContextValue>({
   isFollowed: () => false,
 });
 
+/**
+ * MeProvider is a provider for the current user context. It takes a session
+ * prop provided by nextAuth. If the apolloClient is not provided, the
+ * MeProvider will takes care of the Provided by the AppolloProvider.
+ */
 export const MeProvider: React.FC<MeProviderProps> = ({
   children,
   apolloClient,
@@ -89,7 +76,10 @@ export const MeProvider: React.FC<MeProviderProps> = ({
     [me]
   );
 
+  // Remove __typename from me object to avoid errors when using the spread
+  // operator
   delete me?.__typename;
+
   const value = {
     ...(me as Omit<MeQuery, '__typename'>),
     refetchMe,
@@ -109,6 +99,12 @@ export const MeProvider: React.FC<MeProviderProps> = ({
   );
 };
 
+/**
+ * useMe is a hook that returns the context of the current user and a function
+ *  to refetch the current user with somes useful functions.
+ *
+ * This hook must be used within a `MeProvider`.
+ */
 export const useMe: () => MeContextValue = () => {
   const context = useContext(MeContext);
   if (!context) {
