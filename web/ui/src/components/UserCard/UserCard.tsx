@@ -5,17 +5,17 @@ import Tooltip from '@components/Tooltip';
 import { useMe } from '@ctx/currentUserContext';
 import { UserFlag } from '@graphql.d';
 import classNames from 'classnames';
+import { PropsWithClassName } from 'types/globals';
 import DropdownMenu from './DropDownMenu';
-import { UserCardComponent } from './types';
+import { UserCardProps } from './types';
 
-export const UserCard: UserCardComponent = ({
+export const UserCard: React.FC<PropsWithClassName<UserCardProps>> = ({
   user,
   location,
   className,
   buttonAlwaysShow,
-  refetchQueries,
 }) => {
-  const { isMe, isFollowed } = useMe();
+  const { isMe } = useMe();
 
   if (!user) return null;
 
@@ -57,12 +57,7 @@ export const UserCard: UserCardComponent = ({
       <Name className="font-light min-w-0 w-full" user={user} />
       <LocationBadge location={location} />
       {!isMe(user) && (
-        <DropdownMenu
-          user={user}
-          isFriend={isFollowed(user)}
-          buttonAlwaysShow={buttonAlwaysShow}
-          refetchQueries={refetchQueries}
-        />
+        <DropdownMenu user={user} buttonAlwaysShow={buttonAlwaysShow} />
       )}
     </div>
   );

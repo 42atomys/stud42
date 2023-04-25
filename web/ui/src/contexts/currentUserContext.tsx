@@ -1,7 +1,7 @@
 import { ApolloClient, ApolloQueryResult } from '@apollo/client';
 import { ConditionalWrapper } from '@components/ConditionalWrapper';
 import { MeQuery, User, useMeLazyQuery } from '@graphql.d';
-import { useSession } from 'next-auth/react';
+import { Session } from 'next-auth';
 import React, {
   createContext,
   useCallback,
@@ -25,6 +25,7 @@ interface MeContextValue extends Omit<MeQuery, '__typename'> {
 
 type MeProviderProps = React.PropsWithChildren<{
   apolloClient?: ApolloClient<any>;
+  session?: Session | null;
 }>;
 
 const MeContext = createContext<MeContextValue>({
@@ -38,9 +39,12 @@ const MeContext = createContext<MeContextValue>({
 export const MeProvider: React.FC<MeProviderProps> = ({
   children,
   apolloClient,
+  session,
 }) => {
-  const [me, setMe] = useState<MeQuery | null>(null);
-  const { status } = useSession();
+  const [me, setMe] = useState<MeQuery>({
+    me: {} as MeQuery['me'],
+    myFollowings: [],
+  });
 
   const [getMe, { refetch: refetchMe }] = useMeLazyQuery({
     client: apolloClient ? apolloClient : undefined,
@@ -95,7 +99,7 @@ export const MeProvider: React.FC<MeProviderProps> = ({
 
   return (
     <ConditionalWrapper
-      condition={status === 'authenticated'}
+      condition={!!session}
       trueWrapper={(c) => (
         <MeContext.Provider value={value}>{c}</MeContext.Provider>
       )}

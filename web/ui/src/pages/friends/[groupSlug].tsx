@@ -10,7 +10,6 @@ import {
 import { useMe } from '@ctx/currentUserContext';
 import {
   FollowsGroupKind,
-  FriendsPageDocument,
   FriendsPageQuery,
   User,
   useCreateFriendshipMutation,
@@ -198,7 +197,6 @@ const IndexPage: NextPage<PageProps> = () => {
                 key={`user-${user.id}-${i}`}
                 user={user as User}
                 location={user?.lastLocation}
-                refetchQueries={[FriendsPageDocument]}
                 className="m-2 hover:scale-[102%] hover:border-indigo-500"
               />
             ))}

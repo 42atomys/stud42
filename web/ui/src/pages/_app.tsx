@@ -4,8 +4,8 @@ import { MeProvider } from '@ctx/currentUserContext';
 import { Theme } from '@graphql.d';
 import { useApollo } from '@lib/apollo';
 import useSettings, { useTheme } from '@lib/useSettings';
-import { SessionProvider, SessionProviderProps } from 'next-auth/react';
-import { AppProps } from 'next/app';
+import { SessionProviderProps, getSession } from 'next-auth/react';
+import { AppContext, AppProps } from 'next/app';
 import Script from 'next/script';
 import { useMemo } from 'react';
 import '../styles/globals.css';
@@ -13,7 +13,7 @@ import '../styles/globals.css';
 const Interface = ({
   Component,
   session,
-  pageProps: props,
+  pageProps: props = {},
 }: AppProps & SessionProviderProps) => {
   const { initialApolloState, ...pageProps } = props;
   const apolloClient = useApollo(initialApolloState);
@@ -28,13 +28,9 @@ const Interface = ({
   const getLayout = MemorizedComponent.getLayout || ((page) => page);
 
   return (
-    <SessionProvider
-      session={session}
-      refetchOnWindowFocus={false}
-      refetchInterval={300}
-    >
+    <>
       <ApolloProvider client={apolloClient}>
-        <MeProvider apolloClient={apolloClient}>
+        <MeProvider apolloClient={apolloClient} session={session}>
           <NotificationProvider>
             {getLayout(<MemorizedComponent {...pageProps} />)}
             <NotificationContainer />
@@ -45,8 +41,13 @@ const Interface = ({
         src="https://kit.fontawesome.com/a8d6f88c41.js"
         crossOrigin="anonymous"
       ></Script>
-    </SessionProvider>
+    </>
   );
+};
+
+Interface.getInitialProps = async ({ ctx }: AppContext) => {
+  const session = await getSession(ctx);
+  return { session };
 };
 
 export default Interface;

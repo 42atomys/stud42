@@ -1,6 +1,6 @@
 import UserCard from '@components/UserCard';
 import { useMe } from '@ctx/currentUserContext';
-import { ClusterViewDocument, User, UserFlag } from '@graphql.d';
+import { User, UserFlag } from '@graphql.d';
 import classNames from 'classnames';
 import { createRef, useEffect } from 'react';
 
@@ -69,7 +69,6 @@ export const UserPopup = ({
             user.flags?.includes(UserFlag.SPONSOR),
         })}
         buttonAlwaysShow={true}
-        refetchQueries={[ClusterViewDocument]}
       />
     </div>
   );
