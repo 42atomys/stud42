@@ -81,6 +81,10 @@ export const useSettings: UseSettingsFunc = ({
         const newSettingsEntry =
           value instanceof Function ? value(localSettings) : value;
 
+        if (newSettingsEntry === localSettings) {
+          return;
+        }
+
         const newSettings = {
           ...localSettings,
           ...newSettingsEntry,
