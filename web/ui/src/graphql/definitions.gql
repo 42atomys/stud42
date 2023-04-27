@@ -190,6 +190,35 @@ query me {
   }
 }
 
+query userProfile($userID: UUID!) {
+  user(id: $userID) {
+    id
+    duoLogin
+    firstName
+    usualFirstName
+    lastName
+    duoAvatarSmallURL
+    poolMonth
+    poolYear
+    isSwimmer
+    nickname
+    avatarURL
+    coverURL
+    flags
+    lastLocation {
+      ...LocationBasicData
+    }
+    currentCampus {
+      ...CampusBasicData
+    }
+    accounts {
+      provider
+      uid: providerAccountId
+      username
+    }
+  }
+}
+
 # @deprecated
 query meWithFlags {
   me {

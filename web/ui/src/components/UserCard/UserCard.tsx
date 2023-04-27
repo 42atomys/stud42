@@ -29,8 +29,9 @@ export const UserCard: React.FC<PropsWithClassName<UserCardProps>> = ({
       )}
     >
       <Avatar
+        userId={user.id}
         duoAvatarURL={user.duoAvatarSmallURL}
-        size="xxxl"
+        size="3xl"
         rounded
         className="mb-4 bg-slate-800 outline-offset-4"
         flags={user.flags}

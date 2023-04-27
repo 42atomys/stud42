@@ -17,7 +17,9 @@ export const useSidebar = () => {
       children: React.ReactNode;
       className?: string;
     }): JSX.Element => (
-      <div className={classNames('flex-auto', className)}>{children}</div>
+      <div id="page-content" className={classNames('flex-auto', className)}>
+        {children}
+      </div>
     ),
     PageContainer: ({
       children,
@@ -26,7 +28,7 @@ export const useSidebar = () => {
       children: React.ReactNode;
       className?: string;
     }): JSX.Element => (
-      <div className={classNames('flex', 'flex-col', 'md:flex-row', className)}>
+      <div className={classNames('flex flex-col md:flex-row', className)}>
         {children}
       </div>
     ),

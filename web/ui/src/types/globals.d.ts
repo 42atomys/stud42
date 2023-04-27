@@ -32,4 +32,8 @@ declare global {
   interface String {
     equalsIgnoreCase(searchString: string): boolean;
   }
+
+  interface WindowEventMap {
+    'local-storage': CustomEvent;
+  }
 }
