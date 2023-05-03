@@ -3,7 +3,6 @@ package api
 import (
 	"context"
 
-	typesgen "atomys.codes/stud42/internal/api/generated/types"
 	"atomys.codes/stud42/internal/discord"
 	modelgen "atomys.codes/stud42/internal/models/generated"
 	"atomys.codes/stud42/internal/models/generated/user"
@@ -31,14 +30,14 @@ func accountLinkCallback(ctx context.Context, db *modelgen.Client, account *mode
 	bgCtx := context.Background()
 
 	switch account.Provider {
-	case string(typesgen.ProviderDiscord):
+	case gotype.AccountProviderDiscord:
 		discordLinkCallback(bgCtx, db, account)
-	case string(typesgen.ProviderGithub):
+	case gotype.AccountProviderGithub:
 		githubLinkCallback(bgCtx, db, account)
-	case string(typesgen.ProviderDuo):
+	case gotype.AccountProviderDuo:
 		duoLinkCallback(bgCtx, db, account)
 	default:
-		log.Warn().Str("accountType", account.Type).Msg("no callback is defined")
+		log.Warn().Str("accountType", account.Type.String()).Msg("no callback is defined")
 	}
 }
 

@@ -58,7 +58,7 @@ mutation internalCreateUser(
 }
 
 mutation internalLinkAccount(
-  $provider: Provider!
+  $provider: AccountProvider!
   $providerAccountId: String!
   $username: String!
   $token_type: String!
@@ -172,7 +172,7 @@ query me {
     duoAvatarSmallURL
     accounts {
       provider
-      uid: providerAccountId
+      providerAccountId
       username
     }
     currentCampus {
@@ -213,8 +213,26 @@ query userProfile($userID: UUID!) {
     }
     accounts {
       provider
-      uid: providerAccountId
+      providerAccountId
       username
+    }
+
+    intraProxy {
+      correctionPoint
+      wallet
+      alumni
+      active
+      groups {
+        name
+      }
+      cursusUsers {
+        grade
+        level
+        cursus {
+          kind
+          name
+        }
+      }
     }
   }
 }
@@ -225,7 +243,7 @@ query meWithFlags {
     id
     accounts {
       provider
-      uid: providerAccountId
+      providerAccountId
       username
     }
     flags
@@ -333,7 +351,7 @@ query internalGetUserByEmail($email: String!) {
 }
 
 query internalGetUserByAccount(
-  $provider: Provider!
+  $provider: AccountProvider!
   $providerAccountId: String!
 ) {
   user: internalGetUserByAccount(provider: $provider, uid: $providerAccountId) {
@@ -345,7 +363,7 @@ fragment UserAccountsData on User {
   id
   accounts {
     provider
-    uid: providerAccountId
+    providerAccountId
     username
   }
 }

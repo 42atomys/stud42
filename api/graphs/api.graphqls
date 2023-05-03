@@ -18,8 +18,8 @@ enum UserFlag {
   DISCORD
 }
 
-"Provider represents the oauth2 provider supported by the app"
-enum Provider {
+"AccountProvider represents the oauth2 provider supported by the app"
+enum AccountProvider {
   GITHUB
   DUO
   DISCORD
@@ -122,6 +122,57 @@ type User {
   currentLocation: Location
   lastLocation: Location
   currentCampus: Campus
+  intraProxy: IntraUserProxy!
+}
+
+"""
+IntraUser represents an user on the intra. It is used to represent the User
+object returned by the intra API. It is used to provide more informations about
+the user based on the intra data cached by the app to increase the performance
+and prevent the app to be rate limited by the intra API.
+"""
+type IntraUserProxy {
+  kind: String!
+  correctionPoint: Int!
+  wallet: Int!
+  alumni: Boolean!
+  active: Boolean!
+  groups: [IntraGroupProxy!]!
+  cursusUsers: [IntraCursusUserProxy!]!
+  projectsUsers: [IntraProjectsUserProxy!]!
+}
+
+type IntraGroupProxy {
+  id: Int!
+  name: String!
+}
+
+type IntraCursusUserProxy {
+  grade: String
+  level: Float!
+  cursus: IntraCursusProxy!
+}
+
+type IntraCursusProxy {
+  id: Int!
+  kind: String!
+  name: String!
+  slug: String!
+}
+
+type IntraProjectsUserProxy {
+  id: Int!
+  occurrence: Int!
+  finalMark: Int
+  status: String!
+  validated: Boolean!
+  project: IntraProjectProxy!
+}
+
+type IntraProjectProxy {
+  id: Int!
+  name: String!
+  slug: String!
 }
 
 """
@@ -130,8 +181,8 @@ model.
 """
 type Account {
   id: UUID!
-  type: String!
-  provider: String!
+  type: AccountType!
+  provider: AccountProvider!
   providerAccountId: String!
   username: String!
   userID: UUID!
@@ -282,7 +333,7 @@ type Query {
   oauth2 callback to get the user from the account. This is an internal query
   and should not be used by the client.
   """
-  internalGetUserByAccount(provider: Provider!, uid: String!): User!
+  internalGetUserByAccount(provider: AccountProvider!, uid: String!): User!
     @authzByPolicy(policy: SERVICE_TOKEN)
   """
   internalGetUserByEmail returns a user by its email. This is used by the
@@ -395,8 +446,8 @@ LinkAccountInput is used to link an account to a user with the
 internalLinkAccount mutation.
 """
 input LinkAccountInput {
-  provider: Provider
-  type: AccountType
+  provider: AccountProvider!
+  type: AccountType!
   providerAccountId: String!
   username: String!
   accessToken: String!

@@ -1,7 +1,7 @@
-import React from 'react';
-import { ClassNameProps } from 'types/globals';
-
-export type BadgeProps = BadgeTextProps | BadgeChildrenProps | ClassNameProps;
+export type BadgeProps = {
+  color: BadgeColor;
+  text?: string;
+};
 
 export type BadgeColor =
   | 'purple'
@@ -14,15 +14,5 @@ export type BadgeColor =
   | 'white'
   | 'black'
   | 'transparent';
-
-export type BadgeTextProps = {
-  text: string;
-  color: BadgeColor;
-};
-
-export type BadgeChildrenProps = {
-  color: BadgeColor;
-  children: React.ReactNode;
-};
 
 export default BadgeProps;

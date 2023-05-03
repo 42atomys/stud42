@@ -5,7 +5,7 @@ const { withSentryConfig } = require('@sentry/nextjs');
 
 const nextConfig = {
   images: {
-    domains: ['cdn.intra.42.fr', 'cdn.jsdelivr.net'],
+    domains: ['cdn.intra.42.fr', 'cdn.jsdelivr.net', 'picsum.photos'],
     minimumCacheTTL: 300,
   },
   reactStrictMode: true,

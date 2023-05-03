@@ -1,7 +1,7 @@
 import classNames from 'classnames';
-import { Children } from 'react';
-import { ClassNameProps } from 'types/globals';
-import BadgeProps, { BadgeChildrenProps, BadgeTextProps } from './types';
+import React, { Children } from 'react';
+import { PropsWithClassName } from 'types/globals';
+import BadgeProps from './types';
 
 const colorClasses = {
   purple:
@@ -24,17 +24,16 @@ const colorClasses = {
   transparent: 'bg-transparent border-transparent',
 };
 
-export const Badge = ({ ...props }: BadgeProps) => {
-  const { color } = props as BadgeTextProps | BadgeChildrenProps;
-  const { text } = props as BadgeTextProps;
-  const { children } = props as BadgeChildrenProps;
-  const { className } = props as ClassNameProps;
+export const Badge: React.FC<
+  React.PropsWithChildren<PropsWithClassName<BadgeProps>>
+> = (props) => {
+  const { color, text, children, className } = props;
 
   return (
     <div
       data-testid="badge"
       className={classNames(
-        'transition-colors flex w-fit text-gray items-center rounded-full border py-1 px-2 mt-2 text-sm',
+        'transition-colors flex w-fit text-gray items-center rounded-full border py-1 px-2 my-2 text-sm',
         colorClasses[color],
         className
       )}

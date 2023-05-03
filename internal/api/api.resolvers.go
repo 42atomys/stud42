@@ -24,6 +24,7 @@ import (
 	"atomys.codes/stud42/internal/models/generated/user"
 	"atomys.codes/stud42/internal/models/gotype"
 	"atomys.codes/stud42/internal/pkg/searchengine"
+	"atomys.codes/stud42/pkg/duoapi"
 	"atomys.codes/stud42/pkg/utils"
 	"entgo.io/ent/dialect/sql"
 	"github.com/google/uuid"
@@ -213,10 +214,10 @@ func (r *mutationResolver) InternalCreateUser(ctx context.Context, input typesge
 // InternalLinkAccount is the resolver for the internalLinkAccount field.
 func (r *mutationResolver) InternalLinkAccount(ctx context.Context, input typesgen.LinkAccountInput) (*generated.Account, error) {
 	id, err := r.client.Account.Create().
-		SetProvider(input.Provider.String()).
+		SetProvider(input.Provider).
 		SetProviderAccountID(input.ProviderAccountID).
 		SetUsername(input.Username).
-		SetType(input.Type.String()).
+		SetType(input.Type).
 		SetAccessToken(input.AccessToken).
 		SetNillableRefreshToken(input.RefreshToken).
 		SetTokenType(input.TokenType).
@@ -248,7 +249,7 @@ func (r *mutationResolver) InviteOnDiscord(ctx context.Context) (bool, error) {
 		return false, err
 	}
 
-	acc, err := r.client.Account.Query().Where(account.UserID(cu.ID), account.Provider(string(typesgen.ProviderDiscord))).Only(ctx)
+	acc, err := r.client.Account.Query().Where(account.UserID(cu.ID), account.ProviderEQ(gotype.AccountProviderDiscord)).Only(ctx)
 	if err != nil {
 		return false, err
 	}
@@ -500,9 +501,9 @@ func (r *queryResolver) FollowsGroupsForUser(ctx context.Context, userID uuid.UU
 }
 
 // InternalGetUserByAccount is the resolver for the internalGetUserByAccount field.
-func (r *queryResolver) InternalGetUserByAccount(ctx context.Context, provider typesgen.Provider, uid string) (*generated.User, error) {
+func (r *queryResolver) InternalGetUserByAccount(ctx context.Context, provider gotype.AccountProvider, uid string) (*generated.User, error) {
 	return r.client.Account.Query().
-		Where(account.Provider(provider.String()), account.ProviderAccountID(uid)).
+		Where(account.ProviderEQ(provider), account.ProviderAccountID(uid)).
 		QueryUser().
 		Only(ctx)
 }
@@ -528,6 +529,16 @@ func (r *userResolver) IsSwimmer(ctx context.Context, obj *generated.User) (bool
 	now := time.Now()
 	return (*obj.PoolYear == strconv.Itoa(now.Year()) &&
 		strings.EqualFold(*obj.PoolMonth, now.Format("January"))), nil
+}
+
+// IntraProxy is the resolver for the intraProxy field.
+func (r *userResolver) IntraProxy(ctx context.Context, obj *generated.User) (*duoapi.User, error) {
+	intraUser, err := duoapi.UserGet(ctx, strconv.Itoa(obj.DuoID))
+	if err != nil {
+		return nil, err
+	}
+
+	return intraUser, nil
 }
 
 // Me returns apigen.MeResolver implementation.
