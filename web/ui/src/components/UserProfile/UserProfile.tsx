@@ -3,6 +3,8 @@ import { LocationBadge } from '@components/Badge';
 import { Emoji } from '@components/Emoji';
 import { Name } from '@components/Name';
 import { Tooltip } from '@components/Tooltip';
+import DropdownMenu from '@components/UserCard/DropDownMenu';
+import { useMe } from '@ctx/currentUser';
 import {
   Account,
   AccountProvider,
@@ -119,11 +121,11 @@ const CursusProgress: React.FC<{
     <div className="bg-slate-950 rounded-lg overflow-hidden p-2 flex flex-col items-center space-y-3">
       <div className="w-full flex flex-row justify-around items-center">
         <div className="flex flex-col text-center">
-          <h5 className="">Cursus</h5>
+          <h5 className="font-display">Cursus</h5>
           <p className="text-white">{cursusUser?.cursus.name}</p>
         </div>
         <div className="flex flex-col text-center">
-          <h5 className="">Grade</h5>
+          <h5 className="font-display">Grade</h5>
           <p className="text-white">{cursusUser?.grade}</p>
         </div>
       </div>
@@ -224,6 +226,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({
   open,
   setOpen,
 }) => {
+  const { isMe } = useMe();
   const { data, loading, error } = useUserProfileQuery({
     variables: { userID: userId },
     skip: !open,
@@ -239,7 +242,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({
       <AnimatePresence>
         {open && (
           <motion.div
-            className="font-display fixed inset-0 z-50 flex items-start justify-end h-full backdrop-blur-sm backdrop-brightness-50"
+            className="fixed inset-0 z-50 flex items-start justify-end h-full backdrop-blur-sm backdrop-brightness-50"
             data-testid="user-profile-slideover"
             onClick={(e) => e.currentTarget === e.target && setOpen(false)}
             initial={{ opacity: 0 }}
@@ -293,8 +296,9 @@ export const UserProfile: React.FC<UserProfileProps> = ({
                               backgroundImage: `url(${
                                 user.coverURL || (loading ? '' : '')
                               })`,
+                              height: user.coverURL ? '300px' : '125px',
                             }}
-                            className="w-full h-[300px] bg-clip-border bg-center bg-cover rounded-lg bg-slate-200 dark:bg-slate-800"
+                            className="w-full bg-clip-border bg-center bg-cover rounded-lg bg-indigo-200 dark:bg-indigo-800/50"
                           ></div>
                           <Avatar
                             profileLink={false}
@@ -303,10 +307,19 @@ export const UserProfile: React.FC<UserProfileProps> = ({
                             rounded
                             className="absolute bottom-0 left-0 right-0 mx-auto translate-y-1/2 ring-8 ring-white !bg-slate-200 dark:ring-slate-900 dark:!bg-slate-800"
                           />
-                          <Badges flags={user.flags} />
+                          {!isMe(user) && (
+                            <DropdownMenu
+                              buttonAlwaysShow={true}
+                              user={user}
+                              className="-bottom-12 top-auto"
+                            />
+                          )}
+                          {user.flags.length > 1 && (
+                            <Badges flags={user.flags} />
+                          )}
                         </div>
                         <Name
-                          className="text-slate-900 dark:text-white font-bold text-xl"
+                          className="font-display text-slate-900 dark:text-white font-bold text-xl"
                           user={user}
                           displayLogin={false}
                           hasNickname={!!user.nickname}
@@ -318,17 +331,17 @@ export const UserProfile: React.FC<UserProfileProps> = ({
 
                       <div className="bg-slate-950 rounded-lg overflow-hidden p-2 flex flex-row justify-around items-center">
                         <div className="flex flex-col text-center">
-                          <h5 className="">Followers</h5>
+                          <h5 className="font-display">Followers</h5>
                           <p className="text-white !text-orange-500">12k</p>
                         </div>
                         <div className="flex flex-col text-center">
-                          <h5 className="">Following</h5>
+                          <h5 className="font-display">Following</h5>
                           <p className="text-white !text-orange-500">123</p>
                         </div>
                       </div>
 
-                      {!user.isSwimmer && (
-                        <div className="bg-yellow-950 text-yellow-500 rounded-lg overflow-hidden p-2 flex flex-row justify-around items-center text-center">
+                      {user.isSwimmer && (
+                        <div className="bg-yellow-950 text-yellow-500 font-display rounded-lg overflow-hidden p-2 flex flex-row justify-around items-center text-center">
                           <Waving />
                           <p>
                             Making a splash as a swimmer in the 42&apos;s
@@ -340,7 +353,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({
                       <div className="flex flex-row space-x-3">
                         {user.currentCampus && (
                           <div className="bg-slate-950 rounded-lg overflow-hidden p-2 flex-1">
-                            <h5 className="text-center">Campus</h5>
+                            <h5 className="text-center font-display">Campus</h5>
                             <div className="flex flex-col justify-center items-center text-center text-white">
                               <div className="flex justify-center items-center flex-row space-x-1">
                                 <Emoji
@@ -362,7 +375,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({
                           </div>
                         )}
                         <div className="bg-slate-950 rounded-lg overflow-hidden p-2 flex-1">
-                          <h5 className="text-center">Location</h5>
+                          <h5 className="text-center font-display">Location</h5>
                           <div className="flex flex-row justify-center items-center space-x-2">
                             <LocationBadge location={user.lastLocation} />
                           </div>
@@ -373,19 +386,21 @@ export const UserProfile: React.FC<UserProfileProps> = ({
                         <>
                           <div className="flex flex-row justify-around items-center space-x-3">
                             <div className="bg-slate-950 rounded-lg p-2 flex flex-1 flex-col text-center">
-                              <h5>Pool</h5>
+                              <h5 className="font-display">Pool</h5>
                               <p className="text-white first-letter:uppercase">
                                 {user.poolMonth} {user.poolYear}
                               </p>
                             </div>
                             <div className="bg-slate-950 rounded-lg p-2 flex flex-1 flex-col text-center">
-                              <h5>Evaluation Points</h5>
+                              <h5 className="font-display">
+                                Evaluation Points
+                              </h5>
                               <p className="text-white">
                                 {user.intraProxy.correctionPoint}
                               </p>
                             </div>
                             <div className="bg-slate-950 rounded-lg p-2 flex flex-1 flex-col text-center">
-                              <h5>Wallet</h5>
+                              <h5 className="font-display">Wallet</h5>
                               <p className="text-white">
                                 {user.intraProxy.wallet}
                               </p>

@@ -14,6 +14,7 @@ import { DropdownMenuProps } from './types';
 const DropdownMenu: React.FC<PropsWithClassName<DropdownMenuProps>> = ({
   user,
   buttonAlwaysShow = false,
+  className,
 }) => {
   // TODO: use a better way to prevent usage of refetchQueries in the future
   const isFriendsPage = useRouter().asPath.startsWith('/friends');
@@ -28,7 +29,7 @@ const DropdownMenu: React.FC<PropsWithClassName<DropdownMenuProps>> = ({
   const { isFollowed, refetchMe } = useMe();
 
   return (
-    <div className="text-right absolute top-2 right-2">
+    <div className={classNames('text-right absolute top-2 right-2', className)}>
       <Menu as="div" className="relative inline-block text-left">
         {({ open }) => (
           <div>
@@ -45,7 +46,7 @@ const DropdownMenu: React.FC<PropsWithClassName<DropdownMenuProps>> = ({
             <Menu.Items
               static
               className={classNames(
-                'absolute flex flex-col space-y-2 right-0 w-56 origin-top-right bg-slate-50 dark:bg-slate-900 divide-y divide-gray-100 dark:divide-slate-800/75 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none',
+                'absolute flex flex-col space-y-2 right-0 w-56 origin-top-right bg-slate-50 dark:bg-slate-950 divide-y divide-gray-100 dark:divide-slate-900 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none',
                 open ? 'visible flex' : 'invisible hidden'
               )}
             >
