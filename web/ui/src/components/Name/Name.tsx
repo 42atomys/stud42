@@ -1,31 +1,26 @@
 import ConditionalWrapper from '@components/ConditionalWrapper';
 import Tooltip from '@components/Tooltip';
 import classNames from 'classnames';
-import type { NameComponent } from './types';
+import { PropsWithClassName } from 'types/globals';
+import type { NameProps } from './types';
+import { formatName } from './utils';
 
-export const Name: NameComponent = (props) => {
+export const Name: React.FC<PropsWithClassName<NameProps>> = (props) => {
   const {
-    user: { firstName, lastName, usualFirstName, duoLogin, nickname } = {},
-    displayLogin,
-    displayNickname,
+    user = {},
+    displayLogin = false,
+    displayNickname = false,
     className,
+    tooltip = true,
     tooltipClassName,
     ...rProps
   } = props;
 
-  const hasNickname = nickname && nickname !== '';
-  const formattedName = [
-    displayNickname && hasNickname ? `@${nickname} |` : null,
-    usualFirstName || firstName,
-    displayLogin ? `(${duoLogin})` : null,
-    lastName,
-  ]
-    .filter(Boolean)
-    .join(' ');
+  const formattedName = formatName(user, { displayLogin, displayNickname });
 
   return (
     <ConditionalWrapper
-      condition={formattedName.length > 20}
+      condition={tooltip && formattedName.length > 20}
       trueWrapper={(children) => (
         <Tooltip
           className={classNames('w-full', tooltipClassName)}

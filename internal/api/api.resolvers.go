@@ -541,6 +541,20 @@ func (r *userResolver) IntraProxy(ctx context.Context, obj *generated.User) (*du
 	return intraUser, nil
 }
 
+// FollowersCount is the resolver for the followersCount field.
+func (r *userResolver) FollowersCount(ctx context.Context, obj *generated.User) (int, error) {
+	return r.client.Follow.Query().
+		Where(follow.FollowID(obj.ID)).
+		Count(ctx)
+}
+
+// FollowingsCount is the resolver for the followingsCount field.
+func (r *userResolver) FollowingsCount(ctx context.Context, obj *generated.User) (int, error) {
+	return r.client.Follow.Query().
+		Where(follow.UserID(obj.ID)).
+		Count(ctx)
+}
+
 // Me returns apigen.MeResolver implementation.
 func (r *Resolver) Me() apigen.MeResolver { return &meResolver{r} }
 

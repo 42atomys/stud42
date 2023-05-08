@@ -123,6 +123,8 @@ type User {
   lastLocation: Location
   currentCampus: Campus
   intraProxy: IntraUserProxy!
+  followersCount: Int!
+  followingsCount: Int!
 }
 
 """

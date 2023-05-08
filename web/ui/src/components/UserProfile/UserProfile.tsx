@@ -1,7 +1,7 @@
 import { Avatar } from '@components/Avatar';
 import { LocationBadge } from '@components/Badge';
 import { Emoji } from '@components/Emoji';
-import { Name } from '@components/Name';
+import { formatName } from '@components/Name';
 import { Tooltip } from '@components/Tooltip';
 import DropdownMenu from '@components/UserCard/DropDownMenu';
 import { useMe } from '@ctx/currentUser';
@@ -17,6 +17,7 @@ import useKeyDown from '@lib/useKeyDown';
 import classNames from 'classnames';
 import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
+import { Loader } from './Loader';
 import UserProfilePortal from './UserProfilePortal';
 
 const ProviderIconAndLink: {
@@ -53,7 +54,7 @@ const ThridPartyAccount: React.FC<ThridPartyAccountType> = ({
 
   return (
     <Link
-      className="bg-slate-950 rounded-lg p-2"
+      className="hover:bg-slate-950 rounded-lg p-2"
       key={`user-profile-acount-tooltip-${providerAccountId}`}
       href={profileLink(username)}
     >
@@ -82,9 +83,9 @@ const ThridPartyAccounts: React.FC<{
   }
 
   return (
-    <ul className="flex flex-row space-x-3 justify-center items-center">
+    <ul className="flex flex-row space-x-3 ml-2 justify-start items-center">
       <Link
-        className="bg-slate-950 rounded-lg p-2"
+        className="hover:bg-slate-950 rounded-lg p-2"
         href={`https://42born2code.slack.com/messages/@${user?.duoLogin}`}
       >
         <i className="fab fa-fw fa-slack" />
@@ -118,7 +119,7 @@ const CursusProgress: React.FC<{
   const isAPool = cursusUser?.cursus?.kind === 'piscine';
 
   return (
-    <div className="bg-slate-950 rounded-lg overflow-hidden p-2 flex flex-col items-center space-y-3">
+    <div className="overflow-hidden flex flex-col items-center space-y-3">
       <div className="w-full flex flex-row justify-around items-center">
         <div className="flex flex-col text-center">
           <h5 className="font-display">Cursus</h5>
@@ -180,7 +181,7 @@ const Badges = ({ flags }: { flags: UserFlag[] }) => {
   };
 
   return (
-    <div className="absolute top-2 right-2 p-2 flex flex-row space-x-3 justify-center items-center rounded-lg bg-slate-950/70 backdrop-blur-sm backdrop-filter">
+    <div className="p-2 flex flex-row self-start ml-4 space-x-3 justify-center items-center rounded-lg bg-slate-950/70 backdrop-blur-sm backdrop-filter">
       {flags.map((flag) => (
         <Tooltip
           key={`user-profile-badge-${flag}`}
@@ -200,27 +201,6 @@ const Badges = ({ flags }: { flags: UserFlag[] }) => {
   );
 };
 
-const Waving = () => (
-  <motion.div
-    style={{
-      rotate: -20,
-      display: 'inline-block',
-      scale: 1.4,
-    }}
-    animate={{ rotate: 40 }}
-    transition={{
-      from: 0,
-      duration: 0.4,
-      ease: 'linear',
-      type: 'tween',
-      repeatType: 'reverse',
-      repeat: Infinity,
-    }}
-  >
-    <i className="fal fa-hand-wave"></i>
-  </motion.div>
-);
-
 export const UserProfile: React.FC<UserProfileProps> = ({
   userId,
   open,
@@ -232,6 +212,8 @@ export const UserProfile: React.FC<UserProfileProps> = ({
     skip: !open,
   });
   const { user } = data || {};
+
+  const numberFormater = Intl.NumberFormat('en', { notation: 'compact' });
 
   useKeyDown(['Escape'], () => {
     setOpen(false);
@@ -282,15 +264,13 @@ export const UserProfile: React.FC<UserProfileProps> = ({
                     delay: 0.1,
                   }}
                 >
-                  {loading && (
-                    <div className="animate-pulse h-4 bg-gray-200 rounded w-1/4"></div>
-                  )}
+                  {loading && <Loader />}
                   {error && <p>An error occurred. Please try again later</p>}
 
                   {user && (
                     <>
-                      <div className="bg-slate-900 rounded-lg p-2 text-center flex flex-col items-center">
-                        <div className="relative mb-20 w-full">
+                      <div className="bg-slate-900 rounded-lg text-center flex flex-col items-center">
+                        <div className="relative mb-12 w-full">
                           <div
                             style={{
                               backgroundImage: `url(${
@@ -299,60 +279,70 @@ export const UserProfile: React.FC<UserProfileProps> = ({
                               height: user.coverURL ? '300px' : '125px',
                             }}
                             className="w-full bg-clip-border bg-center bg-cover rounded-lg bg-indigo-200 dark:bg-indigo-800/50"
-                          ></div>
-                          <Avatar
-                            profileLink={false}
-                            size="4xl"
-                            duoAvatarURL={user.duoAvatarSmallURL}
-                            rounded
-                            className="absolute bottom-0 left-0 right-0 mx-auto translate-y-1/2 ring-8 ring-white !bg-slate-200 dark:ring-slate-900 dark:!bg-slate-800"
                           />
+                          <div className="absolute bottom-0 w-full h-1/3 rounded-lg bg-gradient-to-t from-slate-950/75 to-slate-950/0" />
+                          <div className="absolute bottom-0 left-4 translate-y-1/3 flex flex-row w-[calc(100%_-_1rem)]">
+                            <Avatar
+                              profileLink={false}
+                              size="4xl"
+                              duoAvatarURL={user.duoAvatarSmallURL}
+                              // rounded
+                              className="ring-8 ring-white !bg-slate-200 dark:ring-slate-900 dark:!bg-slate-800"
+                            />
+
+                            <div className="relative flex flex-col justify-between flex-1">
+                              <div className="flex flex-row justify-around items-center mt-8">
+                                <div className="flex flex-col text-center drop-shadow-2xl">
+                                  <p className="text-white/90 font-display font-bold">
+                                    {numberFormater.format(user.followersCount)}
+                                  </p>
+                                  <h5 className="text-white/80">Followers</h5>
+                                </div>
+                                <div className="flex flex-col text-center drop-shadow-2xl">
+                                  <p className="text-white/90 font-display font-bold">
+                                    {numberFormater.format(
+                                      user.followingsCount
+                                    )}
+                                  </p>
+                                  <h5 className="text-white/80">Following</h5>
+                                </div>
+                              </div>
+
+                              {user.flags.length > 1 && (
+                                <Badges flags={user.flags} />
+                              )}
+                            </div>
+                          </div>
+
                           {!isMe(user) && (
                             <DropdownMenu
                               buttonAlwaysShow={true}
                               user={user}
-                              className="-bottom-12 top-auto"
+                              className="bottom-[-3.10rem] top-auto"
                             />
                           )}
-                          {user.flags.length > 1 && (
-                            <Badges flags={user.flags} />
-                          )}
                         </div>
-                        <Name
-                          className="font-display text-slate-900 dark:text-white font-bold text-xl"
-                          user={user}
-                          displayLogin={false}
-                          hasNickname={!!user.nickname}
-                        />
+                      </div>
+
+                      <div className="flex flex-col text-left ml-4 !mt-5">
+                        <h2 className="font-display text-slate-900 dark:text-white font-bold text-2xl">
+                          {formatName(user)}
+                        </h2>
                         <p>@{user.duoLogin}</p>
                       </div>
 
                       <ThridPartyAccounts user={user} />
 
-                      <div className="bg-slate-950 rounded-lg overflow-hidden p-2 flex flex-row justify-around items-center">
-                        <div className="flex flex-col text-center">
-                          <h5 className="font-display">Followers</h5>
-                          <p className="text-white !text-orange-500">12k</p>
-                        </div>
-                        <div className="flex flex-col text-center">
-                          <h5 className="font-display">Following</h5>
-                          <p className="text-white !text-orange-500">123</p>
-                        </div>
-                      </div>
-
                       {user.isSwimmer && (
-                        <div className="bg-yellow-950 text-yellow-500 font-display rounded-lg overflow-hidden p-2 flex flex-row justify-around items-center text-center">
-                          <Waving />
-                          <p>
-                            Making a splash as a swimmer in the 42&apos;s
-                            selection pool!
-                          </p>
+                        <div className="bg-yellow-950 text-yellow-500 font-display rounded-lg p-2 text-center">
+                          Making a splash as a swimmer in the 42&apos;s
+                          selection pool!
                         </div>
                       )}
 
                       <div className="flex flex-row space-x-3">
                         {user.currentCampus && (
-                          <div className="bg-slate-950 rounded-lg overflow-hidden p-2 flex-1">
+                          <div className="bg-slate-950 rounded-lg p-2 flex-1">
                             <h5 className="text-center font-display">Campus</h5>
                             <div className="flex flex-col justify-center items-center text-center text-white">
                               <div className="flex justify-center items-center flex-row space-x-1">
@@ -374,7 +364,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({
                             </div>
                           </div>
                         )}
-                        <div className="bg-slate-950 rounded-lg overflow-hidden p-2 flex-1">
+                        <div className="bg-slate-950 rounded-lg p-2 flex-1">
                           <h5 className="text-center font-display">Location</h5>
                           <div className="flex flex-row justify-center items-center space-x-2">
                             <LocationBadge location={user.lastLocation} />
@@ -382,35 +372,33 @@ export const UserProfile: React.FC<UserProfileProps> = ({
                         </div>
                       </div>
 
-                      {user?.intraProxy && (
-                        <>
-                          <div className="flex flex-row justify-around items-center space-x-3">
-                            <div className="bg-slate-950 rounded-lg p-2 flex flex-1 flex-col text-center">
-                              <h5 className="font-display">Pool</h5>
-                              <p className="text-white first-letter:uppercase">
-                                {user.poolMonth} {user.poolYear}
-                              </p>
+                      <div className="bg-slate-950 rounded-lg overflow-hidden p-2 flex flex-col space-y-3 flex-1">
+                        {user?.intraProxy && (
+                          <>
+                            <CursusProgress intraProxy={user.intraProxy} />
+                            <div className="grid gap-4 grid-cols-3">
+                              <div className="ring-1 ring-slate-800 rounded-lg p-2 text-center flex flex-col place-content-center">
+                                <h5 className="font-display">Pool</h5>
+                                <p className="text-white first-letter:uppercase">
+                                  {user.poolMonth} {user.poolYear}
+                                </p>
+                              </div>
+                              <div className="ring-1 ring-slate-800 rounded-lg p-2 text-center flex flex-col place-content-center">
+                                <h5 className="font-display">Eval Points</h5>
+                                <p className="text-white">
+                                  {user.intraProxy.correctionPoint}
+                                </p>
+                              </div>
+                              <div className="ring-1 ring-slate-800 rounded-lg p-2 text-center flex flex-col place-content-center">
+                                <h5 className="font-display">Wallet</h5>
+                                <p className="text-white">
+                                  {user.intraProxy.wallet}
+                                </p>
+                              </div>
                             </div>
-                            <div className="bg-slate-950 rounded-lg p-2 flex flex-1 flex-col text-center">
-                              <h5 className="font-display">
-                                Evaluation Points
-                              </h5>
-                              <p className="text-white">
-                                {user.intraProxy.correctionPoint}
-                              </p>
-                            </div>
-                            <div className="bg-slate-950 rounded-lg p-2 flex flex-1 flex-col text-center">
-                              <h5 className="font-display">Wallet</h5>
-                              <p className="text-white">
-                                {user.intraProxy.wallet}
-                              </p>
-                            </div>
-                          </div>
-                          <CursusProgress intraProxy={user.intraProxy} />
-                        </>
-                      )}
-
-                      {/* </div> */}
+                          </>
+                        )}
+                      </div>
                     </>
                   )}
                 </motion.div>
