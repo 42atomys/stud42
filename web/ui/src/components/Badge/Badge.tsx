@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import React, { Children } from 'react';
 import { PropsWithClassName } from 'types/globals';
-import BadgeProps from './types';
+import { BadgeProps } from './types';
 
 const colorClasses = {
   purple:

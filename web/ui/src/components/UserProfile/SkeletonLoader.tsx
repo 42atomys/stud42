@@ -1,8 +1,14 @@
 //   <div className="animate-pulse h-4 bg-gray-200 rounded w-1/4"></div>
 
 import { Avatar } from '@components/Avatar';
+import React from 'react';
 
-export const Loader = () => (
+/**
+ * SkeletonLoader is a UI component that displays a skeleton loader for the
+ * user profile slideshow when the user profile is loading. It is used in the
+ * UserProfile component.
+ */
+export const SkeletonLoader: React.FC = () => (
   <>
     <div className="animate-pulse rounded-lg text-center flex flex-col items-center">
       <div className="relative mb-12 w-full">

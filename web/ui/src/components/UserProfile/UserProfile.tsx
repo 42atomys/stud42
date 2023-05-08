@@ -1,108 +1,28 @@
 import { Avatar } from '@components/Avatar';
-import { LocationBadge } from '@components/Badge';
+import { FlagBadge, LocationBadge, ThridPartyBadge } from '@components/Badge';
+import { thirdPartySorted } from '@components/Badge/utils';
 import { Emoji } from '@components/Emoji';
 import { formatName } from '@components/Name';
-import { Tooltip } from '@components/Tooltip';
 import DropdownMenu from '@components/UserCard/DropDownMenu';
 import { useMe } from '@ctx/currentUser';
-import {
-  Account,
-  AccountProvider,
-  UserFlag,
-  UserProfileQuery,
-  useUserProfileQuery,
-} from '@graphql.d';
+import { UserFlag, UserProfileQuery, useUserProfileQuery } from '@graphql.d';
 import { countryEmoji } from '@lib/clustersMap';
 import useKeyDown from '@lib/useKeyDown';
 import classNames from 'classnames';
 import { AnimatePresence, motion } from 'framer-motion';
-import Link from 'next/link';
-import { Loader } from './Loader';
+import React from 'react';
+import { SkeletonLoader } from './SkeletonLoader';
 import UserProfilePortal from './UserProfilePortal';
+import { UserProfileProps } from './types';
 
-const ProviderIconAndLink: {
-  [key in AccountProvider]: {
-    icon: string;
-    profileLink: (uid: string) => string;
-  };
-} = {
-  [AccountProvider.DUO]: {
-    icon: 'fa-kit fa-duoquadra',
-    profileLink: (uid) => `https://profile.intra.42.fr/users/${uid}`,
-  },
-  [AccountProvider.GITHUB]: {
-    icon: 'fab fa-github',
-    profileLink: (uid) => `https://github.com/${uid}`,
-  },
-  [AccountProvider.DISCORD]: {
-    icon: 'fab fa-discord',
-    profileLink: (uid) => `https://discord.com/users/${uid}`,
-  },
-};
-
-type ThridPartyAccountType = Pick<
-  Account,
-  'provider' | 'providerAccountId' | 'username'
->;
-
-const ThridPartyAccount: React.FC<ThridPartyAccountType> = ({
-  provider,
-  username,
-  providerAccountId,
-}) => {
-  const { icon, profileLink } = ProviderIconAndLink[provider];
-
-  return (
-    <Link
-      className="hover:bg-slate-950 rounded-lg p-2"
-      key={`user-profile-acount-tooltip-${providerAccountId}`}
-      href={profileLink(username)}
-    >
-      <i className={classNames('fa-fw', icon)} />
-    </Link>
-  );
-};
-
-const ThridPartyAccounts: React.FC<{
-  user: NonNullable<UserProfileQuery['user']>;
-}> = ({ user }) => {
-  let accounts: ThridPartyAccountType[] = [];
-  user?.accounts?.forEach((a) => a && accounts.push(a));
-
-  /**
-   * If the user don't have a duo account in database due to the fact that
-   * the user didn't login yet to the application, we add it to the user
-   * object to be able to display it in the user profile.
-   */
-  if (!accounts.some((a) => a?.provider === AccountProvider.DUO)) {
-    accounts.push({
-      provider: AccountProvider.DUO,
-      username: user?.duoLogin,
-      providerAccountId: '',
-    });
-  }
-
-  return (
-    <ul className="flex flex-row space-x-3 ml-2 justify-start items-center">
-      <Link
-        className="hover:bg-slate-950 rounded-lg p-2"
-        href={`https://42born2code.slack.com/messages/@${user?.duoLogin}`}
-      >
-        <i className="fab fa-fw fa-slack" />
-      </Link>
-      {accounts?.map(
-        (account) =>
-          account && (
-            <ThridPartyAccount
-              key={`user-profile-acount-tooltip-${account.providerAccountId}`}
-              {...account}
-            />
-          )
-      )}
-    </ul>
-  );
-};
-
+/**
+ * CursusProgress is a UI component that displays a user's progress in their
+ * main cursus or in their piscine when no main cursus is available.
+ *
+ * It takes in an intraProxy prop, which is a user's intraProxy object.
+ * The component uses the intraProxy object to determine the user's cursus
+ * progress.
+ */
 const CursusProgress: React.FC<{
   intraProxy: NonNullable<UserProfileQuery['user']>['intraProxy'];
 }> = ({ intraProxy }) => {
@@ -160,47 +80,47 @@ const CursusProgress: React.FC<{
   );
 };
 
-const Badges = ({ flags }: { flags: UserFlag[] }) => {
-  const flagToBadge = (flag: UserFlag): string => {
-    switch (flag) {
-      case UserFlag.STAFF:
-        return 'fa-duotone fa-hat-wizard text-indigo-500';
-      case UserFlag.SPONSOR:
-        return 'fa-duotone fa-user-astronaut text-pink-500';
-      case UserFlag.BETA:
-        return 'fa-duotone fa-flask text-orange-500';
-      case UserFlag.COLLABORATOR:
-        return 'fa-duotone fa-code-compare text-cyan-500';
-      case UserFlag.CONTRIBUTOR:
-        return 'fa-duotone fa-code-pull-request text-green-500';
-      case UserFlag.DISCORD:
-        return 'fa-brands fa-discord text-slate-500';
-      default:
-        throw new Error(`Unknown flag: ${flag}`);
-    }
-  };
-
+/**
+ * Badges is a UI component that displays all user flags as badges.
+ */
+const Badges: React.FC<{ flags: UserFlag[] }> = ({ flags }) => {
   return (
-    <div className="p-2 flex flex-row self-start ml-4 space-x-3 justify-center items-center rounded-lg bg-slate-950/70 backdrop-blur-sm backdrop-filter">
+    <div className="flex flex-row self-start ml-4 justify-center items-center rounded-lg bg-slate-950/70 backdrop-blur-sm backdrop-filter">
       {flags.map((flag) => (
-        <Tooltip
-          key={`user-profile-badge-${flag}`}
-          text={flag.toLowerCase()}
-          direction="bottom"
-          size="sm"
-          allowInteractions={false}
-          showArrow={false}
-          className="![--tooltip-mb:1rem]"
-        >
-          <i
-            className={classNames('fa-fw cursor-pointer', flagToBadge(flag))}
-          />
-        </Tooltip>
+        <FlagBadge key={`user-profile-badge-${flag}`} flag={flag} />
       ))}
     </div>
   );
 };
 
+/**
+ * ThridPartyAccounts is a UI component that displays all user third party
+ * accounts as badges.
+ */
+const ThridPartyAccounts: React.FC<{
+  user: NonNullable<UserProfileQuery['user']>;
+}> = ({ user }) => {
+  const accounts = thirdPartySorted(user.accounts, user.duoLogin);
+  return (
+    <ul className="flex flex-row space-x-3 ml-2 justify-start items-center">
+      {accounts?.map(
+        (account) =>
+          account && (
+            <ThridPartyBadge
+              key={`user-profile-acount-tooltip-${account.providerAccountId}`}
+              {...account}
+            />
+          )
+      )}
+    </ul>
+  );
+};
+
+/**
+ * UserProfile is a UI component that displays a user's profile as a slideover.
+ * This component is animated using framer-motion and uses a portal to render
+ * the slideover outside of the root div of app.
+ */
 export const UserProfile: React.FC<UserProfileProps> = ({
   userId,
   open,
@@ -264,7 +184,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({
                     delay: 0.1,
                   }}
                 >
-                  {loading && <Loader />}
+                  {loading && <SkeletonLoader />}
                   {error && <p>An error occurred. Please try again later</p>}
 
                   {user && (
@@ -410,5 +330,3 @@ export const UserProfile: React.FC<UserProfileProps> = ({
     </UserProfilePortal>
   );
 };
-
-export default UserProfile;

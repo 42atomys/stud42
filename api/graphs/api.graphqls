@@ -117,7 +117,7 @@ type User {
   nickname: String
   avatarURL: String
   coverURL: String
-  accounts: [Account]
+  accounts: [Account!]!
   flags: [UserFlag!]!
   currentLocation: Location
   lastLocation: Location
