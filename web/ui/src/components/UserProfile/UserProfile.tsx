@@ -16,6 +16,19 @@ import UserProfilePortal from './UserProfilePortal';
 import { UserProfileProps } from './types';
 
 /**
+ * Badges is a UI component that displays all user flags as badges.
+ */
+const Badges: React.FC<{ flags: UserFlag[] }> = ({ flags }) => {
+  return (
+    <div className="flex flex-row self-start ml-4 justify-center items-center rounded-lg bg-slate-200 dark:bg-slate-950/70 backdrop-blur-sm backdrop-filter">
+      {flags.map((flag) => (
+        <FlagBadge key={`user-profile-badge-${flag}`} flag={flag} />
+      ))}
+    </div>
+  );
+};
+
+/**
  * CursusProgress is a UI component that displays a user's progress in their
  * main cursus or in their piscine when no main cursus is available.
  *
@@ -39,15 +52,17 @@ const CursusProgress: React.FC<{
   const isAPool = cursusUser?.cursus?.kind === 'piscine';
 
   return (
-    <div className="overflow-hidden flex flex-col items-center space-y-3">
+    <div className="flex flex-col items-center space-y-3">
       <div className="w-full flex flex-row justify-around items-center">
         <div className="flex flex-col text-center">
           <h5 className="font-display">Cursus</h5>
-          <p className="text-white">{cursusUser?.cursus.name}</p>
+          <p className="text-slate-900 dark:text-white">
+            {cursusUser?.cursus.name}
+          </p>
         </div>
         <div className="flex flex-col text-center">
           <h5 className="font-display">Grade</h5>
-          <p className="text-white">{cursusUser?.grade}</p>
+          <p className="text-slate-900 dark:text-white">{cursusUser?.grade}</p>
         </div>
       </div>
 
@@ -55,40 +70,29 @@ const CursusProgress: React.FC<{
         className={classNames(
           'relative rounded-lg w-full h-8 overflow-hidden',
           isAPool
-            ? 'bg-yellow-100/50 dark:bg-yellow-950/50'
-            : 'bg-indigo-100/50 dark:bg-indigo-950/50'
+            ? 'bg-yellow-300 dark:bg-yellow-950'
+            : 'bg-indigo-300 dark:bg-indigo-950'
         )}
       >
         <div
           className={classNames(
-            'h-full bg-gradient-to-r',
-            isAPool
-              ? 'from-yellow-700 to-yellow-600'
-              : 'from-indigo-700 to-indigo-600'
+            'h-full',
+            isAPool ? 'bg-yellow-500' : 'bg-indigo-500'
           )}
           style={{ width: `${progress}%` }}
         />
-        <div className="absolute top-0 bottom-0 my-auto w-full flex items-center justify-between px-2">
-          <span className="text-white font-bold">{level}</span>
-          <span className="text-white font-bold mix-blend-soft-light">
+        <div className="absolute top-0 bottom-0 my-auto w-full flex items-center justify-between px-2 mix-blend-soft-light">
+          <span className="text-slate-900 dark:text-white font-bold">
+            {level}
+          </span>
+          <span className="text-slate-900 dark:text-white font-medium">
             {progress}%
           </span>
-          <span className="text-white font-bold">{level + 1}</span>
+          <span className="text-slate-900 dark:text-white font-bold">
+            {level + 1}
+          </span>
         </div>
       </div>
-    </div>
-  );
-};
-
-/**
- * Badges is a UI component that displays all user flags as badges.
- */
-const Badges: React.FC<{ flags: UserFlag[] }> = ({ flags }) => {
-  return (
-    <div className="flex flex-row self-start ml-4 justify-center items-center rounded-lg bg-slate-950/70 backdrop-blur-sm backdrop-filter">
-      {flags.map((flag) => (
-        <FlagBadge key={`user-profile-badge-${flag}`} flag={flag} />
-      ))}
     </div>
   );
 };
@@ -164,14 +168,14 @@ export const UserProfile: React.FC<UserProfileProps> = ({
               <i className="fal fa-xmark text p-2 m-2 cursor-pointer" />
             </motion.button>
             <motion.div
-              className="overflow-y-auto bg-clip-border bg-center bg-cover relative transform overflow-hidden h-[100vh] bg-white dark:bg-slate-900 text-left shadow-xl w-full sm:max-w-lg"
+              className="overflow-y-auto relative transform overflow-hidden h-[100vh] bg-slate-50 dark:bg-slate-900 text-left shadow-xl w-full sm:max-w-lg"
               initial={{ x: '100%', opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: '100%', opacity: 0 }}
               transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
               style={{}}
             >
-              <div className="bg-opacity-80 backdrop-filter backdrop-blur-3xl bg-slate-900 px-4 pt-5 pb-4 sm:p-6 min-h-full">
+              <div className="px-4 pt-5 pb-4 sm:p-6 min-h-full">
                 <motion.div
                   className="space-y-3"
                   initial={{ x: '100%' }}
@@ -189,7 +193,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({
 
                   {user && (
                     <>
-                      <div className="bg-slate-900 rounded-lg text-center flex flex-col items-center">
+                      <div className="rounded-lg text-center flex flex-col items-center">
                         <div className="relative mb-12 w-full">
                           <div
                             style={{
@@ -198,9 +202,16 @@ export const UserProfile: React.FC<UserProfileProps> = ({
                               })`,
                               height: user.coverURL ? '300px' : '125px',
                             }}
-                            className="w-full bg-clip-border bg-center bg-cover rounded-lg bg-indigo-200 dark:bg-indigo-800/50"
+                            className="w-full bg-clip-border bg-center bg-cover rounded-lg bg-slate-500 dark:bg-slate-950"
                           />
-                          <div className="absolute bottom-0 w-full h-1/3 rounded-lg bg-gradient-to-t from-slate-950/75 to-slate-950/0" />
+                          <div
+                            className={classNames(
+                              'absolute bottom-0 w-full h-1/3 rounded-lg bg-gradient-to-t to-transparent',
+                              user.coverURL
+                                ? 'from-slate-700/75 dark:from-slate-950/75'
+                                : 'from-transparent'
+                            )}
+                          />
                           <div className="absolute bottom-0 left-4 translate-y-1/3 flex flex-row w-[calc(100%_-_1rem)]">
                             <Avatar
                               profileLink={false}
@@ -245,7 +256,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({
                       </div>
 
                       <div className="flex flex-col text-left ml-4 !mt-5">
-                        <h2 className="font-display text-slate-900 dark:text-white font-bold text-2xl">
+                        <h2 className="font-display text-slate-900 dark:text-white font-extrabold text-2xl">
                           {formatName(user)}
                         </h2>
                         <p>@{user.duoLogin}</p>
@@ -262,9 +273,9 @@ export const UserProfile: React.FC<UserProfileProps> = ({
 
                       <div className="flex flex-row space-x-3">
                         {user.currentCampus && (
-                          <div className="bg-slate-950 rounded-lg p-2 flex-1">
+                          <div className="bg-slate-200 dark:bg-slate-950 rounded-lg p-2 flex-1">
                             <h5 className="text-center font-display">Campus</h5>
-                            <div className="flex flex-col justify-center items-center text-center text-white">
+                            <div className="flex flex-col justify-center items-center text-center text-slate-900 dark:text-white">
                               <div className="flex justify-center items-center flex-row space-x-1">
                                 <Emoji
                                   emoji={
@@ -284,7 +295,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({
                             </div>
                           </div>
                         )}
-                        <div className="bg-slate-950 rounded-lg p-2 flex-1">
+                        <div className="bg-slate-200 dark:bg-slate-950 rounded-lg p-2 flex-1">
                           <h5 className="text-center font-display">Location</h5>
                           <div className="flex flex-row justify-center items-center space-x-2">
                             <LocationBadge location={user.lastLocation} />
@@ -292,26 +303,26 @@ export const UserProfile: React.FC<UserProfileProps> = ({
                         </div>
                       </div>
 
-                      <div className="bg-slate-950 rounded-lg overflow-hidden p-2 flex flex-col space-y-3 flex-1">
+                      <div className="bg-slate-200 dark:bg-slate-950 rounded-lg overflow-hidden p-2 flex flex-col space-y-3 flex-1">
                         {user?.intraProxy && (
                           <>
                             <CursusProgress intraProxy={user.intraProxy} />
                             <div className="grid gap-4 grid-cols-3">
-                              <div className="ring-1 ring-slate-800 rounded-lg p-2 text-center flex flex-col place-content-center">
+                              <div className="ring-1 ring-slate-300 dark:ring-slate-800 rounded-lg p-2 text-center flex flex-col place-content-center">
                                 <h5 className="font-display">Pool</h5>
-                                <p className="text-white first-letter:uppercase">
+                                <p className="text-slate-900 dark:text-white first-letter:uppercase">
                                   {user.poolMonth} {user.poolYear}
                                 </p>
                               </div>
-                              <div className="ring-1 ring-slate-800 rounded-lg p-2 text-center flex flex-col place-content-center">
+                              <div className="ring-1 ring-slate-300 dark:ring-slate-800 rounded-lg p-2 text-center flex flex-col place-content-center">
                                 <h5 className="font-display">Eval Points</h5>
-                                <p className="text-white">
+                                <p className="text-slate-900 dark:text-white">
                                   {user.intraProxy.correctionPoint}
                                 </p>
                               </div>
-                              <div className="ring-1 ring-slate-800 rounded-lg p-2 text-center flex flex-col place-content-center">
+                              <div className="ring-1 ring-slate-300 dark:ring-slate-800 rounded-lg p-2 text-center flex flex-col place-content-center">
                                 <h5 className="font-display">Wallet</h5>
-                                <p className="text-white">
+                                <p className="text-slate-900 dark:text-white">
                                   {user.intraProxy.wallet}
                                 </p>
                               </div>

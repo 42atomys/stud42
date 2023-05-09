@@ -52,7 +52,7 @@ export const ThridPartyBadge: React.FC<ThridPartyBadgeProps> = ({
         trueWrapper={(children) => (
           <Link
             role="link"
-            className="hover:bg-slate-950 rounded-lg p-2"
+            className="hover:bg-slate-200 dark:hover:bg-slate-950 rounded-lg p-2"
             key={`user-profile-acount-tooltip-${providerAccountId}`}
             href={data.link?.(username) as URL}
           >

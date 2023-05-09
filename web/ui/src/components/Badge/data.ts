@@ -51,7 +51,7 @@ export const flagData: FlagDataMap = {
   BETA: {
     name: 'Beta Tester',
     description: 'Present during the beta phase',
-    className: 'fa-duotone fa-flask-potion text-yellow-500',
+    className: 'fa-duotone fa-flask-potion text-orange-500',
   },
   COLLABORATOR: {
     name: 'Collaborator',

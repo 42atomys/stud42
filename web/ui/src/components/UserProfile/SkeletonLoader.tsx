@@ -18,7 +18,7 @@ export const SkeletonLoader: React.FC = () => (
             profileLink={false}
             size="4xl"
             duoAvatarURL={''}
-            className="ring-8 ring-white bg-slate-200 dark:ring-slate-900 dark:!bg-slate-700"
+            className="ring-8 ring-white !bg-slate-200 dark:ring-slate-900 dark:!bg-slate-700"
           />
         </div>
       </div>
@@ -30,15 +30,15 @@ export const SkeletonLoader: React.FC = () => (
     </div>
 
     <ul className="flex flex-row space-x-3 ml-4 justify-start items-center !mb-5">
-      <i className="animate-pulse bg-slate-700 rounded-lg w-9 h-9" />
-      <i className="animate-pulse bg-slate-700 rounded-lg w-9 h-9" />
+      <i className="animate-pulse bg-slate-200 dark:bg-slate-700 rounded-lg w-9 h-9" />
+      <i className="animate-pulse bg-slate-200 dark:bg-slate-700 rounded-lg w-9 h-9" />
     </ul>
 
     <div className="flex flex-row space-x-3">
-      <div className="animate-pulse h-24 bg-slate-950 rounded-lg flex-1" />
-      <div className="animate-pulse h-24 bg-slate-950 rounded-lg flex-1" />
+      <div className="animate-pulse h-24 bg-slate-200 dark:bg-slate-950 rounded-lg flex-1" />
+      <div className="animate-pulse h-24 bg-slate-200 dark:bg-slate-950 rounded-lg flex-1" />
     </div>
 
-    <div className="animate-pulse h-80 bg-slate-950 rounded-lg" />
+    <div className="animate-pulse h-80 bg-slate-200 dark:bg-slate-950 rounded-lg" />
   </>
 );
