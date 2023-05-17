@@ -40,6 +40,7 @@ const Interface = ({
       <Script
         src="https://kit.fontawesome.com/a8d6f88c41.js"
         crossOrigin="anonymous"
+        data-auto-replace-svg="nest"
       ></Script>
     </>
   );
