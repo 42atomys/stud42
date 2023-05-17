@@ -25,6 +25,7 @@ deps:
 
 devcontainer-init: generate certs deps
 	wget -O ./bin/rabbitmqadmin http://rabbitmq:15672/cli/rabbitmqadmin && chmod +x ./bin/rabbitmqadmin
+	wget -O ./bin/mc https://dl.min.io/client/mc/release/darwin-amd64/mc && chmod +x ./bin/mc
 	cp config/stud42.example.yaml config/stud42.yaml
 	go mod download
 	yarn --cwd web/ui install

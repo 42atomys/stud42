@@ -36,3 +36,9 @@ make -f build/Makefile devcontainer-init
 ./bin/rabbitmqadmin --host rabbitmq --user rabbitmq --password rabbitmq declare binding source="webhooks" destination="webhooks.processing"
 ./bin/rabbitmqadmin --host rabbitmq --user rabbitmq --password rabbitmq declare binding source="webhooks" destination="webhooks.dlq" routing_key="webhooks.dlq"
 ./bin/rabbitmqadmin --host rabbitmq --user rabbitmq --password rabbitmq declare policy name="webhooks.dlq.policy" pattern="^webhooks.processing$" definition='{"dead-letter-exchange":"webhooks", "dead-letter-routing-key": "webhooks.dlq"}' apply-to=queues
+
+# Configure Minio
+# Create the s42-users bucket
+go install github.com/minio/mc@latest
+mc alias set s3 http://minio:9000 $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
+mc mb s3/$S3_BUCKET_USERS --ignore-existing --region europe-west1 

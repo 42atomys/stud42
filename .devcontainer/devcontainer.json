@@ -112,6 +112,7 @@
     5500, // jwtks-service http port
     "jaeger:16686", // the jaeger port
     "meilisearch:7700", // the meilisearch port
+    "minio:9000", // the minio port
     "rabbitmq:15672" // the rabbitmq management ui port
   ],
   // Use 'postCreateCommand' to run commands after the container is created.
@@ -137,6 +138,9 @@
     },
     "7700": {
       "label": "MeiliSearch"
+    },
+    "9000": {
+      "label": "Minio (S3)"
     },
     "15672": {
       "label": "RabbitMQ Management UI"
