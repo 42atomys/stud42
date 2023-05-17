@@ -4,25 +4,11 @@ import classNames from 'classnames';
 import { NextPage } from 'next';
 import { signOut } from 'next-auth/react';
 import Head from 'next/head';
-import { ClassNameProps } from 'types/globals';
+import { PropsWithChildren } from 'react';
+import { PropsWithClassName } from 'types/globals';
+import { SettingsLayoutProps } from './types';
 
-const SettingsPages = [
-  'profile',
-  'apparence',
-  'awesomeness',
-  'accounts',
-  'about',
-  'help',
-  'terms',
-  'privacy',
-] as const;
-
-type PageProps = {
-  page: (typeof SettingsPages)[number];
-  children: React.ReactNode;
-} & ClassNameProps;
-
-export const SettingsLayout: NextPage<PageProps> = ({
+export const SettingsLayout: NextPage<PropsWithClassName<PropsWithChildren<SettingsLayoutProps>>> = ({
   page,
   children,
   className,
@@ -40,10 +26,14 @@ export const SettingsLayout: NextPage<PageProps> = ({
             <MenuCategory name="Settings">
               <MenuItem
                 active={page === 'profile'}
-                // href="/settings/profile"
+                href="/settings/profile"
                 icon="fa-user"
                 name="Public profile"
-                rightChildren="Soon"
+                rightChildren={
+                  <span className="bg-indigo-400 dark:bg-indigo-600 text-white uppercase rounded-full py-0.5 px-2 text-xs font-bold">
+                    NEW
+                  </span>
+                }
               />
               <MenuItem
                 active={page === 'apparence'}
