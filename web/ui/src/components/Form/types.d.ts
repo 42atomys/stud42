@@ -1,4 +1,9 @@
-import { Dispatch, KeyboardEventHandler } from 'react';
+import {
+  DetailedHTMLProps,
+  Dispatch,
+  InputHTMLAttributes,
+  KeyboardEventHandler,
+} from 'react';
 import { Maybe } from 'types/globals';
 
 interface InputProps<S> {
@@ -28,6 +33,17 @@ interface SelectInputProps<S> extends InputProps<S>, KeyDownEvent {
   selectedValue: S;
   objects: S[];
 }
+
+interface FileInputProps<S>
+  extends InputProps<S>,
+    KeyDownEvent,
+    Omit<
+      DetailedHTMLProps<
+        InputHTMLAttributes<HTMLInputElement>,
+        HTMLInputElement
+      >,
+      keyof InputProps<S> | 'type' | 'value' | 'id'
+    > {}
 
 interface TextInputProps<S> extends InputProps<S>, KeyDownEvent {
   type: InputTextType = 'text';
