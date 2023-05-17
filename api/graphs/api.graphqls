@@ -45,6 +45,11 @@ enum Theme {
   LIGHT
 }
 
+enum PresignedUploadURLKind {
+  USER_AVATAR
+  USER_COVER
+}
+
 """
 ClusterMapAvatarSize represents the value accepted for the avatar size on the
 cluster map
@@ -324,6 +329,13 @@ type Query {
     campusName: String!
     identifierPrefixes: [String!]
   ): [LocationStats!]! @authenticated
+
+  presignedUploadURL(
+    contentType: String!
+    contentLength: Int!
+    kind: PresignedUploadURLKind!
+  ): String! @authenticated
+
   """
   myFollowings returns a list of users the current user is following in a group
   by its ID or slug.
@@ -398,6 +410,12 @@ type Mutation {
 
   "updateSettings updates the settings of the current user."
   updateSettings(input: SettingsInput!): Settings! @authenticated
+
+  """
+  updateMe updates the current user.
+  """
+  updateMe(input: UpdateMeInput!): Me! @authenticated
+
   """
   internalCreateUser creates a user. This is used by the oauth2 callback to
   create the user. This is an internal mutation and should not be used by the
@@ -476,6 +494,13 @@ SettingsInput is used to update the settings of the current user.
 input SettingsInput {
   theme: Theme!
   clusterMapAvatarSize: ClusterMapAvatarSize!
+}
+
+input UpdateMeInput {
+  coverURL: String
+  avatarURL: String
+  nickname: String
+  pronoun: UserPronoun
 }
 
 input FollowsGroupInput {

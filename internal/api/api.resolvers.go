@@ -8,6 +8,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"mime"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -27,6 +29,11 @@ import (
 	"atomys.codes/stud42/pkg/duoapi"
 	"atomys.codes/stud42/pkg/utils"
 	"entgo.io/ent/dialect/sql"
+	"github.com/99designs/gqlgen/graphql"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
 )
@@ -181,6 +188,40 @@ func (r *mutationResolver) UpdateSettings(ctx context.Context, input typesgen.Se
 		return nil, err
 	}
 	return &updatedUser.Settings, nil
+}
+
+// UpdateMe is the resolver for the updateMe field.
+func (r *mutationResolver) UpdateMe(ctx context.Context, input typesgen.UpdateMeInput) (*generated.User, error) {
+	cu, err := CurrentUserFromContext(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	s3Endpoint := os.Getenv("S3_ENDPOINT")
+	if input.AvatarURL != nil && *input.AvatarURL != "" && !strings.HasPrefix(*input.AvatarURL, s3Endpoint) {
+		return nil, graphql.ErrorOnPath(ctx, errors.New("this is not a valid avatar URL"))
+	}
+
+	if input.CoverURL != nil && *input.CoverURL != "" && !strings.HasPrefix(*input.CoverURL, s3Endpoint) {
+		return nil, graphql.ErrorOnPath(ctx, errors.New("this is not a valid cover URL"))
+	}
+
+	// For the moment, only sponsors can change their nickname.
+	// This will change in the future.
+	if input.Nickname != nil && !utils.Contains(cu.Flags, gotype.UserFlagSponsor) {
+		return nil, graphql.ErrorOnPath(ctx, errors.New("you cannot change your nickname, you are not a sponsor"))
+	}
+
+	updatedUser, err := r.client.User.UpdateOne(cu).
+		SetNillableAvatarURL(input.AvatarURL).
+		SetNillableCoverURL(input.CoverURL).
+		SetNillableNickname(input.Nickname).
+		SetNillablePronoun(input.Pronoun).
+		Save(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return updatedUser, nil
 }
 
 // InternalCreateUser is the resolver for the internalCreateUser field.
@@ -408,6 +449,57 @@ func (r *queryResolver) LocationsStatsByPrefixes(ctx context.Context, campusName
 	}
 
 	return finalLocationStats, err
+}
+
+// PresignedUploadURL is the resolver for the presignedUploadURL field.
+func (r *queryResolver) PresignedUploadURL(ctx context.Context, contentType string, contentLength int, kind typesgen.PresignedUploadURLKind) (string, error) {
+	cu, err := CurrentUserFromContext(ctx)
+	if err != nil {
+		return "", err
+	}
+
+	// Validate the content type
+	if !utils.Contains([]string{"image/png", "image/jpeg"}, contentType) {
+		return "", fmt.Errorf("invalid content type. Must be an image")
+	}
+
+	// Validate the content length\
+	const _10MB = 10 * 1024 * 1024
+	if contentLength > _10MB {
+		return "", fmt.Errorf("invalid content length. Must be less than 5MB")
+	}
+
+	// File extension
+	extension, err := mime.ExtensionsByType(contentType)
+	if err != nil {
+		return "", err
+	}
+
+	// Prepare the S3 request so a signature can be generated
+	svc := s3.New(
+		session.New(),
+		aws.NewConfig().
+			WithEndpoint(os.Getenv("S3_ENDPOINT")).
+			WithRegion(os.Getenv("S3_REGION")).
+			WithCredentials(credentials.NewCredentials(&credentials.EnvProvider{})),
+		&aws.Config{
+			S3ForcePathStyle: aws.Bool(true),
+		},
+	)
+	request, _ := svc.PutObjectRequest(&s3.PutObjectInput{
+		Bucket:        aws.String(os.Getenv("S3_BUCKET_USERS")),
+		Key:           aws.String(strings.ToLower(kind.String()) + "/" + cu.ID.String() + "_" + uuid.NewString() + extension[0]),
+		ContentType:   aws.String(contentType),
+		ContentLength: aws.Int64(int64(contentLength)),
+	})
+	// Create the pre-signed url with an expiry
+	url, err := request.Presign(time.Minute)
+	if err != nil {
+		fmt.Println("Failed to generate a pre-signed url: ", err)
+		return "", err
+	}
+
+	return url, nil
 }
 
 // MyFollowings is the resolver for the myFollowings field.
