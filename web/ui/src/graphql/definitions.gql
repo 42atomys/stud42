@@ -152,6 +152,27 @@ mutation updateSettings($input: SettingsInput!) {
   }
 }
 
+mutation updateMe($input: UpdateMeInput!) {
+  updateMe(input: $input) {
+    nickname
+    coverURL
+    avatarURL
+    pronoun
+  }
+}
+
+query presignedUploadURL(
+  $kind: PresignedUploadURLKind!
+  $contentType: String!
+  $contentLength: Int!
+) {
+  presignedUploadURL(
+    kind: $kind
+    contentType: $contentType
+    contentLength: $contentLength
+  )
+}
+
 query myApparenceSettings {
   me {
     id
@@ -170,6 +191,10 @@ query me {
     lastName
     flags
     duoAvatarSmallURL
+    pronoun
+    nickname
+    avatarURL
+    coverURL
     accounts {
       provider
       providerAccountId
@@ -198,6 +223,7 @@ query userProfile($userID: UUID!) {
     usualFirstName
     lastName
     duoAvatarSmallURL
+    pronoun
     poolMonth
     poolYear
     isSwimmer
