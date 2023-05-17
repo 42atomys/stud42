@@ -8,6 +8,14 @@ enum SecurityPolicy {
   NONE
 }
 
+"UserPronoun represents the pronoun of an User"
+enum UserPronoun {
+  PRIVATE
+  HE_HIM
+  SHE_HER
+  THEY_THEM
+}
+
 "UserFlag represents the special feature/access for an User (like a role)"
 enum UserFlag {
   STAFF
@@ -82,6 +90,7 @@ type Me {
   usualFirstName: String
   lastName: String!
   phone: String
+  pronoun: UserPronoun!
   poolYear: String
   poolMonth: String
   isSwimmer: Boolean!
@@ -111,6 +120,7 @@ type User {
   firstName: String!
   usualFirstName: String
   lastName: String!
+  pronoun: UserPronoun!
   poolYear: String
   poolMonth: String
   isSwimmer: Boolean!
