@@ -47,6 +47,9 @@ interface FileInputProps<S>
 
 interface TextInputProps<S> extends InputProps<S>, KeyDownEvent {
   type: InputTextType = 'text';
+  // debounce is in milliseconds (ms) if you want to use it to avoid update the
+  // state on every key press
+  debounce?: number;
 }
 
 interface SwitchProps<S> extends InputProps<S> {

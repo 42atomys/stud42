@@ -1,12 +1,12 @@
 import { Listbox, Transition } from '@headlessui/react';
 import classNames from 'classnames';
 import { Fragment, useState } from 'react';
-import { ClassNameProps } from 'types/globals';
+import { PropsWithClassName } from 'types/globals';
 import { SelectInputProps } from './types';
 
 export const SelectInput: React.FC<
-  SelectInputProps<string> & ClassNameProps
-> = ({ objects, selectedValue, onChange, className }) => {
+  PropsWithClassName<SelectInputProps<string>>
+> = ({ objects, selectedValue, onChange, className, defaultValue }) => {
   const [value, setValue] = useState(selectedValue);
   const onChangeCallback = (newValue: typeof selectedValue) => {
     setValue(newValue);
@@ -14,7 +14,11 @@ export const SelectInput: React.FC<
   };
 
   return (
-    <Listbox value={value} onChange={onChangeCallback}>
+    <Listbox
+      value={value}
+      onChange={onChangeCallback}
+      defaultValue={defaultValue}
+    >
       <div className={classNames('relative', className)}>
         <Listbox.Button className="relative w-full cursor-default rounded-lg bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 py-2 pl-3 pr-10 text-left focus:outline-none focus-visible:border-indigo-500 sm:text-sm">
           <span className="block truncate lowercase first-letter:uppercase">
@@ -67,5 +71,3 @@ export const SelectInput: React.FC<
     </Listbox>
   );
 };
-
-export default SelectInput;
