@@ -1,12 +1,22 @@
 import { Avatar } from '@components/Avatar';
-import { FlagBadge, LocationBadge, ThridPartyBadge } from '@components/Badge';
+import {
+  AkaBadgy,
+  FlagBadge,
+  LocationBadge,
+  ThridPartyBadge,
+} from '@components/Badge';
 import { thirdPartySorted } from '@components/Badge/utils';
 import { Emoji } from '@components/Emoji';
 import { formatName } from '@components/Name';
 import { Portal } from '@components/Portal';
 import DropdownMenu from '@components/UserCard/DropDownMenu';
 import { useMe } from '@ctx/currentUser';
-import { UserFlag, UserProfileQuery, useUserProfileQuery } from '@graphql.d';
+import {
+  UserFlag,
+  UserProfileQuery,
+  UserPronoun,
+  useUserProfileQuery,
+} from '@graphql.d';
 import { countryEmoji } from '@lib/clustersMap';
 import useKeyDown from '@lib/useKeyDown';
 import classNames from 'classnames';
@@ -20,7 +30,7 @@ import { UserProfileProps } from './types';
  */
 const Badges: React.FC<{ flags: UserFlag[] }> = ({ flags }) => {
   return (
-    <div className="flex flex-row self-start ml-4 justify-center items-center rounded-lg bg-slate-200 dark:bg-slate-950/70 backdrop-blur-sm backdrop-filter">
+    <div className="flex flex-row self-start ml-4 justify-center items-center rounded-lg px-2 bg-slate-200 dark:bg-slate-950/70 backdrop-blur-sm backdrop-filter">
       {flags.map((flag) => (
         <FlagBadge key={`user-profile-badge-${flag}`} flag={flag} />
       ))}
@@ -111,7 +121,7 @@ const ThridPartyAccounts: React.FC<{
         (account) =>
           account && (
             <ThridPartyBadge
-              key={`user-profile-acount-tooltip-${account.providerAccountId}`}
+              key={`user-profile-account-tooltip-${account.provider}`}
               {...account}
             />
           )
@@ -260,9 +270,25 @@ export const UserProfile: React.FC<UserProfileProps> = ({
                       </div>
 
                       <div className="flex flex-col text-left ml-4 !mt-5">
-                        <h2 className="font-display text-slate-900 dark:text-white font-extrabold text-2xl">
-                          {formatName(user)}
+                        <h2 className="font-display font-extrabold text-2xl">
+                          <span className="text-slate-900 dark:text-white">
+                            {formatName(user)}
+                          </span>
+                          {user.pronoun !== UserPronoun.PRIVATE && (
+                            <span className="text-lg font-medium first-letter:uppercase capitalize text-inherit">
+                              {' · '}
+                              {user.pronoun.toLowerCase().replace('_', '/')}
+                            </span>
+                          )}
                         </h2>
+                        {user.nickname && user.nickname !== '' && (
+                          <p className="flex justify-start items-center space-x-1">
+                            <AkaBadgy />{' '}
+                            <span className="text-lg font-display">
+                              {user.nickname}
+                            </span>
+                          </p>
+                        )}
                         <p>@{user.duoLogin}</p>
                       </div>
 

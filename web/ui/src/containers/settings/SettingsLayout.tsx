@@ -8,11 +8,9 @@ import { PropsWithChildren } from 'react';
 import { PropsWithClassName } from 'types/globals';
 import { SettingsLayoutProps } from './types';
 
-export const SettingsLayout: NextPage<PropsWithClassName<PropsWithChildren<SettingsLayoutProps>>> = ({
-  page,
-  children,
-  className,
-}) => {
+export const SettingsLayout: NextPage<
+  PropsWithClassName<PropsWithChildren<SettingsLayoutProps>>
+> = ({ page, children, className }) => {
   const { SidebarProvider, Sidebar, PageContainer, PageContent } = useSidebar();
 
   return (
