@@ -51,7 +51,7 @@ export const Loader = () => {
   }, [setHint]);
 
   return (
-    <div className="text-4xl flex flex-col justify-center items-center">
+    <div className="text-4xl flex flex-col justify-center items-center w-full h-full">
       <h1 className="flex font-extrabold justify-center items-center mb-2">
         <LoaderSpinner />
         <span className="ml-4 text-indigo-500/50">Loading</span>
