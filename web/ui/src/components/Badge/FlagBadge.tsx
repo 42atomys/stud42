@@ -45,10 +45,7 @@ export const FlagBadge: React.FC<{ flag: UserFlag }> = ({ flag }) => {
       >
         <i
           data-testid={`flag-${flag}`}
-          className={classNames(
-            'fa-fw cursor-pointer py-2 px-1',
-            data.className
-          )}
+          className={classNames('fa-fw cursor-pointer p-1', data.className)}
         />
       </ConditionalWrapper>
     </Tooltip>
