@@ -34,7 +34,6 @@ export default function Document() {
       </Head>
       <body className="antialiased text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-800/60">
         <Main />
-        <div id="user-profile-portal" />
         <NextScript />
       </body>
     </Html>

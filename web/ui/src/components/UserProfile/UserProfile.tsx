@@ -3,6 +3,7 @@ import { FlagBadge, LocationBadge, ThridPartyBadge } from '@components/Badge';
 import { thirdPartySorted } from '@components/Badge/utils';
 import { Emoji } from '@components/Emoji';
 import { formatName } from '@components/Name';
+import { Portal } from '@components/Portal';
 import DropdownMenu from '@components/UserCard/DropDownMenu';
 import { useMe } from '@ctx/currentUser';
 import { UserFlag, UserProfileQuery, useUserProfileQuery } from '@graphql.d';
@@ -12,7 +13,6 @@ import classNames from 'classnames';
 import { AnimatePresence, motion } from 'framer-motion';
 import React from 'react';
 import { SkeletonLoader } from './SkeletonLoader';
-import UserProfilePortal from './UserProfilePortal';
 import { UserProfileProps } from './types';
 
 /**
@@ -144,7 +144,11 @@ export const UserProfile: React.FC<UserProfileProps> = ({
   });
 
   return (
-    <UserProfilePortal>
+    <Portal
+      singleton
+      portalId="user-profile-portal"
+      key={`user-profile-${userId}`}
+    >
       <AnimatePresence>
         {open && (
           <motion.div
@@ -338,6 +342,6 @@ export const UserProfile: React.FC<UserProfileProps> = ({
           </motion.div>
         )}
       </AnimatePresence>
-    </UserProfilePortal>
+    </Portal>
   );
 };
