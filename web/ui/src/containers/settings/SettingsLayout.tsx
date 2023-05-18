@@ -1,5 +1,5 @@
+import { NewBadgy } from '@components/Badge';
 import { Menu, MenuCategory, MenuItem, useSidebar } from '@components/Sidebar';
-import Tooltip from '@components/Tooltip';
 import classNames from 'classnames';
 import { NextPage } from 'next';
 import { signOut } from 'next-auth/react';
@@ -27,11 +27,7 @@ export const SettingsLayout: NextPage<
                 href="/settings/profile"
                 icon="fa-user"
                 name="Public profile"
-                rightChildren={
-                  <span className="bg-indigo-400 dark:bg-indigo-600 text-white uppercase rounded-full py-0.5 px-2 text-xs font-bold">
-                    NEW
-                  </span>
-                }
+                rightChildren={<NewBadgy />}
               />
               <MenuItem
                 active={page === 'apparence'}
@@ -41,20 +37,10 @@ export const SettingsLayout: NextPage<
               />
               <MenuItem
                 active={page === 'awesomeness'}
-                // href="/settings/awesomeness"
+                href="/settings/awesomeness"
                 icon="fa-sparkles"
                 name="Awesomess"
-                rightChildren={
-                  <Tooltip
-                    text="Sponsors Only"
-                    subText="This feature is only accessible for Github Sponsors."
-                    direction="left"
-                    size="sm"
-                    color="fuchsia"
-                  >
-                    <i className="fa-solid fa-user-astronaut" />
-                  </Tooltip>
-                }
+                rightChildren={<NewBadgy />}
                 className='!text-fuchsia-400 dark:!text-fuchsia-600 hover:!bg-fuchsia-500/20 hover:!text-fuchsia-500 [&_.anchor-sub-text]:hover:!text-fuchsia-500 [&[data-active="true"]]:!bg-fuchsia-500/20 [&[data-active="true"]_.anchor-sub-text]:!text-fuchsia-500 '
               />
             </MenuCategory>
