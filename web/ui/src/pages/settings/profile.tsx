@@ -61,7 +61,7 @@ const ProfileSettingPage: NextPage<PageProps> = () => {
         <SettingsTable>
           <SettingsTableRow
             title="Cover Image"
-            description="Recommended size: 465 x 300. Maximum size: 10Mb"
+            description="Recommended size: 465 x 300. Maximum size: 1Mb"
           >
             <div className="flex items-center space-x-4">
               {me.coverURL && (

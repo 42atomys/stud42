@@ -464,8 +464,8 @@ func (r *queryResolver) PresignedUploadURL(ctx context.Context, contentType stri
 	}
 
 	// Validate the content length
-	const _10MB = 10 * 1024 * 1024
-	if contentLength > _10MB {
+	const _1MB = 1 * 1024 * 1024
+	if contentLength > _1MB {
 		return "", fmt.Errorf("invalid content length. Must be less than 5MB")
 	}
 
