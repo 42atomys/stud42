@@ -82,6 +82,16 @@ module "api" {
       key  = "MEILI_MASTER_KEY"
       name = "meilisearch-token"
     }
+
+    AWS_ACCESS_KEY_ID = {
+      key  = "AWS_ACCESS_KEY_ID"
+      name = "ovh-s3-credentials"
+    }
+
+    AWS_SECRET_ACCESS_KEY = {
+      key  = "AWS_SECRET_ACCESS_KEY"
+      name = "ovh-s3-credentials"
+    }
   }
 
   volumeMounts = [
