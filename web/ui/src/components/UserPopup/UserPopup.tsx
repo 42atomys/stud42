@@ -7,7 +7,7 @@ import { motion } from 'framer-motion';
 import { createRef, useEffect } from 'react';
 
 const POPUP_WIDTH = 200;
-const POPUP_HEIGHT = 250;
+const POPUP_HEIGHT = 270;
 
 export const UserPopup = ({
   user,
@@ -63,7 +63,7 @@ export const UserPopup = ({
       layoutId={`user-popup-${user.id}`}
       ref={ref}
       className={classNames(
-        'bg-slate-200 dark:bg-slate-900 dark:to-slate-900 shadow-2xl shadow-slate-400/50 dark:shadow-black/50 rounded fixed left-0 top-0',
+        'bg-slate-200 dark:bg-slate-900 dark:to-slate-900 shadow-2xl shadow-slate-400/50 dark:shadow-black/50 rounded fixed left-0 top-0 overflow-hidden',
         isFollowed(user)
           ? 'border-blue-200 dark:border-blue-800'
           : 'border-emerald-200 dark:border-emerald-800'
@@ -76,10 +76,13 @@ export const UserPopup = ({
       <UserCard
         user={user}
         location={location}
-        className={classNames('max-h-[250px] h-[250px] border-0', {
-          'bg-gradient-to-b from-fuchsia-500/20 to-transparent':
-            user.flags?.includes(UserFlag.SPONSOR),
-        })}
+        className={classNames(
+          'max-h-[270px] h-[270px] !rounded-none !border-0',
+          {
+            'bg-gradient-to-b from-fuchsia-500/20 to-transparent':
+              user.flags?.includes(UserFlag.SPONSOR),
+          }
+        )}
         buttonAlwaysShow={true}
       />
     </motion.div>

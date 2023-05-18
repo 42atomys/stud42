@@ -399,8 +399,11 @@ fragment UserIdentyData on User {
   firstName
   usualFirstName
   lastName
+  nickname
   flags
   duoAvatarSmallURL
+  avatarURL
+  coverURL
 }
 
 fragment LocationBasicData on Location {
