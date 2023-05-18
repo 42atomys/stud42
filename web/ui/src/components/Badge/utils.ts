@@ -13,43 +13,35 @@ export const thirdPartySorted = (
   let accs: ThridPartyBadgeProps[] = [];
   accounts?.forEach((a) => (a !== null ? a && accs.push(a) : null));
 
-  if (!duoLogin) {
-    return accs;
-  }
+  if (duoLogin) {
+    /**
+     * If the user don't have a duo account in database due to the fact that
+     * the user didn't login yet to the application, we add it to the user
+     * object to be able to display it in the user profile.
+     */
+    if (!accs.some((a) => a?.provider === AccountProvider.DUO)) {
+      accs.push({
+        provider: AccountProvider.DUO,
+        username: duoLogin,
+        providerAccountId: '',
+      });
+    }
 
-  /**
-   * If the user don't have a duo account in database due to the fact that
-   * the user didn't login yet to the application, we add it to the user
-   * object to be able to display it in the user profile.
-   */
-  if (!accs.some((a) => a?.provider === AccountProvider.DUO)) {
+    /**
+     * Push the slack account to the accounts array without required to have
+     * a slack account in database. This is due to the fact that the slack
+     * account is not linked and is not required to be linked. The slack
+     * username is the duo login by design.
+     */
     accs.push({
-      provider: AccountProvider.DUO,
+      provider: 'SLACK' as AccountProvider,
       username: duoLogin,
       providerAccountId: '',
     });
   }
 
-  /**
-   * Push the slack account to the accounts array without required to have
-   * a slack account in database. This is due to the fact that the slack
-   * account is not linked and is not required to be linked. The slack
-   * username is the duo login by design.
-   */
-  accs.push({
-    provider: 'SLACK' as AccountProvider,
-    username: duoLogin,
-    providerAccountId: '',
-  });
-
-  const sorted = Object.keys(thridPartyData);
-
-  accs.sort((a, b) => {
-    return accs.indexOf(a) > sorted.indexOf(a.provider) &&
-      accs.indexOf(b) > sorted.indexOf(b.provider)
-      ? 1
-      : -1;
-  });
-
-  return accs;
+  const sortedKeys = Object.keys(thridPartyData);
+  return accs.sort(
+    (a, b) => sortedKeys.indexOf(a.provider) - sortedKeys.indexOf(b.provider)
+  );
 };

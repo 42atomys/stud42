@@ -9,14 +9,13 @@ export const Name: React.FC<PropsWithClassName<NameProps>> = (props) => {
   const {
     user = {},
     displayLogin = false,
-    displayNickname = false,
     className,
     tooltip = true,
     tooltipClassName,
     ...rProps
   } = props;
 
-  const formattedName = formatName(user, { displayLogin, displayNickname });
+  const formattedName = formatName(user, { displayLogin });
 
   return (
     <ConditionalWrapper

@@ -4,7 +4,6 @@ import { Maybe } from 'types/globals';
 export type NameProps = {
   hasNickname?: boolean = false;
   displayLogin?: boolean = false;
-  displayNickname?: boolean = false;
   tooltipClassName?: string;
   tooltip?: boolean = true;
   user: Pick<

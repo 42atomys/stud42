@@ -33,10 +33,10 @@ const DropdownMenu: React.FC<PropsWithClassName<DropdownMenuProps>> = ({
       <Menu as="div" className="relative inline-block text-left">
         {({ open }) => (
           <div>
-            <Menu.Button className="inline-flex justify-center w-full">
+            <Menu.Button className="inline-flex justify-center items-center w-[2em] h-[2em] text-lg rounded-full p-2 hover:text-indigo-800 dark:hover:text-indigo-200 hover:bg-indigo-500/20">
               <i
                 className={classNames(
-                  'fa-light fa-ellipsis-vertical w-[18px] h-[18px] text-lg rounded-full p-2 hover:text-indigo-800 dark:hover:text-indigo-200 hover:bg-indigo-500/20',
+                  'fa-light fa-ellipsis-vertical fa-fw',
                   buttonAlwaysShow || open
                     ? 'visible'
                     : 'invisible group-hover:visible'
