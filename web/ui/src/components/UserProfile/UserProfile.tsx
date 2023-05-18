@@ -156,7 +156,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({
   return (
     <Portal
       singleton
-      portalId="user-profile-portal"
+      portalDOMId="user-profile-portal"
       key={`user-profile-${userId}`}
     >
       <AnimatePresence>

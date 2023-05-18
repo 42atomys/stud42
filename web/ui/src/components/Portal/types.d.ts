@@ -3,6 +3,7 @@ type PortalProps = PortalInstance & {
 };
 
 type PortalInstance = {
-  portalId: string;
+  // The DOM id of the portal
+  portalDOMId: string;
   key?: string;
 };
