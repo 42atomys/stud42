@@ -39,7 +39,7 @@ module "service-token" {
 
     "ovh-s3-credentials" : {
       isClusterWide = false
-      namespace     = production
+      namespace     = "production"
       secretType    = "Opaque"
 
       reflected           = true
