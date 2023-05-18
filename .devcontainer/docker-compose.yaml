@@ -30,9 +30,6 @@ services:
       SEARCHENGINE_MEILISEARCH_HOST: http://meilisearch:7700
       SEARCHENGINE_MEILISEARCH_TOKEN: private-meilisearch-token-for-dev-only
       # Block Storage (s3)
-      S3_ENDPOINT: http://localhost:9000
-      S3_REGION: europe-west1
-      S3_BUCKET_USERS: users
       AWS_ACCESS_KEY_ID: minio-s42-dev
       AWS_SECRET_ACCESS_KEY: minio-s42-dev
       # Interface

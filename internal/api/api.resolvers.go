@@ -9,7 +9,6 @@ import (
 	"errors"
 	"fmt"
 	"mime"
-	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -36,6 +35,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
+	"github.com/spf13/viper"
 )
 
 // IsSwimmer is the resolver for the isSwimmer field.
@@ -197,7 +197,7 @@ func (r *mutationResolver) UpdateMe(ctx context.Context, input typesgen.UpdateMe
 		return nil, err
 	}
 
-	s3Endpoint := os.Getenv("S3_ENDPOINT")
+	s3Endpoint := viper.GetString("api.s3.users.endpoint")
 	if input.AvatarURL != nil && *input.AvatarURL != "" && !strings.HasPrefix(*input.AvatarURL, s3Endpoint) {
 		return nil, graphql.ErrorOnPath(ctx, errors.New("this is not a valid avatar URL"))
 	}
@@ -479,15 +479,15 @@ func (r *queryResolver) PresignedUploadURL(ctx context.Context, contentType stri
 	svc := s3.New(
 		session.New(),
 		aws.NewConfig().
-			WithEndpoint(os.Getenv("S3_ENDPOINT")).
-			WithRegion(os.Getenv("S3_REGION")).
+			WithEndpoint(viper.GetString("api.s3.users.endpoint")).
+			WithRegion(viper.GetString("api.s3.users.region")).
 			WithCredentials(credentials.NewCredentials(&credentials.EnvProvider{})),
 		&aws.Config{
 			S3ForcePathStyle: aws.Bool(true),
 		},
 	)
 	request, _ := svc.PutObjectRequest(&s3.PutObjectInput{
-		Bucket:        aws.String(os.Getenv("S3_BUCKET_USERS")),
+		Bucket:        aws.String(viper.GetString("api.s3.users.bucket")),
 		Key:           aws.String(strings.ToLower(kind.String()) + "/" + cu.ID.String() + "_" + uuid.NewString() + extension[0]),
 		ContentType:   aws.String(contentType),
 		ContentLength: aws.Int64(int64(contentLength)),
