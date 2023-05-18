@@ -6,6 +6,7 @@ import {
   useCreateOrUpdateFollowsGroupMutation,
 } from '@graphql.d';
 import { Dialog } from '@headlessui/react';
+import useKeyDown from '@lib/useKeyDown';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
 
@@ -34,6 +35,8 @@ export const FriendsGroupAddOrEditModal: React.FC<
       refetchQueries: [FriendsPageDocument],
       awaitRefetchQueries: true,
     });
+
+  useKeyDown(['Escape'], () => setIsOpen(false));
 
   return (
     <>

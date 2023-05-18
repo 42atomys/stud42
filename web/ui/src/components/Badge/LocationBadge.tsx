@@ -2,6 +2,7 @@ import ConditionalWrapper from '@components/ConditionalWrapper';
 import Emoji from '@components/Emoji';
 import Tooltip from '@components/Tooltip';
 import { Location } from '@graphql.d';
+import { countryEmoji } from '@lib/clustersMap';
 import { clusterURL } from '@lib/searchEngine';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
@@ -9,7 +10,6 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import Link from 'next/link';
 import { NestedPartial } from 'types/utils';
 import { Badge } from './Badge';
-import { countryNameToEmoji } from './countryMap';
 
 dayjs.extend(relativeTime);
 
@@ -69,7 +69,7 @@ export const LocationBadge = ({
         </span>
         {isConnected && (
           <Emoji
-            emoji={countryNameToEmoji[location?.campus?.country || '']}
+            emoji={countryEmoji[location?.campus?.country || '']}
             size={14}
             title={location?.campus?.name}
             className={classNames('mx-1', isConnected ? 'visible' : 'hidden')}

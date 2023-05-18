@@ -1,4 +1,5 @@
 import {
+  AccountProvider,
   InternalCreateUserDocument,
   InternalCreateUserMutation,
   InternalCreateUserMutationVariables,
@@ -14,7 +15,6 @@ import {
   InternalLinkAccountDocument,
   InternalLinkAccountMutation,
   InternalLinkAccountMutationVariables,
-  Provider,
 } from '@graphql.d';
 import { getServiceToken } from '@lib/config';
 import { captureException } from '@sentry/nextjs';
@@ -28,10 +28,10 @@ if (!process.env.NEXT_PUBLIC_GRAPHQL_API)
 
 const url = process.env.NEXT_PUBLIC_GRAPHQL_API;
 
-const providerMap: Record<string, Provider> = {
-  github: Provider.GITHUB,
-  '42-school': Provider.DUO,
-  discord: Provider.DISCORD,
+const providerMap: Record<string, AccountProvider> = {
+  github: AccountProvider.GITHUB,
+  '42-school': AccountProvider.DUO,
+  discord: AccountProvider.DISCORD,
 };
 
 /**
@@ -202,7 +202,7 @@ export const GraphQLAdapter = (): S42Adapter => {
           provider: acc.provider,
           providerAccountId: acc.providerAccountId,
           username: acc.username,
-          type: acc.type as ProviderType,
+          type: acc.type.toLowerCase() as ProviderType,
           userId: acc.user.id,
         };
       } catch (error) {

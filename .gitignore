@@ -13,6 +13,7 @@
 
 # Binaries
 bin/rabbitmqadmin
+bin/mc
 
 # Configuration Files
 config/*

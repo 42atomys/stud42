@@ -1,8 +1,8 @@
 import { Emoji } from '@components/Emoji';
 import {
+  AccountProvider,
   MeWithFlagsDocument,
   MeWithFlagsQuery,
-  Provider,
   useInviteOnDiscordMutation,
 } from '@graphql.d';
 import { queryAuthenticatedSSR } from '@lib/apollo';
@@ -139,7 +139,9 @@ interface PageProps {
 export const IndexPage: NextPage<PageProps, {}> = ({ me }) => {
   let currentStep =
     (me.accounts?.filter(
-      (a) => a?.provider === Provider.GITHUB || a?.provider === Provider.DISCORD
+      (a) =>
+        a?.provider === AccountProvider.GITHUB ||
+        a?.provider === AccountProvider.DISCORD
     ).length || 0) + 1;
 
   if (currentStep >= 3) currentStep = 4;

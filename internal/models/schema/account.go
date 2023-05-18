@@ -1,6 +1,7 @@
 package schema
 
 import (
+	"atomys.codes/stud42/internal/models/gotype"
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema/edge"
@@ -18,8 +19,8 @@ func (Account) Fields() []ent.Field {
 		field.UUID("id", uuid.UUID{}).Unique().Immutable().Default(uuid.New).Annotations(entsql.Annotation{
 			Default: "uuid_generate_v4()",
 		}),
-		field.String("type").NotEmpty().MaxLen(255),
-		field.String("provider").NotEmpty().MaxLen(255),
+		field.Enum("type").GoType(gotype.AccountType("")),
+		field.Enum("provider").GoType(gotype.AccountProvider("")),
 		field.String("provider_account_id").NotEmpty().MaxLen(255),
 		field.String("username").NotEmpty().MaxLen(255),
 		field.Int("expires_at").Optional().Nillable(),

@@ -6,6 +6,7 @@ import {
   useFollowsGroupManageModalQuery,
 } from '@graphql.d';
 import { Dialog } from '@headlessui/react';
+import useKeyDown from '@lib/useKeyDown';
 import classNames from 'classnames';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
@@ -63,6 +64,8 @@ export const FriendsGroupManageModal: React.FC<
   });
 
   const { myFollowsGroups = [], followsGroupsForUser = [] } = data || {};
+
+  useKeyDown(['Escape'], () => setIsOpen(false));
 
   return (
     <>

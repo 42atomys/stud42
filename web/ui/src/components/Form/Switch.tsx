@@ -44,5 +44,3 @@ export const Switch: React.FC<
     </>
   );
 };
-
-export default Switch;

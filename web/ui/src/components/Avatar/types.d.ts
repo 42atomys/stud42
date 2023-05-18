@@ -5,8 +5,9 @@ type AvatarSize =
   | 'sm'
   | 'md'
   | 'xl'
-  | 'xxl'
-  | 'xxxl'
+  | '2xl'
+  | '3xl'
+  | '4xl'
   // auto-based-on-width will only be used on cluster map currently and will be
   // removed once we have a better solution for the cluster map avatar sizing
   | 'auto-based-on-witdth'
@@ -18,6 +19,14 @@ export type AvatarProps = {
   duoAvatarURL?: string | null;
   size?: AvatarSize;
   rounded?: boolean;
-  className?: string;
   flags?: User['flags'];
-};
+} & (
+  | {
+      profileLink?: false;
+      userId?: never;
+    }
+  | {
+      profileLink?: true;
+      userId: string;
+    }
+);

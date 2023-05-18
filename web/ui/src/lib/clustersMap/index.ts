@@ -28,5 +28,6 @@ export const Campuses: {
   vienna: new Vienna(),
 };
 
+export { countryEmoji } from './countryEmoji';
 export type { CampusNames, ClusterMapEntity } from './types';
 export default Campuses;
