@@ -1,22 +1,29 @@
 import classNames from 'classnames';
-import { useState } from 'react';
-import { ClassNameProps } from 'types/globals';
+import { useRef, useState } from 'react';
+import { PropsWithClassName } from 'types/globals';
 import { TextInputProps } from './types';
 
 export const TextInput: React.FC<
-  TextInputProps<string & {}> & ClassNameProps
+  PropsWithClassName<TextInputProps<string & {}>>
 > = ({
   onChange,
   className,
   defaultValue,
   label: labelName,
   name,
+  debounce = 0,
   ...inputProps
 }) => {
   const [value, setValue] = useState(defaultValue || '');
+  const timeout = useRef<NodeJS.Timeout>();
   const onChangeCallback = (newValue: string) => {
     setValue(newValue);
-    onChange(newValue);
+
+    if (debounce === 0) return onChange(newValue);
+    if (timeout.current) clearTimeout(timeout.current);
+    timeout.current = setTimeout(() => {
+      onChange(newValue);
+    }, debounce);
   };
 
   // set an identifier for the input name as url-safe slug
@@ -24,9 +31,10 @@ export const TextInput: React.FC<
 
   return (
     <div
+      key={`text-input-${inputId}`}
       className={classNames(
         className,
-        'rounded-md text-left px-3 pt-2.5 pb-1.5 shadow-sm ring-1 ring-inset ring-slate-200 dark:ring-slate-800 focus-within:ring-2 focus-within:ring-indigo-500'
+        'rounded-md text-left px-3 pt-2.5 pb-1.5 shadow-sm ring-1 ring-inset ring-slate-200 dark:ring-slate-800 focus-within:ring-2 focus-within:!ring-indigo-500'
       )}
     >
       {labelName && (
@@ -44,5 +52,3 @@ export const TextInput: React.FC<
     </div>
   );
 };
-
-export default TextInput;

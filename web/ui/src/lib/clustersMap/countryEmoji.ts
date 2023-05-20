@@ -1,4 +1,4 @@
-export const countryNameToEmoji: { [key: string]: string } = {
+export const countryEmoji: { [key: string]: string } = {
   Turkey: '🇹🇷',
   Switzerland: '🇨🇭',
   Italy: '🇮🇹',

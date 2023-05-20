@@ -48,5 +48,3 @@ export const ColorInput: React.FC<
     </div>
   );
 };
-
-export default ColorInput;

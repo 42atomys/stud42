@@ -1,4 +1,4 @@
-import { countryNameToEmoji } from '../countryMap';
+import { countryNameToEmoji } from '../data';
 
 describe('countryMap has good format', () => {
   Object.keys(countryNameToEmoji).forEach((key) => {

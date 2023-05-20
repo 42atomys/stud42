@@ -7,6 +7,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useContext } from 'react';
+import { PropsWithClassName } from 'types/globals';
 import { SidebarContext } from './SidebarContext';
 
 /**
@@ -181,3 +182,26 @@ export const Sidebar = ({
     </div>
   );
 };
+
+/**
+ * PageContent is the main content of the page (without the sidebar) and is
+ * scrollable if the content is too big for the screen height.
+ */
+export const PageContent: React.FC<
+  React.PropsWithChildren<PropsWithClassName>
+> = ({ children, className }) => (
+  <div id="page-content" className={classNames('flex-auto', className)}>
+    {children}
+  </div>
+);
+
+/**
+ * PageContainer is a container for the page content and the sidebar (if any)
+ */
+export const PageContainer: React.FC<
+  React.PropsWithChildren<PropsWithClassName>
+> = ({ children, className }) => (
+  <div className={classNames('flex flex-col md:flex-row', className)}>
+    {children}
+  </div>
+);

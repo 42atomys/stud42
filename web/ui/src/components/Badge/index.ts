@@ -1,9 +1,6 @@
-export { Badge, Badge as default } from './Badge';
+export { Badge } from './Badge';
+export { AkaBadgy, BetaBadgy, DeprecatedBadgy, NewBadgy } from './Badgy';
+export { FlagBadge } from './FlagBadge';
 export { LocationBadge } from './LocationBadge';
-
-export type {
-  BadgeColor,
-  BadgeProps,
-  BadgeTextProps,
-  BadgeChildrenProps,
-} from './types';
+export { ThridPartyBadge } from './ThridPartyBadge';
+export type { BadgeColor, BadgeProps } from './types';

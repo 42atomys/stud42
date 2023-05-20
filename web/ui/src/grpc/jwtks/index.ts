@@ -47,6 +47,7 @@ export const SignToken: SignTokenFn = async (req) => {
 /**
  * ValidateToken is a function used to validate a JWT token. It takes a
  * token and returns a promise that resolves to a validated JWT token.
+ * @deprecated Use jwt keyset endpoint instead
  */
 export const ValidateToken: ValidateTokenFn = async (req) => {
   return new Promise<any>((resolve, reject) => {

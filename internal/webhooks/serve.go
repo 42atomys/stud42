@@ -11,7 +11,6 @@ import (
 	"github.com/rs/zerolog/log"
 	"github.com/streadway/amqp"
 
-	typesgen "atomys.codes/stud42/internal/api/generated/types"
 	modelsutils "atomys.codes/stud42/internal/models"
 	"atomys.codes/stud42/internal/models/generated"
 	modelgen "atomys.codes/stud42/internal/models/generated"
@@ -185,7 +184,7 @@ func (p *processor) githubHandler(data []byte) error {
 		Query().
 		Where(
 			user.HasAccountsWith(
-				account.Provider(typesgen.ProviderGithub.String()),
+				account.ProviderEQ(gotype.AccountProviderGithub),
 				account.ProviderAccountID(strconv.Itoa(webhookPayload.Sender.ID)),
 			),
 		).

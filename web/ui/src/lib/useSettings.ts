@@ -1,7 +1,6 @@
 import { ApolloClient } from '@apollo/client';
 import useNotification from '@components/Notification';
 import {
-  ClusterMapAvatarSize,
   Settings,
   Theme,
   useMyApparenceSettingsLazyQuery,
@@ -47,7 +46,8 @@ export const useSettings: UseSettingsFunc = ({
       LocalStorageKeys.Settings,
       // Default settings if not found in local storage or if local storage is
       // not available
-      { theme: Theme.AUTO, clusterMapAvatarSize: ClusterMapAvatarSize.AUTO }
+      // @ts-ignore
+      {}
     );
 
   const [updateSettingsMutation] = useUpdateSettingsMutation({

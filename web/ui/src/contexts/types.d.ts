@@ -1,3 +1,5 @@
+import { MeQuery } from '@graphql.d';
+
 export interface MeContextValue extends Omit<MeQuery, '__typename'> {
   // Function to update the current user in the session storage
   refetchMe: () => Promise<ApolloQueryResult<MeQuery>>;

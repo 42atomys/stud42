@@ -8,6 +8,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"mime"
 	"strconv"
 	"strings"
 	"time"
@@ -24,10 +25,17 @@ import (
 	"atomys.codes/stud42/internal/models/generated/user"
 	"atomys.codes/stud42/internal/models/gotype"
 	"atomys.codes/stud42/internal/pkg/searchengine"
+	"atomys.codes/stud42/pkg/duoapi"
 	"atomys.codes/stud42/pkg/utils"
 	"entgo.io/ent/dialect/sql"
+	"github.com/99designs/gqlgen/graphql"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
+	"github.com/spf13/viper"
 )
 
 // IsSwimmer is the resolver for the isSwimmer field.
@@ -182,6 +190,40 @@ func (r *mutationResolver) UpdateSettings(ctx context.Context, input typesgen.Se
 	return &updatedUser.Settings, nil
 }
 
+// UpdateMe is the resolver for the updateMe field.
+func (r *mutationResolver) UpdateMe(ctx context.Context, input typesgen.UpdateMeInput) (*generated.User, error) {
+	cu, err := CurrentUserFromContext(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	s3Endpoint := viper.GetString("api.s3.users.endpoint")
+	if input.AvatarURL != nil && *input.AvatarURL != "" && !strings.HasPrefix(*input.AvatarURL, s3Endpoint) {
+		return nil, graphql.ErrorOnPath(ctx, errors.New("this is not a valid avatar URL"))
+	}
+
+	if input.CoverURL != nil && *input.CoverURL != "" && !strings.HasPrefix(*input.CoverURL, s3Endpoint) {
+		return nil, graphql.ErrorOnPath(ctx, errors.New("this is not a valid cover URL"))
+	}
+
+	// For the moment, only sponsors can change their nickname.
+	// This will change in the future.
+	if input.Nickname != nil && !utils.Contains(cu.Flags, gotype.UserFlagSponsor) {
+		return nil, graphql.ErrorOnPath(ctx, errors.New("you cannot change your nickname, you are not a sponsor"))
+	}
+
+	updatedUser, err := r.client.User.UpdateOne(cu).
+		SetNillableAvatarURL(input.AvatarURL).
+		SetNillableCoverURL(input.CoverURL).
+		SetNillableNickname(input.Nickname).
+		SetNillablePronoun(input.Pronoun).
+		Save(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return updatedUser, nil
+}
+
 // InternalCreateUser is the resolver for the internalCreateUser field.
 func (r *mutationResolver) InternalCreateUser(ctx context.Context, input typesgen.CreateUserInput) (uuid.UUID, error) {
 	campusID, err := r.client.Campus.Query().Where(campus.DuoID(input.CurrentDuoCampusID)).FirstID(ctx)
@@ -213,10 +255,10 @@ func (r *mutationResolver) InternalCreateUser(ctx context.Context, input typesge
 // InternalLinkAccount is the resolver for the internalLinkAccount field.
 func (r *mutationResolver) InternalLinkAccount(ctx context.Context, input typesgen.LinkAccountInput) (*generated.Account, error) {
 	id, err := r.client.Account.Create().
-		SetProvider(input.Provider.String()).
+		SetProvider(input.Provider).
 		SetProviderAccountID(input.ProviderAccountID).
 		SetUsername(input.Username).
-		SetType(input.Type.String()).
+		SetType(input.Type).
 		SetAccessToken(input.AccessToken).
 		SetNillableRefreshToken(input.RefreshToken).
 		SetTokenType(input.TokenType).
@@ -248,7 +290,7 @@ func (r *mutationResolver) InviteOnDiscord(ctx context.Context) (bool, error) {
 		return false, err
 	}
 
-	acc, err := r.client.Account.Query().Where(account.UserID(cu.ID), account.Provider(string(typesgen.ProviderDiscord))).Only(ctx)
+	acc, err := r.client.Account.Query().Where(account.UserID(cu.ID), account.ProviderEQ(gotype.AccountProviderDiscord)).Only(ctx)
 	if err != nil {
 		return false, err
 	}
@@ -409,6 +451,57 @@ func (r *queryResolver) LocationsStatsByPrefixes(ctx context.Context, campusName
 	return finalLocationStats, err
 }
 
+// PresignedUploadURL is the resolver for the presignedUploadURL field.
+func (r *queryResolver) PresignedUploadURL(ctx context.Context, contentType string, contentLength int, kind typesgen.PresignedUploadURLKind) (string, error) {
+	cu, err := CurrentUserFromContext(ctx)
+	if err != nil {
+		return "", err
+	}
+
+	// Validate the content type
+	if !utils.Contains([]string{"image/png", "image/jpeg"}, contentType) {
+		return "", fmt.Errorf("invalid content type. Must be an image")
+	}
+
+	// Validate the content length
+	const _1MB = 1 * 1024 * 1024
+	if contentLength > _1MB {
+		return "", fmt.Errorf("invalid content length. Must be less than 5MB")
+	}
+
+	// File extension
+	extension, err := mime.ExtensionsByType(contentType)
+	if err != nil {
+		return "", err
+	}
+
+	// Prepare the S3 request so a signature can be generated
+	svc := s3.New(
+		session.New(),
+		aws.NewConfig().
+			WithEndpoint(viper.GetString("api.s3.users.endpoint")).
+			WithRegion(viper.GetString("api.s3.users.region")).
+			WithCredentials(credentials.NewCredentials(&credentials.EnvProvider{})),
+		&aws.Config{
+			S3ForcePathStyle: aws.Bool(true),
+		},
+	)
+	request, _ := svc.PutObjectRequest(&s3.PutObjectInput{
+		Bucket:        aws.String(viper.GetString("api.s3.users.bucket")),
+		Key:           aws.String(strings.ToLower(kind.String()) + "/" + cu.ID.String() + "_" + uuid.NewString() + extension[0]),
+		ContentType:   aws.String(contentType),
+		ContentLength: aws.Int64(int64(contentLength)),
+	})
+	// Create the pre-signed url with an expiry
+	url, err := request.Presign(time.Minute)
+	if err != nil {
+		fmt.Println("Failed to generate a pre-signed url: ", err)
+		return "", err
+	}
+
+	return url, nil
+}
+
 // MyFollowings is the resolver for the myFollowings field.
 func (r *queryResolver) MyFollowings(ctx context.Context, followsGroupID *uuid.UUID, followsGroupSlug *string) ([]*generated.User, error) {
 	cu, _ := CurrentUserFromContext(ctx)
@@ -500,9 +593,9 @@ func (r *queryResolver) FollowsGroupsForUser(ctx context.Context, userID uuid.UU
 }
 
 // InternalGetUserByAccount is the resolver for the internalGetUserByAccount field.
-func (r *queryResolver) InternalGetUserByAccount(ctx context.Context, provider typesgen.Provider, uid string) (*generated.User, error) {
+func (r *queryResolver) InternalGetUserByAccount(ctx context.Context, provider gotype.AccountProvider, uid string) (*generated.User, error) {
 	return r.client.Account.Query().
-		Where(account.Provider(provider.String()), account.ProviderAccountID(uid)).
+		Where(account.ProviderEQ(provider), account.ProviderAccountID(uid)).
 		QueryUser().
 		Only(ctx)
 }
@@ -528,6 +621,30 @@ func (r *userResolver) IsSwimmer(ctx context.Context, obj *generated.User) (bool
 	now := time.Now()
 	return (*obj.PoolYear == strconv.Itoa(now.Year()) &&
 		strings.EqualFold(*obj.PoolMonth, now.Format("January"))), nil
+}
+
+// IntraProxy is the resolver for the intraProxy field.
+func (r *userResolver) IntraProxy(ctx context.Context, obj *generated.User) (*duoapi.User, error) {
+	intraUser, err := duoapi.UserGet(ctx, strconv.Itoa(obj.DuoID))
+	if err != nil {
+		return nil, err
+	}
+
+	return intraUser, nil
+}
+
+// FollowersCount is the resolver for the followersCount field.
+func (r *userResolver) FollowersCount(ctx context.Context, obj *generated.User) (int, error) {
+	return r.client.Follow.Query().
+		Where(follow.FollowID(obj.ID)).
+		Count(ctx)
+}
+
+// FollowingsCount is the resolver for the followingsCount field.
+func (r *userResolver) FollowingsCount(ctx context.Context, obj *generated.User) (int, error) {
+	return r.client.Follow.Query().
+		Where(follow.UserID(obj.ID)).
+		Count(ctx)
 }
 
 // Me returns apigen.MeResolver implementation.

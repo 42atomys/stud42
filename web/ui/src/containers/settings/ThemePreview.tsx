@@ -95,14 +95,17 @@ export const ThemePreview = ({
         </div>
       </div>
       <div className="flex flex-row justify-start items-center p-2">
-        <i
-          className={classNames(
-            'fa-regular fa-fw pr-2',
-            active
-              ? 'fa-circle-check text-indigo-500'
-              : 'fa-circle group-hover:text-indigo-500'
-          )}
-        ></i>
+        {(active && (
+          <i
+            key="theme-preview-active"
+            className="fa-regular fa-circle-check fa-fw text-indigo-500 pr-2"
+          ></i>
+        )) || (
+          <i
+            key="theme-preview-inactive"
+            className="fa-regular fa-circle fa-fw group-hover:text-indigo-500 pr-2"
+          ></i>
+        )}
         <p className="first-letter:capitalize text-sm">{themeName} theme</p>
       </div>
     </div>

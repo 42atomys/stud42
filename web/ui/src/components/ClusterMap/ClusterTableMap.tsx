@@ -3,6 +3,7 @@ import { useMe } from '@ctx/currentUser';
 import { ClusterMapAvatarSize } from '@graphql.d';
 import useSettings from '@lib/useSettings';
 import classNames from 'classnames';
+import { motion } from 'framer-motion';
 import { Children } from 'react';
 import { ClusterContext } from './ClusterContainer';
 import { MapLocation } from './types';
@@ -60,7 +61,10 @@ export const ClusterWorkspaceWithUser = ({
   return (
     <ClusterContext.Consumer>
       {({ highlight, hightlightVisibility }) => (
-        <div
+        <motion.div
+          layout
+          layoutId={`user-popup-${location.user.id}`}
+          layoutRoot
           className={classNames(
             'flex flex-1 flex-col justify-center items-center m-0.5 rounded cursor-pointer transition ease-in-out duration-200',
             isMe(location.user)
@@ -85,6 +89,7 @@ export const ClusterWorkspaceWithUser = ({
           <span className="mb-1">
             <Avatar
               duoAvatarURL={location.user.duoAvatarSmallURL}
+              profileLink={false}
               rounded={false}
               flags={location.user.flags}
               size={
@@ -98,7 +103,7 @@ export const ClusterWorkspaceWithUser = ({
             />
           </span>
           <span className="text-xs">{displayText || location.identifier}</span>
-        </div>
+        </motion.div>
       )}
     </ClusterContext.Consumer>
   );

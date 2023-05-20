@@ -60,7 +60,7 @@ var apiCmd = &cobra.Command{
 		// })
 
 		srv.Use(entgql.Transactioner{TxOpener: modelsutils.Client()})
-		srv.Use(extension.FixedComplexityLimit(50))
+		srv.Use(extension.FixedComplexityLimit(64))
 		srv.Use(otelgql.Middleware(tracer))
 
 		router := chi.NewRouter()

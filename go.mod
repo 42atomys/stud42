@@ -6,6 +6,7 @@ require (
 	entgo.io/contrib v0.3.0
 	entgo.io/ent v0.11.4
 	github.com/99designs/gqlgen v0.17.28
+	github.com/aws/aws-sdk-go v1.44.261
 	github.com/bwmarrin/discordgo v0.25.0
 	github.com/getsentry/sentry-go v0.13.0
 	github.com/go-chi/chi/v5 v5.0.8
@@ -56,6 +57,7 @@ require (
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/hashicorp/hcl/v2 v2.13.0 // indirect
 	github.com/inconshreveable/mousetrap v1.0.1 // indirect
+	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/klauspost/compress v1.15.6 // indirect
 	github.com/lestrrat-go/blackmagic v1.0.1 // indirect

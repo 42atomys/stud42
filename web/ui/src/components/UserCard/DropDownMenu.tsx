@@ -14,6 +14,7 @@ import { DropdownMenuProps } from './types';
 const DropdownMenu: React.FC<PropsWithClassName<DropdownMenuProps>> = ({
   user,
   buttonAlwaysShow = false,
+  className,
 }) => {
   // TODO: use a better way to prevent usage of refetchQueries in the future
   const isFriendsPage = useRouter().asPath.startsWith('/friends');
@@ -28,14 +29,14 @@ const DropdownMenu: React.FC<PropsWithClassName<DropdownMenuProps>> = ({
   const { isFollowed, refetchMe } = useMe();
 
   return (
-    <div className="text-right absolute top-2 right-2">
+    <div className={classNames('text-right absolute top-2 right-2', className)}>
       <Menu as="div" className="relative inline-block text-left">
         {({ open }) => (
           <div>
-            <Menu.Button className="inline-flex justify-center w-full">
+            <Menu.Button className="inline-flex justify-center items-center w-[2em] h-[2em] text-lg rounded-full p-2 hover:text-indigo-800 dark:hover:text-indigo-200 hover:bg-indigo-500/20">
               <i
                 className={classNames(
-                  'fa-light fa-ellipsis-vertical w-[18px] h-[18px] text-lg rounded-full p-2 hover:text-indigo-800 dark:hover:text-indigo-200 hover:bg-indigo-500/20',
+                  'fa-light fa-ellipsis-vertical fa-fw',
                   buttonAlwaysShow || open
                     ? 'visible'
                     : 'invisible group-hover:visible'
@@ -45,7 +46,7 @@ const DropdownMenu: React.FC<PropsWithClassName<DropdownMenuProps>> = ({
             <Menu.Items
               static
               className={classNames(
-                'absolute flex flex-col space-y-2 right-0 w-56 origin-top-right bg-slate-50 dark:bg-slate-900 divide-y divide-gray-100 dark:divide-slate-800/75 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none',
+                'absolute flex flex-col space-y-2 right-0 w-56 origin-top-right bg-slate-50 dark:bg-slate-950 divide-y divide-gray-100 dark:divide-slate-900 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none',
                 open ? 'visible flex' : 'invisible hidden'
               )}
             >

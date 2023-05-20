@@ -37,6 +37,20 @@ module "service-token" {
       }
     }
 
+    "ovh-s3-credentials" : {
+      isClusterWide = false
+      namespace     = "production"
+      secretType    = "Opaque"
+
+      reflected           = true
+      reflectedNamespaces = ["staging"]
+
+      encryptedData = {
+        "AWS_ACCESS_KEY_ID"     = "AgCcEfb0ziVTopKX359ktRyGfkH7KGldN2xF9F3uLNJ8qkgYCQgjFlvZXcM5IDkSP9ZGEqZKDlkxCQvLLTvtUeWmOmbyDSWtkG9e+pzm5+R1jIg+GLg/zS97Rbm+/v5E/K5NxzB45CDLjQukRHdlNQG6j6XH8A/nopAUKeQXtsTACt85IQw/7LFz83AS3uuylTb9c6yTmRW4C+CZR+TQpfDdRM3Fq2yaZillF0K50Gfh9WF5ahskiqBcNX2xe/WBREQqdE2cnlkMv8/Wzhu4HgsQuwjrm6dkAW2EkeOAWqBFwcSocC1DAeOVQA1xnxlXwA8v3+KXiH54D8nTOjYyAzW5s/QB+S+b/go5ljSsueJKnl88w8du4+C5yKG+gYsQms7PCHV+MkA0/lLIL6FKIcCZjYxmg/jguSROYz/q4zU6IvgPKUhuGU39ggLJEbZnjEjGLFaw+edG2VSuC1tNzELLcEgLiXxzfUsaySB6oGO4vgVbkiLrZxEDain1K+2Gb8MaAvE6iu8T4CVJHkT8r2Zzpa50rCMIdczajiZRilhnnDh/i3hdwl+UNyW/0wtd+X0UmEZV5wDKfq8WqJm3tS0yrJwE+7jvRe2lyoi/CoT0CTKJXE09BVBlB97aC+vmTx/kxRnewLSZD7n0gCjZyLoGEGTm1xmXVMNiIHCj9Bkgo2j1uR7fMvGoQnRL2VaNFEbmJ750GbKMbO9ORhNMFgkzjBmvjTRFneWXTdnVxuNgow==",
+        "AWS_SECRET_ACCESS_KEY" = "AgCjUZuzryNxDh2sVS8VeOB9dfPk/JLeYMBGpJhs24w5+QuTnDdUdHSEhaRa7pSLm/X5iMdqvQ/8wDC/PlndUM6cEdNaCpAT2q7UA7j5TUfOXBO6e0upIWMbKT+ce2PgPhljDhY4/IxG47qeJiQMepv8T5obn3xvMkMmNu70P9rxNayB0+WinCUJvDzXi4RTrvNf2r8JyBqUZ8nsHZ+Qa35tMr3eKZd/81Po1dw+EMvgJXlrLZMCS/savt8OwCKLQlySUW2vq95m3pbiy85sMhxwVMMcNOCBCcjmx/zF0mIJ1Q8aScOJ/sKG/1+Mo0Yxmh3Hx3eFqrvWBfD6YVVcddzCcjlCuts+8UcLKoZA5a6JWY8Yb9FaH7uCq00EjqeXWEZhPg8vhZxyEtvPIy3AvfXxp9JKJP82NL3KiDsFZ5Nf5Je9/xo2kpSuVgzpERA5NLLKam9jKKIQBySwLH4Yc4iKYVMt6G8qHkqHs4YYSHKS4SujP1XTZ2pisXe0syZrZCoTyKDxQ7ZBr26psM05VaGMctDBubdfCy5uWU4lng27/wI1RyhaZg1ZDeDUgROI4iRgJQ1cL7XY/K9vXLlm2ef87klijGVK4oDBEkGug6LrEHY0jbBuxNGeOYi/oQ50haYuu6pS9uEK2yFp1Ji5TvcKFNdTu8cDLgbboRB3/hdTYaeRHw8TPs2dVfsBWHILgDtIwU3QwUZzud6gOWMbt+XZVF/irGIqHMg1fRO+i2boEg=="
+      }
+    }
+
     "sentry-dsns" : {
       isClusterWide = false
       namespace     = "production"

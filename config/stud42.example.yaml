@@ -1,5 +1,14 @@
 # API relatives configurations
-api: {}
+api:
+  # s3 configurations for the API to store files
+  s3:
+    # The bucket configuration to store the files of the API for the Users
+    # This bucket is used to store the profile pictures of the users
+    # and the files uploaded by the users in the API (soon)
+    users:
+      bucket: s42-users
+      region: europe-west1
+      endpoint: http://localhost:9000
 
 # Interface relatives configurations
 interface: {}
