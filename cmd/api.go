@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -20,11 +21,13 @@ import (
 	"github.com/rs/cors"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
+	"github.com/vektah/gqlparser/v2/gqlerror"
 	"go.opentelemetry.io/otel"
 
 	"atomys.codes/stud42/internal/api"
 	modelsutils "atomys.codes/stud42/internal/models"
 	"atomys.codes/stud42/internal/pkg/searchengine"
+	"atomys.codes/stud42/pkg/cache"
 	"atomys.codes/stud42/pkg/otelgql"
 )
 
@@ -39,27 +42,25 @@ var apiCmd = &cobra.Command{
 	Short: "Serve the API in production",
 
 	PreRun: func(cmd *cobra.Command, args []string) {
-		if err := modelsutils.Connect(); err != nil {
-			log.Fatal().Err(err).Msg("failed to connect to database")
-		}
-
-		if err := modelsutils.Migrate(); err != nil {
-			log.Fatal().Err(err).Msg("failed to migrate database")
-		}
-
 		searchengine.Initizialize()
 	},
 
 	Run: func(cmd *cobra.Command, args []string) {
 		tracer := otel.GetTracerProvider().Tracer("graphql-api")
-		srv := handler.NewDefaultServer(api.NewSchema(modelsutils.Client(), tracer))
-		// srv.SetRecoverFunc(func(ctx context.Context, err interface{}) error {
-		// 	// notify bug tracker...
-		// 	log.Error().Err(err.(error)).Msg("unhandled error")
-		// 	return gqlerror.Errorf("Internal server error!")
-		// })
+		cacheClient, _ := cmd.Context().Value(keyValueCtxKey{}).(*cache.Client)
+		gqlCacheClient, err := cacheClient.NewGQLCache(30 * time.Minute)
+		if err != nil {
+			log.Fatal().Err(err).Msg("failed to init gql cache")
+		}
 
+		srv := handler.NewDefaultServer(api.NewSchema(modelsutils.Client(), cacheClient, tracer))
+		srv.SetRecoverFunc(func(ctx context.Context, err interface{}) error {
+			// notify bug tracker...
+			log.Error().Err(err.(error)).Msg("unhandled api error")
+			return gqlerror.Errorf("Internal server error!")
+		})
 		srv.Use(entgql.Transactioner{TxOpener: modelsutils.Client()})
+		srv.Use(extension.AutomaticPersistedQuery{Cache: gqlCacheClient})
 		srv.Use(extension.FixedComplexityLimit(64))
 		srv.Use(otelgql.Middleware(tracer))
 
