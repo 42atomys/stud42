@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -97,7 +98,7 @@ var apiCmd = &cobra.Command{
 				const _50KB = (1 << 10) * 50
 
 				limitedBody := http.MaxBytesReader(w, r.Body, _50KB)
-				bodyBytes, err := ioutil.ReadAll(limitedBody)
+				bodyBytes, err := io.ReadAll(limitedBody)
 				limitedBody.Close()
 
 				// if r.Body reach the max size limit, the request will be canceled
