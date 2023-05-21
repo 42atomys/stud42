@@ -25,7 +25,7 @@ var rootCmd = &cobra.Command{
 
 		keyValueStoreUrl := viper.GetString("keyvalue-store-url")
 		if keyValueStoreUrl != "" {
-			cacheClient, err = cache.New(viper.GetString("keyvalue-store-url"))
+			cacheClient, err = cache.NewClient(viper.GetString("keyvalue-store-url"))
 			if err != nil {
 				log.Fatal().Err(err).Msg("failed to create cache")
 			}
