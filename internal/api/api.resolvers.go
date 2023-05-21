@@ -25,6 +25,7 @@ import (
 	"atomys.codes/stud42/internal/models/generated/user"
 	"atomys.codes/stud42/internal/models/gotype"
 	"atomys.codes/stud42/internal/pkg/searchengine"
+	"atomys.codes/stud42/pkg/cache"
 	"atomys.codes/stud42/pkg/duoapi"
 	"atomys.codes/stud42/pkg/utils"
 	"entgo.io/ent/dialect/sql"
@@ -625,12 +626,14 @@ func (r *userResolver) IsSwimmer(ctx context.Context, obj *generated.User) (bool
 
 // IntraProxy is the resolver for the intraProxy field.
 func (r *userResolver) IntraProxy(ctx context.Context, obj *generated.User) (*duoapi.User, error) {
-	intraUser, err := duoapi.UserGet(ctx, strconv.Itoa(obj.DuoID))
-	if err != nil {
-		return nil, err
-	}
+	cacheKey := cache.NewKeyBuilder().WithPrefix("intra-proxy").WithObject(obj.ID).Build()
 
-	return intraUser, nil
+	loader := cache.New[*duoapi.User](r.cache).WithLoader(func(ctx context.Context, key cache.CacheKey) (*duoapi.User, error) {
+		return duoapi.UserGet(ctx, strconv.Itoa(obj.DuoID))
+	})
+	defer loader.Close()
+
+	return loader.Get(ctx, cacheKey, cache.WithExpiration(24*time.Hour))
 }
 
 // FollowersCount is the resolver for the followersCount field.
