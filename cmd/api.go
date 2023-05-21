@@ -5,7 +5,6 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"strings"
@@ -108,7 +107,7 @@ var apiCmd = &cobra.Command{
 					return
 				}
 
-				r.Body = ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
+				r.Body = io.NopCloser(bytes.NewBuffer(bodyBytes))
 				h.ServeHTTP(w, r)
 			}
 			return http.HandlerFunc(fn)
