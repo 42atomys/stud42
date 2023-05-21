@@ -2,47 +2,42 @@ package cache
 
 import (
 	"context"
+	"encoding"
+	"errors"
+	"reflect"
+	"sync"
 	"time"
 
-	"github.com/dgraph-io/ristretto"
-	"github.com/eko/gocache/lib/v4/cache"
-	"github.com/eko/gocache/lib/v4/store"
-	restore "github.com/eko/gocache/store/redis/v4"
-	ristore "github.com/eko/gocache/store/ristretto/v4"
+	"log"
+
 	"github.com/redis/go-redis/v9"
-	"github.com/rs/zerolog/log"
 )
 
 type Client struct {
-	ristrettoClient *ristore.RistrettoStore
-	redisStore      *restore.RedisStore
+	redisStore *redis.Client
+}
+
+type LoadFunction[T any] func(ctx context.Context, key CacheKey) (T, error)
+
+type loadableKeyValue[T any] struct {
+	key     CacheKey
+	value   T
+	options []option
 }
 
 type TypedClient[T any] struct {
-	Client
-	*cache.ChainCache[T]
+	*Client
+	setterWg   *sync.WaitGroup
+	setChannel chan *loadableKeyValue[T]
+	loader     LoadFunction[T]
 }
 
 // New create a new cache client with initialized stores and cache. It will
 // return an error if the cache cannot be initialized.
 //
 // The cache will be initialized with the following stores:
-// - Ristretto: In memory cache optimized for high performance and low memory usage.
 // - Redis: Redis cache for distributed cache.
-func New(redisUrl string) (*Client, error) {
-	// Ristretto cache is a in memory cache that is optimized for high performance
-	// and low memory usage. It is a drop in replacement for the standard library
-	// cache.
-	ristrettoCache, err := ristretto.NewCache(&ristretto.Config{
-		NumCounters: int64(1e7), // number of keys to track frequency of (10M).
-		MaxCost:     int64(1e8), // maximum cost of cache (100MB).
-		BufferItems: 64,         // number of keys per Get buffer.
-	})
-	if err != nil {
-		return nil, err
-	}
-	ristrettoStore := ristore.NewRistretto(ristrettoCache)
-
+func NewClient(redisUrl string) (*Client, error) {
 	// Redis is a high performance key value store that is used for caching
 	// this is used as fallback to ristretto cache when we are in a high
 	// traffic situation (scale on multiple instances).
@@ -57,32 +52,67 @@ func New(redisUrl string) (*Client, error) {
 	opts.PoolSize = 10
 	opts.PoolTimeout = 30 * time.Second
 
-	redisStore := restore.NewRedis(redis.NewClient(opts))
+	redisClient := redis.NewClient(opts)
+	if _, err := redisClient.Ping(context.Background()).Result(); err != nil {
+		return nil, err
+	}
 
 	return &Client{
-		ristrettoClient: ristrettoStore,
-		redisStore:      redisStore,
+		redisStore: redisClient,
 	}, nil
 }
 
-// NewTyped creates a new typed cache client with initialized stores and cache.
+type BinaryMarshable interface {
+	encoding.BinaryMarshaler
+	encoding.BinaryUnmarshaler
+}
+
+var ErrNotFound = errors.New("item not found in cache")
+
+// New creates a new typed cache client with initialized stores and cache.
 // The type is used to ensure that the cache is only used for the correct type
 // and automatically casted to the correct type.
-func NewTyped[T any](c *Client) *TypedClient[T] {
-	return &TypedClient[T]{
-		Client: *c,
-		ChainCache: cache.NewChain[T](
-			cache.New[T](c.ristrettoClient),
-			cache.New[T](c.redisStore),
-		),
+func New[T any](client *Client) *TypedClient[T] {
+
+	typedClient := &TypedClient[T]{
+		Client: client,
+		loader: func(ctx context.Context, key CacheKey) (obj T, err error) {
+			return obj, ErrNotFound
+		},
+		setterWg:   &sync.WaitGroup{},
+		setChannel: make(chan *loadableKeyValue[T]),
 	}
+
+	typedClient.setterWg.Add(1)
+	go typedClient.setter()
+
+	return typedClient
+}
+
+func (tc *TypedClient[T]) setter() {
+	defer tc.setterWg.Done()
+
+	for item, ok := <-tc.setChannel; ok; item, ok = <-tc.setChannel {
+		if err := tc.Set(context.Background(), item.key, item.value, item.options...); err != nil {
+			log.Printf("failed to set value in cache: %s", err.Error())
+		}
+	}
+}
+
+// Close the LoadableCache update channel to prevent any goroutine leak
+// and wait for the setter goroutine to finish
+func (c *TypedClient[T]) Close() error {
+	close(c.setChannel)
+
+	return nil
 }
 
 // WithLoader is a wrapper around the cache that allows us to load data from the
 // `lf` function if it is not in the cache. This is useful for loading data
 // from a database or other source.
-func (tc *TypedClient[T]) WithLoader(ctx context.Context, lf LoadFunction[T]) *LoadableCache[T] {
-	return NewLoadable(lf, tc)
+func (tc *TypedClient[T]) WithLoader(lf LoadFunction[T]) *TypedClient[T] {
+	tc.loader = lf
+	return tc
 }
 
 // Get returns the value stored in the cache for the given key. If the key is
@@ -90,33 +120,75 @@ func (tc *TypedClient[T]) WithLoader(ctx context.Context, lf LoadFunction[T]) *L
 // the value is loaded from the `lf` function and stored in the cache. If the
 // key is not found in the cache and there is no `Loader` function, then the
 // value is nil and the bool is false.
-func (tc *TypedClient[T]) Get(ctx context.Context, key CacheKey) (T, error) {
-	log.Debug().Str("key", key.String()).Msg("get value from cache")
-	return tc.ChainCache.Get(ctx, key.String())
+func (tc *TypedClient[T]) Get(ctx context.Context, key CacheKey, setOptions ...option) (object T, err error) {
+	if reflect.ValueOf(object).Kind() != reflect.Ptr {
+		return object, errors.New("object must be a pointer")
+	}
+
+	// initialize the object to the zero value of the type
+	object = reflect.New(reflect.TypeOf(object).Elem()).Interface().(T)
+
+	err = tc.redisStore.Get(ctx, key.String()).Scan(object)
+	if err == nil {
+		return object, nil
+	}
+
+	if !errors.Is(err, redis.Nil) {
+		return object, err
+	}
+
+	object, err = tc.loader(ctx, key)
+	if err == nil {
+		tc.setChannel <- &loadableKeyValue[T]{
+			key:     key,
+			value:   object,
+			options: setOptions,
+		}
+	}
+
+	return object, err
+}
+
+type SetOption struct {
+	Expiration time.Duration
+}
+
+type option func(*SetOption)
+
+func WithExpiration(expiration time.Duration) option {
+	return func(o *SetOption) {
+		o.Expiration = expiration
+	}
+}
+
+func ApplyOptions(opts ...option) SetOption {
+	o := SetOption{
+		Expiration: 0,
+	}
+	for _, opt := range opts {
+		opt(&o)
+	}
+	return o
 }
 
 // Set stores the value in the cache for the given key. The value is stored
 // with the given options.
-func (tc *TypedClient[T]) Set(ctx context.Context, key CacheKey, object T, options ...store.Option) error {
-	log.Debug().Str("key", key.String()).Msg("set value in cache")
-	return tc.ChainCache.Set(ctx, key.String(), object, options...)
+func (tc *TypedClient[T]) Set(ctx context.Context, key CacheKey, object T, options ...option) error {
+	o := ApplyOptions(options...)
+	return tc.redisStore.Set(ctx, key.String(), object, o.Expiration).Err()
 }
 
 // Delete removes the value from the cache for the given key.
 func (tc *TypedClient[T]) Delete(ctx context.Context, key CacheKey) error {
-	log.Debug().Str("key", key.String()).Msg("delete value from cache")
-	return tc.ChainCache.Delete(ctx, key.String())
+	return tc.redisStore.Del(ctx, key.String()).Err()
 }
 
-// Invalidate removes all the values from the cache for the given tags.
-// If no tags are given, all the values are removed from the cache.
-func (tc *TypedClient[T]) Invalidate(ctx context.Context, options ...store.InvalidateOption) error {
-	log.Debug().Msg("invalidate cache")
-	return tc.ChainCache.Invalidate(ctx, options...)
-}
+// // Invalidate removes all the values from the cache for the given tags.
+// // If no tags are given, all the values are removed from the cache.
+// func (tc *TypedClient[T]) Invalidate(ctx context.Context, options ...store.InvalidateOption) error {
+// }
 
 // Clear removes all the values from the cache.
 func (tc *TypedClient[T]) Clear(ctx context.Context) error {
-	log.Debug().Msg("clear cache")
-	return tc.ChainCache.Clear(ctx)
+	return tc.redisStore.FlushAll(ctx).Err()
 }

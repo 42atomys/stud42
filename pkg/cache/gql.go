@@ -2,11 +2,8 @@ package cache
 
 import (
 	"context"
+	"log"
 	"time"
-
-	"github.com/eko/gocache/lib/v4/store"
-	"github.com/getsentry/sentry-go"
-	"github.com/rs/zerolog/log"
 )
 
 type GQLCache struct {
@@ -23,7 +20,7 @@ var (
 // NewGQLCache creates a new cache client for the graphql layer with the given
 // ttl for the cache.
 func (c *Client) NewGQLCache(ttl time.Duration) (*GQLCache, error) {
-	return &GQLCache{TypedClient: NewTyped[any](c), ttl: ttl}, nil
+	return &GQLCache{TypedClient: New[any](c), ttl: ttl}, nil
 }
 
 // Add adds a new value to the cache with the given key.
@@ -31,10 +28,9 @@ func (c *Client) NewGQLCache(ttl time.Duration) (*GQLCache, error) {
 //
 // [GQLGen Doc]: https://github.com/99designs/gqlgen/blob/master/graphql/cache.go
 func (c *GQLCache) Add(ctx context.Context, key string, value interface{}) {
-	err := c.Set(ctx, gqlCacheKey.WithObject(key).Build(), value, store.WithExpiration(c.ttl), store.WithTags([]string{"gql"}))
+	err := c.Set(ctx, gqlCacheKey.WithObject(key).Build(), value, WithExpiration(c.ttl))
 	if err != nil {
-		log.Error().Err(err).Msg("failed to add to cache")
-		sentry.CaptureException(err)
+		log.Printf("failed to add to cache: %s", err.Error())
 	}
 }
 

@@ -32,7 +32,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/rs/zerolog/log"
+	"log"
 )
 
 type CacheKey string
@@ -128,7 +128,7 @@ func (b *KeyBuilder) WithObject(key any) *KeyBuilder {
 	case string:
 		b.key = s
 	default:
-		log.Warn().Msgf("The key %v is not a stringer or a string", key)
+		log.Printf("WARN: The key %v is not a stringer or a string", key)
 	}
 	return b
 }
@@ -178,7 +178,7 @@ func kebabCase(s string) string {
 	)
 
 	if strings.Contains(s, " ") {
-		log.Warn().Msgf("Your cache key is not in kebak-case. Please convert it to avoid any issue. The key is %s", s)
+		log.Printf("WARN: Your cache key is not in kebak-case. Please convert it to avoid any issue. The key is %s", s)
 	}
 
 	// convert to lower case and replace separators with spaces
