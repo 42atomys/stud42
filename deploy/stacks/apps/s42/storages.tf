@@ -314,7 +314,7 @@ module "dragonfly" {
   persistentVolumeClaims = var.hasPersistentStorage ? {
     data = {
       accessModes      = ["ReadWriteMany"]
-      storage          = var.namespace == "production" ? "5Gi" : "1Gi"
+      storage          = "2Gi"
       storageClassName = "csi-cinder-high-speed"
     }
   } : {}
