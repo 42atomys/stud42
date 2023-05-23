@@ -1,0 +1,38 @@
+{{/* gotype: entgo.io/ent/entc/gen.Graph */}}
+
+{{ define "import/additional/marshal_binary" }}
+  "bytes"
+  "encoding/gob"
+{{ end }}
+
+{{ define "model/additional/marshal_binary" }}
+
+func ({{ $.Receiver }} *{{ $.Name }}) MarshalBinary() ([]byte, error) {
+  return json.Marshal({{ $.Receiver }})
+}
+
+func ({{ $.Receiver }} *{{ $.Name }}) UnmarshalBinary(data []byte) error {
+  return json.Unmarshal(data, {{ $.Receiver }})
+}
+
+{{ end }}
+
+{{ define "gql_pagination_marshal" }}
+  {{ template "header" $ }}
+
+  {{ range $n := $.Nodes }}
+    {{ template "gql_pagination/helper/marshal_binary" $n }}
+  {{ end }}
+{{ end }}
+
+{{ define "gql_pagination/helper/marshal_binary" }}
+
+func ({{ $.Receiver }} *{{ $.Name }}Connection) MarshalBinary() ([]byte, error) {
+  return json.Marshal({{ $.Receiver }})
+}
+
+func ({{ $.Receiver }} *{{ $.Name }}Connection) UnmarshalBinary(data []byte) error {
+  return json.Unmarshal(data, {{ $.Receiver }})
+}
+
+{{ end }}

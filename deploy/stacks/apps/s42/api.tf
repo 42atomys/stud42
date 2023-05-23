@@ -51,6 +51,9 @@ module "api" {
     DATABASE_HOST                 = "postgres.${var.namespace}.svc.cluster.local"
     DATABASE_NAME                 = "s42"
     DATABASE_URL                  = "postgresql://postgres:$(DATABASE_PASSWORD)@$(DATABASE_HOST):5432/$(DATABASE_NAME)?sslmode=disable"
+    KEYVALUE_STORE_HOST           = "dragonfly.${var.namespace}.svc.cluster.local"
+    KEYVALUE_STORE_PORT           = "6379"
+    KEYVALUE_STORE_URL            = "redis://:$(DFLY_PASSWORD)@$(KEYVALUE_STORE_HOST):$(KEYVALUE_STORE_PORT)"
     SEARCHENGINE_MEILISEARCH_HOST = "http://meilisearch.${var.namespace}.svc.cluster.local:7700"
   }
 
@@ -58,6 +61,11 @@ module "api" {
     DATABASE_PASSWORD = {
       key  = "POSTGRES_PASSWORD_ENCODED"
       name = "postgres-credentials"
+    }
+
+    DFLY_PASSWORD = {
+      key  = "DFLY_PASSWORD"
+      name = "dragonfly-credentials"
     }
 
     GITHUB_TOKEN = {

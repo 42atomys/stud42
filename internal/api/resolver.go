@@ -6,6 +6,7 @@ import (
 
 	apigen "atomys.codes/stud42/internal/api/generated"
 	modelgen "atomys.codes/stud42/internal/models/generated"
+	"atomys.codes/stud42/pkg/cache"
 )
 
 // This file will not be regenerated automatically.
@@ -14,16 +15,18 @@ import (
 
 type Resolver struct {
 	client *modelgen.Client
+	cache  *cache.Client
 	tracer trace.Tracer
 }
 
 type contextKey string
 
 // NewSchema creates a graphql executable schema.
-func NewSchema(client *modelgen.Client, tr trace.Tracer) graphql.ExecutableSchema {
+func NewSchema(client *modelgen.Client, cacheClient *cache.Client, tr trace.Tracer) graphql.ExecutableSchema {
 	return apigen.NewExecutableSchema(apigen.Config{
 		Resolvers: &Resolver{
 			client: client,
+			cache:  cacheClient,
 			tracer: tr,
 		},
 		Directives: apigen.DirectiveRoot{

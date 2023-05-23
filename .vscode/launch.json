@@ -8,6 +8,9 @@
       "mode": "debug",
       "program": "${workspaceFolder}/main.go",
       "args": ["serve", "api", "-g"],
+      "env": {
+        "DEBUG": "true"
+      },
       "showLog": true
     },
     {
@@ -16,7 +19,10 @@
       "request": "launch",
       "mode": "debug",
       "program": "${workspaceFolder}/main.go",
-      "args": ["serve", "jwtks"]
+      "args": ["serve", "jwtks"],
+      "env": {
+        "DEBUG": "true"
+      }
     },
     {
       "name": "Launch Interface (with chrome debug)",
@@ -36,7 +42,10 @@
       "request": "launch",
       "mode": "debug",
       "program": "${workspaceFolder}/main.go",
-      "args": ["jobs", "webhooks"]
+      "args": ["jobs", "webhooks"],
+      "env": {
+        "DEBUG": "true"
+      }
     },
     {
       "name": "Launch crawler (campus)",
@@ -44,7 +53,10 @@
       "request": "launch",
       "mode": "debug",
       "program": "${workspaceFolder}/main.go",
-      "args": ["jobs", "crawler", "campus"]
+      "args": ["jobs", "crawler", "campus"],
+      "env": {
+        "DEBUG": "true"
+      }
     },
     {
       "name": "Launch crawler (locations)",
@@ -52,7 +64,10 @@
       "request": "launch",
       "mode": "debug",
       "program": "${workspaceFolder}/main.go",
-      "args": ["jobs", "crawler", "locations"]
+      "args": ["jobs", "crawler", "locations"],
+      "env": {
+        "DEBUG": "true"
+      }
     }
   ]
 }

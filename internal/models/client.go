@@ -8,16 +8,21 @@ import (
 
 	modelgen "atomys.codes/stud42/internal/models/generated"
 	_ "atomys.codes/stud42/internal/models/generated/runtime"
+	"atomys.codes/stud42/pkg/cache"
 )
 
 var client *modelgen.Client
 
 // Connect to the database and create the client.
-func Connect() (err error) {
+func Connect(cacheClient *cache.Client) (err error) {
 	var opts = []modelgen.Option{}
 
 	if os.Getenv("DEBUG") == "true" {
 		opts = append(opts, modelgen.Debug())
+	}
+
+	if cacheClient != nil {
+		opts = append(opts, modelgen.Cache(cacheClient))
 	}
 
 	client, err = modelgen.Open(

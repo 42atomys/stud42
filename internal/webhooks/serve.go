@@ -32,10 +32,6 @@ var ErrInvalidWebhook = errors.New("invalid webhook, metadata is empty")
 
 // New creates a new webhooks processor instance
 func New() *processor {
-	if err := modelsutils.Connect(); err != nil {
-		log.Fatal().Err(err).Msg("failed to connect to database")
-	}
-
 	return &processor{
 		ctx: context.Background(),
 		db:  modelsutils.Client(),

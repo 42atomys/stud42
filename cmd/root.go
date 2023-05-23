@@ -4,6 +4,8 @@ import (
 	"context"
 	"strings"
 
+	modelsutils "atomys.codes/stud42/internal/models"
+	"atomys.codes/stud42/pkg/cache"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -11,10 +13,34 @@ import (
 
 var cfgFile string
 
+type keyValueCtxKey struct{}
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "api",
 	Short: "stud42 API",
+	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		var cacheClient *cache.Client
+		var err error
+
+		keyValueStoreUrl := viper.GetString("keyvalue-store-url")
+		if keyValueStoreUrl != "" {
+			cacheClient, err = cache.NewClient(viper.GetString("keyvalue-store-url"))
+			if err != nil {
+				log.Fatal().Err(err).Msg("failed to create cache")
+			}
+
+			cmd.SetContext(context.WithValue(cmd.Context(), keyValueCtxKey{}, cacheClient))
+		}
+
+		if modelsutils.Connect(cacheClient) != nil {
+			log.Fatal().Msg("Failed to connect to database")
+		}
+
+		if err := modelsutils.Migrate(); err != nil {
+			log.Fatal().Err(err).Msg("failed to migrate database")
+		}
+	},
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.

@@ -22,16 +22,6 @@ This operation is useful when the meilisearch index is corrupted or when the
 meilisearch index is not up to date. This operation will take a long time to
 complete. This operation will drop the meilisearch index and recreate it with
 all the users.`,
-	PreRun: func(cmd *cobra.Command, args []string) {
-		if err := modelsutils.Connect(); err != nil {
-			log.Fatal().Err(err).Msg("failed to connect to database")
-		}
-
-		if err := modelsutils.Migrate(); err != nil {
-			log.Fatal().Err(err).Msg("failed to migrate database")
-		}
-		searchengine.Initizialize()
-	},
 	Run: func(cmd *cobra.Command, args []string) {
 		log.Info().Msg("Prepare the re-indexation of the users")
 
