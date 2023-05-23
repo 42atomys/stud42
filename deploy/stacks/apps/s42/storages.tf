@@ -249,6 +249,8 @@ module "dragonfly" {
   replicas             = 1
   maxUnavailable       = 0
 
+  fixPermissions = true
+
   prometheus = {
     enabled = true
     port    = 6379
