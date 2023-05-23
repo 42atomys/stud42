@@ -149,28 +149,6 @@ func (tc *TypedClient[T]) Get(ctx context.Context, key CacheKey, setOptions ...o
 	return object, err
 }
 
-type SetOption struct {
-	Expiration time.Duration
-}
-
-type option func(*SetOption)
-
-func WithExpiration(expiration time.Duration) option {
-	return func(o *SetOption) {
-		o.Expiration = expiration
-	}
-}
-
-func ApplyOptions(opts ...option) SetOption {
-	o := SetOption{
-		Expiration: 0,
-	}
-	for _, opt := range opts {
-		opt(&o)
-	}
-	return o
-}
-
 // Set stores the value in the cache for the given key. The value is stored
 // with the given options.
 func (tc *TypedClient[T]) Set(ctx context.Context, key CacheKey, object T, options ...option) error {
