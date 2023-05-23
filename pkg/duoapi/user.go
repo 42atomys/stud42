@@ -50,10 +50,14 @@ func (l *User) ProcessWebhook(ctx context.Context, metadata *WebhookMetadata, pr
 	return nil
 }
 
+// MarshalBinary implements the encoding.BinaryMarshaler interface.
+// This is used by the cache package.
 func (obj *User) MarshalBinary() ([]byte, error) {
 	return json.Marshal(obj)
 }
 
+// UnmarshalBinary implements the encoding.BinaryUnmarshaler interface.
+// This is used by the cache package.
 func (obj *User) UnmarshalBinary(data []byte) error {
 	return json.Unmarshal(data, &obj)
 }
