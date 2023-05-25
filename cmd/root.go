@@ -25,6 +25,7 @@ var rootCmd = &cobra.Command{
 
 		keyValueStoreUrl := viper.GetString("keyvalue-store-url")
 		if keyValueStoreUrl != "" {
+			log.Info().Msg("Key-value store URL is set, connecting to it...")
 			cacheClient, err = cache.NewClient(viper.GetString("keyvalue-store-url"))
 			if err != nil {
 				log.Fatal().Err(err).Msg("failed to create cache")
@@ -33,12 +34,16 @@ var rootCmd = &cobra.Command{
 			cmd.SetContext(context.WithValue(cmd.Context(), keyValueCtxKey{}, cacheClient))
 		}
 
-		if modelsutils.Connect(cacheClient) != nil {
-			log.Fatal().Msg("Failed to connect to database")
-		}
+		if viper.GetString("database-url") != "" {
+			log.Info().Msg("Database URL is set, connecting to database...")
+			if modelsutils.Connect(cacheClient) != nil {
+				log.Fatal().Msg("Failed to connect to database")
+			}
 
-		if err := modelsutils.Migrate(); err != nil {
-			log.Fatal().Err(err).Msg("failed to migrate database")
+			log.Info().Msg("Migrating database...")
+			if err := modelsutils.Migrate(); err != nil {
+				log.Fatal().Err(err).Msg("failed to migrate database")
+			}
 		}
 	},
 }
