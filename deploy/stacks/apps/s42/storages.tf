@@ -3,13 +3,6 @@ locals {
   rabbitmqClusterReference = {
     name = local.rabbitmqClusterName
   }
-
-  dragonflyProbe = {
-    httpGet = {
-      path = "/"
-      port = "dragonfly"
-    }
-  }
 }
 
 resource "kubernetes_manifest" "rabbitmq" {
@@ -255,9 +248,6 @@ module "dragonfly" {
     enabled = true
     port    = 6379
   }
-
-  livenessProbe  = local.dragonflyProbe
-  readinessProbe = local.dragonflyProbe
 
   resources = {
     requests = {
