@@ -64,7 +64,7 @@ module "api" {
     }
 
     DFLY_PASSWORD = {
-      key  = "DFLY_PASSWORD"
+      key  = "DFLY_PASSWORD_ENCODED"
       name = "dragonfly-credentials"
     }
 
