@@ -94,6 +94,7 @@ const ProfileSettingPage: NextPage<PageProps> = () => {
                     const presignedURL = new URL(data!.presignedUploadURL);
                     fetch(presignedURL, {
                       method: 'PUT',
+                      mode: 'no-cors',
                       body: coverFile,
                       headers: { 'Content-Type': coverFile.type },
                     }).then(async () => {
