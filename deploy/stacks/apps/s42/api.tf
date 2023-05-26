@@ -13,7 +13,7 @@ module "api" {
 
   nodeSelector = local.nodepoolSelector["services"]
 
-  replicas = 1
+  replicas = 2
   autoscaling = {
     enabled     = true
     minReplicas = 2
@@ -66,6 +66,16 @@ module "api" {
     DFLY_PASSWORD = {
       key  = "DFLY_PASSWORD_ENCODED"
       name = "dragonfly-credentials"
+    }
+
+    FORTY_TWO_ID = {
+      key  = "FORTY_TWO_ID"
+      name = "oauth2-providers"
+    }
+
+    FORTY_TWO_SECRET = {
+      key  = "FORTY_TWO_SECRET"
+      name = "oauth2-providers"
     }
 
     GITHUB_TOKEN = {
