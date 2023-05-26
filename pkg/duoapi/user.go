@@ -2,6 +2,7 @@ package duoapi
 
 import (
 	"context"
+	"encoding/json"
 )
 
 func UserGet(ctx context.Context, userID string) (*User, error) {
@@ -47,4 +48,16 @@ func (l *User) ProcessWebhook(ctx context.Context, metadata *WebhookMetadata, pr
 		return p.Alumnize(l, metadata)
 	}
 	return nil
+}
+
+// MarshalBinary implements the encoding.BinaryMarshaler interface.
+// This is used by the cache package.
+func (obj *User) MarshalBinary() ([]byte, error) {
+	return json.Marshal(obj)
+}
+
+// UnmarshalBinary implements the encoding.BinaryUnmarshaler interface.
+// This is used by the cache package.
+func (obj *User) UnmarshalBinary(data []byte) error {
+	return json.Unmarshal(data, &obj)
 }

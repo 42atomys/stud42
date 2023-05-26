@@ -1,6 +1,13 @@
 import { ApolloQueryResult } from '@apollo/client';
 import { ConditionalWrapper } from '@components/ConditionalWrapper';
-import { MeQuery, User, useMeLazyQuery } from '@graphql.d';
+import {
+  MeQuery,
+  SettingsInput,
+  Theme,
+  User,
+  useMeLazyQuery,
+  useUpdateSettingsMutation,
+} from '@graphql.d';
 import React, {
   createContext,
   useCallback,
@@ -8,12 +15,14 @@ import React, {
   useEffect,
   useState,
 } from 'react';
+import { useNotification } from './notifications';
 import type { MeContextValue, MeProviderProps } from './types';
 
 const MeContext = createContext<MeContextValue>({
-  me: {} as MeQuery['me'],
+  me: { settings: {} } as MeQuery['me'],
   myFollowings: {} as MeQuery['myFollowings'],
   refetchMe: () => Promise.resolve({} as ApolloQueryResult<MeQuery>),
+  updateSettings: () => Promise.resolve(),
   isMe: () => false,
   isFollowed: () => false,
 });
@@ -28,8 +37,9 @@ export const MeProvider: React.FC<MeProviderProps> = ({
   apolloClient,
   session,
 }) => {
+  const { addNotification } = useNotification();
   const [me, setMe] = useState<MeQuery>({
-    me: {} as MeQuery['me'],
+    me: { settings: {} } as MeQuery['me'],
     myFollowings: [],
   });
 
@@ -76,6 +86,54 @@ export const MeProvider: React.FC<MeProviderProps> = ({
     [me]
   );
 
+  const [updateSettingsMutation] = useUpdateSettingsMutation({
+    client: apolloClient ? apolloClient : undefined,
+    refetchQueries: ['me'],
+    awaitRefetchQueries: true,
+    onCompleted: (data) => {
+      if (!data) return;
+
+      addNotification({
+        title: 'Settings updated',
+        message: 'Your settings have been updated.',
+        type: 'success',
+        duration: 5000,
+      });
+    },
+  });
+
+  /**
+   * Function that takes the new settings and updates the current user settings
+   * in the database and refetches the current user.
+   */
+  const updateSettings = useCallback(
+    async (settings: Partial<SettingsInput>) => {
+      await updateSettingsMutation({
+        variables: {
+          input: {
+            ...me.me.settings,
+            ...settings,
+          },
+        },
+      });
+    },
+    [me, updateSettingsMutation]
+  );
+
+  // Apply the theme settings directly on the document element
+  // to avoid a flash of the default theme on page load
+  // Move it to this hook to prevent duplicated provider with same behaviour.
+  useEffect(() => {
+    if (me.me.settings && me.me.settings.theme === Theme.DARK) {
+      document.documentElement.classList.add('dark', 'bg-slate-900');
+    } else if (
+      (!me.me.settings || me.me.settings.theme === Theme.AUTO) &&
+      window.matchMedia('(prefers-color-scheme: dark)').matches
+    ) {
+      document.documentElement.classList.add('dark', 'bg-slate-900');
+    }
+  }, [me]);
+
   // Remove __typename from me object to avoid errors when using the spread
   // operator
   delete me?.__typename;
@@ -83,9 +141,10 @@ export const MeProvider: React.FC<MeProviderProps> = ({
   const value = {
     ...(me as Omit<MeQuery, '__typename'>),
     refetchMe,
+    updateSettings,
     isMe,
     isFollowed,
-  };
+  } satisfies MeContextValue;
 
   return (
     <ConditionalWrapper
