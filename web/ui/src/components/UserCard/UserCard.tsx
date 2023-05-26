@@ -23,8 +23,9 @@ export const UserCard: React.FC<PropsWithClassName<UserCardProps>> = ({
   return (
     <div
       className={classNames(
+        '[--card-width:200px]',
         'relative group',
-        'text-center grow-[1] min-w-[200px] max-w-[200px] transition-all',
+        'text-center grow-[1] min-w-[var(--card-width)] max-w-[var(--card-width)] transition-all',
         'rounded-lg border-2 border-transparent hover:cursor-pointer',
         className
       )}
@@ -72,7 +73,10 @@ export const UserCard: React.FC<PropsWithClassName<UserCardProps>> = ({
               </Tooltip>
             )}
           </h2>
-          <Name className="font-light min-w-0 w-full" user={user} />
+          <Name
+            className="font-light min-w-0 w-[calc(var(--card-width)_-_1rem)]"
+            user={user}
+          />
           {user.nickname && user.nickname !== '' && (
             <p className="flex justify-start items-center space-x-1 my-1 text-sm">
               <AkaBadgy /> <span>{user.nickname}</span>
