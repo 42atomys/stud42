@@ -15,6 +15,15 @@ module.exports = {
         '3xl': '1792px',
         '4xl': '2048px',
       },
+      keyframes: {
+        progress: {
+          '0%': { width: '0%' },
+          '100%': { width: '100%' },
+        },
+      },
+      animation: {
+        progress: 'progress 1s linear',
+      },
     },
   },
   plugins: [],

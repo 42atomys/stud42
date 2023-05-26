@@ -15,6 +15,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
+import { useNotification } from './notifications';
 import type { MeContextValue, MeProviderProps } from './types';
 
 const MeContext = createContext<MeContextValue>({
@@ -36,6 +37,7 @@ export const MeProvider: React.FC<MeProviderProps> = ({
   apolloClient,
   session,
 }) => {
+  const { addNotification } = useNotification();
   const [me, setMe] = useState<MeQuery>({
     me: { settings: {} } as MeQuery['me'],
     myFollowings: [],
@@ -88,6 +90,16 @@ export const MeProvider: React.FC<MeProviderProps> = ({
     client: apolloClient ? apolloClient : undefined,
     refetchQueries: ['me'],
     awaitRefetchQueries: true,
+    onCompleted: (data) => {
+      if (!data) return;
+
+      addNotification({
+        title: 'Settings updated',
+        message: 'Your settings have been updated.',
+        type: 'success',
+        duration: 5000,
+      });
+    },
   });
 
   /**

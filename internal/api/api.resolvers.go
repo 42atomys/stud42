@@ -200,17 +200,21 @@ func (r *mutationResolver) UpdateMe(ctx context.Context, input typesgen.UpdateMe
 
 	s3Endpoint := viper.GetString("api.s3.users.endpoint")
 	if input.AvatarURL != nil && *input.AvatarURL != "" && !strings.HasPrefix(*input.AvatarURL, s3Endpoint) {
-		return nil, graphql.ErrorOnPath(ctx, errors.New("this is not a valid avatar URL"))
+		return nil, graphql.ErrorOnPath(ctx, errors.New("invalid avatar url"))
 	}
 
 	if input.CoverURL != nil && *input.CoverURL != "" && !strings.HasPrefix(*input.CoverURL, s3Endpoint) {
-		return nil, graphql.ErrorOnPath(ctx, errors.New("this is not a valid cover URL"))
+		return nil, graphql.ErrorOnPath(ctx, errors.New("invalid cover url"))
 	}
 
 	// For the moment, only sponsors can change their nickname.
 	// This will change in the future.
 	if input.Nickname != nil && !utils.Contains(cu.Flags, gotype.UserFlagSponsor) {
 		return nil, graphql.ErrorOnPath(ctx, errors.New("you cannot change your nickname, you are not a sponsor"))
+	}
+
+	if input.Nickname != nil && len(*input.Nickname) > 20 {
+		return nil, graphql.ErrorOnPath(ctx, errors.New("your nickname cannot be longer than 20 characters"))
 	}
 
 	updatedUser, err := r.client.User.UpdateOne(cu).
@@ -461,13 +465,13 @@ func (r *queryResolver) PresignedUploadURL(ctx context.Context, contentType stri
 
 	// Validate the content type
 	if !utils.Contains([]string{"image/png", "image/jpeg"}, contentType) {
-		return "", fmt.Errorf("invalid content type. Must be an image")
+		return "", fmt.Errorf("we only accept png and jpeg files")
 	}
 
 	// Validate the content length
 	const _5MB = 5 * 1024 * 1024
 	if contentLength > _5MB {
-		return "", fmt.Errorf("invalid content length. Must be less than 5MB")
+		return "", fmt.Errorf("the file is too big. Max size is 5MB")
 	}
 
 	// File extension

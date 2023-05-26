@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
+import { PropsWithClassName } from 'types/globals';
 
 /**
  * MultiplePortal is used to create a portal that is not unique in the DOM.
@@ -11,11 +12,9 @@ import { createPortal } from 'react-dom';
  * DOM. The `key` prop is used to identify the portal in React. The `key` prop
  * is optional, but it is recommended to use it to avoid React warnings.
  */
-const MultiplePortal: React.FC<React.PropsWithChildren<PortalInstance>> = ({
-  key,
-  portalDOMId: portalId,
-  children,
-}) => {
+const MultiplePortal: React.FC<
+  React.PropsWithChildren<PropsWithClassName<PortalInstance>>
+> = ({ key, portalDOMId: portalId, children, className }) => {
   // create div element only once using ref
   const elementContainer = useRef<HTMLDivElement | null>(null);
   if (!elementContainer.current && typeof document !== 'undefined')
@@ -28,6 +27,7 @@ const MultiplePortal: React.FC<React.PropsWithChildren<PortalInstance>> = ({
     if (!portalElement) {
       portalElement = document.createElement('div');
       portalElement.id = portalId;
+      if (className) portalElement.classList.value = className;
       document.body.appendChild(portalElement);
     }
 
@@ -36,7 +36,7 @@ const MultiplePortal: React.FC<React.PropsWithChildren<PortalInstance>> = ({
     return () => {
       portalElement?.removeChild(el);
     };
-  }, [portalId]);
+  }, [portalId, className]);
 
   if (!window) return null;
 
@@ -51,11 +51,9 @@ const MultiplePortal: React.FC<React.PropsWithChildren<PortalInstance>> = ({
  * DOM. The `key` prop is used to identify the portal in React. The `key` prop
  * is optional, but it is recommended to use it to avoid React warnings.
  */
-const SingletonPortal: React.FC<React.PropsWithChildren<PortalInstance>> = ({
-  key,
-  portalDOMId: portalId,
-  children,
-}) => {
+const SingletonPortal: React.FC<
+  React.PropsWithChildren<PropsWithClassName<PortalInstance>>
+> = ({ key, portalDOMId: portalId, children, className }) => {
   // create div element only once using ref
   const elementContainer = useRef<HTMLElement | null>(null);
   if (!elementContainer.current && typeof document !== 'undefined') {
@@ -64,6 +62,7 @@ const SingletonPortal: React.FC<React.PropsWithChildren<PortalInstance>> = ({
     if (!elementContainer.current) {
       elementContainer.current = document.createElement('div');
       elementContainer.current.id = portalId;
+      if (className) elementContainer.current.classList.value = className;
       document.body.appendChild(elementContainer.current);
     }
   }
@@ -81,10 +80,9 @@ const SingletonPortal: React.FC<React.PropsWithChildren<PortalInstance>> = ({
  * DOM. The `key` prop is used to identify the portal in React. The `key` prop
  * is optional, but it is recommended to use it to avoid React warnings.
  */
-export const Portal: React.FC<React.PropsWithChildren<PortalProps>> = ({
-  singleton,
-  ...props
-}) => {
+export const Portal: React.FC<
+  React.PropsWithChildren<PropsWithClassName<PortalProps>>
+> = ({ singleton, ...props }) => {
   if (singleton) {
     return SingletonPortal.call(null, props);
   }

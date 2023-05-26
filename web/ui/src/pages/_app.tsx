@@ -1,12 +1,30 @@
 import { ApolloProvider } from '@apollo/client';
-import useNotification from '@components/Notification';
 import { MeProvider } from '@ctx/currentUser';
+import { NotificationProvider, useNotification } from '@ctx/notifications';
 import { useApollo } from '@lib/apollo';
 import { SessionProviderProps, getSession } from 'next-auth/react';
 import { AppContext, AppProps } from 'next/app';
 import Script from 'next/script';
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import '../styles/globals.css';
+
+const InteractiveApp: React.FC<
+  React.PropsWithChildren<{
+    initialApolloState?: unknown;
+    session?: SessionProviderProps['session'];
+  }>
+> = ({ initialApolloState, session, children }) => {
+  const { addNotification } = useNotification();
+  const apolloClient = useApollo(initialApolloState, { addNotification });
+
+  return (
+    <ApolloProvider client={apolloClient}>
+      <MeProvider apolloClient={apolloClient} session={session}>
+        {children}
+      </MeProvider>
+    </ApolloProvider>
+  );
+};
 
 const Interface = ({
   Component,
@@ -14,9 +32,7 @@ const Interface = ({
   pageProps: props = {},
 }: AppProps & SessionProviderProps) => {
   const { initialApolloState, ...pageProps } = props;
-  const apolloClient = useApollo(initialApolloState);
 
-  const { NotificationProvider, NotificationContainer } = useNotification();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const MemorizedComponent = useMemo(() => Component, [pageProps]);
 
@@ -25,14 +41,14 @@ const Interface = ({
 
   return (
     <>
-      <ApolloProvider client={apolloClient}>
-        <MeProvider apolloClient={apolloClient} session={session}>
-          <NotificationProvider>
-            {getLayout(<MemorizedComponent {...pageProps} />)}
-            <NotificationContainer />
-          </NotificationProvider>
-        </MeProvider>
-      </ApolloProvider>
+      <NotificationProvider>
+        <InteractiveApp
+          initialApolloState={initialApolloState}
+          session={session}
+        >
+          {getLayout(<MemorizedComponent {...pageProps} />)}
+        </InteractiveApp>
+      </NotificationProvider>
       <Script
         src="https://kit.fontawesome.com/a8d6f88c41.js"
         crossOrigin="anonymous"

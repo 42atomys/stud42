@@ -1,9 +1,4 @@
-import {
-  DetailedHTMLProps,
-  Dispatch,
-  InputHTMLAttributes,
-  KeyboardEventHandler,
-} from 'react';
+import { DetailedHTMLProps, Dispatch, InputHTMLAttributes } from 'react';
 import { Maybe } from 'types/globals';
 
 interface InputProps<S> {
@@ -24,10 +19,6 @@ type InputTextType =
   | 'url'
   | 'search';
 
-interface KeyDownEvent {
-  onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
-}
-
 interface SelectInputProps<S> extends InputProps<S>, KeyDownEvent {
   name?: string;
   selectedValue: S;
@@ -45,7 +36,9 @@ interface FileInputProps<S>
       keyof InputProps<S> | 'type' | 'value' | 'id'
     > {}
 
-interface TextInputProps<S> extends InputProps<S>, KeyDownEvent {
+interface TextInputProps<S>
+  extends InputProps<S>,
+    Omit<React.HTMLProps<HTMLInputElement>, 'onChange'> {
   type: InputTextType = 'text';
   // debounce is in milliseconds (ms) if you want to use it to avoid update the
   // state on every key press
