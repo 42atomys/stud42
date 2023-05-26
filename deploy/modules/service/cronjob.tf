@@ -1,4 +1,4 @@
-resource "kubernetes_cron_job" "app" {
+resource "kubernetes_cron_job_v1" "app" {
   count = var.enabled && var.kind == "CronJob" ? 1 : 0
 
   depends_on = [

@@ -14,7 +14,7 @@ module "jwtks_service" {
 
   nodeSelector = local.nodepoolSelector["services"]
 
-  replicas = 1
+  replicas = 2
   autoscaling = {
     enabled     = true
     minReplicas = 2

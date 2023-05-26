@@ -77,7 +77,7 @@ resource "kubernetes_manifest" "rabbitmq" {
   }
 }
 
-resource "kubernetes_pod_disruption_budget" "rabbitmq" {
+resource "kubernetes_pod_disruption_budget_v1" "rabbitmq" {
   depends_on = [
     kubernetes_manifest.rabbitmq
   ]
