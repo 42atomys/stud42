@@ -1,4 +1,4 @@
-import { MeQuery } from '@graphql.d';
+import { MeQuery, SettingsInput } from '@graphql.d';
 
 export interface MeContextValue extends Omit<MeQuery, '__typename'> {
   // Function to update the current user in the session storage
@@ -11,6 +11,9 @@ export interface MeContextValue extends Omit<MeQuery, '__typename'> {
   // string and returns true or false depending on whether the entity is followed
   // by the current user or not.
   isFollowed: (entity: Pick<User, 'id'> | string) => boolean;
+  // Function that takes the new settings and updates the current user settings
+  // in the database and refetches the current user.
+  updateSettings: (settings: Partial<SettingsInput>) => Promise<void>;
 }
 
 type MeProviderProps = React.PropsWithChildren<{

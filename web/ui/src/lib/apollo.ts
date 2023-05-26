@@ -9,7 +9,7 @@ import {
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
-import { persistCache, SessionStorageWrapper } from 'apollo3-cache-persist';
+import { LocalStorageWrapper, persistCache } from 'apollo3-cache-persist';
 import merge from 'deepmerge';
 import Cookies from 'js-cookie';
 import { useMemo } from 'react';
@@ -75,7 +75,8 @@ const createApolloClient = () => {
   ) {
     persistCache({
       cache,
-      storage: new SessionStorageWrapper(window.sessionStorage),
+      storage: new LocalStorageWrapper(window.sessionStorage),
+      trigger: 'write',
     });
   }
 
