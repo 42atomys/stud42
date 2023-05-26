@@ -173,6 +173,7 @@ query presignedUploadURL(
   )
 }
 
+# @deprecated
 query myApparenceSettings {
   me {
     id
@@ -206,6 +207,9 @@ query me {
 
     currentLocation {
       ...LocationBasicData
+    }
+    settings {
+      ...ApparenceSettings
     }
   }
 

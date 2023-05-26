@@ -1,7 +1,6 @@
 import Avatar from '@components/Avatar';
 import { useMe } from '@ctx/currentUser';
 import { ClusterMapAvatarSize } from '@graphql.d';
-import useSettings from '@lib/useSettings';
 import classNames from 'classnames';
 import { motion } from 'framer-motion';
 import { Children } from 'react';
@@ -55,8 +54,11 @@ export const ClusterWorkspaceWithUser = ({
     location: MapLocation
   ) => void;
 }) => {
-  const [settings] = useSettings();
-  const { isMe, isFollowed } = useMe();
+  const {
+    isMe,
+    isFollowed,
+    me: { settings },
+  } = useMe();
 
   return (
     <ClusterContext.Consumer>
