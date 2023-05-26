@@ -1,3 +1,4 @@
+import { NotificationProps } from '@components/Notification/types';
 import { MeQuery, SettingsInput } from '@graphql.d';
 
 export interface MeContextValue extends Omit<MeQuery, '__typename'> {
@@ -20,3 +21,9 @@ type MeProviderProps = React.PropsWithChildren<{
   apolloClient?: ApolloClient<any>;
   session: Session | null;
 }>;
+
+export interface NotificationContextValue {
+  notificationsCount: number;
+  addNotification: (notification: Omit<NotificationProps, 'id'>) => void;
+  removeNotification: (notification: NotificationProps) => void;
+}
