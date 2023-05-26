@@ -199,6 +199,23 @@
       }
     },
     {
+      "label": "Run dragonfly cli (redis-cli)",
+      "detail": "Execute redis-cli on container",
+      "type": "process",
+      "isBackground": true,
+      "command": "redis-cli",
+      "icon": {
+        "id": "debug-start",
+        "color": "terminal.ansiRed"
+      },
+      "problemMatcher": [],
+      "args": ["-h", "dragonfly", "-p", "6379"],
+      "presentation": {
+        "focus": true,
+        "panel": "dedicated"
+      }
+    },
+    {
       "label": "Populate DB with campus",
       "detail": "Execute the campus crawler to populate your development database with campus (need 42 credentials)",
       "type": "shell",

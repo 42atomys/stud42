@@ -70,6 +70,35 @@ resource "kubernetes_stateful_set" "app" {
           }
         }
 
+        dynamic "init_container" {
+          for_each = { for k, v in var.volumeMounts : k => v if var.fixPermissions == true && v.readOnly == false }
+
+          content {
+            name  = "fix-permissions-${init_container.key}"
+            image = "busybox"
+            command = [
+              "chown",
+              "-R",
+              "${var.containerSecurityContext.runAsUser}:${var.containerSecurityContext.runAsGroup}",
+              init_container.value.mountPath,
+            ]
+
+            security_context {
+              run_as_group    = 0
+              run_as_user     = 0
+              run_as_non_root = false
+            }
+
+            volume_mount {
+              name              = init_container.value.volumeName
+              mount_path        = init_container.value.mountPath
+              read_only         = lookup(init_container.value, "readOnly", false)
+              sub_path          = lookup(init_container.value, "subPath", null)
+              mount_propagation = lookup(init_container.value, "mountPropagation", null)
+            }
+          }
+        }
+
         security_context {
           run_as_user         = lookup(var.podSecurityContext, "runAsUser", 1000)
           run_as_group        = lookup(var.podSecurityContext, "runAsGroup", 1000)

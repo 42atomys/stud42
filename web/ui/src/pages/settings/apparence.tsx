@@ -6,14 +6,17 @@ import {
   SettingsTableRow,
   ThemePreview,
 } from '@containers/settings';
+import { useMe } from '@ctx/currentUser';
 import { ClusterMapAvatarSize, Theme } from '@graphql.d';
-import useSettings from '@lib/useSettings';
 import { NextPage } from 'next';
 
 type PageProps = {};
 
 const ApparenceSettingPage: NextPage<PageProps> = () => {
-  const [settings, setSettings] = useSettings();
+  const {
+    me: { settings },
+    updateSettings,
+  } = useMe();
 
   return (
     <SettingsLayout page="apparence">
@@ -23,19 +26,19 @@ const ApparenceSettingPage: NextPage<PageProps> = () => {
         system and automatically switch between light and dark themes."
       >
         <div className="flex flex-col lg:flex-row space-y-8 lg:space-y-0 items-center justify-around">
-          <div onClick={() => setSettings({ theme: Theme.AUTO })}>
+          <div onClick={() => updateSettings({ theme: Theme.AUTO })}>
             <ThemePreview
               themeName="auto"
               active={settings.theme === Theme.AUTO}
             />
           </div>
-          <div onClick={() => setSettings({ theme: Theme.LIGHT })}>
+          <div onClick={() => updateSettings({ theme: Theme.LIGHT })}>
             <ThemePreview
               themeName="light"
               active={settings.theme === Theme.LIGHT}
             />
           </div>
-          <div onClick={() => setSettings({ theme: Theme.DARK })}>
+          <div onClick={() => updateSettings({ theme: Theme.DARK })}>
             <ThemePreview
               themeName="dark"
               active={settings.theme === Theme.DARK}
@@ -59,7 +62,7 @@ const ApparenceSettingPage: NextPage<PageProps> = () => {
               selectedValue={settings.clusterMapAvatarSize}
               defaultValue={ClusterMapAvatarSize.AUTO}
               onChange={(value) =>
-                setSettings({
+                updateSettings({
                   clusterMapAvatarSize: value as ClusterMapAvatarSize,
                 })
               }

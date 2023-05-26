@@ -23,23 +23,26 @@ export const UserCard: React.FC<PropsWithClassName<UserCardProps>> = ({
   return (
     <div
       className={classNames(
+        '[--card-width:200px]',
         'relative group',
-        'text-center grow-[1] min-w-[200px] max-w-[200px] transition-all',
-        'rounded-lg border-2 border-transparent hover:cursor-pointer overflow-hidden',
+        'text-center grow-[1] min-w-[var(--card-width)] max-w-[var(--card-width)] transition-all',
+        'rounded-lg border-2 border-transparent hover:cursor-pointer',
         className
       )}
     >
       {hasCover && (
-        <div
-          className={classNames(
-            'absolute top-0 left-0 right-0 bg-cover bg-center w-full h-full blur-sm scale-110',
-            '[-webkit-mask-image:linear-gradient(rgb(0,0,0)0%,rgba(0,0,0,0)58%)]',
-            'dark:[-webkit-mask-image:linear-gradient(rgb(0,0,0)42%,rgba(0,0,0,0.2)58%)]'
-          )}
-          style={{
-            backgroundImage: `url(${user.coverURL})`,
-          }}
-        />
+        <div className="absolute top-0 left-0 right-0 overflow-hidden w-full h-full rounded-lg">
+          <div
+            className={classNames(
+              'bg-cover bg-center w-full h-full blur-sm scale-110',
+              '[-webkit-mask-image:linear-gradient(rgb(0,0,0)0%,rgba(0,0,0,0)58%)]',
+              'dark:[-webkit-mask-image:linear-gradient(rgb(0,0,0)42%,rgba(0,0,0,0.2)58%)]'
+            )}
+            style={{
+              backgroundImage: `url(${user.coverURL})`,
+            }}
+          />
+        </div>
       )}
       <div className="relative w-full h-full flex flex-col items-center justify-center p-4 z-10">
         <Avatar
@@ -70,7 +73,10 @@ export const UserCard: React.FC<PropsWithClassName<UserCardProps>> = ({
               </Tooltip>
             )}
           </h2>
-          <Name className="font-light min-w-0 w-full" user={user} />
+          <Name
+            className="font-light min-w-0 w-[calc(var(--card-width)_-_1rem)]"
+            user={user}
+          />
           {user.nickname && user.nickname !== '' && (
             <p className="flex justify-start items-center space-x-1 my-1 text-sm">
               <AkaBadgy /> <span>{user.nickname}</span>

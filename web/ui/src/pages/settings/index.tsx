@@ -9,7 +9,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
   return {
     redirect: {
-      destination: `/settings/${category || 'apparence'}`,
+      destination: `/settings/${category || 'profile'}`,
       permanent: false,
     },
     props: {},

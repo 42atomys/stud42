@@ -654,3 +654,9 @@ variable "serviceType" {
     error_message = "serviceType must be one of ClusterIP, NodePort or LoadBalancer"
   }
 }
+
+variable "fixPermissions" {
+  type        = bool
+  description = "Fix permissions of the mounted volumes (start an init container as root to chown the volumes)"
+  default     = false
+}

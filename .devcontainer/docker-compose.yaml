@@ -25,6 +25,7 @@ services:
       GO_ENV: development
       APP_VERSION: indev
       DATABASE_URL: postgresql://postgres:postgres@database:5432/s42?sslmode=disable
+      KEYVALUE_STORE_URL: redis://:@dragonfly:6379
       AMQP_URL: amqp://rabbitmq:rabbitmq@rabbitmq:5672
       CORS_ORIGIN: http://localhost:3000
       SEARCHENGINE_MEILISEARCH_HOST: http://meilisearch:7700
@@ -60,6 +61,17 @@ services:
     # Add "forwardPorts": ["5432"] to **devcontainer.json** to forward PostgreSQL locally.
     # (Adding the "ports" property to this file will not forward from a Codespace.)
 
+  dragonfly:
+    hostname: s42-dragonfly
+    image: 'docker.dragonflydb.io/dragonflydb/dragonfly'
+    restart: unless-stopped
+    ulimits:
+      memlock: -1
+    volumes:
+      - dragonfly-data:/data
+    # Use "forwardPorts" in **devcontainer.json** to forward an workspace port locally.
+    # (Adding the "ports" property to this file will not forward from a Codespace.)
+
   rabbitmq:
     hostname: s42-rabbitmq
     image: ghcr.io/42atomys/s42-rabbitmq:3.10.2-management
@@ -91,6 +103,7 @@ services:
 
 volumes:
   postgres-data:
+  dragonfly-data:
   meilisearch-data:
   minio-data:
 

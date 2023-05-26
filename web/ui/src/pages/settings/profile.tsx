@@ -8,6 +8,7 @@ import {
 } from '@containers/settings';
 import SettingsLayout from '@containers/settings/SettingsLayout';
 import { useMe } from '@ctx/currentUser';
+import { useNotification } from '@ctx/notifications';
 import {
   PresignedUploadUrlKind,
   UserFlag,
@@ -21,12 +22,25 @@ import { useState } from 'react';
 type PageProps = {};
 
 const ProfileSettingPage: NextPage<PageProps> = () => {
-  const { me } = useMe();
+  const { me, refetchMe } = useMe();
+  const { addNotification } = useNotification();
   const [showProfile, setShowProfile] = useState(false);
   const [presignedUrl] = usePresignedUploadUrlLazyQuery({
     fetchPolicy: 'no-cache',
   });
-  const [updateMe] = useUpdateMeMutation();
+  const [updateMe] = useUpdateMeMutation({
+    onCompleted: (d) => {
+      if (!d) return;
+
+      refetchMe();
+      addNotification({
+        type: 'success',
+        title: 'Profile updated',
+        message: 'Your profile has been updated successfully',
+        duration: 5000,
+      });
+    },
+  });
 
   if (!me.id) {
     return (
@@ -61,10 +75,10 @@ const ProfileSettingPage: NextPage<PageProps> = () => {
         <SettingsTable>
           <SettingsTableRow
             title="Cover Image"
-            description="Recommended size: 465 x 300. Maximum size: 1Mb"
+            description="Recommended size: 465 x 300. Maximum size: 5Mb"
           >
             <div className="flex items-center space-x-4">
-              {me.coverURL && (
+              {me.coverURL && me.coverURL != '' && (
                 <div
                   className="group rounded-lg w-[77px] h-[50px] bg-cover bg-center flex overflow-hidden cursor-pointer"
                   style={{ backgroundImage: `url(${me.coverURL})` }}
@@ -96,7 +110,16 @@ const ProfileSettingPage: NextPage<PageProps> = () => {
                       method: 'PUT',
                       body: coverFile,
                       headers: { 'Content-Type': coverFile.type },
-                    }).then(async () => {
+                    }).then(async (d) => {
+                      if (!d.ok) {
+                        return addNotification({
+                          type: 'error',
+                          title: 'Error uploading cover',
+                          message: 'There was an error uploading your cover',
+                          duration: 5000,
+                        });
+                      }
+
                       updateMe({
                         variables: {
                           input: {
@@ -137,6 +160,7 @@ const ProfileSettingPage: NextPage<PageProps> = () => {
             <TextInput
               name="nickname"
               type="text"
+              maxLength={20}
               defaultValue={me.nickname || ''}
               className="flex-1 bg-slate-50 dark:bg-slate-900"
               disabled={!me.flags?.includes(UserFlag.SPONSOR)}

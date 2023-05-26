@@ -24,7 +24,6 @@ func GetRandomRBGColor() *RGBColor {
 func GetRandomHexColor() string {
 	bytes := make([]byte, 3)
 
-	rand.Seed(time.Now().UnixNano())
 	_, err := randOnUnix().Read(bytes)
 	if err != nil {
 		panic(err)
