@@ -40,7 +40,7 @@ export const Search: SearchComponent = ({
             setLoader(true);
             setSelectedUser(user);
 
-            action(user);
+            action(user).finally(() => setLoader(false));
           }}
         >
           {({ open }) => (
