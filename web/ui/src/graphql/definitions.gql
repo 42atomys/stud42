@@ -173,16 +173,6 @@ query presignedUploadURL(
   )
 }
 
-# @deprecated
-query myApparenceSettings {
-  me {
-    id
-    settings {
-      ...ApparenceSettings
-    }
-  }
-}
-
 query me {
   me {
     id
@@ -279,20 +269,6 @@ query meWithFlags {
     currentCampus {
       ...CampusBasicData
     }
-  }
-}
-
-# @deprecated
-query myFollowings($followsGroupSlug: String) {
-  myFollowings(followsGroupSlug: $followsGroupSlug) {
-    id
-    lastLocation {
-      ...LocationBasicData
-      campus {
-        ...CampusBasicData
-      }
-    }
-    ...UserIdentyData
   }
 }
 
