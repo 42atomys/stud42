@@ -109,7 +109,11 @@ const ProfileSettingPage: NextPage<PageProps> = () => {
                     fetch(presignedURL, {
                       method: 'PUT',
                       body: coverFile,
-                      headers: { 'Content-Type': coverFile.type },
+                      headers: {
+                        'Content-Type': coverFile.type,
+                        'Content-Length': coverFile.size.toString(),
+                        'x-amz-acl': 'public-read',
+                      },
                     }).then(async (d) => {
                       if (!d.ok) {
                         return addNotification({

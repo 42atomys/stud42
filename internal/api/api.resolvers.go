@@ -486,19 +486,18 @@ func (r *queryResolver) PresignedUploadURL(ctx context.Context, contentType stri
 		aws.NewConfig().
 			WithEndpoint(viper.GetString("api.s3.users.endpoint")).
 			WithRegion(viper.GetString("api.s3.users.region")).
-			WithCredentials(credentials.NewCredentials(&credentials.EnvProvider{})),
-		&aws.Config{
-			S3ForcePathStyle: aws.Bool(true),
-		},
+			WithCredentials(credentials.NewCredentials(&credentials.EnvProvider{})).
+			WithS3ForcePathStyle(viper.GetBool("api.s3.users.forcePathStyle")),
 	)
 	request, _ := svc.PutObjectRequest(&s3.PutObjectInput{
 		Bucket:        aws.String(viper.GetString("api.s3.users.bucket")),
 		Key:           aws.String(strings.ToLower(kind.String()) + "/" + cu.ID.String() + "_" + uuid.NewString() + extension[0]),
 		ContentType:   aws.String(contentType),
 		ContentLength: aws.Int64(int64(contentLength)),
+		ACL:           aws.String("public-read"),
 	})
 	// Create the pre-signed url with an expiry
-	url, err := request.Presign(time.Minute)
+	url, err := request.Presign(5 * time.Minute)
 	if err != nil {
 		fmt.Println("Failed to generate a pre-signed url: ", err)
 		return "", err
