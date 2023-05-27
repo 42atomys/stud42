@@ -9,6 +9,11 @@ api:
       bucket: s42-users
       region: europe-west1
       endpoint: http://localhost:9000
+      # forcePathStyle is used to force the usage of the path style
+      # in the endpoint. This is used to use minio as a S3 compatible
+      # storage in local development, or in production with a provider
+      # that does not support the virtual host style.
+      forcePathStyle: true
 
 # Interface relatives configurations
 interface: {}

@@ -24,19 +24,15 @@ import (
 	"atomys.codes/stud42/internal/models/generated/location"
 	"atomys.codes/stud42/internal/models/generated/user"
 	"atomys.codes/stud42/internal/models/gotype"
+	"atomys.codes/stud42/internal/pkg/s3"
 	"atomys.codes/stud42/internal/pkg/searchengine"
 	"atomys.codes/stud42/pkg/cache"
 	"atomys.codes/stud42/pkg/duoapi"
 	"atomys.codes/stud42/pkg/utils"
 	"entgo.io/ent/dialect/sql"
 	"github.com/99designs/gqlgen/graphql"
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
-	"github.com/spf13/viper"
 )
 
 // IsSwimmer is the resolver for the isSwimmer field.
@@ -198,12 +194,16 @@ func (r *mutationResolver) UpdateMe(ctx context.Context, input typesgen.UpdateMe
 		return nil, err
 	}
 
-	s3Endpoint := viper.GetString("api.s3.users.endpoint")
-	if input.AvatarURL != nil && *input.AvatarURL != "" && !strings.HasPrefix(*input.AvatarURL, s3Endpoint) {
+	s3Client, err := s3.NewS3Client(s3.UsersBucketConfigKey)
+	if err != nil {
+		return nil, graphql.ErrorOnPath(ctx, errors.New("failed to connect to storage"))
+	}
+
+	if input.AvatarURL != nil && *input.AvatarURL != "" && !strings.HasPrefix(*input.AvatarURL, s3Client.GetBaseURL()) {
 		return nil, graphql.ErrorOnPath(ctx, errors.New("invalid avatar url"))
 	}
 
-	if input.CoverURL != nil && *input.CoverURL != "" && !strings.HasPrefix(*input.CoverURL, s3Endpoint) {
+	if input.CoverURL != nil && *input.CoverURL != "" && !strings.HasPrefix(*input.CoverURL, s3Client.GetBaseURL()) {
 		return nil, graphql.ErrorOnPath(ctx, errors.New("invalid cover url"))
 	}
 
@@ -480,31 +480,17 @@ func (r *queryResolver) PresignedUploadURL(ctx context.Context, contentType stri
 		return "", err
 	}
 
-	// Prepare the S3 request so a signature can be generated
-	svc := s3.New(
-		session.New(),
-		aws.NewConfig().
-			WithEndpoint(viper.GetString("api.s3.users.endpoint")).
-			WithRegion(viper.GetString("api.s3.users.region")).
-			WithCredentials(credentials.NewCredentials(&credentials.EnvProvider{})),
-		&aws.Config{
-			S3ForcePathStyle: aws.Bool(true),
-		},
-	)
-	request, _ := svc.PutObjectRequest(&s3.PutObjectInput{
-		Bucket:        aws.String(viper.GetString("api.s3.users.bucket")),
-		Key:           aws.String(strings.ToLower(kind.String()) + "/" + cu.ID.String() + "_" + uuid.NewString() + extension[0]),
-		ContentType:   aws.String(contentType),
-		ContentLength: aws.Int64(int64(contentLength)),
-	})
-	// Create the pre-signed url with an expiry
-	url, err := request.Presign(time.Minute)
+	// Initialize the s3 client
+	s3client, err := s3.NewS3Client(s3.UsersBucketConfigKey)
 	if err != nil {
-		fmt.Println("Failed to generate a pre-signed url: ", err)
 		return "", err
 	}
 
-	return url, nil
+	// Generate the key
+	key := fmt.Sprintf("%s/%s_%d%s", strings.ToLower(kind.String()), cu.ID, time.Now().Unix(), extension[0])
+
+	// Generate the presigned url
+	return s3client.PresignedUploadURL(key, contentType, int64(contentLength), "public-read", 5*time.Minute)
 }
 
 // MyFollowings is the resolver for the myFollowings field.
