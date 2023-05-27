@@ -124,13 +124,15 @@ export const MeProvider: React.FC<MeProviderProps> = ({
   // to avoid a flash of the default theme on page load
   // Move it to this hook to prevent duplicated provider with same behaviour.
   useEffect(() => {
-    if (me.me.settings && me.me.settings.theme === Theme.DARK) {
+    if (me.me.settings.theme === Theme.DARK) {
       document.documentElement.classList.add('dark', 'bg-slate-900');
     } else if (
-      (!me.me.settings || me.me.settings.theme === Theme.AUTO) &&
+      me.me.settings.theme === Theme.AUTO &&
       window.matchMedia('(prefers-color-scheme: dark)').matches
     ) {
       document.documentElement.classList.add('dark', 'bg-slate-900');
+    } else {
+      document.documentElement.classList.remove('dark', 'bg-slate-900');
     }
   }, [me]);
 
