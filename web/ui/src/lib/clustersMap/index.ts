@@ -4,6 +4,7 @@ import { Malaga } from './campus/malaga';
 import { Paris } from './campus/paris';
 import { Seoul } from './campus/seoul';
 import { Vienna } from './campus/vienna';
+import { Istanbul } from './campus/istanbul';
 import { CampusNames, ICampus } from './types';
 
 /**
@@ -21,6 +22,7 @@ export const Campuses: {
   [key in CampusNames]: ICampus;
 } = {
   helsinki: new Helsinki(),
+  istanbul: new Istanbul(),
   lausanne: new Lausanne(),
   malaga: new Malaga(),
   paris: new Paris(),
