@@ -39,7 +39,7 @@
     "classnames": "^2.3.2",
     "dayjs": "^1.11.7",
     "deepmerge": "^4.2.2",
-    "framer-motion": "^10.6.1",
+    "framer-motion": "^10.12.16",
     "google-protobuf": "^3.21.2",
     "graphql": "^16.6.0",
     "graphql-request": "^5.1.0",
