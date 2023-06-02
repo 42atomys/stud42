@@ -33,7 +33,7 @@
     "@sentry/browser": "^7.47.0",
     "@sentry/nextjs": "^7.47.0",
     "@sentry/node": "^7.47.0",
-    "@types/uuid": "^9.0.0",
+    "@types/uuid": "^9.0.1",
     "apollo3-cache-persist": "^0.14.1",
     "axios": "^1.2.1",
     "classnames": "^2.3.2",
