@@ -1,10 +1,10 @@
 import { Helsinki } from './campus/helsinki';
+import { Istanbul } from './campus/istanbul';
 import { Lausanne } from './campus/lausanne';
 import { Malaga } from './campus/malaga';
 import { Paris } from './campus/paris';
 import { Seoul } from './campus/seoul';
 import { Vienna } from './campus/vienna';
-import { Istanbul } from './campus/istanbul';
 import { CampusNames, ICampus } from './types';
 
 /**

@@ -1,3 +1,4 @@
+import { ConditionalWrapper } from '@components/ConditionalWrapper';
 import { TooltipProps } from '@components/Tooltip';
 import Tooltip from '@components/Tooltip/Tooltip';
 import { Contribute, Star } from '@lib/github';
@@ -86,19 +87,39 @@ export const Sidebar = ({
   const { open, setOpen } = useContext(SidebarContext);
   const { publicRuntimeConfig } = getConfig();
 
+  const isPrideMonth = new Date().getMonth() === 5;
   return (
     <div className="md:flex flex-row md:flex-row md:min-h-screen w-full md:w-auto drop-shadow-xl md:drop-shadow-none md:sticky md:top-0 md:h-screen z-40">
       <div className="flex flex-col text-slate-600 dark:text-slate-400 bg-slate-200 dark:bg-slate-900 flex-shrink-0">
         <div className="flex-shrink-0 p-4 flex flex-row justify-between">
-          <span className="text-lg font-display antialiased font-black tracking-widest text-gray-900 uppercase rounded-lg dark:text-white focus:outline-none focus:shadow-outline">
-            <Image
-              src="/assets/images/logo.svg"
-              alt="logo"
-              width={48}
-              height={48}
-              quality={100}
-            />
-          </span>
+          <div className="flex flex-col justify-center antialiased focus:outline-none focus:shadow-outline space-y-2">
+            <ConditionalWrapper
+              condition={isPrideMonth}
+              trueWrapper={(children) => (
+                <Tooltip
+                  text="Happy Pride Month!"
+                  size="sm"
+                  allowInteractions={false}
+                  direction="right"
+                  tooltipClassName="z-50"
+                >
+                  {children}
+                </Tooltip>
+              )}
+            >
+              <Image
+                src={
+                  isPrideMonth
+                    ? '/assets/images/logo_pride.svg'
+                    : '/assets/images/logo.svg'
+                }
+                alt="logo"
+                width={48}
+                height={48}
+                quality={100}
+              />
+            </ConditionalWrapper>
+          </div>
           <button
             className="rounded-lg md:hidden focus:outline-none focus:shadow-outline"
             onClick={() => setOpen(!open)}

@@ -3,12 +3,12 @@
  */
 export type CampusNames =
   | 'paris'
+  | 'istanbul'
   | 'helsinki'
   | 'malaga'
   | 'vienna'
   | 'seoul'
-  | 'lausanne'
-  | 'istanbul';
+  | 'lausanne';
 
 /**
  * Types of Cluster Map entities

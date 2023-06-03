@@ -2,8 +2,8 @@ import { ApolloProvider } from '@apollo/client';
 import { MeProvider } from '@ctx/currentUser';
 import { NotificationProvider, useNotification } from '@ctx/notifications';
 import { useApollo } from '@lib/apollo';
-import { SessionProviderProps, getSession } from 'next-auth/react';
-import { AppContext, AppProps } from 'next/app';
+import { SessionProvider, SessionProviderProps } from 'next-auth/react';
+import { AppProps } from 'next/app';
 import Script from 'next/script';
 import React, { useMemo } from 'react';
 import '../styles/globals.css';
@@ -18,20 +18,19 @@ const InteractiveApp: React.FC<
   const apolloClient = useApollo(initialApolloState, { addNotification });
 
   return (
-    <ApolloProvider client={apolloClient}>
-      <MeProvider apolloClient={apolloClient} session={session}>
-        {children}
-      </MeProvider>
-    </ApolloProvider>
+    <SessionProvider session={session}>
+      <ApolloProvider client={apolloClient}>
+        <MeProvider apolloClient={apolloClient}>{children}</MeProvider>
+      </ApolloProvider>
+    </SessionProvider>
   );
 };
 
 const Interface = ({
   Component,
-  session,
   pageProps: props = {},
 }: AppProps & SessionProviderProps) => {
-  const { initialApolloState, ...pageProps } = props;
+  const { initialApolloState, session, ...pageProps } = props;
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const MemorizedComponent = useMemo(() => Component, [pageProps]);
@@ -58,9 +57,10 @@ const Interface = ({
   );
 };
 
-Interface.getInitialProps = async ({ ctx }: AppContext) => {
-  const session = await getSession(ctx);
-  return { session };
-};
+//! Disable server side session fetching due to next-auth latency issues
+// Interface.getServerSideProps = async (context: GetServerSidePropsContext) => {
+//   const session = await getServerSession(context.req, context.res, nextAuthOptions);
+//   return { session };
+// };
 
 export default Interface;
