@@ -1,14 +1,14 @@
 import GraphQLAdapter from '@lib/GraphqlAdapter';
 import { decodeJWT, encodeJWT } from '@lib/jwt';
-import NextAuth, { AdapterUser } from 'next-auth';
+import NextAuth, { AdapterUser, NextAuthOptions } from 'next-auth';
 import FortyTwoProvider from 'next-auth/providers/42-school';
 import DiscordProvider from 'next-auth/providers/discord';
 import GithubProvider from 'next-auth/providers/github';
 import { DuoProfile, JWT } from 'types/next-auth';
 
-// For more information on each option (and a full list of options) go to
-// https://next-auth.js.org/configuration/options
-export default NextAuth({
+import type { NextApiRequest, NextApiResponse } from 'next';
+
+const nextAuthOptions: NextAuthOptions = {
   // @ts-ignore
   adapter: GraphQLAdapter(),
   // https://next-auth.js.org/configuration/providers
@@ -185,4 +185,28 @@ export default NextAuth({
 
   // Enable debug messages in the console if you are having problems
   debug: process.env.NODE_ENV !== 'production',
-});
+};
+
+const auth = async (req: NextApiRequest, res: NextApiResponse) => {
+  // Do whatever you want here, before the request is passed down to `NextAuth`
+  try {
+    console.log('auth');
+    console.table({
+      req,
+      res,
+    });
+
+    // calculate timing
+    const start = Date.now();
+    const result = await NextAuth(req, res, nextAuthOptions);
+    const end = Date.now();
+    const duration = end - start;
+
+    // log the result
+    console.log(`NextAuth took ${duration}ms`);
+
+    return result;
+  } catch (e) {}
+};
+
+export default auth;
