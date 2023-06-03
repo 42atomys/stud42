@@ -1,14 +1,14 @@
 import GraphQLAdapter from '@lib/GraphqlAdapter';
 import { decodeJWT, encodeJWT } from '@lib/jwt';
-import NextAuth, { AdapterUser } from 'next-auth';
+import NextAuth, { AdapterUser, AuthAction, NextAuthOptions } from 'next-auth';
 import FortyTwoProvider from 'next-auth/providers/42-school';
 import DiscordProvider from 'next-auth/providers/discord';
 import GithubProvider from 'next-auth/providers/github';
 import { DuoProfile, JWT } from 'types/next-auth';
+import { getActiveTransaction } from '@sentry/browser';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
-// For more information on each option (and a full list of options) go to
-// https://next-auth.js.org/configuration/options
-export default NextAuth({
+const nextAuthOptions: NextAuthOptions = {
   // @ts-ignore
   adapter: GraphQLAdapter(),
   // https://next-auth.js.org/configuration/providers
@@ -185,4 +185,22 @@ export default NextAuth({
 
   // Enable debug messages in the console if you are having problems
   debug: process.env.NODE_ENV !== 'production',
-});
+};
+
+const auth = async (req: NextApiRequest, res: NextApiResponse) => {
+  try {
+    // calculate timing to log it into span to analyse it
+    const start = Date.now();
+    const result = await NextAuth(req, res, nextAuthOptions);
+    const end = Date.now();
+    const duration = end - start;
+
+    // log the result
+    const transaction = getActiveTransaction();
+    transaction?.setData('nextauth-duration', duration);
+    transaction?.setData('nextauth-action', req.query.action as AuthAction);
+    return result;
+  } catch (e) {}
+};
+
+export default auth;

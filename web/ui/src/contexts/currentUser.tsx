@@ -115,6 +115,12 @@ export const MeProvider: React.FC<MeProviderProps> = ({
             ...settings,
           },
         },
+        onCompleted: () => {
+          // Update the local storage with the new theme settings
+          // to avoid a flash of the default theme on page load when
+          // the user is not logged in.
+          localStorage.setItem('theme', settings.theme || Theme.AUTO);
+        },
       });
     },
     [me, updateSettingsMutation]
@@ -124,8 +130,16 @@ export const MeProvider: React.FC<MeProviderProps> = ({
   // to avoid a flash of the default theme on page load
   // Move it to this hook to prevent duplicated provider with same behaviour.
   useEffect(() => {
-    if (me.me.settings.theme === Theme.DARK) {
+    if (me.me.settings.theme) {
+      localStorage.setItem('theme', me.me.settings.theme);
+    }
+
+    if (
+      localStorage.getItem('theme') === Theme.DARK ||
+      me.me.settings.theme === Theme.DARK
+    ) {
       document.documentElement.classList.add('dark', 'bg-slate-900');
+      return;
     } else if (
       me.me.settings.theme === Theme.AUTO &&
       window.matchMedia('(prefers-color-scheme: dark)').matches
