@@ -1,11 +1,11 @@
 import GraphQLAdapter from '@lib/GraphqlAdapter';
 import { decodeJWT, encodeJWT } from '@lib/jwt';
-import NextAuth, { AdapterUser, NextAuthOptions } from 'next-auth';
+import NextAuth, { AdapterUser, AuthAction, NextAuthOptions } from 'next-auth';
 import FortyTwoProvider from 'next-auth/providers/42-school';
 import DiscordProvider from 'next-auth/providers/discord';
 import GithubProvider from 'next-auth/providers/github';
 import { DuoProfile, JWT } from 'types/next-auth';
-
+import { getActiveTransaction } from '@sentry/browser';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 const nextAuthOptions: NextAuthOptions = {
@@ -188,23 +188,17 @@ const nextAuthOptions: NextAuthOptions = {
 };
 
 const auth = async (req: NextApiRequest, res: NextApiResponse) => {
-  // Do whatever you want here, before the request is passed down to `NextAuth`
   try {
-    console.log('auth');
-    console.table({
-      req,
-      res,
-    });
-
-    // calculate timing
+    // calculate timing to log it into span to analyse it
     const start = Date.now();
     const result = await NextAuth(req, res, nextAuthOptions);
     const end = Date.now();
     const duration = end - start;
 
     // log the result
-    console.log(`NextAuth took ${duration}ms`);
-
+    const transaction = getActiveTransaction();
+    transaction?.setData('nextauth-duration', duration);
+    transaction?.setData('nextauth-action', req.query.action as AuthAction);
     return result;
   } catch (e) {}
 };
