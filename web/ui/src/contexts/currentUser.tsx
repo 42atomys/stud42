@@ -8,6 +8,7 @@ import {
   useMeLazyQuery,
   useUpdateSettingsMutation,
 } from '@graphql.d';
+import { useSession } from 'next-auth/react';
 import React, {
   createContext,
   useCallback,
@@ -35,9 +36,9 @@ const MeContext = createContext<MeContextValue>({
 export const MeProvider: React.FC<MeProviderProps> = ({
   children,
   apolloClient,
-  session,
 }) => {
   const { addNotification } = useNotification();
+  const { status } = useSession();
   const [me, setMe] = useState<MeQuery>({
     me: { settings: {} } as MeQuery['me'],
     myFollowings: [],
@@ -164,7 +165,7 @@ export const MeProvider: React.FC<MeProviderProps> = ({
 
   return (
     <ConditionalWrapper
-      condition={!!session}
+      condition={status === 'authenticated'}
       trueWrapper={(c) => (
         <MeContext.Provider value={value}>{c}</MeContext.Provider>
       )}

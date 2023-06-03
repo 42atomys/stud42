@@ -1,5 +1,6 @@
 import { NotificationProps } from '@components/Notification/types';
 import { MeQuery, SettingsInput } from '@graphql.d';
+import { Session } from 'next-auth';
 
 export interface MeContextValue extends Omit<MeQuery, '__typename'> {
   // Function to update the current user in the session storage
@@ -19,7 +20,7 @@ export interface MeContextValue extends Omit<MeQuery, '__typename'> {
 
 type MeProviderProps = React.PropsWithChildren<{
   apolloClient?: ApolloClient<any>;
-  session: Session | null;
+  session?: Session;
 }>;
 
 export interface NotificationContextValue {

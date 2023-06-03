@@ -20,9 +20,7 @@ const InteractiveApp: React.FC<
   return (
     <SessionProvider session={session}>
       <ApolloProvider client={apolloClient}>
-        <MeProvider apolloClient={apolloClient} session={session}>
-          {children}
-        </MeProvider>
+        <MeProvider apolloClient={apolloClient}>{children}</MeProvider>
       </ApolloProvider>
     </SessionProvider>
   );
