@@ -18,9 +18,18 @@ auth:
   endpoints:
     sets: https://${rootDomain}/.well-known/jwks
     sign: https://${rootDomain}/auth/token
-  # Certs used to sign and validate the JWT
+  # Configuration about the JWT
   # Also called : The JWK
   jwk:
+    # The issuer of the JWT token (the auth service) should be
+    # the same as the one configured in the auth service. This
+    # is used to validate the JWT token.
+    issuer: "s42-id-provider"
+    # The audience of the JWT token (the app) should be the same
+    # as the one configured in the auth service. This is used to
+    # validate the JWT token too.
+    audience: "app:s42:system"
+    # Certificates used to sign and validate the JWT token.
     certPrivateKeyFile: /etc/certs/jwk/private.key
     certPublicKeyFile: /etc/certs/jwk/public.pem
 

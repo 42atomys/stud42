@@ -40,9 +40,18 @@ auth:
     # specific and cannot be called from outside the cluster without the
     # proper credentials.
     sign: http://localhost:5000/token
-  # Certs used to sign and validate the JWT
+  # Configuration about the JWT
   # Also called : The JWK
   jwk:
+    # The issuer of the JWT token (the auth service) should be
+    # the same as the one configured in the auth service. This
+    # is used to validate the JWT token.
+    issuer: "s42-local-provider"
+    # The audience of the JWT token (the app) should be the same
+    # as the one configured in the auth service. This is used to
+    # validate the JWT token too.
+    audience: "app:s42:system"
+    # Certificates used to sign and validate the JWT token.
     certPrivateKeyFile: /workspace/certs/private.key
     certPublicKeyFile: /workspace/certs/public.pem
 

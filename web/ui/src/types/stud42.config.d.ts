@@ -30,5 +30,24 @@ type Configuration = {
        */
       sign: string;
     };
+
+    /**
+     * Configuration about the JWT
+     * Also called : The JWK
+     */
+    jwk: {
+      /**
+       *  The issuer of the JWT token (the auth service) should be
+       * the same as the one configured in the auth service. This
+       * is used to validate the JWT token.
+       */
+      issuer: string;
+      /**
+       *  The audience of the JWT token (the app) should be the same
+       * as the one configured in the auth service. This is used to
+       * validate the JWT token too.
+       */
+      audience: string;
+    };
   };
 };

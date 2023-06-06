@@ -14,6 +14,7 @@ import (
 	"github.com/lestrrat-go/jwx/v2/jwt"
 	"github.com/rs/cors"
 	"github.com/rs/zerolog/log"
+	"github.com/spf13/viper"
 )
 
 /**
@@ -95,14 +96,14 @@ func tokenHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	token, err := jwt.NewBuilder().
-		Issuer(`s42-id-provider`).
+		Issuer(viper.GetString("auth.jwk.issuer")).
 		IssuedAt(time.Now()).
 		Expiration(time.Now().UTC().Add(time.Duration(request.Validity) * time.Second)).
 		NotBefore(time.Now().UTC()).
 		// Audience is not required, but it's a good idea to set it.
 		// Following the spec, it should be an array of strings containing the
 		// audience of the token. "{type}:{entity}:{scope}"
-		Audience([]string{"app:s42:system"}).
+		Audience([]string{viper.GetString("auth.jwk.audience")}).
 		// ID is required, and should be a string containing a unique identifier
 		// for the token. It's recommended to use a UUID.
 		// @TODO generate and set a unique ID to invalidate the token for more security.

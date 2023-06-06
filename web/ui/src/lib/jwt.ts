@@ -1,7 +1,6 @@
 import { getConfig, getServiceToken } from '@lib/config';
-import jwt, { JwtHeader } from 'jsonwebtoken';
-import JwksClient from 'jwks-rsa';
-import { JWT, JWTOptions } from 'next-auth/jwt';
+import { createRemoteJWKSet, jwtVerify } from 'jose';
+import { JWTOptions } from 'next-auth/jwt';
 
 /**
  * encodeJWT will encode a JWT token using the JWT library and the
@@ -43,29 +42,12 @@ export const encodeJWT: JWTOptions['encode'] = async ({ token, maxAge }) => {
 export const decodeJWT: JWTOptions['decode'] = async ({ token }) => {
   if (!token) return null;
 
-  const c = JwksClient({
-    jwksUri: getConfig().auth.endpoints.sets,
-  });
+  const JWTKS = createRemoteJWKSet(new URL(getConfig().auth.endpoints.sets));
 
-  const getKey = (
-    header: JwtHeader,
-    callback: (_: Error | null, publicKey: string) => void
-  ) => {
-    c.getSigningKey(header.kid, (err, key) => {
-      if (err || !key) return callback(err, '');
-      callback(err, key.getPublicKey());
-    });
-  };
-
-  return new Promise<JWT | null>((resolve, reject) => {
-    jwt.verify(
-      token,
-      getKey,
-      { algorithms: ['RS256'], clockTolerance: 5000 },
-      (err, decoded) => {
-        if (err) return reject(err);
-        return resolve(decoded as JWT);
-      }
-    );
-  });
+  return jwtVerify(token, JWTKS, {
+    algorithms: ['RS256'],
+    clockTolerance: 5000,
+    audience: getConfig().auth.jwk.audience,
+    issuer: getConfig().auth.jwk.issuer,
+  }).then((r) => r.payload);
 };
