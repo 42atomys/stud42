@@ -30,7 +30,7 @@ auth:
     #
     # In production, the auth endpoint is a HTTPS endpoint. Accessible
     # to the public.
-    sets: http://localhost:5500/.well-known/jwks
+    sets: http://localhost:5000/.well-known/jwks
     # The endpoint used to generate a JWT token from a user.
     # In order to use this endpoint, the `auth-service` must be running.
     # If you have access to the DEVENV you can use the public dev endpoint.
@@ -39,7 +39,7 @@ auth:
     # The communication with the authorization server is cluster
     # specific and cannot be called from outside the cluster without the
     # proper credentials.
-    sign: http://localhost:5500/token
+    sign: http://localhost:5000/token
   # Certs used to sign and validate the JWT
   # Also called : The JWK
   jwk:

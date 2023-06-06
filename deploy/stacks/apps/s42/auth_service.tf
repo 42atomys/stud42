@@ -57,7 +57,7 @@ module "auth_service" {
     }
 
     wellknow = {
-      containerPort = 5500
+      containerPort = 5000
       istioProtocol = "http"
     }
   }

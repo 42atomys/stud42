@@ -31,5 +31,5 @@ var authCmd = &cobra.Command{
 func init() {
 	serveCmd.AddCommand(authCmd)
 
-	authHttpPortFlag = authCmd.Flags().String("port", "5500", "port used to serve the http server of the jwt-provider")
+	authHttpPortFlag = authCmd.Flags().String("port", "5000", "port used to serve the http server of the jwt-provider")
 }

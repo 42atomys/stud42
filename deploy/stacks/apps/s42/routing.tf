@@ -27,7 +27,7 @@ module "istio" {
               destination = {
                 host = "auth-service.${var.namespace}.svc.cluster.local"
                 port = {
-                  number = 5500
+                  number = 5000
                 }
               }
             }
@@ -53,7 +53,7 @@ module "istio" {
               destination = {
                 host = "auth-service.${var.namespace}.svc.cluster.local"
                 port = {
-                  number = 5500
+                  number = 5000
                 }
               }
             }

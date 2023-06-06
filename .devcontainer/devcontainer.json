@@ -103,7 +103,7 @@
   "forwardPorts": [
     3000, // web-ui port
     4000, // api port
-    5500, // Authorization Service http port
+    5000, // Authorization Service http port
     "jaeger:16686", // the jaeger port
     "meilisearch:7700", // the meilisearch port
     "minio:9000", // the minio port
@@ -121,7 +121,7 @@
     "4000": {
       "label": "API"
     },
-    "5500": {
+    "5000": {
       "label": "Authorization Service"
     },
     "16686": {
