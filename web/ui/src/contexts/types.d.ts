@@ -20,7 +20,7 @@ export interface MeContextValue extends Omit<MeQuery, '__typename'> {
 
 type MeProviderProps = React.PropsWithChildren<{
   apolloClient?: ApolloClient<any>;
-  session?: Session;
+  session?: Maybe<Session>;
 }>;
 
 export interface NotificationContextValue {

@@ -13,7 +13,7 @@ on:
       kubeNamespace:
         required: true
         type: string
-        description: "The name of the Kubernetes namespace to deploy to (e.g. staging, production, previews, sandbox)"
+        description: "The name of the Kubernetes namespace to deploy to (e.g. staging, production, previews)"
       imageTag:
         required: true
         description: "The docker image tag to deploy"
@@ -54,7 +54,6 @@ jobs:
               stacks = ['pre-cluster', 'cluster'];
             }
             if (context.eventName == 'push' && context.ref == 'refs/heads/main' ) {
-              stacks.push('sandbox');
             } else {
               stacks.push('apps');
             }
@@ -139,7 +138,6 @@ jobs:
           TF_VAR_baseUrl: ${{ steps.envurl.outputs.url }}
           TF_VAR_webhooksEnabled: ${{ inputs.kubeNamespace == 'production' }}
           TF_VAR_crawlerEnabled: ${{ inputs.kubeNamespace == 'production' }}
-          TF_VAR_hasProvidedJWTKSCertificates: "false"
           TF_VAR_hasPersistentStorage: ${{ contains(fromJson('["production", "staging"]'), inputs.kubeNamespace) }}
         run: terraform apply -auto-approve -input=false
 

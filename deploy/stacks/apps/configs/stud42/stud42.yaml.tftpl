@@ -11,24 +11,18 @@ api:
 # Interface relatives configurations
 interface: {}
 
-# jwtks service relatives configurations
-jwtks:
+# auth service relatives configurations
+auth:
   # Endpoint of the public JWKSet can be used to validate
   # a JWT Token
   endpoints:
     sets: https://${rootDomain}/.well-known/jwks
-    sign: jwtks-service.${namespace}.svc.cluster.local:5000
+    sign: https://${rootDomain}/auth/token
   # Certs used to sign and validate the JWT
   # Also called : The JWK
   jwk:
     certPrivateKeyFile: /etc/certs/jwk/private.key
     certPublicKeyFile: /etc/certs/jwk/public.pem
-  # Certs used to secure the GRPC Endpoint with SSL/TLS
-  grpc:
-    insecure: ${namespace == "sandbox"}
-    certRootCaFile: /etc/certs/grpc/ca.crt
-    certPrivateKeyFile: /etc/certs/grpc/tls.key
-    certPublicKeyFile: /etc/certs/grpc/tls.crt
 
 discord:
   guildID: "248936708379246593"

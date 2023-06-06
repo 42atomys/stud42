@@ -4,11 +4,10 @@ module "s42" {
   appVersion = var.appsVersion["s42"]
   namespace  = var.namespace
 
-  rootDomain                   = var.baseUrl
-  hasProvidedJWTKSCertificates = var.hasProvidedJWTKSCertificates
-  hasPersistentStorage         = var.hasPersistentStorage
-  crawlerEnabled               = var.crawlerEnabled
-  webhookProcessorEnabled      = var.webhooksEnabled
+  rootDomain              = var.baseUrl
+  hasPersistentStorage    = var.hasPersistentStorage
+  crawlerEnabled          = var.crawlerEnabled
+  webhookProcessorEnabled = var.webhooksEnabled
 }
 
 module "webhooked" {

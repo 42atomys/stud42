@@ -18,42 +18,33 @@ api:
 # Interface relatives configurations
 interface: {}
 
-# jwtks service relatives configurations
-jwtks:
+# auth service relatives configurations
+auth:
   # Endpoint of the public JWKSet can be used to validate
   # a JWT Token
   endpoints:
     # The endpoint used to retrieve the public key for the JWT token.
     # This endpoint is a HTTP(S) endpoint. If you have access to the
     # DEVENV, you can use the public dev endpoint. Else, use the
-    # `jwtks-service` configured locally.
+    # `auth-service` configured locally.
     #
-    # In production, the JWTKS endpoint is a HTTPS endpoint. Accessible
+    # In production, the auth endpoint is a HTTPS endpoint. Accessible
     # to the public.
-    sets: https://sandbox.s42.dev/.well-known/jwks
-    # The endpoint used to retrieve the public key for the JWT token.
-    # This endpoint is a gRPC endpoint. In order to use this endpoint,
-    # the `jwtks-service` must be running. If you have access to the DEVENV
-    # you can use the public dev endpoint and set `insecure` to `true` to
-    # bypass the TLS certificate check during development ONLY.
+    sets: http://localhost:5500/.well-known/jwks
+    # The endpoint used to generate a JWT token from a user.
+    # In order to use this endpoint, the `auth-service` must be running.
+    # If you have access to the DEVENV you can use the public dev endpoint.
     #
-    # In production, the endpoint should be `secure` and use a TLS
-    # certificate. The communication with the signing server is cluster
-    # specific and cannot be called from outside the cluster.
-    sign: sandbox.s42.dev:51000
+    # In production, the endpoint should be `secure`.
+    # The communication with the authorization server is cluster
+    # specific and cannot be called from outside the cluster without the
+    # proper credentials.
+    sign: http://localhost:5500/token
   # Certs used to sign and validate the JWT
   # Also called : The JWK
   jwk:
-    certPrivateKeyFile: /etc/stud42/certs/private.key
-    certPublicKeyFile: /etc/stud42/certs/public.pem
-  # Certs used to secure the GRPC Endpoint with SSL/TLS
-  grpc:
-    # Set if the JWTKS grpc endpoint need to be insecure
-    # /!\ DONT SET AS TRUE IN PRODUCTION
-    insecure: true
-    certRootCaFile: /etc/stud42/certs/root.ca
-    certPrivateKeyFile: /etc/stud42/certs/server.key
-    certPublicKeyFile: /etc/stud42/certs/server.pem
+    certPrivateKeyFile: /workspace/certs/private.key
+    certPublicKeyFile: /workspace/certs/public.pem
 
 discord:
   guildID: "248936708379246593"

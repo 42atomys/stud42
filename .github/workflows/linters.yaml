@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        stack: ["pre-cluster", "cluster", "apps", "sandbox"]
+        stack: ["pre-cluster", "cluster", "apps"]
     defaults:
       run:
         working-directory: "deploy/stacks/${{ matrix.stack }}"
@@ -18,8 +18,7 @@ jobs:
         uses: hashicorp/setup-terraform@v2
       - name: Terraform Format
         env:
-          # Sandbox is not deployed to the production workspace.
-          TF_WORKSPACE: ${{ matrix.stack == 'sandbox' && 'sandbox' || 'production' }}
+          TF_WORKSPACE: "production"
         run: terraform fmt -check=true -recursive
 
   backend:
@@ -32,14 +31,6 @@ jobs:
         with:
           go-version: "1.20"
           check-latest: true
-      - name: Setup protoc
-        uses: arduino/setup-protoc@v1
-        with:
-          # TODO: Update to latest version when the issue
-          # https://github.com/arduino/setup-protoc/issues/33
-          # has been fixed
-          version: "3.x"
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Generate code
         run: make -f build/Makefile generate
       - name: golangci-lint
@@ -73,11 +64,7 @@ jobs:
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
-      - name: Install protoc
-        run: |
-          wget -O /tmp/protoc.zip https://github.com/protocolbuffers/protobuf/releases/download/v3.20.0/protoc-3.20.0-linux-x86_64.zip
-          unzip -ud /tmp/protoc /tmp/protoc.zip
-          mv /tmp/protoc/bin/protoc /usr/local/bin/protoc
+
       - name: Generate code
         run: yarn generate
 

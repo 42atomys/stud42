@@ -25,16 +25,21 @@
       "@pages/*": ["pages/*"],
       "@lib/*": ["lib/*"],
       "@graphql.d": ["graphql/generated.ts"],
-      "@grpc.d": ["grpc/"],
       "@assets/*": ["../public/assets/*"]
-    }
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
     "next.config.ts",
-    "src/lib/prototypes/string.js"
+    "src/lib/prototypes/string.js",
+    ".next/types/**/*.ts"
   ],
   "exclude": ["node_modules"]
 }

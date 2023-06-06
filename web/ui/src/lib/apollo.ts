@@ -15,6 +15,7 @@ import merge from 'deepmerge';
 import Cookies from 'js-cookie';
 import { useMemo } from 'react';
 import { ServerSideRequest } from 'types/next';
+import { nextAuthOptions } from './auth';
 
 type ApolloClientMetadata = {
   addNotification?: NotificationContextValue['addNotification'];
@@ -24,7 +25,7 @@ type ApolloClientMetadata = {
  * the token cookie name is used to store the token in the cookie and to read it
  * from the cookie
  */
-const tokenCookieName = '__s42.auth-token';
+const tokenCookieName = nextAuthOptions.cookies?.sessionToken?.name!;
 
 // Reuse client on the client-side.
 let apolloClient: ApolloClient<any>;

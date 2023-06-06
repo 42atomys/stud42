@@ -122,23 +122,12 @@ module "interface" {
       volumeName = "configuration"
       mountPath  = "/config"
       readOnly   = true
-    },
-    {
-      volumeName = "certs-grpc"
-      mountPath  = "/etc/certs/grpc"
-      readOnly   = true
     }
   ]
 
   volumesFromConfig = {
     configuration = {
       configMapName = "stud42-config"
-    }
-  }
-
-  volumesFromSecret = {
-    certs-grpc = {
-      secretName = "jwtks-service-grpc-internal-tls"
     }
   }
 }
