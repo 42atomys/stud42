@@ -51,11 +51,6 @@ module "auth_service" {
   }
 
   ports = {
-    signing = {
-      containerPort = 5000
-      istioProtocol = "tls"
-    }
-
     wellknow = {
       containerPort = 5000
       istioProtocol = "http"
