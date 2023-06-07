@@ -23,11 +23,6 @@ import { AdapterAccount, AdapterUser } from 'next-auth/adapters';
 import { ProviderType } from 'next-auth/providers';
 import type { DuoContext, S42Adapter } from './types';
 
-if (!process.env.NEXT_PUBLIC_GRAPHQL_API)
-  throw new Error('Missing NEXT_PUBLIC_GRAPHQL_API');
-
-const url = process.env.NEXT_PUBLIC_GRAPHQL_API;
-
 const providerMap: Record<string, AccountProvider> = {
   github: AccountProvider.GITHUB,
   '42-school': AccountProvider.DUO,
@@ -58,7 +53,7 @@ export const GraphQLAdapter = (): S42Adapter => {
           InternalCreateUserMutation,
           InternalCreateUserMutationVariables
         >(
-          url,
+          process.env.NEXT_PUBLIC_GRAPHQL_API!,
           InternalCreateUserDocument,
           {
             email: typedUser.email as string,
@@ -99,7 +94,7 @@ export const GraphQLAdapter = (): S42Adapter => {
           InternalGetUserQuery & { user: AdapterUser },
           InternalGetUserQueryVariables
         >(
-          url,
+          process.env.NEXT_PUBLIC_GRAPHQL_API!,
           InternalGetUserDocument,
           { id },
           { Authorization: `ServiceToken ${getServiceToken()}` }
@@ -122,7 +117,7 @@ export const GraphQLAdapter = (): S42Adapter => {
           InternalGetUserByEmailQuery & { user: AdapterUser },
           InternalGetUserByEmailQueryVariables
         >(
-          url,
+          process.env.NEXT_PUBLIC_GRAPHQL_API!,
           InternalGetUserByEmailDocument,
           { email },
           { Authorization: `ServiceToken ${getServiceToken()}` }
@@ -149,7 +144,7 @@ export const GraphQLAdapter = (): S42Adapter => {
           InternalGetUserByAccountQuery & { user: AdapterUser },
           InternalGetUserByAccountQueryVariables
         >(
-          url,
+          process.env.NEXT_PUBLIC_GRAPHQL_API!,
           InternalGetUserByAccountDocument,
           {
             provider: providerMap[provider],
@@ -182,7 +177,7 @@ export const GraphQLAdapter = (): S42Adapter => {
           InternalLinkAccountMutation,
           InternalLinkAccountMutationVariables
         >(
-          url,
+          process.env.NEXT_PUBLIC_GRAPHQL_API!,
           InternalLinkAccountDocument,
           {
             provider: providerMap[account.provider],
