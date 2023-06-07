@@ -63,7 +63,7 @@ module "auth_service" {
 
   envFromSecret = {
     SENTRY_DSN = {
-      key  = "JWTKS_SERVICE_DSN"
+      key  = "AUTH_SERVICE_DSN"
       name = "sentry-dsns"
     }
     S42_SERVICE_TOKEN = {
