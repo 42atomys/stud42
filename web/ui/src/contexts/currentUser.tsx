@@ -8,7 +8,8 @@ import {
   useMeLazyQuery,
   useUpdateSettingsMutation,
 } from '@graphql.d';
-import { useSession } from 'next-auth/react';
+import { nextAuthOptions } from '@lib/auth';
+import Cookies from 'js-cookie';
 import React, {
   createContext,
   useCallback,
@@ -37,8 +38,8 @@ export const MeProvider: React.FC<MeProviderProps> = ({
   children,
   apolloClient,
 }) => {
+  const authToken = Cookies.get(nextAuthOptions.cookies?.sessionToken?.name!);
   const { addNotification } = useNotification();
-  const { status } = useSession();
   const [me, setMe] = useState<MeQuery>({
     me: { settings: {} } as MeQuery['me'],
     myFollowings: [],
@@ -165,7 +166,7 @@ export const MeProvider: React.FC<MeProviderProps> = ({
 
   return (
     <ConditionalWrapper
-      condition={status === 'authenticated'}
+      condition={authToken !== undefined}
       trueWrapper={(c) => (
         <MeContext.Provider value={value}>{c}</MeContext.Provider>
       )}

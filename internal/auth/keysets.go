@@ -1,4 +1,4 @@
-package jwtks
+package auth
 
 import (
 	"crypto/rsa"

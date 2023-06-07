@@ -14,12 +14,12 @@
       "showLog": true
     },
     {
-      "name": "Launch JWTKS Service",
+      "name": "Launch Authorization Service",
       "type": "go",
       "request": "launch",
       "mode": "debug",
       "program": "${workspaceFolder}/main.go",
-      "args": ["serve", "jwtks"],
+      "args": ["serve", "auth"],
       "env": {
         "DEBUG": "true"
       }

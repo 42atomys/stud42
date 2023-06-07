@@ -1,5 +1,4 @@
 import { DuoContext, GithubContext } from '@lib/GraphqlAdapter';
-import { JwtPayload } from 'jsonwebtoken';
 import { DefaultSession, Profile, User } from 'next-auth';
 
 interface DuoProfile extends Profile {
@@ -9,7 +8,7 @@ interface DuoProfile extends Profile {
   }[];
 }
 
-interface JWT extends JwtPayload {
+interface JWT {
   aud: [string];
   exp: number;
   iat: number;
@@ -17,6 +16,7 @@ interface JWT extends JwtPayload {
   jti: string;
   nbf: number;
   sub: string;
+  [key: string]: any;
 }
 
 declare module 'next-auth' {

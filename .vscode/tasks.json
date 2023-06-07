@@ -43,6 +43,21 @@
       "problemMatcher": ["$go"]
     },
     {
+      "label": "Start project",
+      "detail": "Start all services in background",
+      "dependsOrder": "parallel",
+      "dependsOn": [
+        "Start API",
+        "Start Interface",
+        "Start Authorization Service"
+      ],
+      "icon": {
+        "id": "rocket",
+        "color": "terminal.ansiCyan"
+      },
+      "problemMatcher": ["$go"]
+    },
+    {
       "label": "Start API",
       "detail": "Start API in background",
       "type": "process",
@@ -75,6 +90,23 @@
         "panel": "dedicated"
       },
       "problemMatcher": ["$tsc"]
+    },
+    {
+      "label": "Start Authorization Service",
+      "detail": "Start Authorization service in background",
+      "type": "process",
+      "isBackground": true,
+      "command": "env",
+      "args": ["APP_NAME=auth", "go", "run", "main.go", "serve", "auth"],
+      "problemMatcher": ["$go"],
+      "icon": {
+        "id": "symbol-event",
+        "color": "terminal.ansiCyan"
+      },
+      "presentation": {
+        "focus": true,
+        "panel": "dedicated"
+      }
     },
     {
       "label": "Lint API",
