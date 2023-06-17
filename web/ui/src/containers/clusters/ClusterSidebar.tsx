@@ -38,6 +38,7 @@ export const ClusterSidebar = ({
       },
     });
   const myCampusName = me?.currentCampus?.name?.toLowerCase() || '';
+  console.log(me);
   const freePlacesPerCluster: { [key: string]: number } =
     locationsStatsByPrefixes
       .map((l) => {
