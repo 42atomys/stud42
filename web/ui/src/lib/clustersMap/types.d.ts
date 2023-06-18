@@ -15,10 +15,16 @@ export type CampusNames =
  * W = WORKSPACE
  * T = TEXT
  */
-export type ClusterMapEntity = null | Pillar | Workspace | Text;
+export type ClusterMapEntity =
+  | null
+  | Pillar
+  | Workspace
+  | PersonalWorkspace
+  | Text;
 
 type Pillar = 'P';
 type Workspace = `W:${string}`;
+type PersonalWorkspace = 'PW' | `PW:${string}`;
 type Text = `T:${string}`;
 
 /**
