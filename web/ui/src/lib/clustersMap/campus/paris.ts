@@ -6,7 +6,7 @@ import { CampusNames, ICampus } from '../types';
 export class Paris extends Campus implements ICampus {
   emoji = (): string => '🇫🇷';
 
-  name = (): CampusNames => 'paris';
+  name = (): CampusNames => 'paris'
 
   extractorRegexp = (): RegExp =>
     /(?<building>bess|paul)-(?<clusterWithLetter>f(?<cluster>\d+(?:A|B)?))(?<rowWithLetter>r(?<row>\d+))(?<workspaceWithLetter>s(?<workspace>\d+))/i;
@@ -20,258 +20,152 @@ export class Paris extends Campus implements ICampus {
         totalWorkspaces: 73,
         // prettier-ignore
         map: [
-          ['T:r1',   'P',  'P',  'P',  'P', null, null, 'W:bess-f1r1s1', 'W:bess-f1r1s2', 'W:bess-f1r1s3', 'W:bess-f1r1s4', 'W:bess-f1r1s5', 'W:bess-f1r1s6', 'W:bess-f1r1s7', 'W:bess-f1r1s8', null, null, 'W:bess-f1r1s9', 'W:bess-f1r1s10', 'W:bess-f1r1s11', 'W:bess-f1r1s12', 'W:bess-f1r1s13', 'W:bess-f1r1s14',             null, 'T:r1'],
-          ['T:r2',   'P',  'P',  'P',  'P', null, null,            null, 'W:bess-f1r2s1', 'W:bess-f1r2s2', 'W:bess-f1r2s3', 'W:bess-f1r2s4', 'W:bess-f1r2s5', 'W:bess-f1r2s6',            null, null, null, 'W:bess-f1r2s7',  'W:bess-f1r2s8',  'W:bess-f1r2s9', 'W:bess-f1r2s10', 'W:bess-f1r2s11', 'W:bess-f1r2s12',             null, 'T:r2'],
-          ['T:r3',   'P',  'P',  'P',  'P', null, null, 'W:bess-f1r3s1', 'W:bess-f1r3s2', 'W:bess-f1r3s3', 'W:bess-f1r3s4', 'W:bess-f1r3s5', 'W:bess-f1r3s6', 'W:bess-f1r3s7', 'W:bess-f1r3s8', null, null, 'W:bess-f1r3s9', 'W:bess-f1r3s10', 'W:bess-f1r3s11', 'W:bess-f1r3s12', 'W:bess-f1r3s13', 'W:bess-f1r3s14',             null, 'T:r3'],
+          ['T:r1',  'PW', 'PW', 'PW', 'PW', null, null, 'W:bess-f1r1s1', 'W:bess-f1r1s2', 'W:bess-f1r1s3', 'W:bess-f1r1s4', 'W:bess-f1r1s5', 'W:bess-f1r1s6', 'W:bess-f1r1s7', 'W:bess-f1r1s8', null, null, 'W:bess-f1r1s9', 'W:bess-f1r1s10', 'W:bess-f1r1s11', 'W:bess-f1r1s12', 'W:bess-f1r1s13', 'W:bess-f1r1s14',             null, 'T:r1'],
+          ['T:r2',  'PW', 'PW', 'PW', 'PW', null, null,            null, 'W:bess-f1r2s1', 'W:bess-f1r2s2', 'W:bess-f1r2s3', 'W:bess-f1r2s4', 'W:bess-f1r2s5', 'W:bess-f1r2s6',            null, null, null, 'W:bess-f1r2s7',  'W:bess-f1r2s8',  'W:bess-f1r2s9', 'W:bess-f1r2s10', 'W:bess-f1r2s11', 'W:bess-f1r2s12',             null, 'T:r2'],
+          ['T:r3',  'PW', 'PW', 'PW', 'PW', null, null, 'W:bess-f1r3s1', 'W:bess-f1r3s2', 'W:bess-f1r3s3', 'W:bess-f1r3s4', 'W:bess-f1r3s5', 'W:bess-f1r3s6', 'W:bess-f1r3s7', 'W:bess-f1r3s8', null, null, 'W:bess-f1r3s9', 'W:bess-f1r3s10', 'W:bess-f1r3s11', 'W:bess-f1r3s12', 'W:bess-f1r3s13', 'W:bess-f1r3s14',             null, 'T:r3'],
           ['T:r4',  null, null, null, null, null, null, 'W:bess-f1r4s1', 'W:bess-f1r4s2', 'W:bess-f1r4s3', 'W:bess-f1r4s4', 'W:bess-f1r4s5', 'W:bess-f1r4s6', 'W:bess-f1r4s7',            null, null, null, 'W:bess-f1r4s8',  'W:bess-f1r4s9', 'W:bess-f1r4s10', 'W:bess-f1r4s11', 'W:bess-f1r4s12', 'W:bess-f1r4s13', 'W:bess-f1r4s14', 'T:r4'],
           ['T:r5',  null, null, null, null, null, null,            null, 'W:bess-f1r5s1', 'W:bess-f1r5s2', 'W:bess-f1r5s3', 'W:bess-f1r5s4', 'W:bess-f1r5s5', 'W:bess-f1r5s6', 'W:bess-f1r5s7', null, null, 'W:bess-f1r5s8',  'W:bess-f1r5s9', 'W:bess-f1r5s10', 'W:bess-f1r5s11', 'W:bess-f1r5s12', 'W:bess-f1r5s13',             null, 'T:r5'],
           ['T:r6',  null, null, null, null, null, null,            null,            null,            null,            null,            null,            null,            null,            null, null, null, 'W:bess-f1r6s1',  'W:bess-f1r6s2',  'W:bess-f1r6s3',  'W:bess-f1r6s4',  'W:bess-f1r6s5',  'W:bess-f1r6s6',             null, 'T:r6'],
         ],
       }),
-      // bess- f1 for viewing only
-      // new Cluster({
-      //   identifier: 'e4',
-      //   name: 'Ada (bess-f1)',
-      //   totalWorkspaces: 73,
-      //   // prettier-ignore
-      //   map: [
-      //     // the P areas are the desk with no computers (for personal computer usage)
-      //     ['T:r1',   'P',  'P',  'P',  'P', null, null, 'W:e4r1p1', 'W:e4r1p2', 'W:e4r1p3', 'W:e4r1p4', 'W:e4r1p5', 'W:e4r1p6', 'W:e4r1p7', 'W:e4r1p8', null, null, 'W:e4r1p9',  'W:e4r1p10',  'W:e4r1p11', 'W:e4r1p12', 'W:e4r1p13', 'W:e4r1p14',        null, 'T:r1'],
-      //     ['T:r2',   'P',  'P',  'P',  'P', null, null,       null, 'W:e4r2p1', 'W:e4r2p2', 'W:e4r2p3', 'W:e4r2p4', 'W:e4r2p5', 'W:e4r2p6',       null, null, null, 'W:e4r2p7',   'W:e4r2p8',   'W:e4r2p9', 'W:e4r2p10', 'W:e4r2p11', 'W:e4r2p12',        null, 'T:r2'],
-      //     ['T:r3',   'P',  'P',  'P',  'P', null, null, 'W:e4r3p1', 'W:e4r3p2', 'W:e4r3p3', 'W:e4r3p4', 'W:e4r3p5', 'W:e4r3p6', 'W:e4r3p7', 'W:e4r3p8', null, null, 'W:e4r3p9',  'W:e4r3p10',  'W:e4r3p11', 'W:e4r3p12', 'W:e4r3p13', 'W:e4r3p14',        null, 'T:r3'],
-      //     ['T:r4',  null, null, null, null, null, null, 'W:e4r4p1', 'W:e4r4p2', 'W:e4r4p3', 'W:e4r4p4', 'W:e4r4p5', 'W:e4r4p6', 'W:e4r4p7',       null, null, null, 'W:e4r4p8',   'W:e4r4p9',  'W:e4r4p10', 'W:e4r4p11', 'W:e4r4p12', 'W:e4r4p13', 'W:e4r4p14', 'T:r4'],
-      //     ['T:r5',  null, null, null, null, null, null,       null, 'W:e4r5p1', 'W:e4r5p2', 'W:e4r5p3', 'W:e4r5p4', 'W:e4r5p5', 'W:e4r5p6', 'W:e4r5p7', null, null, 'W:e4r5p8',   'W:e4r5p9',  'W:e4r5p10', 'W:e4r5p11', 'W:e4r5p12', 'W:e4r5p13',        null, 'T:r5'],
-      //     ['T:r6',  null, null, null, null, null, null,       null,       null,       null,       null,       null,       null,       null,       null, null, null, 'W:e4r6p1',   'W:e4r6p2',   'W:e4r6p3',  'W:e4r6p4',  'W:e4r6p5',  'W:e4r6p6',        null, 'T:r6'],
-      //   ],
-      // }),
-      // bess-f2 ready to use
       new Cluster({
         identifier: 'bess-f2',
         name: 'Hyrule',
         totalWorkspaces: 100,
         // prettier-ignore
         map: [
-          ['T:r1',  'W:bess-f2r1p1', 'W:bess-f2r1p2', 'W:bess-f2r1p3', 'W:bess-f2r1p4', 'W:bess-f2r1p5', 'W:bess-f2r1p6', null, null, 'W:bess-f2r1p7', 'W:bess-f2r1p8', 'W:bess-f2r1p9', 'W:bess-f2r1p10', 'W:bess-f2r1p11', 'W:bess-f2r1p12', 'W:bess-f2r1p13', 'W:bess-f2r1p14', null, null, 'W:bess-f2r1p15', 'W:bess-f2r1p16', 'W:bess-f2r1p17', 'W:bess-f2r1p18', 'W:bess-f2r1p19', 'W:bess-f2r1p20', 'W:bess-f2r1p21', 'T:r1'],
-          ['T:r2',  'W:bess-f2r2p1', 'W:bess-f2r2p2', 'W:bess-f2r2p3', 'W:bess-f2r2p4', 'W:bess-f2r2p5', 'W:bess-f2r2p6', null, null,            null, 'W:bess-f2r2p7', 'W:bess-f2r2p8',  'W:bess-f2r2p9', 'W:bess-f2r2p10', 'W:bess-f2r2p11', 'W:bess-f2r2p12',             null, null, null, 'W:bess-f2r2p13', 'W:bess-f2r2p14', 'W:bess-f2r2p15', 'W:bess-f2r2p16', 'W:bess-f2r2p17', 'W:bess-f2r2p18',             null, 'T:r2'],
-          ['T:r3',  'W:bess-f2r3p1', 'W:bess-f2r3p2', 'W:bess-f2r3p3', 'W:bess-f2r3p4', 'W:bess-f2r3p5', 'W:bess-f2r3p6', null, null, 'W:bess-f2r3p7', 'W:bess-f2r3p8', 'W:bess-f2r3p9', 'W:bess-f2r3p10', 'W:bess-f2r3p11', 'W:bess-f2r3p12', 'W:bess-f2r3p13', 'W:bess-f2r3p14', null, null, 'W:bess-f2r3p15', 'W:bess-f2r3p16', 'W:bess-f2r3p17', 'W:bess-f2r3p18', 'W:bess-f2r3p19', 'W:bess-f2r3p20',             null, 'T:r3'],
-          ['T:r4',  'W:bess-f2r4p1', 'W:bess-f2r4p2', 'W:bess-f2r4p3', 'W:bess-f2r4p4', 'W:bess-f2r4p5', 'W:bess-f2r4p6', null, null, 'W:bess-f2r4p7', 'W:bess-f2r4p8', 'W:bess-f2r4p9', 'W:bess-f2r4p10', 'W:bess-f2r4p11', 'W:bess-f2r4p12', 'W:bess-f2r4p13',             null, null, null, 'W:bess-f2r4p14', 'W:bess-f2r4p15', 'W:bess-f2r4p16', 'W:bess-f2r4p17', 'W:bess-f2r4p18', 'W:bess-f2r4p19',             null, 'T:r4'],
-          ['T:r5',             null,            null,            null, 'W:bess-f2r5p1', 'W:bess-f2r5p2', 'W:bess-f2r5p3', null, null,            null, 'W:bess-f2r5p4', 'W:bess-f2r5p5',  'W:bess-f2r5p6',  'W:bess-f2r5p7',  'W:bess-f2r5p8',  'W:bess-f2r5p9', 'W:bess-f2r5p10', null, null, 'W:bess-f2r5p11', 'W:bess-f2r5p12', 'W:bess-f2r5p13', 'W:bess-f2r5p14', 'W:bess-f2r5p15', 'W:bess-f2r5p16',             null, 'T:r5'],
-          ['T:r6',             null,            null,            null,            null,            null,            null, null, null,            null,            null,            null,             null,             null,             null,             null,             null, null, null,  'W:bess-f2r6p1',  'W:bess-f2r6p2',  'W:bess-f2r6p3',  'W:bess-f2r6p4',  'W:bess-f2r6p5',  'W:bess-f2r6p6',             null, 'T:r6'],
+          ['T:r1',  'W:bess-f2r1s1', 'W:bess-f2r1s2', 'W:bess-f2r1s3', 'W:bess-f2r1s4', 'W:bess-f2r1s5', 'W:bess-f2r1s6', null, null, 'W:bess-f2r1s7', 'W:bess-f2r1s8', 'W:bess-f2r1s9', 'W:bess-f2r1s10', 'W:bess-f2r1s11', 'W:bess-f2r1s12', 'W:bess-f2r1s13', 'W:bess-f2r1s14', null, null, 'W:bess-f2r1s15', 'W:bess-f2r1s16', 'W:bess-f2r1s17', 'W:bess-f2r1s18', 'W:bess-f2r1s19', 'W:bess-f2r1s20', 'W:bess-f2r1s21', 'T:r1'],
+          ['T:r2',  'W:bess-f2r2s1', 'W:bess-f2r2s2', 'W:bess-f2r2s3', 'W:bess-f2r2s4', 'W:bess-f2r2s5', 'W:bess-f2r2s6', null, null,            null, 'W:bess-f2r2s7', 'W:bess-f2r2s8',  'W:bess-f2r2s9', 'W:bess-f2r2s10', 'W:bess-f2r2s11', 'W:bess-f2r2s12',             null, null, null, 'W:bess-f2r2s13', 'W:bess-f2r2s14', 'W:bess-f2r2s15', 'W:bess-f2r2s16', 'W:bess-f2r2s17', 'W:bess-f2r2s18',             null, 'T:r2'],
+          ['T:r3',  'W:bess-f2r3s1', 'W:bess-f2r3s2', 'W:bess-f2r3s3', 'W:bess-f2r3s4', 'W:bess-f2r3s5', 'W:bess-f2r3s6', null, null, 'W:bess-f2r3s7', 'W:bess-f2r3s8', 'W:bess-f2r3s9', 'W:bess-f2r3s10', 'W:bess-f2r3s11', 'W:bess-f2r3s12', 'W:bess-f2r3s13', 'W:bess-f2r3s14', null, null, 'W:bess-f2r3s15', 'W:bess-f2r3s16', 'W:bess-f2r3s17', 'W:bess-f2r3s18', 'W:bess-f2r3s19', 'W:bess-f2r3s20',             null, 'T:r3'],
+          ['T:r4',  'W:bess-f2r4s1', 'W:bess-f2r4s2', 'W:bess-f2r4s3', 'W:bess-f2r4s4', 'W:bess-f2r4s5', 'W:bess-f2r4s6', null, null, 'W:bess-f2r4s7', 'W:bess-f2r4s8', 'W:bess-f2r4s9', 'W:bess-f2r4s10', 'W:bess-f2r4s11', 'W:bess-f2r4s12', 'W:bess-f2r4s13',             null, null, null, 'W:bess-f2r4s14', 'W:bess-f2r4s15', 'W:bess-f2r4s16', 'W:bess-f2r4s17', 'W:bess-f2r4s18', 'W:bess-f2r4s19',             null, 'T:r4'],
+          ['T:r5',             null,            null,            null, 'W:bess-f2r5s1', 'W:bess-f2r5s2', 'W:bess-f2r5s3', null, null,            null, 'W:bess-f2r5s4', 'W:bess-f2r5s5',  'W:bess-f2r5s6',  'W:bess-f2r5s7',  'W:bess-f2r5s8',  'W:bess-f2r5s9', 'W:bess-f2r5s10', null, null, 'W:bess-f2r5s11', 'W:bess-f2r5s12', 'W:bess-f2r5s13', 'W:bess-f2r5s14', 'W:bess-f2r5s15', 'W:bess-f2r5s16',             null, 'T:r5'],
+          ['T:r6',             null,            null,            null,            null,            null,            null, null, null,            null,            null,            null,             null,             null,             null,             null,             null, null, null,  'W:bess-f2r6s1',  'W:bess-f2r6s2',  'W:bess-f2r6s3',  'W:bess-f2r6s4',  'W:bess-f2r6s5',  'W:bess-f2r6s6',             null, 'T:r6'],
         ],
       }),
-      //bess-f2 viewing only
-      // new Cluster({
-      //   identifier: 'e5',
-      //   name: 'Hyrule (bess-f2)',
-      //   totalWorkspaces: 100,
-      //   // prettier-ignore
-      //   map: [
-      //     ['T:r1',  'W:e5r1p1',  'W:e5r1p2',  'W:e5r1p3',  'W:e5r1p4',  'W:e5r1p5',  'W:e5r1p6', null, null, 'W:e5r1p7', 'W:e5r1p8', 'W:e5r1p9', 'W:e5r1p10', 'W:e5r1p11', 'W:e5r1p12', 'W:e5r1p13', 'W:e5r1p14', null, null, 'W:e5r1p15',  'W:e5r1p16',  'W:e5r1p17', 'W:e5r1p18', 'W:e5r1p19', 'W:e5r1p20', 'W:e5r1p21', 'T:r1'],
-      //     ['T:r2',  'W:e5r2p1',  'W:e5r2p2',  'W:e5r2p3',  'W:e5r2p4',  'W:e5r2p5',  'W:e5r2p6', null, null,       null, 'W:e5r2p7', 'W:e5r2p8',  'W:e5r2p9', 'W:e5r2p10', 'W:e5r2p11', 'W:e5r2p12',        null, null, null, 'W:e5r2p13',  'W:e5r2p14',  'W:e5r2p15', 'W:e5r2p16', 'W:e5r2p17', 'W:e5r2p18',        null, 'T:r2'],
-      //     ['T:r3',  'W:e5r3p1',  'W:e5r3p2',  'W:e5r3p3',  'W:e5r3p4',  'W:e5r3p5',  'W:e5r3p6', null, null, 'W:e5r3p7', 'W:e5r3p8', 'W:e5r3p9', 'W:e5r3p10', 'W:e5r3p11', 'W:e5r3p12', 'W:e5r3p13', 'W:e5r3p14', null, null, 'W:e5r3p15',  'W:e5r3p16',  'W:e5r3p17', 'W:e5r3p18', 'W:e5r3p19', 'W:e5r3p20',        null, 'T:r3'],
-      //     ['T:r4',  'W:e5r4p1',  'W:e5r4p2',  'W:e5r4p3',  'W:e5r4p4',  'W:e5r4p5',  'W:e5r4p6', null, null, 'W:e5r4p7', 'W:e5r4p8', 'W:e5r4p9', 'W:e5r4p10', 'W:e5r4p11', 'W:e5r4p12', 'W:e5r4p13',        null, null, null, 'W:e5r4p14',  'W:e5r4p15',  'W:e5r4p16', 'W:e5r4p17', 'W:e5r4p18', 'W:e5r4p19',        null, 'T:r4'],
-      //     ['T:r5',        null,        null,        null,  'W:e5r5p1',  'W:e5r5p2',  'W:e5r5p3', null, null,       null, 'W:e5r5p4', 'W:e5r5p5',  'W:e5r5p6',  'W:e5r5p7',  'W:e5r5p8',  'W:e5r5p9', 'W:e5r5p10', null, null, 'W:e5r5p11',  'W:e5r5p12',  'W:e5r5p13', 'W:e5r5p14', 'W:e5r5p15', 'W:e5r5p16',        null, 'T:r5'],
-      //     ['T:r6',        null,        null,        null,        null,        null,        null, null, null,       null,       null,       null,        null,        null,        null,        null,        null, null, null,  'W:e5r6p1',   'W:e5r6p2',   'W:e5r6p3',  'W:e5r6p4',  'W:e5r6p5',  'W:e5r6p6',        null, 'T:r6'],
-      //   ],
-      // }),
-      // bess-f3 ready to use
       new Cluster({
         identifier: 'bess-f3',
-        name: 'Turing (bess-f3)',
+        name: 'Turing',
         totalWorkspaces: 74,
         // prettier-ignore
         map: [
-          ['T:r1',  null, null, null, null, null, null, 'W:bess-f3r1p1', 'W:bess-f3r1p2', 'W:bess-f3r1p3', 'W:bess-f3r1p4', 'W:bess-f3r1p5', 'W:bess-f3r1p6', 'W:bess-f3r1p7', 'W:bess-f3r1p8', null, null, 'W:bess-f3r1p9', 'W:bess-f3r1p10', 'W:bess-f3r1p11', 'W:bess-f3r1p12', 'W:bess-f3r1p13', 'W:bess-f3r1p14', 'W:bess-f3r1p15', 'T:r1'],
-          ['T:r2',  null, null, null, null, null, null,            null, 'W:bess-f3r2p1', 'W:bess-f3r2p2', 'W:bess-f3r2p3', 'W:bess-f3r2p4', 'W:bess-f3r2p5', 'W:bess-f3r2p6',            null, null, null, 'W:bess-f3r2p7',  'W:bess-f3r2p8',  'W:bess-f3r2p9', 'W:bess-f3r2p10', 'W:bess-f3r2p11', 'W:bess-f3r2p12',            null, 'T:r2'],
-          ['T:r3',  null, null, null, null, null, null, 'W:bess-f3r3p1', 'W:bess-f3r3p2', 'W:bess-f3r3p3', 'W:bess-f3r3p4', 'W:bess-f3r3p5', 'W:bess-f3r3p6', 'W:bess-f3r3p7', 'W:bess-f3r3p8', null, null, 'W:bess-f3r3p9', 'W:bess-f3r3p10', 'W:bess-f3r3p11', 'W:bess-f3r3p12', 'W:bess-f3r3p13', 'W:bess-f3r3p14',            null, 'T:r3'],
-          ['T:r4',  null, null, null, null, null, null, 'W:bess-f3r4p1', 'W:bess-f3r4p2', 'W:bess-f3r4p3', 'W:bess-f3r4p4', 'W:bess-f3r4p5', 'W:bess-f3r4p6', 'W:bess-f3r4p7',            null, null, null, 'W:bess-f3r4p8',  'W:bess-f3r4p9', 'W:bess-f3r4p10', 'W:bess-f3r4p11', 'W:bess-f3r4p12', 'W:bess-f3r4p13',            null, 'T:r4'],
-          ['T:r5',  null, null, null, null, null, null,            null, 'W:bess-f3r5p1', 'W:bess-f3r5p2', 'W:bess-f3r5p3', 'W:bess-f3r5p4', 'W:bess-f3r5p5', 'W:bess-f3r5p6', 'W:bess-f3r5p7', null, null, 'W:bess-f3r5p8',  'W:bess-f3r5p9', 'W:bess-f3r5p10', 'W:bess-f3r5p11', 'W:bess-f3r5p12', 'W:bess-f3r5p13',            null, 'T:r5'],
-          ['T:r6',  null, null, null, null, null, null,            null,            null,            null,            null,            null,            null,            null,            null, null, null, 'W:bess-f3r6p1',  'W:bess-f3r6p2',  'W:bess-f3r6p3',  'W:bess-f3r6p4',  'W:bess-f3r6p5',  'W:bess-f3r6p6', 'W:bess-f3r6p7', 'T:r6'],
+          ['T:r1',  null, null, null, null, null, null, 'W:bess-f3r1s1', 'W:bess-f3r1s2', 'W:bess-f3r1s3', 'W:bess-f3r1s4', 'W:bess-f3r1s5', 'W:bess-f3r1s6', 'W:bess-f3r1s7', 'W:bess-f3r1s8', null, null, 'W:bess-f3r1s9', 'W:bess-f3r1s10', 'W:bess-f3r1s11', 'W:bess-f3r1s12', 'W:bess-f3r1s13', 'W:bess-f3r1s14', 'W:bess-f3r1s15', 'T:r1'],
+          ['T:r2',  null, null, null, null, null, null,            null, 'W:bess-f3r2s1', 'W:bess-f3r2s2', 'W:bess-f3r2s3', 'W:bess-f3r2s4', 'W:bess-f3r2s5', 'W:bess-f3r2s6',            null, null, null, 'W:bess-f3r2s7',  'W:bess-f3r2s8',  'W:bess-f3r2s9', 'W:bess-f3r2s10', 'W:bess-f3r2s11', 'W:bess-f3r2s12',            null, 'T:r2'],
+          ['T:r3',  null, null, null, null, null, null, 'W:bess-f3r3s1', 'W:bess-f3r3s2', 'W:bess-f3r3s3', 'W:bess-f3r3s4', 'W:bess-f3r3s5', 'W:bess-f3r3s6', 'W:bess-f3r3s7', 'W:bess-f3r3s8', null, null, 'W:bess-f3r3s9', 'W:bess-f3r3s10', 'W:bess-f3r3s11', 'W:bess-f3r3s12', 'W:bess-f3r3s13', 'W:bess-f3r3s14',            null, 'T:r3'],
+          ['T:r4',  null, null, null, null, null, null, 'W:bess-f3r4s1', 'W:bess-f3r4s2', 'W:bess-f3r4s3', 'W:bess-f3r4s4', 'W:bess-f3r4s5', 'W:bess-f3r4s6', 'W:bess-f3r4s7',            null, null, null, 'W:bess-f3r4s8',  'W:bess-f3r4s9', 'W:bess-f3r4s10', 'W:bess-f3r4s11', 'W:bess-f3r4s12', 'W:bess-f3r4s13',            null, 'T:r4'],
+          ['T:r5',  null, null, null, null, null, null,            null, 'W:bess-f3r5s1', 'W:bess-f3r5s2', 'W:bess-f3r5s3', 'W:bess-f3r5s4', 'W:bess-f3r5s5', 'W:bess-f3r5s6', 'W:bess-f3r5s7', null, null, 'W:bess-f3r5s8',  'W:bess-f3r5s9', 'W:bess-f3r5s10', 'W:bess-f3r5s11', 'W:bess-f3r5s12', 'W:bess-f3r5s13',            null, 'T:r5'],
+          ['T:r6',  null, null, null, null, null, null,            null,            null,            null,            null,            null,            null,            null,            null, null, null, 'W:bess-f3r6s1',  'W:bess-f3r6s2',  'W:bess-f3r6s3',  'W:bess-f3r6s4',  'W:bess-f3r6s5',  'W:bess-f3r6s6', 'W:bess-f3r6s7', 'T:r6'],
         ],
       }),
-
-      // bess-f3 viewing only
-      // new Cluster({
-      //   identifier: 'e6',
-      //   name: 'Turing (bess-f3)',
-      //   totalWorkspaces: 74,
-      //   // prettier-ignore
-      //   map: [
-      //     ['T:r1',  null, null, null, null, null, null, 'W:e6r1p1', 'W:e6r1p2', 'W:e6r1p3', 'W:e6r1p4', 'W:e6r1p5', 'W:e6r1p6', 'W:e6r1p7', 'W:e6r1p8', null, null, 'W:e6r1p9',  'W:e6r1p10',  'W:e6r1p11', 'W:e6r1p12', 'W:e6r1p13', 'W:e6r1p14', 'W:e6r1p15', 'T:r1'],
-      //     ['T:r2',  null, null, null, null, null, null,       null, 'W:e6r2p1', 'W:e6r2p2', 'W:e6r2p3', 'W:e6r2p4', 'W:e6r2p5', 'W:e6r2p6',       null, null, null, 'W:e6r2p7',   'W:e6r2p8',   'W:e6r2p9', 'W:e6r2p10', 'W:e6r2p11', 'W:e6r2p12',        null, 'T:r2'],
-      //     ['T:r3',  null, null, null, null, null, null, 'W:e6r3p1', 'W:e6r3p2', 'W:e6r3p3', 'W:e6r3p4', 'W:e6r3p5', 'W:e6r3p6', 'W:e6r3p7', 'W:e6r3p8', null, null, 'W:e6r3p9',  'W:e6r3p10',  'W:e6r3p11', 'W:e6r3p12', 'W:e6r3p13', 'W:e6r3p14',        null, 'T:r3'],
-      //     ['T:r4',  null, null, null, null, null, null, 'W:e6r4p1', 'W:e6r4p2', 'W:e6r4p3', 'W:e6r4p4', 'W:e6r4p5', 'W:e6r4p6', 'W:e6r4p7',       null, null, null, 'W:e6r4p8',   'W:e6r4p9',  'W:e6r4p10', 'W:e6r4p11', 'W:e6r4p12', 'W:e6r4p13',        null, 'T:r4'],
-      //     ['T:r5',  null, null, null, null, null, null,       null, 'W:e6r5p1', 'W:e6r5p2', 'W:e6r5p3', 'W:e6r5p4', 'W:e6r5p5', 'W:e6r5p6', 'W:e6r5p7', null, null, 'W:e6r5p8',   'W:e6r5p9',  'W:e6r5p10', 'W:e6r5p11', 'W:e6r5p12', 'W:e6r5p13',        null, 'T:r5'],
-      //     ['T:r6',  null, null, null, null, null, null,       null,       null,       null,       null,       null,       null,       null,       null, null, null, 'W:e6r6p1',   'W:e6r6p2',   'W:e6r6p3',  'W:e6r6p4',  'W:e6r6p5',  'W:e6r6p6',  'W:e6r6p7', 'T:r6'],
-      //   ],
-      // }),
-      // bess-f4 ready to use
       new Cluster({
         identifier: 'bess-f4',
         name: 'Carthage',
         totalWorkspaces: 70,
         // prettier-ignore
         map: [
-          ['T:r1',  null, null, null, null, null, null, 'W:bess-f4r1p1', 'W:bess-f4r1p2', 'W:bess-f4r1p3', 'W:bess-f4r1p4', 'W:bess-f4r1p5', 'W:bess-f4r1p6', 'W:bess-f4r1p7', 'W:bess-f4r1p8', null, null, 'W:bess-f4r1p9',  'W:bess-f4r1p10',  'W:bess-f4r1p11', 'W:bess-f4r1p12', 'W:bess-f4r1p13', 'W:bess-f4r1p14', 'T:r1'],
-          ['T:r2',  null, null, null, null, null, null, 'W:bess-f4r2p1', 'W:bess-f4r2p2', 'W:bess-f4r2p3', 'W:bess-f4r2p4', 'W:bess-f4r2p5', 'W:bess-f4r2p6', 'W:bess-f4r2p7',            null, null, null, 'W:bess-f4r2p7',   'W:bess-f4r2p8',   'W:bess-f4r2p9', 'W:bess-f4r2p10', 'W:bess-f4r2p11', 'W:bess-f4r2p12', 'T:r2'],
-          ['T:r3',  null, null, null, null, null, null, 'W:bess-f4r3p1', 'W:bess-f4r3p2', 'W:bess-f4r3p3', 'W:bess-f4r3p4', 'W:bess-f4r3p5', 'W:bess-f4r3p6', 'W:bess-f4r3p7', 'W:bess-f4r3p8', null, null, 'W:bess-f4r3p9',  'W:bess-f4r3p10',  'W:bess-f4r3p11', 'W:bess-f4r3p12', 'W:bess-f4r3p13', 'W:bess-f4r3p14', 'T:r3'],
-          ['T:r4',  null, null, null, null, null, null, 'W:bess-f4r4p1', 'W:bess-f4r4p2', 'W:bess-f4r4p3', 'W:bess-f4r4p4', 'W:bess-f4r4p5', 'W:bess-f4r4p6', 'W:bess-f4r4p7',            null, null, null, 'W:bess-f4r4p8',   'W:bess-f4r4p9',  'W:bess-f4r4p10', 'W:bess-f4r4p11', 'W:bess-f4r4p12', 'W:bess-f4r4p13', 'T:r4'],
-          ['T:r5',  null, null, null, null, null, null,            null,            null,            null, 'W:bess-f4r5p1', 'W:bess-f4r5p2', 'W:bess-f4r5p3', 'W:bess-f4r5p4', 'W:bess-f4r5p5', null, null, 'W:bess-f4r5p6',   'W:bess-f4r5p7',   'W:bess-f4r5p8',  'W:bess-f4r5p9', 'W:bess-f4r5p10', 'W:bess-f4r5p11', 'T:r5'],
-          ['T:r6',  null, null, null, null, null, null,            null,            null,            null,            null,            null,            null,            null,            null, null, null, 'W:bess-f4r6p1',   'W:bess-f4r6p2',   'W:bess-f4r6p3',  'W:bess-f4r6p4',  'W:bess-f4r6p5',             null, 'T:r6'],
+          ['T:r1',  null, null, null, null, null, null, 'W:bess-f4r1s1', 'W:bess-f4r1s2', 'W:bess-f4r1s3', 'W:bess-f4r1s4', 'W:bess-f4r1s5', 'W:bess-f4r1s6', 'W:bess-f4r1s7', 'W:bess-f4r1s8', null, null, 'W:bess-f4r1s9',  'W:bess-f4r1s10',  'W:bess-f4r1s11', 'W:bess-f4r1s12', 'W:bess-f4r1s13', 'W:bess-f4r1s14', 'T:r1'],
+          ['T:r2',  null, null, null, null, null, null, 'W:bess-f4r2s1', 'W:bess-f4r2s2', 'W:bess-f4r2s3', 'W:bess-f4r2s4', 'W:bess-f4r2s5', 'W:bess-f4r2s6', 'W:bess-f4r2s7',            null, null, null, 'W:bess-f4r2s7',   'W:bess-f4r2s8',   'W:bess-f4r2s9', 'W:bess-f4r2s10', 'W:bess-f4r2s11', 'W:bess-f4r2s12', 'T:r2'],
+          ['T:r3',  null, null, null, null, null, null, 'W:bess-f4r3s1', 'W:bess-f4r3s2', 'W:bess-f4r3s3', 'W:bess-f4r3s4', 'W:bess-f4r3s5', 'W:bess-f4r3s6', 'W:bess-f4r3s7', 'W:bess-f4r3s8', null, null, 'W:bess-f4r3s9',  'W:bess-f4r3s10',  'W:bess-f4r3s11', 'W:bess-f4r3s12', 'W:bess-f4r3s13', 'W:bess-f4r3s14', 'T:r3'],
+          ['T:r4',  null, null, null, null, null, null, 'W:bess-f4r4s1', 'W:bess-f4r4s2', 'W:bess-f4r4s3', 'W:bess-f4r4s4', 'W:bess-f4r4s5', 'W:bess-f4r4s6', 'W:bess-f4r4s7',            null, null, null, 'W:bess-f4r4s8',   'W:bess-f4r4s9',  'W:bess-f4r4s10', 'W:bess-f4r4s11', 'W:bess-f4r4s12', 'W:bess-f4r4s13', 'T:r4'],
+          ['T:r5',  null, null, null, null, null, null,            null,            null,            null, 'W:bess-f4r5s1', 'W:bess-f4r5s2', 'W:bess-f4r5s3', 'W:bess-f4r5s4', 'W:bess-f4r5s5', null, null, 'W:bess-f4r5s6',   'W:bess-f4r5s7',   'W:bess-f4r5s8',  'W:bess-f4r5s9', 'W:bess-f4r5s10', 'W:bess-f4r5s11', 'T:r5'],
+          ['T:r6',  null, null, null, null, null, null,            null,            null,            null,            null,            null,            null,            null,            null, null, null, 'W:bess-f4r6s1',   'W:bess-f4r6s2',   'W:bess-f4r6s3',  'W:bess-f4r6s4',  'W:bess-f4r6s5',             null, 'T:r6'],
         ],
       }),
-
-      // bess-f4 viewing only
-      // new Cluster({
-      //   identifier: 'e7',
-      //   name: 'Carthage (bess-f4)',
-      //   totalWorkspaces: 70,
-      //   // prettier-ignore
-      //   map: [
-      //     ['T:r1',  null, null, null, null, null, null, 'W:e7r1p1', 'W:e7r1p2', 'W:e7r1p3', 'W:e7r1p4', 'W:e7r1p5', 'W:e7r1p6', 'W:e7r1p7', 'W:e7r1p8', null, null, 'W:e7r1p9',  'W:e7r1p10',  'W:e7r1p11', 'W:e7r1p12', 'W:e7r1p13', 'W:e7r1p14', 'T:r1'],
-      //     ['T:r2',  null, null, null, null, null, null, 'W:e7r2p1', 'W:e7r2p2', 'W:e7r2p3', 'W:e7r2p4', 'W:e7r2p5', 'W:e7r2p6', 'W:e7r2p7',       null, null, null, 'W:e7r2p7',   'W:e7r2p8',   'W:e7r2p9', 'W:e7r2p10', 'W:e7r2p11', 'W:e7r2p12', 'T:r2'],
-      //     ['T:r3',  null, null, null, null, null, null, 'W:e7r3p1', 'W:e7r3p2', 'W:e7r3p3', 'W:e7r3p4', 'W:e7r3p5', 'W:e7r3p6', 'W:e7r3p7', 'W:e7r3p8', null, null, 'W:e7r3p9',  'W:e7r3p10',  'W:e7r3p11', 'W:e7r3p12', 'W:e7r3p13', 'W:e7r3p14', 'T:r3'],
-      //     ['T:r4',  null, null, null, null, null, null, 'W:e7r4p1', 'W:e7r4p2', 'W:e7r4p3', 'W:e7r4p4', 'W:e7r4p5', 'W:e7r4p6', 'W:e7r4p7',       null, null, null, 'W:e7r4p8',   'W:e7r4p9',  'W:e7r4p10', 'W:e7r4p11', 'W:e7r4p12', 'W:e7r4p13', 'T:r4'],
-      //     ['T:r5',  null, null, null, null, null, null,       null,       null,       null, 'W:e7r5p1', 'W:e7r5p2', 'W:e7r5p3', 'W:e7r5p4', 'W:e7r5p5', null, null, 'W:e7r5p6',   'W:e7r5p7',   'W:e7r5p8',  'W:e7r5p9', 'W:e7r5p10', 'W:e7r5p11', 'T:r5'],
-      //     ['T:r6',  null, null, null, null, null, null,       null,       null,       null,       null,       null,       null,       null,       null, null, null, 'W:e7r6p1',   'W:e7r6p2',   'W:e7r6p3',  'W:e7r6p4',  'W:e7r6p5',        null, 'T:r6'],
-      //   ],
-      // }),
-
-      //paul-f3A ready to use
       new Cluster({
         identifier: 'paul-f3A',
-        name: 'Pandora (paul-f3A)',
+        name: 'Pandora',
         totalWorkspaces: 70,
         // prettier-ignore
         map: [
-          ['T:r9',             null,             null,             null,             null,             null,             null,             null,             null, null, null,             null,              null,  'W:paul-f3Ar9p1', 'T:r9'],
-          ['T:r8',             null,             null,             null,             null,             null,             null,             null,             null, null, null, 'W:paul-f3Ar8p1',  'W:paul-f3Ar8p2',  'W:paul-f3Ar8p3', 'T:r8'],
-          ['T:r7',             null,             null,             null,             null,             null,             null, 'W:paul-f3Ar7p1', 'W:paul-f3Ar7p2', null, null, 'W:paul-f3Ar7p3',  'W:paul-f3Ar7p4',  'W:paul-f3Ar7p5', 'T:r7'],
-          ['T:r6',             null, 'W:paul-f3Ar6p1', 'W:paul-f3Ar6p2', 'W:paul-f3Ar6p3', 'W:paul-f3Ar6p4', 'W:paul-f3Ar6p5', 'W:paul-f3Ar6p6', 'W:paul-f3Ar6p7', null, null, 'W:paul-f3Ar6p8',  'W:paul-f3Ar6p9', 'W:paul-f3Ar6p10', 'T:r6'],
-          ['T:r5', 'W:paul-f3Ar5p1', 'W:paul-f3Ar5p2', 'W:paul-f3Ar5p3', 'W:paul-f3Ar5p4', 'W:paul-f3Ar5p5', 'W:paul-f3Ar5p6', 'W:paul-f3Ar5p7', 'W:paul-f3Ar5p8', null, null, 'W:paul-f3Ar5p9', 'W:paul-f3Ar5p10', 'W:paul-f3Ar5p11', 'T:r5'],
-          ['T:r4', 'W:paul-f3Ar4p1', 'W:paul-f3Ar4p2', 'W:paul-f3Ar4p3', 'W:paul-f3Ar4p4', 'W:paul-f3Ar4p5',             null, 'W:paul-f3Ar4p6', 'W:paul-f3Ar4p7', null, null, 'W:paul-f3Ar4p8',  'W:paul-f3Ar4p9', 'W:paul-f3Ar4p10', 'T:r4'],
-          ['T:r3', 'W:paul-f3Ar3p1', 'W:paul-f3Ar3p2', 'W:paul-f3Ar3p3', 'W:paul-f3Ar3p4', 'W:paul-f3Ar3p5', 'W:paul-f3Ar3p6', 'W:paul-f3Ar3p7', 'W:paul-f3Ar3p8', null, null, 'W:paul-f3Ar3p9', 'W:paul-f3Ar3p10', 'W:paul-f3Ar3p11', 'T:r3'],
-          ['T:r2', 'W:paul-f3Ar2p1', 'W:paul-f3Ar2p2', 'W:paul-f3Ar2p3', 'W:paul-f3Ar2p4', 'W:paul-f3Ar2p5',             null,             null,             null, null, null,             null,              null,              null, 'T:r2'],
-          ['T:r1', 'W:paul-f3Ar1p1', 'W:paul-f3Ar1p2',             null,             null,             null,             null,             null,             null, null, null,             null,              null,              null, 'T:r1'],
+          ['T:r9',             null,             null,             null,             null,             null,             null,             null,             null, null, null,             null,              null,  'W:paul-f3Ar9s1', 'T:r9'],
+          ['T:r8',             null,             null,             null,             null,             null,             null,             null,             null, null, null, 'W:paul-f3Ar8s1',  'W:paul-f3Ar8s2',  'W:paul-f3Ar8s3', 'T:r8'],
+          ['T:r7',             null,             null,             null,             null,             null,             null, 'W:paul-f3Ar7s1', 'W:paul-f3Ar7s2', null, null, 'W:paul-f3Ar7s3',  'W:paul-f3Ar7s4',  'W:paul-f3Ar7s5', 'T:r7'],
+          ['T:r6',             null, 'W:paul-f3Ar6s1', 'W:paul-f3Ar6s2', 'W:paul-f3Ar6s3', 'W:paul-f3Ar6s4', 'W:paul-f3Ar6s5', 'W:paul-f3Ar6s6', 'W:paul-f3Ar6s7', null, null, 'W:paul-f3Ar6s8',  'W:paul-f3Ar6s9', 'W:paul-f3Ar6s10', 'T:r6'],
+          ['T:r5', 'W:paul-f3Ar5s1', 'W:paul-f3Ar5s2', 'W:paul-f3Ar5s3', 'W:paul-f3Ar5s4', 'W:paul-f3Ar5s5', 'W:paul-f3Ar5s6', 'W:paul-f3Ar5s7', 'W:paul-f3Ar5s8', null, null, 'W:paul-f3Ar5s9', 'W:paul-f3Ar5s10', 'W:paul-f3Ar5s11', 'T:r5'],
+          ['T:r4', 'W:paul-f3Ar4s1', 'W:paul-f3Ar4s2', 'W:paul-f3Ar4s3', 'W:paul-f3Ar4s4', 'W:paul-f3Ar4s5',             null, 'W:paul-f3Ar4s6', 'W:paul-f3Ar4s7', null, null, 'W:paul-f3Ar4s8',  'W:paul-f3Ar4s9', 'W:paul-f3Ar4s10', 'T:r4'],
+          ['T:r3', 'W:paul-f3Ar3s1', 'W:paul-f3Ar3s2', 'W:paul-f3Ar3s3', 'W:paul-f3Ar3s4', 'W:paul-f3Ar3s5', 'W:paul-f3Ar3s6', 'W:paul-f3Ar3s7', 'W:paul-f3Ar3s8', null, null, 'W:paul-f3Ar3s9', 'W:paul-f3Ar3s10', 'W:paul-f3Ar3s11', 'T:r3'],
+          ['T:r2', 'W:paul-f3Ar2s1', 'W:paul-f3Ar2s2', 'W:paul-f3Ar2s3', 'W:paul-f3Ar2s4', 'W:paul-f3Ar2s5',             null,             null,             null, null, null,             null,              null,              null, 'T:r2'],
+          ['T:r1', 'W:paul-f3Ar1s1', 'W:paul-f3Ar1s2',             null,             null,             null,             null,             null,             null, null, null,             null,              null,              null, 'T:r1'],
         ],
       }),
-
-      //paul-f3B viewing only
-      // new Cluster({
-      //   identifier: 'e8A',
-      //   name: 'Grâce (paul-f3A)',
-      //   totalWorkspaces: 58,
-      //   // prettier-ignore
-      //   map: [
-      //     ['T:r9',        null,        null,        null,        null,        null,        null,        null,        null, null, null,        null,         null,  'W:e8r9p1', 'T:r9'],
-      //     ['T:r8',        null,        null,        null,        null,        null,        null,        null,        null, null, null, 'W:e8r8p1',  'W:e8r8p2',  'W:e8r8p3', 'T:r8'],
-      //     ['T:r7',        null,        null,        null,        null,        null,        null, 'W:e8r7p1', 'W:e8r7p2', null, null, 'W:e8r7p3',  'W:e8r7p4',  'W:e8r7p5', 'T:r7'],
-      //     ['T:r6',        null, 'W:e8r6p1', 'W:e8r6p2', 'W:e8r6p3', 'W:e8r6p4', 'W:e8r6p5', 'W:e8r6p6', 'W:e8r6p7', null, null, 'W:e8r6p8',  'W:e8r6p9', 'W:e8r6p10', 'T:r6'],
-      //     ['T:r5', 'W:e8r5p1', 'W:e8r5p2', 'W:e8r5p3', 'W:e8r5p4', 'W:e8r5p5', 'W:e8r5p6', 'W:e8r5p7', 'W:e8r5p8', null, null, 'W:e8r5p9', 'W:e8r5p10', 'W:e8r5p11', 'T:r5'],
-      //     ['T:r4', 'W:e8r4p1', 'W:e8r4p2', 'W:e8r4p3', 'W:e8r4p4', 'W:e8r4p5',        null, 'W:e8r4p6', 'W:e8r4p7', null, null, 'W:e8r4p8',  'W:e8r4p9', 'W:e8r4p10', 'T:r4'],
-      //     ['T:r3', 'W:e8r3p1', 'W:e8r3p2', 'W:e8r3p3', 'W:e8r3p4', 'W:e8r3p5', 'W:e8r3p6', 'W:e8r3p7', 'W:e8r3p8', null, null, 'W:e8r3p9', 'W:e8r3p10', 'W:e8r3p11', 'T:r3'],
-      //     ['T:r2', 'W:e8r2p1', 'W:e8r2p2', 'W:e8r2p3', 'W:e8r2p4', 'W:e8r2p5',        null,        null,        null, null, null,        null,         null,         null, 'T:r2'],
-      //     ['T:r1', 'W:e8r1p1', 'W:e8r1p2',        null,        null,        null,        null,        null,        null, null, null,        null,         null,         null, 'T:r1'],
-      //   ],
-      // }),
-
-      // //paul-f3B viewing only
       new Cluster({
         identifier: 'paul-f3B',
         name: 'The Citadel',
         totalWorkspaces: 52,
         // prettier-ignore
         map: [
-          ['T:r10', 'W:paul-f3Br10p1', 'W:paul-f3Br10p2',             null, null, null,             null,             null,             null,             null,             null, 'T:r10'],
-          [ 'T:r9',  'W:paul-f3Br9p1',  'W:paul-f3Br9p2', 'W:paul-f3Br9p3', null, null,             null,             null,             null,             null,             null,  'T:r9'],
-          [ 'T:r8',  'W:paul-f3Br8p1',  'W:paul-f3Br8p2', 'W:paul-f3Br8p3', null, null,             null,             null,             null,             null,             null,  'T:r8'],
-          [ 'T:r7',  'W:paul-f3Br7p1',  'W:paul-f3Br7p2', 'W:paul-f3Br7p3', null, null, 'W:paul-f3Br7p4', 'W:paul-f3Br7p5',             null, 'W:paul-f3Br7p6', 'W:paul-f3Br7p7',  'T:r7'],
-          [ 'T:r6',  'W:paul-f3Br6p1',  'W:paul-f3Br6p2', 'W:paul-f3Br6p3', null, null, 'W:paul-f3Br6p4', 'W:paul-f3Br6p5', 'W:paul-f3Br6p6', 'W:paul-f3Br6p7', 'W:paul-f3Br6p8',  'T:r6'],
-          [ 'T:r5',  'W:paul-f3Br5p1',  'W:paul-f3Br5p2', 'W:paul-f3Br5p3', null, null, 'W:paul-f3Br5p4', 'W:paul-f3Br5p5', 'W:paul-f3Br5p6', 'W:paul-f3Br5p7', 'W:paul-f3Br5p8',  'T:r5'],
-          [ 'T:r4',  'W:paul-f3Br4p1',  'W:paul-f3Br4p2', 'W:paul-f3Br4p3', null, null, 'W:paul-f3Br4p4', 'W:paul-f3Br4p5', 'W:paul-f3Br4p6', 'W:paul-f3Br4p7', 'W:paul-f3Br4p8',  'T:r4'],
-          [ 'T:r3',  'W:paul-f3Br3p1',  'W:paul-f3Br3p2', 'W:paul-f3Br3p3', null, null, 'W:paul-f3Br3p4', 'W:paul-f3Br3p5',             null, 'W:paul-f3Br3p6', 'W:paul-f3Br3p7',  'T:r3'],
-          [ 'T:r2',              null,              null,             null, null, null, 'W:paul-f3Br2p1', 'W:paul-f3Br2p2',             null,             null,             null,  'T:r2'],
-          [ 'T:r1',              null,              null,             null, null, null, 'W:paul-f3Br1p1', 'W:paul-f3Br1p2',             null,             null,             null,  'T:r1'],
+          ['T:r10',  'W:paul-f3Br1s1',  'W:paul-f3Br1s2',             null, null, null,             null,             null,             null,             null,             null, 'T:r10'],
+          [ 'T:r9',  'W:paul-f3Br9s1',  'W:paul-f3Br9s2', 'W:paul-f3Br9s3', null, null,             null,             null,             null,             null,             null,  'T:r9'],
+          [ 'T:r8',  'W:paul-f3Br8s1',  'W:paul-f3Br8s2', 'W:paul-f3Br8s3', null, null,             null,             null,             null,             null,             null,  'T:r8'],
+          [ 'T:r7',  'W:paul-f3Br7s1',  'W:paul-f3Br7s2', 'W:paul-f3Br7s3', null, null, 'W:paul-f3Br7s4', 'W:paul-f3Br7s5',             null, 'W:paul-f3Br7s6', 'W:paul-f3Br7s7',  'T:r7'],
+          [ 'T:r6',  'W:paul-f3Br6s1',  'W:paul-f3Br6s2', 'W:paul-f3Br6s3', null, null, 'W:paul-f3Br6s4', 'W:paul-f3Br6s5', 'W:paul-f3Br6s6', 'W:paul-f3Br6s7', 'W:paul-f3Br6s8',  'T:r6'],
+          [ 'T:r5',  'W:paul-f3Br5s1',  'W:paul-f3Br5s2', 'W:paul-f3Br5s3', null, null, 'W:paul-f3Br5s4', 'W:paul-f3Br5s5', 'W:paul-f3Br5s6', 'W:paul-f3Br5s7', 'W:paul-f3Br5s8',  'T:r5'],
+          [ 'T:r4',  'W:paul-f3Br4s1',  'W:paul-f3Br4s2', 'W:paul-f3Br4s3', null, null, 'W:paul-f3Br4s4', 'W:paul-f3Br4s5', 'W:paul-f3Br4s6', 'W:paul-f3Br4s7', 'W:paul-f3Br4s8',  'T:r4'],
+          [ 'T:r3',  'W:paul-f3Br3s1',  'W:paul-f3Br3s2', 'W:paul-f3Br3s3', null, null, 'W:paul-f3Br3s4', 'W:paul-f3Br3s5',             null, 'W:paul-f3Br3s6', 'W:paul-f3Br3s7',  'T:r3'],
+          [ 'T:r2',              null,              null,             null, null, null, 'W:paul-f3Br2s1', 'W:paul-f3Br2s2',             null,             null,             null,  'T:r2'],
+          [ 'T:r1',              null,              null,             null, null, null, 'W:paul-f3Br1s1', 'W:paul-f3Br1s2',             null,             null,             null,  'T:r1'],
         ],
       }),
-
-      //paul-f3B viewing only
-      // new Cluster({
-      //   identifier: 'e8B',
-      //   name: 'The Citadel (paul-f3B)',
-      //   totalWorkspaces: 52,
-      //   // prettier-ignore
-      //   map: [
-      //     ['T:r10','W:e8r10p1', 'W:e8r10p2',        null, null, null,        null,        null,        null,        null,        null, 'T:r10'],
-      //     ['T:r9',  'W:e8r9p1',  'W:e8r9p2', 'W:e8r9p3', null, null,        null,        null,        null,        null,        null, 'T:r9'],
-      //     ['T:r8',  'W:e8r8p1',  'W:e8r8p2', 'W:e8r8p3', null, null,        null,        null,        null,        null,        null, 'T:r8'],
-      //     ['T:r7',  'W:e8r7p1',  'W:e8r7p2', 'W:e8r7p3', null, null, 'W:e8r7p4', 'W:e8r7p5',        null, 'W:e8r7p6', 'W:e8r7p7', 'T:r7'],
-      //     ['T:r6',  'W:e8r6p1',  'W:e8r6p2', 'W:e8r6p3', null, null, 'W:e8r6p4', 'W:e8r6p5', 'W:e8r6p6', 'W:e8r6p7', 'W:e8r6p8', 'T:r6'],
-      //     ['T:r5',  'W:e8r5p1',  'W:e8r5p2', 'W:e8r5p3', null, null, 'W:e8r5p4', 'W:e8r5p5', 'W:e8r5p6', 'W:e8r5p7', 'W:e8r5p8', 'T:r5'],
-      //     ['T:r4',  'W:e8r4p1',  'W:e8r4p2', 'W:e8r4p3', null, null, 'W:e8r4p4', 'W:e8r4p5', 'W:e8r4p6', 'W:e8r4p7', 'W:e8r4p8', 'T:r4'],
-      //     ['T:r3',  'W:e8r3p1',  'W:e8r3p2', 'W:e8r3p3', null, null, 'W:e8r3p4', 'W:e8r3p5',        null, 'W:e8r3p6', 'W:e8r3p7', 'T:r3'],
-      //     ['T:r2',         null,         null,        null, null, null, 'W:e8r2p1', 'W:e8r2p2',        null,        null,        null, 'T:r2'],
-      //     ['T:r1',         null,         null,        null, null, null, 'W:e8r1p1', 'W:e8r1p2',        null,        null,        null, 'T:r1'],
-      //   ],
-      // }),
-      // // paul-f3A/B together ready to use EXCEPT identifier not set
       new Cluster({
-        identifier: 'paul-f3',
-        name: 'Grâce / The Citadel',
-        totalWorkspaces: 110,
+        identifier: 'paul-f4A',
+        name: 'The Grid',
+        totalWorkspaces: 57,
         // prettier-ignore
         map: [
-          ['T:r10',            null,              null,             null,             null,             null,             null,             null,             null, null, null,             null,              null,              null,   null, 'P', 'T:r10', 'W:paul-f3Br10p1', 'W:paul-f3Br10p2',             null, null, null,             null,             null,             null,             null,             null, 'T:r10'],
-          ['T:r9',             null,              null,             null,             null,             null,             null,             null,             null, null, null,             null,              null,  'W:paul-f3Ar9p1', 'T:r9', 'P',  'T:r9',  'W:paul-f3Br9p1',  'W:paul-f3Br9p2', 'W:paul-f3Br9p3', null, null,             null,             null,             null,             null,             null,  'T:r9'],
-          ['T:r8',             null,              null,             null,             null,             null,             null,             null,             null, null, null, 'W:paul-f3Ar8p1',  'W:paul-f3Ar8p2',  'W:paul-f3Ar8p3', 'T:r8', 'P',  'T:r8',  'W:paul-f3Br8p1',  'W:paul-f3Br8p2', 'W:paul-f3Br8p3', null, null,             null,             null,             null,             null,             null,  'T:r8'],
-          ['T:r7',             null,              null,             null,             null,             null,             null, 'W:paul-f3Ar7p1', 'W:paul-f3Ar7p2', null, null, 'W:paul-f3Ar7p3',  'W:paul-f3Ar7p4',  'W:paul-f3Ar7p5', 'T:r7', 'P',  'T:r7',  'W:paul-f3Br7p1',  'W:paul-f3Br7p2', 'W:paul-f3Br7p3', null, null, 'W:paul-f3Br7p4', 'W:paul-f3Br7p5',             null, 'W:paul-f3Br7p6', 'W:paul-f3Br7p7',  'T:r7'],
-          ['T:r6',             null,  'W:paul-f3Ar6p1', 'W:paul-f3Ar6p2', 'W:paul-f3Ar6p3', 'W:paul-f3Ar6p4', 'W:paul-f3Ar6p5', 'W:paul-f3Ar6p6', 'W:paul-f3Ar6p7', null, null, 'W:paul-f3Ar6p8',  'W:paul-f3Ar6p9', 'W:paul-f3rA6p10', 'T:r6', 'P',  'T:r6',  'W:paul-f3Br6p1',  'W:paul-f3Br6p2', 'W:paul-f3Br6p3', null, null, 'W:paul-f3Br6p4', 'W:paul-f3Br6p5', 'W:paul-f3Br6p6', 'W:paul-f3Br6p7', 'W:paul-f3Br6p8',  'T:r6'],
-          ['T:r5',  'W:paul-f3Ar5p1', 'W:paul-f3Ar5p2', 'W:paul-f3Ar5p3', 'W:paul-f3Ar5p4', 'W:paul-f3Ar5p5', 'W:paul-f3Ar5p6', 'W:paul-f3Ar5p7', 'W:paul-f3Ar5p8', null, null, 'W:paul-f3Ar5p9', 'W:paul-f3Ar5p10', 'W:paul-f3rA5p11', 'T:r5', 'P',  'T:r5',  'W:paul-f3Br5p1',  'W:paul-f3Br5p2', 'W:paul-f3Br5p3', null, null, 'W:paul-f3Br5p4', 'W:paul-f3Br5p5', 'W:paul-f3Br5p6', 'W:paul-f3Br5p7', 'W:paul-f3Br5p8',  'T:r5'],
-          ['T:r4',  'W:paul-f3Ar4p1', 'W:paul-f3Ar4p2', 'W:paul-f3Ar4p3', 'W:paul-f3Ar4p4', 'W:paul-f3Ar4p5',             null, 'W:paul-f3Ar4p6', 'W:paul-f3Ar4p7', null, null, 'W:paul-f3Ar4p8',  'W:paul-f3Ar4p9', 'W:paul-f3rA4p10', 'T:r4', 'P',  'T:r4',  'W:paul-f3Br4p1',  'W:paul-f3Br4p2', 'W:paul-f3Br4p3', null, null, 'W:paul-f3Br4p4', 'W:paul-f3Br4p5', 'W:paul-f3Br4p6', 'W:paul-f3Br4p7', 'W:paul-f3Br4p8',  'T:r4'],
-          ['T:r3',  'W:paul-f3Ar3p1', 'W:paul-f3Ar3p2', 'W:paul-f3Ar3p3', 'W:paul-f3Ar3p4', 'W:paul-f3Ar3p5', 'W:paul-f3Ar3p6', 'W:paul-f3Ar3p7', 'W:paul-f3Ar3p8', null, null, 'W:paul-f3Ar3p9', 'W:paul-f3Ar3p10', 'W:paul-f3rA3p11', 'T:r3', 'P',  'T:r3',  'W:paul-f3Br3p1',  'W:paul-f3Br3p2', 'W:paul-f3Br3p3', null, null, 'W:paul-f3Br3p4', 'W:paul-f3Br3p5',             null, 'W:paul-f3Br3p6', 'W:paul-f3Br3p7',  'T:r3'],
-          ['T:r2',  'W:paul-f3Ar2p1', 'W:paul-f3Ar2p2', 'W:paul-f3Ar2p3', 'W:paul-f3Ar2p4', 'W:paul-f3Ar2p5',             null,             null,             null, null, null,             null,              null,              null, 'T:r2', 'P',  'T:r2',              null,              null,             null, null, null, 'W:paul-f3Br2p1', 'W:paul-f3Br2p2',             null,             null,             null,  'T:r2'],
-          ['T:r1',  'W:paul-f3Ar1p1', 'W:paul-f3Ar1p2',             null,             null,             null,             null,             null,             null, null, null,             null,              null,              null, 'T:r1', 'P',  'T:r1',              null,              null,             null, null, null, 'W:paul-f3Br1p1', 'W:paul-f3Br1p2',             null,             null,             null,  'T:r1'],
+          ['T:r8', 'W:paul-f4Ar8s1', 'W:paul-f4Ar8s2', 'W:paul-f4Ar8s3', 'W:paul-f4Ar8s4', 'W:paul-f4Ar8s5',             null,             null,             null, null, null, 'W:paul-f4Ar8s8',  'W:paul-f4Ar8s9', 'W:paul-f4Ar8s10', 'T:r8'],
+          ['T:r7', 'W:paul-f4Ar7s1', 'W:paul-f4Ar7s2', 'W:paul-f4Ar7s3', 'W:paul-f4Ar7s4', 'W:paul-f4Ar7s5', 'W:paul-f4Ar7s6', 'W:paul-f4Ar7s7', 'W:paul-f4Ar7s8', null, null, 'W:paul-f4Ar7s9', 'W:paul-f4Ar7s10', 'W:paul-f4Ar7s11', 'T:r7'],
+          ['T:r6', 'W:paul-f4Ar6s1', 'W:paul-f4Ar6s2', 'W:paul-f4Ar6s3', 'W:paul-f4Ar6s4', 'W:paul-f4Ar6s5',             null, 'W:paul-f4Ar6s6', 'W:paul-f4Ar6s7', null, null, 'W:paul-f4Ar6s8',  'W:paul-f4Ar6s9', 'W:paul-f4Ar6s10', 'T:r6'],
+          ['T:r5', 'W:paul-f4Ar5s1', 'W:paul-f4Ar5s2', 'W:paul-f4Ar5s3', 'W:paul-f4Ar5s4', 'W:paul-f4Ar5s5', 'W:paul-f4Ar5s6', 'W:paul-f4Ar5s7', 'W:paul-f4Ar5s8', null, null, 'W:paul-f4Ar5s9', 'W:paul-f4Ar5s10', 'W:paul-f4Ar5s11', 'T:r5'],
+          ['T:r4', 'W:paul-f4Ar4s1', 'W:paul-f4Ar4s2', 'W:paul-f4Ar4s3', 'W:paul-f4Ar4s4', 'W:paul-f4Ar4s5',             null,             null,                   null, null,             null,             null,               null, 'T:r4'],
+          ['T:r3', 'W:paul-f4Ar3s1', 'W:paul-f4Ar3s2',             null,             null,             null,             null,             null,                   null, null,             null,             null,               null, 'T:r3'],
+          ['T:r2', 'W:paul-f4Ar2s1', 'W:paul-f4Ar2s2', 'W:paul-f4Ar2s3', 'W:paul-f4Ar2s4', 'W:paul-f4Ar2s5',             null,             null,                   null, null,             null,             null,               null, 'T:r2'],
+          ['T:r1', 'W:paul-f4Ar1s1', 'W:paul-f4Ar1s2', 'W:paul-f4Ar1s3', 'W:paul-f4Ar1s4', 'W:paul-f4Ar1s5',             null,             null,                   null, null,             null,             null,               null, 'T:r1'],
         ],
       }),
-      // paul-f3A/B together viewing only
-      // new Cluster({
-      //   identifier: 'e8',
-      //   name: 'Grâce / The Citadel (paul-f3A/B)',
-      //   totalWorkspaces: 110,
-      //   // prettier-ignore
-      //   map: [
-      //     ['T:r10',       null,       null,       null,      null,        null,       null,       null,       null, null, null,       null,        null,        null,   null, 'P', 'T:r10', 'W:e8r10p1', 'W:e8r10p2',        null, null, null,        null,        null,        null,        null,        null, 'T:r10'],
-      //     ['T:r9',        null,       null,       null,      null,        null,       null,       null,       null, null, null,       null,        null,  'W:e8r9p1', 'T:r9', 'P',  'T:r9',  'W:e8r9p1',  'W:e8r9p2', 'W:e8r9p3', null, null,        null,        null,        null,        null,        null, 'T:r9'],
-      //     ['T:r8',        null,       null,       null,      null,        null,       null,       null,       null, null, null, 'W:e8r8p1',  'W:e8r8p2',  'W:e8r8p3', 'T:r8', 'P',  'T:r8',  'W:e8r8p1',  'W:e8r8p2', 'W:e8r8p3', null, null,        null,        null,        null,        null,        null, 'T:r8'],
-      //     ['T:r7',        null,       null,       null,      null,        null,       null, 'W:e8r7p1', 'W:e8r7p2', null, null, 'W:e8r7p3',  'W:e8r7p4',  'W:e8r7p5', 'T:r7', 'P',  'T:r7',  'W:e8r7p1',  'W:e8r7p2', 'W:e8r7p3', null, null, 'W:e8r7p4', 'W:e8r7p5',        null, 'W:e8r7p6', 'W:e8r7p7', 'T:r7'],
-      //     ['T:r6',        null, 'W:e8r6p1', 'W:e8r6p2', 'W:e8r6p3', 'W:e8r6p4', 'W:e8r6p5', 'W:e8r6p6', 'W:e8r6p7', null, null, 'W:e8r6p8',  'W:e8r6p9', 'W:e8r6p10', 'T:r6', 'P',  'T:r6',  'W:e8r6p1',  'W:e8r6p2', 'W:e8r6p3', null, null, 'W:e8r6p4', 'W:e8r6p5', 'W:e8r6p6', 'W:e8r6p7', 'W:e8r6p8', 'T:r6'],
-      //     ['T:r5',  'W:e8r5p1', 'W:e8r5p2', 'W:e8r5p3', 'W:e8r5p4', 'W:e8r5p5', 'W:e8r5p6', 'W:e8r5p7', 'W:e8r5p8', null, null, 'W:e8r5p9', 'W:e8r5p10', 'W:e8r5p11', 'T:r5', 'P',  'T:r5',  'W:e8r5p1',  'W:e8r5p2', 'W:e8r5p3', null, null, 'W:e8r5p4', 'W:e8r5p5', 'W:e8r5p6', 'W:e8r5p7', 'W:e8r5p8', 'T:r5'],
-      //     ['T:r4',  'W:e8r4p1', 'W:e8r4p2', 'W:e8r4p3', 'W:e8r4p4', 'W:e8r4p5',       null, 'W:e8r4p6', 'W:e8r4p7', null, null, 'W:e8r4p8',  'W:e8r4p9', 'W:e8r4p10', 'T:r4', 'P',  'T:r4',  'W:e8r4p1',  'W:e8r4p2', 'W:e8r4p3', null, null, 'W:e8r4p4', 'W:e8r4p5', 'W:e8r4p6', 'W:e8r4p7', 'W:e8r4p8', 'T:r4'],
-      //     ['T:r3',  'W:e8r3p1', 'W:e8r3p2', 'W:e8r3p3', 'W:e8r3p4', 'W:e8r3p5', 'W:e8r3p6', 'W:e8r3p7', 'W:e8r3p8', null, null, 'W:e8r3p9', 'W:e8r3p10', 'W:e8r3p11', 'T:r3', 'P',  'T:r3',  'W:e8r3p1',  'W:e8r3p2', 'W:e8r3p3', null, null, 'W:e8r3p4', 'W:e8r3p5',        null, 'W:e8r3p6', 'W:e8r3p7', 'T:r3'],
-      //     ['T:r2',  'W:e8r2p1', 'W:e8r2p2', 'W:e8r2p3', 'W:e8r2p4', 'W:e8r2p5',       null,       null,       null, null, null,       null,        null,        null, 'T:r2', 'P',  'T:r2',         null,         null,        null, null, null, 'W:e8r2p1', 'W:e8r2p2',        null,        null,        null, 'T:r2'],
-      //     ['T:r1',  'W:e8r1p1', 'W:e8r1p2',       null,       null,       null,       null,       null,       null, null, null,       null,        null,        null, 'T:r1', 'P',  'T:r1',         null,         null,        null, null, null, 'W:e8r1p1', 'W:e8r1p2',        null,        null,        null, 'T:r1'],
-      //   ],
-      // }),
-      // paul-f4A/B together viewing only
-      // new Cluster({
-      //   identifier: 'e9',
-      //   name: 'The Grid / The Upside (paul-f4A/B)',
-      //   totalWorkspaces: 105,
-      //   // prettier-ignore
-      //   map: [
-      //     [  null,       null,       null,       null,      null,        null,       null,       null,       null, null, null,       null,        null,        null,   null, 'P',  'T:r9', 'W:e9r9p1', 'W:e9r9p2', 'W:e9r9p3', null, null,       null,       null,       null,        null,        null, 'T:r9'],
-      //     [  null,       null,       null,       null,      null,        null,       null,       null,       null, null, null,       null,        null,        null,   null, 'P',  'T:r8', 'W:e9r8p1', 'W:e9r8p2', 'W:e9r8p3', null, null,       null,       null,       null,        null,        null, 'T:r8'],
-      //     [  null,       null,       null,       null,      null,        null,       null,       null,       null, null, null,       null,        null,        null,   null, 'P',  'T:r7', 'W:e9r7p1', 'W:e9r7p2', 'W:e9r7p3', null, null, 'W:e9r7p4', 'W:e9r7p5',       null,  'W:e9r7p6',  'W:e9r7p7', 'T:r7'],
-      //     ['T:r8', 'W:e9r8p1', 'W:e9r8p2', 'W:e9r8p3', 'W:e9r8p4', 'W:e9r8p5',       null,       null,       null, null, null, 'W:e9r8p8',  'W:e9r8p9', 'W:e9r8p10', 'T:r8', 'P',  'T:r6', 'W:e9r6p1', 'W:e9r6p2', 'W:e9r6p3', null, null, 'W:e9r6p4', 'W:e9r6p5',  'W:e9r6p6', 'W:e9r6p7',  'W:e9r6p8', 'T:r6'],
-      //     ['T:r7', 'W:e9r7p1', 'W:e9r7p2', 'W:e9r7p3', 'W:e9r7p4', 'W:e9r7p5', 'W:e9r7p6', 'W:e9r7p7', 'W:e9r7p8', null, null, 'W:e9r7p9', 'W:e9r7p10', 'W:e9r7p11', 'T:r7', 'P',  'T:r5', 'W:e9r5p1', 'W:e9r5p2', 'W:e9r5p3', null, null, 'W:e9r5p4', 'W:e9r5p5',  'W:e9r5p6', 'W:e9r5p7',  'W:e9r5p8', 'T:r5'],
-      //     ['T:r6', 'W:e9r6p1', 'W:e9r6p2', 'W:e9r6p3', 'W:e9r6p4', 'W:e9r6p5',       null, 'W:e9r6p6', 'W:e9r6p7', null, null, 'W:e9r6p8',  'W:e9r6p9', 'W:e9r6p10', 'T:r6', 'P',  'T:r4', 'W:e9r4p1', 'W:e9r4p2', 'W:e9r4p3', null, null, 'W:e9r4p4', 'W:e9r4p5',  'W:e9r4p6', 'W:e9r4p7',  'W:e9r4p8', 'T:r4'],
-      //     ['T:r5', 'W:e9r5p1', 'W:e9r5p2', 'W:e9r5p3', 'W:e9r5p4', 'W:e9r5p5', 'W:e9r5p6', 'W:e9r5p7', 'W:e9r5p8', null, null, 'W:e9r5p9', 'W:e9r5p10', 'W:e9r5p11', 'T:r5', 'P',  'T:r3', 'W:e9r3p1', 'W:e9r3p2', 'W:e9r3p3', null, null, 'W:e9r3p4', 'W:e9r3p5',        null, 'W:e9r3p7',  'W:e9r3p8', 'T:r3'],
-      //     ['T:r4', 'W:e9r4p1', 'W:e9r4p2', 'W:e9r4p3', 'W:e9r4p4', 'W:e9r4p5',       null,       null,       null, null, null,       null,        null,        null, 'T:r4', 'P',  'T:r2',       null,       null,       null, null, null, 'W:e9r2p1', 'W:e9r2p2',        null,       null,        null, 'T:r2'],
-      //     ['T:r3', 'W:e9r3p1', 'W:e9r3p2',       null,       null,       null,       null,       null,       null, null, null,       null,        null,        null, 'T:r3', 'P',  'T:r1',       null,       null,       null, null, null, 'W:e9r1p1', 'W:e9r1p2',        null,       null,        null, 'T:r1'],
-      //     ['T:r2', 'W:e9r2p1', 'W:e9r2p2', 'W:e9r2p3', 'W:e9r2p4', 'W:e9r2p5',       null,       null,       null, null, null,       null,        null,        null, 'T:r2', 'P',    null,       null,       null,       null, null, null,       null,       null,        null,       null,        null,   null],
-      //     ['T:r1', 'W:e9r1p1', 'W:e9r1p2', 'W:e9r1p3', 'W:e9r1p4', 'W:e9r1p5',       null,       null,       null, null, null,       null,        null,        null, 'T:r1', 'P',    null,       null,       null,       null, null, null,       null,       null,        null,       null,        null,   null],
-      //   ],
-      // }),
+      new Cluster({
+        identifier: 'paul-f4B',
+        name: 'The Upside',
+        totalWorkspaces: 48,
+        // prettier-ignore
+        map: [
+          ['T:r9', 'W:paul-f4Br9s1', 'W:paul-f4Br9s2', 'W:paul-f4Br9s3', null, null,             null,             null,             null,             null,             null, 'T:r9'],
+          ['T:r8', 'W:paul-f4Br8s1', 'W:paul-f4Br8s2', 'W:paul-f4Br8s3', null, null,             null,             null,             null,             null,             null, 'T:r8'],
+          ['T:r7', 'W:paul-f4Br7s1', 'W:paul-f4Br7s2', 'W:paul-f4Br7s3', null, null, 'W:paul-f4Br7s4', 'W:paul-f4Br7s5',             null, 'W:paul-f4Br7s6', 'W:paul-f4Br7s7', 'T:r7'],
+          ['T:r6', 'W:paul-f4Br6s1', 'W:paul-f4Br6s2', 'W:paul-f4Br6s3', null, null, 'W:paul-f4Br6s4', 'W:paul-f4Br6s5', 'W:paul-f4Br6s6', 'W:paul-f4Br6s7', 'W:paul-f4Br6s8', 'T:r6'],
+          ['T:r5', 'W:paul-f4Br5s1', 'W:paul-f4Br5s2', 'W:paul-f4Br5s3', null, null, 'W:paul-f4Br5s4', 'W:paul-f4Br5s5', 'W:paul-f4Br5s6', 'W:paul-f4Br5s7', 'W:paul-f4Br5s8', 'T:r5'],
+          ['T:r4', 'W:paul-f4Br4s1', 'W:paul-f4Br4s2', 'W:paul-f4Br4s3', null, null, 'W:paul-f4Br4s4', 'W:paul-f4Br4s5', 'W:paul-f4Br4s6', 'W:paul-f4Br4s7', 'W:paul-f4Br4s8', 'T:r4'],
+          ['T:r3', 'W:paul-f4Br3s1', 'W:paul-f4Br3s2', 'W:paul-f4Br3s3', null, null, 'W:paul-f4Br3s4', 'W:paul-f4Br3s5',             null, 'W:paul-f4Br3s7', 'W:paul-f4Br3s8', 'T:r3'],
+          ['T:r2',             null,             null,             null, null, null, 'W:paul-f4Br2s1', 'W:paul-f4Br2s2',             null,             null,             null, 'T:r2'],
+          ['T:r1',             null,             null,             null, null, null, 'W:paul-f4Br1s1', 'W:paul-f4Br1s2',             null,             null,             null, 'T:r1'],
+        ],
+      }),
+      new Cluster({
+        identifier: 'paul-f5A',
+        name: 'Hogwarts',
+        totalWorkspaces: 30,
+        // prettier-ignore
+        map: [
+          ['T:r6',             null,             null,             null,             null,             null,             null,             null,             null,  null, null,             null, 'W:paul-f5Ar6s1',  'W:paul-f5Ar6s2', 'T:r6'],
+          ['T:r5',             null,             null,             null,             null,             null,             null,             null,             null,  null, null, 'W:paul-f5Ar5s1', 'W:paul-f5Ar5s2',  'W:paul-f5Ar5s3', 'T:r5'],
+          ['T:r4',             null,             null,             null,             null,             null,             null, 'W:paul-f5Ar4s1', 'W:paul-f5Ar4s2',  null, null, 'W:paul-f5Ar4s3', 'W:paul-f5Ar4s4',  'W:paul-f5Ar4s5', 'T:r4'],
+          ['T:r3',             null, 'W:paul-f5Ar3s1', 'W:paul-f5Ar3s2', 'W:paul-f5Ar3s3', 'W:paul-f5Ar3s4', 'W:paul-f5Ar3s5', 'W:paul-f5Ar3s6', 'W:paul-f5Ar3s7',  null, null, 'W:paul-f5Ar3s8', 'W:paul-f5Ar3s9', 'W:paul-f5Ar3s10', 'T:r3'],
+          ['T:r2', 'W:paul-f5Ar3s1', 'W:paul-f5Ar3s2', 'W:paul-f5Ar3s3', 'W:paul-f5Ar3s4', 'W:paul-f5Ar3s5',             null,             null,             null,  null, null,             null,             null,              null, 'T:r2'],
+          ['T:r1', 'W:paul-f5Ar1s1', 'W:paul-f5Ar1s2', 'W:paul-f5Ar1s3', 'W:paul-f5Ar1s4', 'W:paul-f5Ar1s5',             null,             null,             null,  null, null,             null,             null,              null, 'T:r1'],
+        ],
+      }),
+      new Cluster({
+        identifier: 'paul-f5B',
+        name: 'Cyberdyne',
+        totalWorkspaces: 32,
+        // prettier-ignore
+        map: [
+          ['T:r6', 'W:paul-f5Br6s1', 'W:paul-f5Br6s2', 'W:paul-f5Br6s3', null, null, 'W:paul-f5Br6s4', 'W:paul-f5Br6s5', 'W:paul-f5Br6s6', 'W:paul-f5Br6s7', 'T:r6'],
+          ['T:r5', 'W:paul-f5Br5s1', 'W:paul-f5Br5s2', 'W:paul-f5Br5s3', null, null, 'W:paul-f5Br5s4', 'W:paul-f5Br5s5', 'W:paul-f5Br5s6', 'W:paul-f5Br5s7', 'T:r5'],
+          ['T:r4', 'W:paul-f5Br4s1', 'W:paul-f5Br4s2', 'W:paul-f5Br4s3', null, null, 'W:paul-f5Br4s4', 'W:paul-f5Br4s5', 'W:paul-f5Br4s6', 'W:paul-f5Br4s7', 'T:r4'],
+          ['T:r3', 'W:paul-f5Br3s1', 'W:paul-f5Br3s2', 'W:paul-f5Br3s3', null, null, 'W:paul-f5Br3s4', 'W:paul-f5Br3s5',             null, 'W:paul-f5Br3s6', 'T:r3'],
+          ['T:r2',             null,             null,             null, null, null,             null, 'W:paul-f5Br2s1',             null, 'W:paul-f5Br2s2', 'T:r2'],
+          ['T:r1',             null,             null,             null, null, null,             null, 'W:paul-f5Br1s1', 'W:paul-f5Br1s2', 'W:paul-f5Br1s3', 'T:r1'],
+        ],
+      }),
     ];
   }
 }
