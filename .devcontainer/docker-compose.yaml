@@ -74,7 +74,7 @@ services:
 
   rabbitmq:
     hostname: s42-rabbitmq
-    image: ghcr.io/42atomys/s42-rabbitmq:3.10.2-management
+    image: ghcr.io/42atomys/s42-rabbitmq:3.11.13-management
     restart: unless-stopped
     environment:
       RABBITMQ_DEFAULT_USER: rabbitmq
