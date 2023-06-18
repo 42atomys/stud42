@@ -1,6 +1,7 @@
 import {
   ClusterContainerProps,
   ClusterEmpty,
+  ClusterPersonalWorkspace,
   ClusterPillar,
   ClusterRow,
   ClusterTableMap,
@@ -9,7 +10,7 @@ import {
   extractNode,
 } from '@components/ClusterMap';
 import { ClusterContainer } from '@components/ClusterMap/ClusterContainer';
-import { Campuses, CampusNames } from '@lib/clustersMap';
+import { CampusNames, Campuses } from '@lib/clustersMap';
 import {
   GetStaticPaths,
   GetStaticPathsResult,
@@ -39,10 +40,19 @@ export const IndexPage: NextPage<
 
                 if (entity === null) return <ClusterEmpty key={key} />;
                 if (entity === 'P') return <ClusterPillar key={key} />;
-                if (entity.startsWith('T:'))
+                if (entity.startsWith('PW')) {
+                  return (
+                    <ClusterPersonalWorkspace
+                      key={key}
+                      displayText={entity.slice(3)}
+                    />
+                  );
+                }
+                if (entity.startsWith('T:')) {
                   return (
                     <ClusterEmpty key={key} displayText={entity.slice(2)} />
                   );
+                }
 
                 const identifier = entity.slice(2);
                 const loc = extractNode(locations, identifier);

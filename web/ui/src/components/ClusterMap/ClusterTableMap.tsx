@@ -1,4 +1,5 @@
 import Avatar from '@components/Avatar';
+import { Tooltip } from '@components/Tooltip';
 import { useMe } from '@ctx/currentUser';
 import { ClusterMapAvatarSize } from '@graphql.d';
 import classNames from 'classnames';
@@ -112,7 +113,7 @@ export const ClusterWorkspaceWithUser = ({
 };
 
 /**
- * ClusterWorkspace component is used to display a workspace with compouter icon
+ * ClusterWorkspace component is used to display a workspace with computer icon
  * and identifier in a `ClusterRow`
  */
 export const ClusterWorkspace = ({
@@ -128,6 +129,37 @@ export const ClusterWorkspace = ({
         <i className="fa-light fa-computer"></i>
       </span>
       <span className="text-xs">{displayText || identifier}</span>
+    </div>
+  );
+};
+
+/**
+ * ClusterPersonalWorkspace component is used to display a workspace space for
+ * personal computer in a `ClusterRow`
+ */
+export const ClusterPersonalWorkspace = ({
+  identifier,
+  displayText,
+}: {
+  identifier?: string;
+  displayText?: string;
+}) => {
+  const hasDisplayText = displayText || identifier;
+  return (
+    <div className="flex flex-1 flex-col justify-center items-center m-0.5 rounded text-slate-500">
+      <Tooltip
+        text="Personal Workspace"
+        size="xs"
+        color="black"
+        direction="top"
+      >
+        <span className="opacity-50">
+          <i className="fa-light fa-laptop"></i>
+        </span>
+        {hasDisplayText && (
+          <span className="text-xs">{displayText || identifier}</span>
+        )}
+      </Tooltip>
     </div>
   );
 };
