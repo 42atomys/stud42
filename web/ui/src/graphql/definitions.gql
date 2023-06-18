@@ -300,12 +300,6 @@ query followsGroupManageModal($userID: UUID!) {
 }
 
 query clusterSidebarData($campusName: String!, $clusterPrefixes: [String!]!) {
-  me {
-    currentCampus {
-      ...CampusBasicData
-    }
-  }
-
   locationsStatsByPrefixes(
     campusName: $campusName
     identifierPrefixes: $clusterPrefixes
