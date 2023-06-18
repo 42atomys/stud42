@@ -384,7 +384,8 @@ func (r *queryResolver) LocationsByCluster(ctx context.Context, page typesgen.Pa
 func (r *queryResolver) LocationsStatsByPrefixes(ctx context.Context, campusName string, identifierPrefixes []string) ([]*typesgen.LocationStats, error) {
 	sqlResults := []*typesgen.LocationStats{}
 	prefixes := make([]any, len(identifierPrefixes))
-	identifierMaxSize := 2
+	identifierMinSize := 2
+	identifierMaxSize := 10
 
 	// We need to convert the prefixes to any to be able to use them in the query
 	// and we also need to know the max size of the prefixes to be able to
@@ -392,13 +393,10 @@ func (r *queryResolver) LocationsStatsByPrefixes(ctx context.Context, campusName
 	// after the request.
 	for i, prefix := range identifierPrefixes {
 		// Validate the length of the prefix.
-		if len(prefix) < 2 || len(prefix) > 4 {
-			return nil, fmt.Errorf("invalid prefix size. Must be between 2 and 4")
+		if len(prefix) < identifierMinSize || len(prefix) > identifierMaxSize {
+			return nil, fmt.Errorf("invalid prefix size. Must be between %d and %d", identifierMinSize, identifierMaxSize)
 		}
 
-		if len(prefix) > identifierMaxSize {
-			identifierMaxSize = len(prefix)
-		}
 		prefixes[i] = prefix
 	}
 
