@@ -54,6 +54,7 @@ export interface ICampus {
   //
   // e.g. for the identifier "c1r2p3" it will return :
   //   {
+  //     building: "paul" | undefined,
   //     cluster: "1",
   //     row: "2",
   //     workspace: "3",
@@ -62,6 +63,8 @@ export interface ICampus {
   //     workspaceWithLetter: "p3",
   //   }
   extractor(identifier: string): {
+    building?: string;
+
     cluster: string;
     row: string;
     workspace: string;
