@@ -30,7 +30,7 @@ export const Search: SearchComponent = ({
     <div className="mb-2">
       <div
         key="search-engine-container"
-        className="relative flex focus-within:border-indigo-500 border-2 border-transparent transition-all flex-row items-center bg-slate-200 dark:bg-slate-900 p-2 rounded"
+        className="relative flex focus-within:border-indigo-500 border-2 border-transparent transition-all flex-row items-center bg-slate-200 dark:bg-slate-950 p-2 rounded"
       >
         <Combobox
           value={selectedUser}
