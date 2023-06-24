@@ -229,6 +229,39 @@ func (r *mutationResolver) UpdateMe(ctx context.Context, input typesgen.UpdateMe
 	return updatedUser, nil
 }
 
+// UpdateAccountVisibility is the resolver for the updateAccountVisibility field.
+func (r *mutationResolver) UpdateAccountVisibility(ctx context.Context, input typesgen.UpdateAccountVisibilityInput) (*generated.Account, error) {
+	cu, err := CurrentUserFromContext(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	if cu.QueryAccounts().Where(account.ID(input.ID)).CountX(ctx) == 0 {
+		return nil, errors.New("you don't own this account or it doesn't exist")
+	}
+
+	return r.client.Account.UpdateOneID(input.ID).
+		SetPublic(input.Public).
+		Save(ctx)
+}
+
+// DeleteAccount is the resolver for the deleteAccount field.
+func (r *mutationResolver) DeleteAccount(ctx context.Context, id uuid.UUID) (bool, error) {
+	cu, err := CurrentUserFromContext(ctx)
+	if err != nil {
+		return false, err
+	}
+
+	_, err = r.client.Account.Delete().
+		Where(account.ID(id), account.UserID(cu.ID)).
+		Exec(ctx)
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
 // InternalCreateUser is the resolver for the internalCreateUser field.
 func (r *mutationResolver) InternalCreateUser(ctx context.Context, input typesgen.CreateUserInput) (uuid.UUID, error) {
 	campusID, err := r.client.Campus.Query().Where(campus.DuoID(input.CurrentDuoCampusID)).FirstID(ctx)
@@ -610,6 +643,11 @@ func (r *userResolver) IsSwimmer(ctx context.Context, obj *generated.User) (bool
 	now := time.Now()
 	return (*obj.PoolYear == strconv.Itoa(now.Year()) &&
 		strings.EqualFold(*obj.PoolMonth, now.Format("January"))), nil
+}
+
+// PublicAccounts is the resolver for the publicAccounts field.
+func (r *userResolver) PublicAccounts(ctx context.Context, obj *generated.User) ([]*generated.Account, error) {
+	return r.client.User.QueryAccounts(obj).Where(account.Public(true)).All(ctx)
 }
 
 // IntraProxy is the resolver for the intraProxy field.
