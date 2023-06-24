@@ -35,13 +35,13 @@ export const nextAuthOptions: NextAuthOptions = {
       clientId: process.env.DISCORD_ID as string,
       clientSecret: process.env.DISCORD_SECRET as string,
       authorization:
-        'https://discord.com/api/oauth2/authorize?scope=identify+email+connections+guilds.join',
+        'https://discord.com/api/oauth2/authorize?scope=identify+email+guilds.join',
     }),
     GithubProvider({
       clientId: process.env.GITHUB_ID as string,
       clientSecret: process.env.GITHUB_SECRET as string,
       authorization:
-        'https://github.com/login/oauth/authorize?scope=user:email+user:follow+public_repo',
+        'https://github.com/login/oauth/authorize?scope=user:email',
     }),
     GitlabProvider({
       clientId: process.env.GITLAB_ID as string,
