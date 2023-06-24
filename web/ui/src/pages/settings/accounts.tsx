@@ -32,7 +32,7 @@ const ThridPartyIcon: React.FC<{ provider: AccountProvider }> = ({
     color="black"
   >
     <motion.button
-      className="p-3 bg-slate-200 dark:bg-slate-950 rounded-md hover:bg-slate-300 dark:hover:bg-slate-950 transition-colors cursor-pointer"
+      className="p-3 bg-slate-200 dark:bg-slate-900 rounded-md hover:bg-slate-300 dark:hover:bg-slate-800 transition-colors cursor-pointer"
       initial={{ scale: 1 }}
       whileHover={{ scale: 1.2 }}
       onClick={() =>

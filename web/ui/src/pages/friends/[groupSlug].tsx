@@ -75,7 +75,7 @@ const NewFriendGroupMenuItem: React.FC<{}> = () => (
       key={`add-friend-group`}
       name="New group"
       icon="[--fa-fw-width:24px] fa-kit fa-fw fa-regular-user-group-circle-plus"
-      className="mt-4 bg-slate-200 hover:bg-indigo-100/10 dark:bg-slate-800 dark:hover:bg-indigo-900/10 ring-2 ring-transparent hover:ring-indigo-500 [&>span]:justify-center [&>span>span]:flex-none"
+      className="mt-4 bg-slate-200 hover:bg-indigo-100/10 dark:bg-slate-900 dark:hover:bg-indigo-900/10 ring-2 ring-transparent hover:ring-indigo-500 [&>span]:justify-center [&>span>span]:flex-none"
     />
   </FriendsGroupAddOrEditModal>
 );

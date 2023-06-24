@@ -11,7 +11,7 @@ export const SettingsCategory: React.FC<
     {description && (
       <p className="text-slate-400 dark:text-slate-500 mb-4">{description}</p>
     )}
-    <div className="bg-slate-50 dark:bg-slate-900 rounded-lg shadow-slate-200 dark:shadow-slate-900 shadow-sm p-4">
+    <div className="bg-slate-50 dark:bg-slate-950 rounded-lg shadow-slate-200 dark:shadow-slate-900 shadow-sm p-4">
       {children}
     </div>
   </div>

@@ -20,7 +20,7 @@ export const SelectInput: React.FC<
       defaultValue={defaultValue}
     >
       <div className={classNames('relative', className)}>
-        <Listbox.Button className="relative w-full cursor-default rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 py-2 pl-3 pr-10 text-left focus:outline-none focus-visible:border-indigo-500 sm:text-sm">
+        <Listbox.Button className="relative w-full cursor-default rounded-lg bg-slate-200 dark:bg-slate-800 border border-slate-200 dark:border-slate-800 py-2 pl-3 pr-10 text-left focus:outline-none focus-visible:border-indigo-500 sm:text-sm">
           <span className="block truncate lowercase first-letter:uppercase">
             {value}
           </span>
@@ -37,7 +37,7 @@ export const SelectInput: React.FC<
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <Listbox.Options className="absolute right-0 w-full mt-2 origin-top-right bg-slate-50 dark:bg-slate-900 divide-y divide-gray-100 dark:divide-slate-800/75 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+          <Listbox.Options className="absolute right-0 w-full mt-2 origin-top-right bg-slate-200 dark:bg-slate-800 divide-y divide-gray-100 dark:divide-slate-800/75 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
             {objects.map((object, objectId) => (
               <div
                 className="px-1 py-1"

@@ -147,7 +147,7 @@ export const Star = (): JSX.Element => {
     <a
       href={`https://github.com/${PROJECT_PATH}`}
       target="_blank"
-      className="px-3 py-1 bg-slate-300 dark:bg-slate-900 rounded-md border dark:border-slate-700 text-slate-600 dark:text-slate-300"
+      className="px-3 py-1 bg-slate-300 dark:bg-slate-950 rounded-md border dark:border-slate-700 text-slate-600 dark:text-slate-300"
       rel="noreferrer"
     >
       <i className="fa-regular fa-star"></i>
@@ -167,7 +167,7 @@ export const Contribute = (): JSX.Element => {
     <a
       href={`https://github.com/${PROJECT_PATH}`}
       target="_blank"
-      className="px-3 py-1 bg-slate-300 dark:bg-slate-900 rounded-md border dark:border-slate-700 text-slate-600 dark:text-slate-300"
+      className="px-3 py-1 bg-slate-300 dark:bg-slate-950 rounded-md border dark:border-slate-700 text-slate-600 dark:text-slate-300"
       rel="noreferrer"
     >
       <i className="fa-brands fa-github"></i>
