@@ -22,6 +22,8 @@ import (
 	"atomys.codes/stud42/internal/models/generated/follow"
 	"atomys.codes/stud42/internal/models/generated/followsgroup"
 	"atomys.codes/stud42/internal/models/generated/location"
+	"atomys.codes/stud42/internal/models/generated/notice"
+	"atomys.codes/stud42/internal/models/generated/noticesuser"
 	"atomys.codes/stud42/internal/models/generated/user"
 	"atomys.codes/stud42/internal/models/gotype"
 	"atomys.codes/stud42/internal/pkg/s3"
@@ -38,6 +40,33 @@ import (
 // IsSwimmer is the resolver for the isSwimmer field.
 func (r *meResolver) IsSwimmer(ctx context.Context, obj *generated.User) (bool, error) {
 	return r.User().IsSwimmer(ctx, obj)
+}
+
+// ActivesNotices is the resolver for the activesNotices field.
+func (r *meResolver) ActivesNotices(ctx context.Context, obj *generated.User) ([]*generated.Notice, error) {
+	cu, err := CurrentUserFromContext(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return r.client.Notice.Query().Modify(func(s *sql.Selector) {
+		t := sql.Table(notice.Table)
+		s.From(t).
+			LeftJoin(sql.Table(noticesuser.Table).As(noticesuser.Table)).
+			OnP(
+				sql.And(
+					sql.ColumnsEQ(t.C(notice.FieldID), sql.Table(noticesuser.Table).C(noticesuser.FieldNoticeID)),
+					sql.EQ(sql.Table(noticesuser.Table).C(noticesuser.FieldUserID), cu.ID),
+				),
+			).
+			Where(
+				sql.And(
+					sql.EQ(t.C(notice.FieldIsActive), true),
+					sql.IsNull(sql.Table(noticesuser.Table).C(noticesuser.FieldID)),
+				),
+			)
+		s.OrderBy(t.C(notice.FieldCreatedAt))
+	}).All(ctx)
 }
 
 // CreateFriendship is the resolver for the createFriendship field.
@@ -126,6 +155,20 @@ func (r *mutationResolver) DeleteFollowsGroup(ctx context.Context, id uuid.UUID)
 	// Delete the relationship between the current user and the group.
 	if _, err := r.client.FollowsGroup.Delete().
 		Where(followsgroup.UserID(cu.ID), followsgroup.ID(id)).Exec(ctx); err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
+// ReadNotice is the resolver for the readNotice field.
+func (r *mutationResolver) ReadNotice(ctx context.Context, noticeID uuid.UUID) (bool, error) {
+	cu, err := CurrentUserFromContext(ctx)
+	if err != nil {
+		return false, err
+	}
+
+	if err := r.client.User.UpdateOneID(cu.ID).AddReadedNoticeIDs(noticeID).Exec(ctx); err != nil {
 		return false, err
 	}
 

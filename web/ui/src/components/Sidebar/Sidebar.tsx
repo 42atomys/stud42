@@ -1,4 +1,5 @@
 import { ConditionalWrapper } from '@components/ConditionalWrapper';
+import { RemoteNotices } from '@components/Notice';
 import { TooltipProps } from '@components/Tooltip';
 import Tooltip from '@components/Tooltip/Tooltip';
 import { Contribute, Star } from '@lib/github';
@@ -222,7 +223,10 @@ export const PageContent: React.FC<
 export const PageContainer: React.FC<
   React.PropsWithChildren<PropsWithClassName>
 > = ({ children, className }) => (
-  <div className={classNames('flex flex-col md:flex-row', className)}>
-    {children}
+  <div className={classNames('flex flex-col', className)}>
+    <RemoteNotices />
+    <div className={classNames('flex flex-col md:flex-row', className)}>
+      {children}
+    </div>
   </div>
 );
