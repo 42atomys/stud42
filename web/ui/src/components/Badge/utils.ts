@@ -1,16 +1,16 @@
 import { AccountProvider } from '@graphql.d';
 import { thridPartyData } from './data';
-import { ThridPartyBadgeProps } from './types';
+import { ThridPartySortable } from './types';
 
 /**
  * Sort the accounts by the order of the thridPartyData object.
  * This is used to display all thrid party accounts in the same order.
  */
-export const thirdPartySorted = (
-  accounts: ThridPartyBadgeProps[],
+export const thirdPartySorted = <T extends ThridPartySortable>(
+  accounts: T[],
   duoLogin?: string
 ) => {
-  let accs: ThridPartyBadgeProps[] = [];
+  let accs: T[] = [];
   accounts?.forEach((a) => (a !== null ? a && accs.push(a) : null));
 
   if (duoLogin) {
@@ -24,7 +24,7 @@ export const thirdPartySorted = (
         provider: AccountProvider.DUO,
         username: duoLogin,
         providerAccountId: '',
-      });
+      } as T);
     }
 
     /**
@@ -37,7 +37,7 @@ export const thirdPartySorted = (
       provider: 'SLACK' as AccountProvider,
       username: duoLogin,
       providerAccountId: '',
-    });
+    } as T);
   }
 
   const sortedKeys = Object.keys(thridPartyData);

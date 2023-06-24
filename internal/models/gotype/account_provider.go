@@ -9,15 +9,29 @@ import (
 type AccountProvider string
 
 const (
-	AccountProviderDuo     AccountProvider = "DUO"
-	AccountProviderGithub  AccountProvider = "GITHUB"
-	AccountProviderDiscord AccountProvider = "DISCORD"
+	AccountProviderDuo       AccountProvider = "DUO"
+	AccountProviderDiscord   AccountProvider = "DISCORD"
+	AccountProviderGithub    AccountProvider = "GITHUB"
+	AccountProviderGitlab    AccountProvider = "GITLAB"
+	AccountProviderInstagram AccountProvider = "INSTAGRAM"
+	AccountProviderLinkedIn  AccountProvider = "LINKEDIN"
+	AccountProviderReddit    AccountProvider = "REDDIT"
+	AccountProviderSpotify   AccountProvider = "SPOTIFY"
+	AccountProviderTwitch    AccountProvider = "TWITCH"
+	AccountProviderTwitter   AccountProvider = "TWITTER"
 )
 
 var AllAccountProvider = []AccountProvider{
 	AccountProviderDuo,
-	AccountProviderGithub,
 	AccountProviderDiscord,
+	AccountProviderGithub,
+	AccountProviderGitlab,
+	AccountProviderInstagram,
+	AccountProviderLinkedIn,
+	AccountProviderReddit,
+	AccountProviderSpotify,
+	AccountProviderTwitch,
+	AccountProviderTwitter,
 }
 
 func (e AccountProvider) Values() []string {
@@ -30,7 +44,10 @@ func (e AccountProvider) Values() []string {
 
 func (e AccountProvider) IsValid() bool {
 	switch e {
-	case AccountProviderDuo, AccountProviderGithub, AccountProviderDiscord:
+	case AccountProviderDuo, AccountProviderDiscord, AccountProviderGithub,
+		AccountProviderGitlab, AccountProviderInstagram, AccountProviderLinkedIn,
+		AccountProviderReddit, AccountProviderSpotify, AccountProviderTwitch,
+		AccountProviderTwitter:
 		return true
 	}
 	return false

@@ -37,9 +37,16 @@ enum NoticeColor {
 
 "AccountProvider represents the oauth2 provider supported by the app"
 enum AccountProvider {
-  GITHUB
-  DUO
   DISCORD
+  DUO
+  GITHUB
+  GITLAB
+  INSTAGRAM
+  LINKEDIN
+  REDDIT
+  SPOTIFY
+  TWITCH
+  TWITTER
 }
 
 "AccountType represents the tpe of the account. Currently only support Oauth"
@@ -124,7 +131,7 @@ type Me {
   nickname: String
   avatarURL: String
   coverURL: String
-  accounts: [Account]
+  accounts: [Account!]!
   flags: [UserFlag!]!
   currentLocation: Location
   lastLocation: Location
@@ -155,7 +162,7 @@ type User {
   nickname: String
   avatarURL: String
   coverURL: String
-  accounts: [Account!]!
+  publicAccounts: [Account!]!
   flags: [UserFlag!]!
   currentLocation: Location
   lastLocation: Location
@@ -225,6 +232,7 @@ type Account {
   provider: AccountProvider!
   providerAccountId: String!
   username: String!
+  public: Boolean!
   userID: UUID!
   user: User!
 }
@@ -444,6 +452,18 @@ type Mutation {
   updateMe(input: UpdateMeInput!): Me! @authenticated
 
   """
+  updateAccountVisibility updates the visibility of an account for the current
+  user.
+  """
+  updateAccountVisibility(input: UpdateAccountVisibilityInput!): Account!
+    @authenticated
+
+  """
+  deleteAccount deletes an account for the current user.
+  """
+  deleteAccount(id: UUID!): Boolean! @authenticated
+
+  """
   internalCreateUser creates a user. This is used by the oauth2 callback to
   create the user. This is an internal mutation and should not be used by the
   client.
@@ -534,4 +554,9 @@ input FollowsGroupInput {
   id: UUID
   name: String!
   color: String
+}
+
+input UpdateAccountVisibilityInput {
+  id: UUID!
+  public: Boolean!
 }

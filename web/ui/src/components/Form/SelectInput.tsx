@@ -20,7 +20,7 @@ export const SelectInput: React.FC<
       defaultValue={defaultValue}
     >
       <div className={classNames('relative', className)}>
-        <Listbox.Button className="relative w-full cursor-default rounded-lg bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 py-2 pl-3 pr-10 text-left focus:outline-none focus-visible:border-indigo-500 sm:text-sm">
+        <Listbox.Button className="relative w-full cursor-default rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 py-2 pl-3 pr-10 text-left focus:outline-none focus-visible:border-indigo-500 sm:text-sm">
           <span className="block truncate lowercase first-letter:uppercase">
             {value}
           </span>

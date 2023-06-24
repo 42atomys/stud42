@@ -52,7 +52,7 @@ const ProfileSettingPage: NextPage<PageProps> = () => {
 
   return (
     <SettingsLayout page="profile">
-      <div className="w-full p-4 rounded-lg bg-slate-950 flex flex-row justify-between items-center">
+      <div className="w-full p-4 rounded-lg bg-slate-200 dark:bg-slate-950 flex flex-row justify-between items-center">
         <span>
           You want to preview your profile? Click on the button on the right.
         </span>
