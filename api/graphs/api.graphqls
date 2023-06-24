@@ -26,6 +26,15 @@ enum UserFlag {
   DISCORD
 }
 
+"NoticeColor represents the color of a notice"
+enum NoticeColor {
+  INFO
+  SUCCESS
+  WARNING
+  DANGER
+  BLACK
+}
+
 "AccountProvider represents the oauth2 provider supported by the app"
 enum AccountProvider {
   GITHUB
@@ -81,6 +90,19 @@ type PageInfo {
 }
 
 """
+Notice represents a notice of the app. It is used to represent the Notice through
+the header of the app.
+"""
+type Notice {
+  id: UUID!
+  slug: String!
+  message: String!
+  icon: String!
+  color: NoticeColor
+  isActive: Boolean!
+}
+
+"""
 Me represents the user currently connected. Is basically an User with more
 data and informations relative to himself only
 """
@@ -110,6 +132,7 @@ type Me {
   followings: [User]!
   followers: [User]!
   settings: Settings!
+  activesNotices: [Notice!]!
 }
 
 """
@@ -398,6 +421,10 @@ type Mutation {
   """
   deleteFollowsGroup(id: UUID!): Boolean! @authenticated
 
+  """
+  readNotice marks a notice as read for the current user.
+  """
+  readNotice(noticeID: UUID!): Boolean! @authenticated
   """
   assignFollowsGroupToUser assigns a follows group to a user. If assign is true,
   the user will be added to the group, otherwise it will be removed.

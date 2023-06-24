@@ -79,6 +79,10 @@ func (User) Edges() []ent.Edge {
 		edge.To("current_campus", Campus.Type).
 			Unique().
 			Field("current_campus_id"),
+
+		// Notices related
+		edge.To("readed_notices", Notice.Type).
+			Through("notices_users", NoticesUser.Type),
 	}
 }
 

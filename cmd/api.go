@@ -56,7 +56,16 @@ var apiCmd = &cobra.Command{
 		srv := handler.NewDefaultServer(api.NewSchema(modelsutils.Client(), cacheClient, tracer))
 		srv.SetRecoverFunc(func(ctx context.Context, err interface{}) error {
 			// notify bug tracker...
-			log.Error().Err(err.(error)).Msg("unhandled api error")
+			errTyped, ok := err.(error)
+			if !ok {
+				errTyped = fmt.Errorf("%v", errTyped)
+			}
+
+			if errTyped == nil {
+				return nil
+			}
+
+			log.Error().Err(errTyped).Msg("unhandled api error")
 			return gqlerror.Errorf("Internal server error!")
 		})
 		srv.Use(entgql.Transactioner{TxOpener: modelsutils.Client()})

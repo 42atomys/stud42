@@ -97,6 +97,10 @@ mutation inviteOnDiscord {
   inviteOnDiscord
 }
 
+mutation readNotice($noticeID: UUID!) {
+  readNotice(noticeID: $noticeID)
+}
+
 query searchUser($query: String!, $onlyOnline: Boolean) {
   searchUser(query: $query, onlyOnline: $onlyOnline) {
     id
@@ -186,6 +190,13 @@ query me {
     nickname
     avatarURL
     coverURL
+    activesNotices {
+      id
+      slug
+      message
+      color
+      icon
+    }
     accounts {
       provider
       providerAccountId
