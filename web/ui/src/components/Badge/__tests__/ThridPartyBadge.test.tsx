@@ -24,7 +24,12 @@ describe('ThridPartyBadge component', () => {
       const linkElement = getByRole('link');
       expect(linkElement).toHaveAttribute(
         'href',
-        thridPartyData[provider].link?.(props.username).toString()
+        thridPartyData[provider]
+          .link?.({
+            username: props.username,
+            providerAccountId: props.providerAccountId,
+          })
+          .toString()
       );
     });
   });

@@ -114,7 +114,7 @@ const CursusProgress: React.FC<{
 const ThridPartyAccounts: React.FC<{
   user: NonNullable<UserProfileQuery['user']>;
 }> = ({ user }) => {
-  const accounts = thirdPartySorted(user.accounts, user.duoLogin);
+  const accounts = thirdPartySorted(user.publicAccounts, user.duoLogin);
   return (
     <ul className="flex flex-row space-x-3 ml-2 justify-start items-center">
       {accounts?.map(

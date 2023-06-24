@@ -4,6 +4,10 @@ import { AdapterUser, NextAuthOptions } from 'next-auth';
 import FortyTwoProvider from 'next-auth/providers/42-school';
 import DiscordProvider from 'next-auth/providers/discord';
 import GithubProvider from 'next-auth/providers/github';
+import GitlabProvider from 'next-auth/providers/gitlab';
+import RedditProvider from 'next-auth/providers/reddit';
+import SpotifyProvider from 'next-auth/providers/spotify';
+import TwitchProvider from 'next-auth/providers/twitch';
 import { DuoProfile, JWT } from 'types/next-auth';
 
 export const nextAuthOptions: NextAuthOptions = {
@@ -27,17 +31,50 @@ export const nextAuthOptions: NextAuthOptions = {
         timeout: 10000,
       },
     }),
+    DiscordProvider({
+      clientId: process.env.DISCORD_ID as string,
+      clientSecret: process.env.DISCORD_SECRET as string,
+      authorization:
+        'https://discord.com/api/oauth2/authorize?scope=identify+email+connections+guilds.join',
+    }),
     GithubProvider({
       clientId: process.env.GITHUB_ID as string,
       clientSecret: process.env.GITHUB_SECRET as string,
       authorization:
         'https://github.com/login/oauth/authorize?scope=user:email+user:follow+public_repo',
     }),
-    DiscordProvider({
-      clientId: process.env.DISCORD_ID as string,
-      clientSecret: process.env.DISCORD_SECRET as string,
-      authorization:
-        'https://discord.com/api/oauth2/authorize?scope=identify+email+connections+guilds.join',
+    GitlabProvider({
+      clientId: process.env.GITLAB_ID as string,
+      clientSecret: process.env.GITLAB_SECRET as string,
+    }),
+    // Need special review from Instagram to use this provider
+    // Disabled during the app verification
+    // InstagramProvider({
+    //   clientId: process.env.INSTAGRAM_ID as string,
+    //   clientSecret: process.env.INSTAGRAM_SECRET as string,
+    // }),
+    // Disabled due LinkedIn restrictions on vanityName
+    // LinkedinProvider({
+    //   clientId: process.env.LINKEDIN_ID as string,
+    //   clientSecret: process.env.LINKEDIN_SECRET as string,
+    // }),
+    RedditProvider({
+      clientId: process.env.REDDIT_ID as string,
+      clientSecret: process.env.REDDIT_SECRET as string,
+    }),
+    // Need special review from Spotify to use this provider
+    SpotifyProvider({
+      clientId: process.env.SPOTIFY_ID as string,
+      clientSecret: process.env.SPOTIFY_SECRET as string,
+    }),
+    // Disabled due twitter restrictions
+    // TwitterProvider({
+    //   clientId: process.env.TWITTER_ID as string,
+    //   clientSecret: process.env.TWITTER_SECRET as string,
+    // }),
+    TwitchProvider({
+      clientId: process.env.TWITCH_ID as string,
+      clientSecret: process.env.TWITCH_SECRET as string,
     }),
   ],
 
@@ -112,20 +149,47 @@ export const nextAuthOptions: NextAuthOptions = {
           )?.campus_id as number, // user will always have a primary campus
         };
         return true;
-      } else if (account.provider == 'github') {
-        (user as AdapterUser).github = {
-          id: profile.id,
-          login: profile.login,
-          type: profile.type,
-        };
-        return true;
-      } else if (account.provider == 'discord' && account._profile) {
-        account._profile.login = `${profile.username}#${profile.discriminator}`;
-
-        return true;
       }
 
-      return false;
+      switch (account.provider) {
+        case 'github':
+          (user as AdapterUser).github = {
+            id: profile.id,
+            login: profile.login,
+            type: profile.type,
+          };
+          return true;
+
+        case 'discord':
+          if (profile.discriminator === '0000')
+            account._profile.login = profile.username;
+          else
+            account._profile.login = `${profile.username}#${profile.discriminator}`;
+          return true;
+
+        case 'gitlab' || 'twitter' || 'instagram':
+          account._profile.login = profile.username;
+          return true;
+
+        case 'twitch':
+          account._profile.login = profile.preferred_username;
+          return true;
+
+        case 'reddit':
+          account._profile.login = profile.name!;
+          return true;
+
+        case 'linkedin':
+          account._profile.login = profile.vanityName!;
+          return true;
+
+        case 'spotify':
+          account._profile.login = profile.display_name;
+          return true;
+
+        default:
+          throw new Error(`Unknown provider ${account.provider}`);
+      }
     },
 
     async session({ session, token }) {

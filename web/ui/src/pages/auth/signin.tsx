@@ -1,26 +1,15 @@
 import Logo42 from '@assets/images/logo-42.svg';
 import Logo from '@assets/images/logo.svg';
 import Error from '@components/AuthError/AuthError';
-import { GetServerSideProps, NextPage } from 'next';
-import { BuiltInProviderType } from 'next-auth/providers';
-import {
-  ClientSafeProvider,
-  getProviders,
-  LiteralUnion,
-  signIn,
-} from 'next-auth/react';
+import { NextPage } from 'next';
+import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
 
-type PageProps = {
-  providers: Record<
-    LiteralUnion<BuiltInProviderType, string>,
-    ClientSafeProvider
-  >;
-};
+type PageProps = {};
 
 export const LoginPage: NextPage<PageProps, {}> = () => {
   const {
-    query: { callbackUrl, error, provider },
+    query: { callbackUrl, error },
   } = useRouter();
 
   return (
@@ -52,55 +41,21 @@ export const LoginPage: NextPage<PageProps, {}> = () => {
           Only one step, click bellow !
         </p>
 
-        {(!provider || provider == 'duo') && (
-          <button
-            className="w-fit flex flex-row group justify-center items-center bg-black hover:bg-slate-200 dark:hover:bg-white hover:text-black transition-all dark:border-0 border-black border-2 border-transparent text-white py-2 px-8 rounded uppercase my-4"
-            onClick={() =>
-              signIn('42-school', { callbackUrl: callbackUrl as string })
-            }
-          >
-            <span>Sign in with</span>
-            <Logo42
-              height={18}
-              className="ml-2 transition-all fill-white group-hover:fill-black"
-            />
-          </button>
-        )}
-
-        {provider == 'github' && (
-          <button
-            className="w-fit flex flex-row group justify-center items-center bg-black hover:bg-white hover:text-black transition-all dark:border-0 border-black border-2 border-transparent text-white py-2 px-8 rounded uppercase my-4"
-            onClick={() =>
-              signIn('github', { callbackUrl: callbackUrl as string })
-            }
-          >
-            <span className="mr-2">Sign in with</span>
-            <i className="fa-brands fa-github "></i>
-          </button>
-        )}
-
-        {provider == 'discord' && (
-          <button
-            className="w-fit flex flex-row group justify-center items-center bg-black hover:bg-white hover:text-black transition-all dark:border-0 border-black border-2 border-transparent text-white py-2 px-8 rounded uppercase my-4"
-            onClick={() =>
-              signIn('discord', { callbackUrl: callbackUrl as string })
-            }
-          >
-            <span className="mr-2">Sign in with</span>
-            <i className="fa-brands fa-discord"></i>
-          </button>
-        )}
+        <button
+          className="w-fit flex flex-row group justify-center items-center bg-black hover:bg-slate-200 dark:hover:bg-white hover:text-black transition-all dark:border-0 border-black border-2 border-transparent text-white py-2 px-8 rounded uppercase my-4"
+          onClick={() =>
+            signIn('42-school', { callbackUrl: callbackUrl as string })
+          }
+        >
+          <span>Sign in with</span>
+          <Logo42
+            height={18}
+            className="ml-2 transition-all fill-white group-hover:fill-black"
+          />
+        </button>
       </div>
     </div>
   );
-};
-
-// This is the recommended way for Next.js 9.3 or newer
-export const getServerSideProps: GetServerSideProps = async () => {
-  const providers = await getProviders();
-  return {
-    props: { providers },
-  };
 };
 
 export default LoginPage;

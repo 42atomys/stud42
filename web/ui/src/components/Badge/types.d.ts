@@ -25,10 +25,8 @@ export type BadgeColor =
 /**
  * Represents the properties used to render the ThridPartyBadge component.
  */
-export type ThridPartyBadgeProps = Pick<
-  Account,
-  'provider' | 'providerAccountId' | 'username'
->;
+export interface ThridPartySortable
+  extends Pick<Account, 'provider' | 'providerAccountId' | 'username'> {}
 
 /**
  * A type used to describe an object with name, description, and link properties.
@@ -36,8 +34,8 @@ export type ThridPartyBadgeProps = Pick<
  * This is used to describe the data used to render the flag badges and the third
  * party badges.
  */
-type ObjectMapData = PropsWithClassName<
-  ClickableLink & {
+type ObjectMapData<T> = PropsWithClassName<
+  ClickableLink<T> & {
     name: string;
     description?: string;
   }
@@ -48,14 +46,17 @@ type ObjectMapData = PropsWithClassName<
  * object. It is used to provide data for the FlagBadge component.
  */
 export type FlagDataMap = {
-  [key in UserFlag]: ObjectMapData;
+  [key in UserFlag]: ObjectMapData<null>;
 };
 
 /**
  * Represents an object that maps each AccountProvider
- * (and a custom SLACK provider) to an ObjectMapData object.
+ * (and a custom SLACK provider) o an ObjectMapData object.
  * It is used to provide data for the ThridPartyBadge component.
  */
 export type ThridPartyAccountDataMap = {
-  [key in AccountProvider | 'SLACK']: ObjectMapData;
+  [key in AccountProvider | 'SLACK']: ObjectMapData<{
+    username: string;
+    providerAccountId: string;
+  }>;
 };

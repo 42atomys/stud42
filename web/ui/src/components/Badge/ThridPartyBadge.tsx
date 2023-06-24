@@ -3,7 +3,7 @@ import { Tooltip } from '@components/Tooltip';
 import classNames from 'classnames';
 import Link from 'next/link';
 import { thridPartyData } from './data';
-import { ThridPartyBadgeProps } from './types';
+import { ThridPartySortable } from './types';
 
 /**
  * ThridPartyUnkwownError is thrown when the provider specified in the props is
@@ -31,7 +31,7 @@ export const ThridPartyUnkwownError = new Error('Unknown thrid party provider');
  * when clicked and redirects the user to the user's profile on that provider's
  * website.
  */
-export const ThridPartyBadge: React.FC<ThridPartyBadgeProps> = ({
+export const ThridPartyBadge: React.FC<ThridPartySortable> = ({
   provider,
   username,
   providerAccountId,
@@ -52,9 +52,10 @@ export const ThridPartyBadge: React.FC<ThridPartyBadgeProps> = ({
         trueWrapper={(children) => (
           <Link
             role="link"
+            target="_blank"
             className="hover:bg-slate-200 dark:hover:bg-slate-950 rounded-lg p-2"
             key={`user-profile-acount-tooltip-${providerAccountId}`}
-            href={data.link?.(username) as URL}
+            href={data.link?.({ username, providerAccountId }) as URL}
           >
             {children}
           </Link>

@@ -47,10 +47,10 @@ export const SettingsLayout: NextPage<
             <MenuCategory name="Access">
               <MenuItem
                 active={page === 'accounts'}
-                // href="/settings/accounts"
+                href="/settings/accounts"
                 icon="fa-shield-check"
                 name="Accounts"
-                rightChildren="Soon"
+                rightChildren={<NewBadgy />}
               />
             </MenuCategory>
             <MenuCategory name="About">

@@ -40,7 +40,7 @@ describe('FlagBadge', () => {
       const linkElement = getByRole('link');
       expect(linkElement).toHaveAttribute(
         'href',
-        flagData[flag].link?.().toString()
+        flagData[flag].link?.(null).toString()
       );
     });
   });
