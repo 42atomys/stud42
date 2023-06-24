@@ -2,9 +2,11 @@ import { ApolloProvider } from '@apollo/client';
 import { MeProvider } from '@ctx/currentUser';
 import { NotificationProvider, useNotification } from '@ctx/notifications';
 import { useApollo } from '@lib/apollo';
+import { ThemeProvider } from 'next-themes';
 import { AppProps } from 'next/app';
 import Script from 'next/script';
 import { useMemo } from 'react';
+
 import '../styles/globals.css';
 
 const Interface = ({ Component, pageProps: props = {} }: AppProps) => {
@@ -21,13 +23,15 @@ const Interface = ({ Component, pageProps: props = {} }: AppProps) => {
 
   return (
     <>
-      <NotificationProvider>
-        <ApolloProvider client={apolloClient}>
-          <MeProvider apolloClient={apolloClient}>
-            {getLayout(<MemorizedComponent {...pageProps} />)}
-          </MeProvider>
-        </ApolloProvider>
-      </NotificationProvider>
+      <ThemeProvider attribute="class">
+        <NotificationProvider>
+          <ApolloProvider client={apolloClient}>
+            <MeProvider apolloClient={apolloClient}>
+              {getLayout(<MemorizedComponent {...pageProps} />)}
+            </MeProvider>
+          </ApolloProvider>
+        </NotificationProvider>
+      </ThemeProvider>
       <Script
         src="https://kit.fontawesome.com/a8d6f88c41.js"
         crossOrigin="anonymous"
