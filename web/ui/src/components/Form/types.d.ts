@@ -39,7 +39,7 @@ interface FileInputProps<S>
 interface TextInputProps<S>
   extends InputProps<S>,
     Omit<React.HTMLProps<HTMLInputElement>, 'onChange'> {
-  type: InputTextType = 'text';
+  type: InputTextType;
   // debounce is in milliseconds (ms) if you want to use it to avoid update the
   // state on every key press
   debounce?: number;

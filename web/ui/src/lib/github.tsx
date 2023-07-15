@@ -125,7 +125,7 @@ export const Star = (): JSX.Element => {
   const getRepo = useCallback(async () => {
     try {
       const { data }: { data: Repository } = await axios.get(
-        `https://api.github.com/repos/${PROJECT_PATH}`
+        `https://api.github.com/repos/${PROJECT_PATH}`,
       );
       return data;
     } catch {
@@ -135,7 +135,7 @@ export const Star = (): JSX.Element => {
 
   const [stars, setStars] = useSessionStorage(
     SessionStorageKeys.GithubStars,
-    0
+    0,
   );
   useEffect(() => {
     getRepo().then(({ stargazers_count }) => {

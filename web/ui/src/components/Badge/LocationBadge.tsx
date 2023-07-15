@@ -29,7 +29,7 @@ export const LocationBadge = ({
       trueWrapper={(children) => {
         const url = clusterURL(
           location?.campus?.name as string,
-          location?.identifier as string
+          location?.identifier as string,
         );
         if (!url) {
           return <>{children}</>;
@@ -59,7 +59,7 @@ export const LocationBadge = ({
         <span
           className={classNames(
             'inline-flex rounded-full w-2 h-2',
-            isConnected ? 'bg-emerald-500' : 'bg-slate-500'
+            isConnected ? 'bg-emerald-500' : 'bg-slate-500',
           )}
         ></span>
         <span className="text-sm mx-1 flex-1 truncate">

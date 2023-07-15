@@ -29,7 +29,7 @@ const FinalStep = () => {
       <h2
         className={classNames(
           'text-4xl font-display font-bold mb-4 mt-4 bg-clip-text text-transparent bg-gradient-to-l  w-fit',
-          'from-emerald-500 to-cyan-500'
+          'from-emerald-500 to-cyan-500',
         )}
       >
         <span className="mr-2">You have the power !</span>
@@ -82,7 +82,7 @@ const Step = ({
       <hr
         className={classNames(
           'border-2 rounded-full mb-2 md:mb-4 ml-14',
-          done ? 'border-indigo-500' : 'border-slate-500'
+          done ? 'border-indigo-500' : 'border-slate-500',
         )}
       />
       <div
@@ -92,7 +92,7 @@ const Step = ({
             ? 'bg-indigo-500 text-slate-900'
             : next
             ? 'border-2 border-indigo-500 text-indigo-500'
-            : 'border-2 border-slate-500 text-slate-500'
+            : 'border-2 border-slate-500 text-slate-500',
         )}
       >
         <i className={icon}></i>
@@ -141,7 +141,7 @@ export const IndexPage: NextPage<PageProps, {}> = ({ me }) => {
     (me.accounts?.filter(
       (a) =>
         a?.provider === AccountProvider.GITHUB ||
-        a?.provider === AccountProvider.DISCORD
+        a?.provider === AccountProvider.DISCORD,
     ).length || 0) + 1;
 
   if (currentStep >= 3) currentStep = 4;

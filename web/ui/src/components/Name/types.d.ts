@@ -2,10 +2,10 @@ import { User } from '@graphql.d';
 import { Maybe } from 'types/globals';
 
 export type NameProps = {
-  hasNickname?: boolean = false;
-  displayLogin?: boolean = false;
+  hasNickname?: boolean;
+  displayLogin?: boolean;
   tooltipClassName?: string;
-  tooltip?: boolean = true;
+  tooltip?: boolean;
   user: Pick<
     User,
     'firstName' | 'usualFirstName' | 'lastName' | 'duoLogin' | 'nickname'

@@ -19,7 +19,7 @@ export const useKeyDown: UsekeyDown = (keys, callback) => {
         callback();
       }
     },
-    [callback, keys]
+    [callback, keys],
   );
 
   useEffect(() => {

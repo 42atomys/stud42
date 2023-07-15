@@ -16,7 +16,7 @@ export const ColorInput: React.FC<
   ...inputProps
 }) => {
   const [value, setValue] = useState<DataType.Color>(
-    defaultValue || 'transparent'
+    defaultValue || 'transparent',
   );
   const onChangeCallback = (newValue: DataType.Color) => {
     setValue(newValue);
@@ -30,7 +30,7 @@ export const ColorInput: React.FC<
     <div
       className={classNames(
         className,
-        'rounded-md relative text-left px-3 pt-2.5 pb-1.5 shadow-sm ring-1 ring-inset ring-slate-200 dark:ring-slate-800 focus-within:ring-2 focus-within:ring-indigo-500'
+        'rounded-md relative text-left px-3 pt-2.5 pb-1.5 shadow-sm ring-1 ring-inset ring-slate-200 dark:ring-slate-800 focus-within:ring-2 focus-within:ring-indigo-500',
       )}
     >
       <label htmlFor={inputId} className="flex text-xs text-slate-500">

@@ -8,5 +8,5 @@ type UserCardProps = Pick<DropdownMenuProps, 'buttonAlwaysShow'> & {
 
 type DropdownMenuProps = {
   user: Pick<User, 'id', 'duoLogin'>;
-  buttonAlwaysShow?: boolean = false;
+  buttonAlwaysShow?: boolean;
 };

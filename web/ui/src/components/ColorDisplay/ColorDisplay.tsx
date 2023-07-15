@@ -8,7 +8,7 @@ export const ColorDisplay: React.FC<
   <div
     className={classNames(
       'w-3 h-3 rounded-full outline outline-2 outline-offset-2 outline-slate-300 dark:outline-slate-700',
-      className
+      className,
     )}
     style={{
       backgroundColor: color || 'transparent',

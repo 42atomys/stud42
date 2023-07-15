@@ -48,7 +48,7 @@ export const ClusterSidebar = ({
       })
       .reduce(
         (acc, [prefix, freePlaces]) => ({ ...acc, [prefix]: freePlaces }),
-        {}
+        {},
       );
 
   if (isFirstLoading(networkStatus)) {
@@ -80,7 +80,7 @@ export const ClusterSidebar = ({
         action={async (user) => {
           const url = clusterURL(
             user?.currentLocation?.campus?.name as string,
-            user?.currentLocation?.identifier as string
+            user?.currentLocation?.identifier as string,
           );
 
           if (url) {

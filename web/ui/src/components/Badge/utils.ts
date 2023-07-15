@@ -8,7 +8,7 @@ import { ThridPartySortable } from './types';
  */
 export const thirdPartySorted = <T extends ThridPartySortable>(
   accounts: T[],
-  duoLogin?: string
+  duoLogin?: string,
 ) => {
   let accs: T[] = [];
   accounts?.forEach((a) => (a !== null ? a && accs.push(a) : null));
@@ -42,6 +42,6 @@ export const thirdPartySorted = <T extends ThridPartySortable>(
 
   const sortedKeys = Object.keys(thridPartyData);
   return accs.sort(
-    (a, b) => sortedKeys.indexOf(a.provider) - sortedKeys.indexOf(b.provider)
+    (a, b) => sortedKeys.indexOf(a.provider) - sortedKeys.indexOf(b.provider),
   );
 };
