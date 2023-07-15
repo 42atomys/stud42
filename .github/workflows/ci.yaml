@@ -32,7 +32,6 @@ jobs:
   ###############################
   build:
     name: "Build 🔧"
-    needs: [linters, tests]
     uses: ./.github/workflows/build.yaml
   ###############################
   ########### DEPLOY ############
@@ -40,12 +39,11 @@ jobs:
 
   deploy:
     name: "Deploy 🚀"
-    needs: [build]
+    needs: [linters, tests, build]
     uses: ./.github/workflows/deploy.yaml
     secrets: inherit
     if: |
       github.event_name == 'release' ||
-      github.event_name == 'push' ||
       github.event_name == 'workflow_dispatch' ||
       (github.event_name == 'pull_request' && github.event.pull_request.draft == false && contains(github.event.pull_request.labels.*.name, 'needs-preview-deploy'))
     with:

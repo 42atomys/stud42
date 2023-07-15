@@ -1,4 +1,4 @@
-import { Flag, MeWithFlagsDocument, MeWithFlagsQuery } from '@graphql.d';
+import { MeWithFlagsDocument, MeWithFlagsQuery } from '@graphql.d';
 import { queryAuthenticatedSSR } from '@lib/apollo';
 import { NextMiddleware, NextResponse } from 'next/server';
 
@@ -8,6 +8,7 @@ export const middleware: NextMiddleware = async (req) => {
   if (
     pathname.startsWith('/api') ||
     pathname.startsWith('/assets') ||
+    pathname.startsWith('/about') ||
     pathname.startsWith('/_next')
   ) {
     return NextResponse.next();
@@ -32,12 +33,5 @@ export const middleware: NextMiddleware = async (req) => {
     );
   }
 
-  const { flags = [] } = data?.me || {};
-  if (flags?.includes(Flag.STAFF) || flags?.includes(Flag.BETA)) {
-    return NextResponse.next();
-  }
-
-  if (pathname.startsWith('/beta')) return NextResponse.next();
-
-  return NextResponse.redirect(new URL('/beta', req.url));
+  return NextResponse.next();
 };

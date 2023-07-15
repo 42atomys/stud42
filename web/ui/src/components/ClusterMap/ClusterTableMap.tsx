@@ -1,7 +1,9 @@
 import Avatar from '@components/Avatar';
+import { Tooltip } from '@components/Tooltip';
+import { useMe } from '@ctx/currentUser';
 import { ClusterMapAvatarSize } from '@graphql.d';
-import useSettings from '@lib/useSettings';
 import classNames from 'classnames';
+import { motion } from 'framer-motion';
 import { Children } from 'react';
 import { ClusterContext } from './ClusterContainer';
 import { MapLocation } from './types';
@@ -53,17 +55,24 @@ export const ClusterWorkspaceWithUser = ({
     location: MapLocation
   ) => void;
 }) => {
-  const [settings] = useSettings();
+  const {
+    isMe,
+    isFollowed,
+    me: { settings },
+  } = useMe();
 
   return (
     <ClusterContext.Consumer>
       {({ highlight, hightlightVisibility }) => (
-        <div
+        <motion.div
+          layout
+          layoutId={`user-popup-${location.user.id}`}
+          layoutRoot
           className={classNames(
-            'flex flex-1 flex-col justify-center items-center m-0.5 rounded text-slate-500 cursor-pointer transition ease-in-out duration-200',
-            location.user.isMe
+            'flex flex-1 flex-col justify-center items-center m-0.5 rounded cursor-pointer transition ease-in-out duration-200',
+            isMe(location.user)
               ? 'bg-cyan-300/60 dark:bg-cyan-700/60 text-cyan-500'
-              : location.user.isFollowing
+              : isFollowed(location.user)
               ? 'bg-blue-300/60 dark:bg-blue-700/60 text-blue-500'
               : location.user.isSwimmer
               ? 'bg-yellow-300/30 dark:bg-yellow-700/30 text-yellow-500'
@@ -83,6 +92,7 @@ export const ClusterWorkspaceWithUser = ({
           <span className="mb-1">
             <Avatar
               duoAvatarURL={location.user.duoAvatarSmallURL}
+              profileLink={false}
               rounded={false}
               flags={location.user.flags}
               size={
@@ -96,14 +106,14 @@ export const ClusterWorkspaceWithUser = ({
             />
           </span>
           <span className="text-xs">{displayText || location.identifier}</span>
-        </div>
+        </motion.div>
       )}
     </ClusterContext.Consumer>
   );
 };
 
 /**
- * ClusterWorkspace component is used to display a workspace with compouter icon
+ * ClusterWorkspace component is used to display a workspace with computer icon
  * and identifier in a `ClusterRow`
  */
 export const ClusterWorkspace = ({
@@ -119,6 +129,37 @@ export const ClusterWorkspace = ({
         <i className="fa-light fa-computer"></i>
       </span>
       <span className="text-xs">{displayText || identifier}</span>
+    </div>
+  );
+};
+
+/**
+ * ClusterPersonalWorkspace component is used to display a workspace space for
+ * personal computer in a `ClusterRow`
+ */
+export const ClusterPersonalWorkspace = ({
+  identifier,
+  displayText,
+}: {
+  identifier?: string;
+  displayText?: string;
+}) => {
+  const hasDisplayText = displayText || identifier;
+  return (
+    <div className="flex flex-1 flex-col justify-center items-center m-0.5 rounded text-slate-500">
+      <Tooltip
+        text="Personal Workspace"
+        size="xs"
+        color="black"
+        direction="top"
+      >
+        <span className="opacity-50">
+          <i className="fa-light fa-laptop"></i>
+        </span>
+        {hasDisplayText && (
+          <span className="text-xs">{displayText || identifier}</span>
+        )}
+      </Tooltip>
     </div>
   );
 };

@@ -8,8 +8,16 @@ enum SecurityPolicy {
   NONE
 }
 
-"Flag represents the special feature/access for an User (like a role)"
-enum Flag {
+"UserPronoun represents the pronoun of an User"
+enum UserPronoun {
+  PRIVATE
+  HE_HIM
+  SHE_HER
+  THEY_THEM
+}
+
+"UserFlag represents the special feature/access for an User (like a role)"
+enum UserFlag {
   STAFF
   COLLABORATOR
   CONTRIBUTOR
@@ -18,11 +26,27 @@ enum Flag {
   DISCORD
 }
 
-"Provider represents the oauth2 provider supported by the app"
-enum Provider {
-  GITHUB
-  DUO
+"NoticeColor represents the color of a notice"
+enum NoticeColor {
+  INFO
+  SUCCESS
+  WARNING
+  DANGER
+  BLACK
+}
+
+"AccountProvider represents the oauth2 provider supported by the app"
+enum AccountProvider {
   DISCORD
+  DUO
+  GITHUB
+  GITLAB
+  INSTAGRAM
+  LINKEDIN
+  REDDIT
+  SPOTIFY
+  TWITCH
+  TWITTER
 }
 
 "AccountType represents the tpe of the account. Currently only support Oauth"
@@ -37,6 +61,11 @@ enum Theme {
   LIGHT
 }
 
+enum PresignedUploadURLKind {
+  USER_AVATAR
+  USER_COVER
+}
+
 """
 ClusterMapAvatarSize represents the value accepted for the avatar size on the
 cluster map
@@ -45,6 +74,11 @@ enum ClusterMapAvatarSize {
   AUTO
   MEDIUM
   LARGE
+}
+
+enum FollowsGroupKind {
+  MANUAL
+  DYNAMIC
 }
 
 ####################################
@@ -63,10 +97,23 @@ type PageInfo {
 }
 
 """
-User represents a user of the app. It is the main entity of the app and is
-used to represent the User model.
+Notice represents a notice of the app. It is used to represent the Notice through
+the header of the app.
 """
-type User {
+type Notice {
+  id: UUID!
+  slug: String!
+  message: String!
+  icon: String!
+  color: NoticeColor
+  isActive: Boolean!
+}
+
+"""
+Me represents the user currently connected. Is basically an User with more
+data and informations relative to himself only
+"""
+type Me {
   id: UUID!
   email: String!
   duoLogin: String!
@@ -77,23 +124,102 @@ type User {
   usualFirstName: String
   lastName: String!
   phone: String
+  pronoun: UserPronoun!
   poolYear: String
   poolMonth: String
   isSwimmer: Boolean!
-  isMe: Boolean!
   nickname: String
   avatarURL: String
   coverURL: String
-  accounts: [Account]
-  flags: [Flag!]!
+  accounts: [Account!]!
+  flags: [UserFlag!]!
   currentLocation: Location
   lastLocation: Location
   currentCampus: Campus
-  isFollowing: Boolean!
-  isFollower: Boolean!
-  following: [User]!
+  followings: [User]!
   followers: [User]!
-  settings: Settings! @authenticated
+  settings: Settings!
+  activesNotices: [Notice!]!
+}
+
+"""
+User represents a user of the app. It is the main entity of the app and is
+used to represent the User model.
+"""
+type User {
+  id: UUID!
+  duoLogin: String!
+  duoID: Int!
+  duoAvatarURL: String
+  duoAvatarSmallURL: String
+  firstName: String!
+  usualFirstName: String
+  lastName: String!
+  pronoun: UserPronoun!
+  poolYear: String
+  poolMonth: String
+  isSwimmer: Boolean!
+  nickname: String
+  avatarURL: String
+  coverURL: String
+  publicAccounts: [Account!]!
+  flags: [UserFlag!]!
+  currentLocation: Location
+  lastLocation: Location
+  currentCampus: Campus
+  intraProxy: IntraUserProxy!
+  followersCount: Int!
+  followingsCount: Int!
+}
+
+"""
+IntraUser represents an user on the intra. It is used to represent the User
+object returned by the intra API. It is used to provide more informations about
+the user based on the intra data cached by the app to increase the performance
+and prevent the app to be rate limited by the intra API.
+"""
+type IntraUserProxy {
+  kind: String!
+  correctionPoint: Int!
+  wallet: Int!
+  alumni: Boolean!
+  active: Boolean!
+  groups: [IntraGroupProxy!]!
+  cursusUsers: [IntraCursusUserProxy!]!
+  projectsUsers: [IntraProjectsUserProxy!]!
+}
+
+type IntraGroupProxy {
+  id: Int!
+  name: String!
+}
+
+type IntraCursusUserProxy {
+  grade: String
+  level: Float!
+  cursus: IntraCursusProxy!
+}
+
+type IntraCursusProxy {
+  id: Int!
+  kind: String!
+  name: String!
+  slug: String!
+}
+
+type IntraProjectsUserProxy {
+  id: Int!
+  occurrence: Int!
+  finalMark: Int
+  status: String!
+  validated: Boolean!
+  project: IntraProjectProxy!
+}
+
+type IntraProjectProxy {
+  id: Int!
+  name: String!
+  slug: String!
 }
 
 """
@@ -102,15 +228,11 @@ model.
 """
 type Account {
   id: UUID!
-  type: String!
-  provider: String!
+  type: AccountType!
+  provider: AccountProvider!
   providerAccountId: String!
   username: String!
-  expires_at: Int
-  token_type: String
-  refresh_token: String @authzByPolicy(policy: SERVICE_TOKEN)
-  access_token: String @authzByPolicy(policy: SERVICE_TOKEN)
-  scope: String
+  public: Boolean!
   userID: UUID!
   user: User!
 }
@@ -145,6 +267,15 @@ type Location {
 
   user: User!
   campus: Campus!
+}
+
+type FollowsGroup {
+  id: UUID!
+  kind: FollowsGroupKind!
+  name: String!
+  slug: String!
+  color: String
+  emoji: String
 }
 
 """
@@ -193,7 +324,7 @@ type Settings {
 
 type Query {
   "me returns the current user"
-  me: User! @authenticated
+  me: Me! @authenticated
   "searchUser returns a list of users matching the query"
   searchUser(query: String!, onlyOnline: Boolean = false): [User!]!
     @authenticated
@@ -229,15 +360,35 @@ type Query {
     campusName: String!
     identifierPrefixes: [String!]
   ): [LocationStats!]! @authenticated
-  "myFollowing returns a list of users the current user is following"
-  myFollowing: [User!]! @authenticated
+
+  presignedUploadURL(
+    contentType: String!
+    contentLength: Int!
+    kind: PresignedUploadURLKind!
+  ): String! @authenticated
+
+  """
+  myFollowings returns a list of users the current user is following in a group
+  by its ID or slug.
+  """
+  myFollowings(followsGroupId: UUID, followsGroupSlug: String): [User!]!
+    @authenticated
+
+  "myFollowsGroups retourns a list of follows groups for the current user"
+  myFollowsGroups: [FollowsGroup!]! @authenticated
+
+  """
+  followsGroupsForUser returns a list of follows groups assigned to a user by
+  its ID based on the current logged in user.
+  """
+  followsGroupsForUser(userID: UUID!): [FollowsGroup!]! @authenticated
 
   """
   internalGetUserByAccount returns a user by its account. This is used by the
   oauth2 callback to get the user from the account. This is an internal query
   and should not be used by the client.
   """
-  internalGetUserByAccount(provider: Provider!, uid: String!): User!
+  internalGetUserByAccount(provider: AccountProvider!, uid: String!): User!
     @authzByPolicy(policy: SERVICE_TOKEN)
   """
   internalGetUserByEmail returns a user by its email. This is used by the
@@ -265,8 +416,53 @@ type Mutation {
   user ID.
   """
   deleteFriendship(userID: UUID!): Boolean! @authenticated
+  """
+  createOrUpdateFollowsGroup creates a follow groups for the current User or
+  update an existing one if an ID is provided in the FollowsGroupInput
+  """
+  createOrUpdateFollowsGroup(input: FollowsGroupInput!): FollowsGroup!
+    @authenticated
+
+  """
+  deleteFollowsGroup deletes a follow groups for the current User with the
+  given ID
+  """
+  deleteFollowsGroup(id: UUID!): Boolean! @authenticated
+
+  """
+  readNotice marks a notice as read for the current user.
+  """
+  readNotice(noticeID: UUID!): Boolean! @authenticated
+  """
+  assignFollowsGroupToUser assigns a follows group to a user. If assign is true,
+  the user will be added to the group, otherwise it will be removed.
+  """
+  assignFollowsGroupToUser(
+    userID: UUID!
+    followsGroupID: UUID!
+    assign: Boolean!
+  ): Boolean! @authenticated
+
   "updateSettings updates the settings of the current user."
   updateSettings(input: SettingsInput!): Settings! @authenticated
+
+  """
+  updateMe updates the current user.
+  """
+  updateMe(input: UpdateMeInput!): Me! @authenticated
+
+  """
+  updateAccountVisibility updates the visibility of an account for the current
+  user.
+  """
+  updateAccountVisibility(input: UpdateAccountVisibilityInput!): Account!
+    @authenticated
+
+  """
+  deleteAccount deletes an account for the current user.
+  """
+  deleteAccount(id: UUID!): Boolean! @authenticated
+
   """
   internalCreateUser creates a user. This is used by the oauth2 callback to
   create the user. This is an internal mutation and should not be used by the
@@ -327,8 +523,8 @@ LinkAccountInput is used to link an account to a user with the
 internalLinkAccount mutation.
 """
 input LinkAccountInput {
-  provider: Provider
-  type: AccountType
+  provider: AccountProvider!
+  type: AccountType!
   providerAccountId: String!
   username: String!
   accessToken: String!
@@ -345,4 +541,22 @@ SettingsInput is used to update the settings of the current user.
 input SettingsInput {
   theme: Theme!
   clusterMapAvatarSize: ClusterMapAvatarSize!
+}
+
+input UpdateMeInput {
+  coverURL: String
+  avatarURL: String
+  nickname: String
+  pronoun: UserPronoun
+}
+
+input FollowsGroupInput {
+  id: UUID
+  name: String!
+  color: String
+}
+
+input UpdateAccountVisibilityInput {
+  id: UUID!
+  public: Boolean!
 }

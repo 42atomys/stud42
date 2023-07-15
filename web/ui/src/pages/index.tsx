@@ -1,5 +1,3 @@
-import { Flag, MeWithFlagsDocument, MeWithFlagsQuery } from '@graphql.d';
-import { queryAuthenticatedSSR } from '@lib/apollo';
 import type { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
 
@@ -14,27 +12,12 @@ const Home: NextPage = () => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const { data } = await queryAuthenticatedSSR<MeWithFlagsQuery>(req, {
-    query: MeWithFlagsDocument,
-  });
-
-  const { flags = [] } = data?.me || {};
-  if (flags?.includes(Flag.STAFF) || flags?.includes(Flag.BETA)) {
-    return {
-      redirect: {
-        destination: '/clusters',
-        permanent: false,
-      },
-    };
-  }
-
+export const getServerSideProps: GetServerSideProps = async () => {
   return {
     redirect: {
-      destination: '/beta',
-      permanent: false,
+      destination: '/clusters',
+      permanent: true,
     },
-    props: {},
   };
 };
 

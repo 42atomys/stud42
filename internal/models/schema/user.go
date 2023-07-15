@@ -37,6 +37,7 @@ func (User) Fields() []ent.Field {
 		field.String("first_name").NotEmpty().MaxLen(255),
 		field.String("usual_first_name").Nillable().Optional().MaxLen(255),
 		field.String("last_name").NotEmpty().MaxLen(255),
+		field.Enum("pronoun").GoType(gotype.UserPronoun("")).Default(gotype.UserPronounPrivate.String()),
 		field.String("phone").Optional().Nillable().MaxLen(255),
 		field.String("pool_year").Optional().Nillable(),
 		field.String("pool_month").Optional().Nillable(),
@@ -50,7 +51,7 @@ func (User) Fields() []ent.Field {
 		field.UUID("current_campus_id", uuid.UUID{}).Nillable().Optional(),
 		field.Bool("is_staff").Default(false),
 		field.Bool("is_a_user").Default(false),
-		field.JSON("flags_list", []string{}).Default([]string{}).Optional(),
+		field.JSON("flags", []gotype.UserFlag{}).Default(gotype.DefaultUserFlag).Optional().StorageKey("flags_list"),
 		field.JSON("settings", gotype.Settings{}).Default(gotype.DefaultSettings).Optional(),
 	}
 }
@@ -58,7 +59,14 @@ func (User) Fields() []ent.Field {
 func (User) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("accounts", Account.Type).Annotations(entsql.Annotation{OnDelete: entsql.Cascade}),
-		edge.To("following", User.Type).From("followers").Annotations(entsql.Annotation{OnDelete: entsql.Cascade}),
+		// Friends / Follows related
+		edge.To("follows_groups", FollowsGroup.Type).Annotations(entsql.Annotation{OnDelete: entsql.Cascade}),
+		edge.To("followings", User.Type).
+			Through("follows", Follow.Type).
+			StorageKey(edge.Table("follows"), edge.Columns("user_id", "follow_id")),
+		edge.From("followers", User.Type).Ref("followings"),
+
+		// Locations related
 		edge.To("locations", Location.Type).Annotations(entsql.Annotation{OnDelete: entsql.Cascade}),
 		edge.To("current_location", Location.Type).
 			Unique().
@@ -71,6 +79,10 @@ func (User) Edges() []ent.Edge {
 		edge.To("current_campus", Campus.Type).
 			Unique().
 			Field("current_campus_id"),
+
+		// Notices related
+		edge.To("readed_notices", Notice.Type).
+			Through("notices_users", NoticesUser.Type),
 	}
 }
 

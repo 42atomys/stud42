@@ -14,12 +14,18 @@ const createJestConfig = nextJest({
 const customJestConfig = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   coverageReporters: ['json-summary', 'lcov', 'json'],
+  coveragePathIgnorePatterns: [
+    '<rootDir>/node_modules/',
+    '<rootDir>/src/graphql/generated.ts',
+  ],
   moduleNameMapper: {
     // Handle module aliases (this will be automatically configured for you soon)
     '^@components/(.*)$': '<rootDir>/src/components/$1',
+    '@ctx/*': '<rootDir>/src/contexts/$1',
     '^@styles/(.*)$': '<rootDir>/src/styles/$1',
     '^@pages/(.*)$': '<rootDir>/src/pages/$1',
     '^@lib/(.*)$': '<rootDir>/src/lib/$1',
+    '^@graphql.d$': '<rootDir>/src/graphql/generated.ts',
 
     // Handle CSS imports (with CSS modules)
     // https://jestjs.io/docs/webpack#mocking-css-modules

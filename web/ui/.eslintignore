@@ -1,3 +1,2 @@
 node_modules
 __generated__
-src/grpc/jwtks/jwtks.ts

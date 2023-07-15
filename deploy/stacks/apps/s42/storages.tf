@@ -1,3 +1,10 @@
+locals {
+  rabbitmqClusterName = "rabbitmq"
+  rabbitmqClusterReference = {
+    name = local.rabbitmqClusterName
+  }
+}
+
 resource "kubernetes_manifest" "rabbitmq" {
   field_manager {
     force_conflicts = true
@@ -7,7 +14,7 @@ resource "kubernetes_manifest" "rabbitmq" {
     apiVersion = "rabbitmq.com/v1beta1"
     kind       = "RabbitmqCluster"
     metadata = {
-      name      = "rabbitmq"
+      name      = local.rabbitmqClusterName
       namespace = var.namespace
     }
 
@@ -61,20 +68,22 @@ resource "kubernetes_manifest" "rabbitmq" {
         additionalPlugins = [
           "rabbitmq_delayed_message_exchange",
           "rabbitmq_prometheus",
-          "rabbitmq_tracing"
+          "rabbitmq_tracing",
+          "rabbitmq_shovel",
+          "rabbitmq_shovel_management"
         ]
       }
     }
   }
 }
 
-resource "kubernetes_pod_disruption_budget" "rabbitmq" {
+resource "kubernetes_pod_disruption_budget_v1" "rabbitmq" {
   depends_on = [
     kubernetes_manifest.rabbitmq
   ]
 
   metadata {
-    name      = "rabbitmq"
+    name      = local.rabbitmqClusterName
     namespace = var.namespace
   }
 
@@ -82,7 +91,7 @@ resource "kubernetes_pod_disruption_budget" "rabbitmq" {
     max_unavailable = 0
     selector {
       match_labels = {
-        "app.kubernetes.io/name" = "rabbitmq"
+        "app.kubernetes.io/name" = local.rabbitmqClusterName
       }
     }
   }
@@ -206,6 +215,98 @@ module "postgres" {
     data = {
       accessModes      = ["ReadWriteOnce"]
       storage          = var.namespace == "production" ? "10Gi" : "1Gi"
+      storageClassName = "csi-cinder-high-speed"
+    }
+  } : {}
+}
+
+resource "random_password" "dragonfly" {
+  length  = 64
+  special = true
+}
+
+module "dragonfly" {
+  source = "../../../modules/service"
+  kind   = "StatefulSet"
+
+  appName         = "dragonfly"
+  appVersion      = "v1.3.0"
+  name            = "dragonfly"
+  namespace       = var.namespace
+  image           = "docker.dragonflydb.io/dragonflydb/dragonfly:v1.3.0"
+  imagePullPolicy = "IfNotPresent"
+
+  nodeSelector = local.nodepoolSelector["storages"]
+
+  revisionHistoryLimit = 1
+  replicas             = 1
+  maxUnavailable       = 0
+
+  fixPermissions = true
+
+  prometheus = {
+    enabled = true
+    port    = 6379
+  }
+
+  resources = {
+    requests = {
+      cpu    = "100m"
+      memory = "128Mi"
+    }
+
+    limits = {
+      memory = "256Mi"
+    }
+  }
+
+  env = {}
+
+  envFromSecret = {
+    DFLY_PASSWORD = {
+      key  = "DFLY_PASSWORD"
+      name = "dragonfly-credentials"
+    }
+  }
+
+  ports = {
+    dragonfly = {
+      containerPort = 6379
+      istioProtocol = "tcp"
+    }
+  }
+
+  volumeMounts = [
+    {
+      mountPath  = "/data"
+      volumeName = "data"
+    }
+  ]
+
+  volumesFromPVC = var.hasPersistentStorage ? {
+    data = {
+      claimName = "dragonfly-data"
+      readOnly  = false
+    }
+  } : {}
+
+  volumesFromEmptyDir = !var.hasPersistentStorage ? {
+    data = {}
+  } : {}
+
+  secrets = {
+    credentials = {
+      data = {
+        "DFLY_PASSWORD"         = random_password.dragonfly.result
+        "DFLY_PASSWORD_ENCODED" = urlencode(random_password.dragonfly.result)
+      }
+    }
+  }
+
+  persistentVolumeClaims = var.hasPersistentStorage ? {
+    data = {
+      accessModes      = ["ReadWriteMany"]
+      storage          = "2Gi"
       storageClassName = "csi-cinder-high-speed"
     }
   } : {}

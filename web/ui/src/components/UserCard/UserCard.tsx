@@ -1,66 +1,93 @@
 import Avatar from '@components/Avatar';
-import { LocationBadge } from '@components/Badge';
+import { AkaBadgy, LocationBadge } from '@components/Badge';
 import Name from '@components/Name';
 import Tooltip from '@components/Tooltip';
-import { Flag } from '@graphql.d';
+import { useMe } from '@ctx/currentUser';
+import { UserFlag } from '@graphql.d';
 import classNames from 'classnames';
+import { PropsWithClassName } from 'types/globals';
 import DropdownMenu from './DropDownMenu';
-import { UserCardComponent } from './types';
+import { UserCardProps } from './types';
 
-export const UserCard: UserCardComponent = ({
+export const UserCard: React.FC<PropsWithClassName<UserCardProps>> = ({
   user,
   location,
   className,
   buttonAlwaysShow,
-  refetchQueries,
 }) => {
+  const { isMe } = useMe();
+
   if (!user) return null;
 
+  const hasCover = !!user.coverURL && user.coverURL !== '';
   return (
     <div
       className={classNames(
-        'flex flex-col relative group items-center justify-center p-4',
-        'text-center grow-[1] min-w-[200px] max-w-[200px] transition-all',
+        '[--card-width:200px]',
+        'relative group',
+        'text-center grow-[1] min-w-[var(--card-width)] max-w-[var(--card-width)] transition-all',
         'rounded-lg border-2 border-transparent hover:cursor-pointer',
         className
       )}
     >
-      <Avatar
-        duoAvatarURL={user.duoAvatarSmallURL}
-        size="xxxl"
-        rounded
-        className="mb-4 bg-slate-800 outline-offset-4"
-        flags={user.flags}
-      />
-      <h2
-        className={classNames('flex flex-row font-bold uppercase', {
-          'text-fuchsia-500': user.flags?.includes(Flag.SPONSOR),
-        })}
-      >
-        <span>{user.duoLogin}</span>
-        {user.flags?.includes(Flag.SPONSOR) && (
-          <Tooltip
-            allowInteractions={false}
-            text="Github Sponsor"
-            direction="top"
-            color="fuchsia"
-            size="xs"
-            className="ml-2 normal-case"
-          >
-            <i className="fa-solid fa-user-astronaut"></i>
-          </Tooltip>
-        )}
-      </h2>
-      <Name className="font-light min-w-0 w-full" user={user} />
-      <LocationBadge location={location} />
-      {!user.isMe && (
-        <DropdownMenu
-          user={user}
-          isFriend={user.isFollowing}
-          buttonAlwaysShow={buttonAlwaysShow}
-          refetchQueries={refetchQueries}
-        />
+      {hasCover && (
+        <div className="absolute top-0 left-0 right-0 overflow-hidden w-full h-full rounded-lg">
+          <div
+            className={classNames(
+              'bg-cover bg-center w-full h-full blur-sm scale-110',
+              '[-webkit-mask-image:linear-gradient(rgb(0,0,0)0%,rgba(0,0,0,0)58%)]',
+              'dark:[-webkit-mask-image:linear-gradient(rgb(0,0,0)42%,rgba(0,0,0,0.2)58%)]'
+            )}
+            style={{
+              backgroundImage: `url(${user.coverURL})`,
+            }}
+          />
+        </div>
       )}
+      <div className="relative w-full h-full flex flex-col items-center justify-center p-4 z-10">
+        <Avatar
+          userId={user.id}
+          duoAvatarURL={user.duoAvatarSmallURL}
+          size="3xl"
+          rounded
+          className="mb-4 bg-slate-800 outline-offset-4"
+          flags={user.flags}
+        />
+        <div className="flex-1 flex flex-col justify-start items-center">
+          <h2
+            className={classNames('flex flex-row font-bold uppercase', {
+              'text-fuchsia-500': user.flags?.includes(UserFlag.SPONSOR),
+            })}
+          >
+            <span>{user.duoLogin}</span>
+            {user.flags?.includes(UserFlag.SPONSOR) && (
+              <Tooltip
+                allowInteractions={false}
+                text="Github Sponsor"
+                direction="top"
+                color="fuchsia"
+                size="xs"
+                className="ml-2 normal-case"
+              >
+                <i className="fa-solid fa-user-astronaut"></i>
+              </Tooltip>
+            )}
+          </h2>
+          <Name
+            className="font-light min-w-0 w-[calc(var(--card-width)_-_1rem)]"
+            user={user}
+          />
+          {user.nickname && user.nickname !== '' && (
+            <p className="flex justify-start items-center space-x-1 my-1 text-sm">
+              <AkaBadgy /> <span>{user.nickname}</span>
+            </p>
+          )}
+        </div>
+        <LocationBadge location={location} />
+        {!isMe(user) && (
+          <DropdownMenu user={user} buttonAlwaysShow={buttonAlwaysShow} />
+        )}
+      </div>
     </div>
   );
 };

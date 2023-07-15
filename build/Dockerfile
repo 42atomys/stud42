@@ -1,5 +1,5 @@
 # GOLANG BUILD - BUILD
-FROM golang:1.18 AS go-build
+FROM golang:1.20 AS go-build
 
 WORKDIR /build
 COPY . /build
@@ -9,16 +9,16 @@ ENV APP_VERSION=$APP_VERSION
 
 RUN apt-get update && \
   apt-get install -y unzip jq && \
-  make -f build/Makefile deps generate build
+  make -f build/Makefile generate build
 
 # INTERFACE BUILD - DEPS
-FROM node:16 AS node-deps
+FROM node:18 AS node-deps
 WORKDIR /build
 COPY web/ui/package.json web/ui/yarn.lock ./
 RUN yarn install --frozen-lockfile
 
 # INTERFACE BUILD - BUILD
-FROM node:16 AS node-builder
+FROM node:18 AS node-builder
 WORKDIR /build
 COPY --from=node-deps /build/node_modules ./node_modules
 COPY . .
@@ -29,14 +29,13 @@ ENV NEXT_TELEMETRY_DISABLED 1
 
 RUN apt-get update -y && \
   apt-get install -y jq && \
-  make -f build/Makefile deps && \
   cd web/ui && \
   yarn add -D @graphql-codegen/cli && \
   yarn generate && yarn build
 
 
 # RUNNER 
-FROM node:16-alpine AS runner
+FROM node:18-alpine AS runner
 
 LABEL maintener "42Atomys <contact@atomys.fr>"
 LABEL repository "https://github.com/42Atomys/stud42"

@@ -1,5 +1,6 @@
 import Search from '@components/Search';
 import useSidebar, { Menu, MenuCategory, MenuItem } from '@components/Sidebar';
+import { useMe } from '@ctx/currentUser';
 import { useClusterSidebarDataQuery } from '@graphql.d';
 import { isFirstLoading } from '@lib/apollo';
 import Campuses, { CampusNames } from '@lib/clustersMap';
@@ -27,8 +28,8 @@ export const ClusterSidebar = ({
   const router = useRouter();
   const campusKeys = Object.keys(Campuses) as Array<CampusNames>;
   const currentCampusData = Campuses[activeCampusName];
-
-  const { data: { me, locationsStatsByPrefixes = [] } = {}, networkStatus } =
+  const { me } = useMe();
+  const { data: { locationsStatsByPrefixes = [] } = {}, networkStatus } =
     useClusterSidebarDataQuery({
       variables: {
         campusName: activeCampusName,
@@ -128,14 +129,14 @@ export const ClusterSidebar = ({
                             clusterIdentifier == activeClusterIdentifier
                           }
                           name={cluster.name()}
-                          leftText={clusterIdentifier.toUpperCase()}
-                          rightText={
+                          leftChildren={clusterIdentifier.toUpperCase()}
+                          rightChildren={
                             activeCampus ? (
                               <>
-                                <span className="pr-1">
+                                <span className="pr-1 text-xs">
                                   {freePlacesPerCluster[clusterIdentifier]}
                                 </span>
-                                <i className="fa-light fa-computer"></i>
+                                <i className="fa-light fa-computer text-inherit"></i>
                               </>
                             ) : undefined
                           }

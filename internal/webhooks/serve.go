@@ -11,12 +11,12 @@ import (
 	"github.com/rs/zerolog/log"
 	"github.com/streadway/amqp"
 
-	typesgen "atomys.codes/stud42/internal/api/generated/types"
 	modelsutils "atomys.codes/stud42/internal/models"
 	"atomys.codes/stud42/internal/models/generated"
 	modelgen "atomys.codes/stud42/internal/models/generated"
 	"atomys.codes/stud42/internal/models/generated/account"
 	"atomys.codes/stud42/internal/models/generated/user"
+	"atomys.codes/stud42/internal/models/gotype"
 	"atomys.codes/stud42/pkg/duoapi"
 	"atomys.codes/stud42/pkg/utils"
 )
@@ -32,10 +32,6 @@ var ErrInvalidWebhook = errors.New("invalid webhook, metadata is empty")
 
 // New creates a new webhooks processor instance
 func New() *processor {
-	if err := modelsutils.Connect(); err != nil {
-		log.Fatal().Err(err).Msg("failed to connect to database")
-	}
-
 	return &processor{
 		ctx: context.Background(),
 		db:  modelsutils.Client(),
@@ -85,6 +81,12 @@ func (p *processor) Serve(amqpUrl, channel string) error {
 	for d := range msgs {
 		err := p.handler(d.Body)
 		if err != nil {
+			if errors.Is(err, ErrInvalidWebhook) {
+				goto ACK
+			}
+
+			// Send the message to the dead letter queue if the error is not a
+			// ErrInvalidWebhook
 			sentry.CaptureEvent(&sentry.Event{
 				Level: sentry.LevelError,
 				Contexts: map[string]interface{}{
@@ -93,11 +95,7 @@ func (p *processor) Serve(amqpUrl, channel string) error {
 				Message: err.Error(),
 			})
 
-			if errors.Is(err, ErrInvalidWebhook) {
-				goto ACK
-			}
-
-			if err = d.Nack(false, true); err != nil {
+			if err = d.Nack(false, false); err != nil {
 				sentry.CaptureException(err)
 				log.Error().Err(err).Msg("Cannot nack the message")
 			}
@@ -182,7 +180,7 @@ func (p *processor) githubHandler(data []byte) error {
 		Query().
 		Where(
 			user.HasAccountsWith(
-				account.Provider(typesgen.ProviderGithub.String()),
+				account.ProviderEQ(gotype.AccountProviderGithub),
 				account.ProviderAccountID(strconv.Itoa(webhookPayload.Sender.ID)),
 			),
 		).
@@ -193,15 +191,15 @@ func (p *processor) githubHandler(data []byte) error {
 		return nil
 	}
 
-	var flagsList = user.FlagsList
+	var flags = user.Flags
 	switch webhookPayload.Action {
 	case "created", "edited":
-		flagsList = append(flagsList, typesgen.FlagSponsor.String())
+		flags = append(flags, gotype.UserFlagSponsor)
 	case "cancelled":
-		flagsList = utils.Remove(flagsList, typesgen.FlagSponsor.String())
+		flags = utils.Remove(flags, gotype.UserFlagSponsor)
 	}
 
-	_, err = p.db.User.UpdateOne(user).SetFlagsList(utils.Uniq(flagsList)).Save(p.ctx)
+	_, err = p.db.User.UpdateOne(user).SetFlags(utils.Uniq(flags)).Save(p.ctx)
 	return err
 }
 

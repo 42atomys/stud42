@@ -25,10 +25,14 @@ services:
       GO_ENV: development
       APP_VERSION: indev
       DATABASE_URL: postgresql://postgres:postgres@database:5432/s42?sslmode=disable
+      KEYVALUE_STORE_URL: redis://:@dragonfly:6379
       AMQP_URL: amqp://rabbitmq:rabbitmq@rabbitmq:5672
       CORS_ORIGIN: http://localhost:3000
       SEARCHENGINE_MEILISEARCH_HOST: http://meilisearch:7700
       SEARCHENGINE_MEILISEARCH_TOKEN: private-meilisearch-token-for-dev-only
+      # Block Storage (s3)
+      AWS_ACCESS_KEY_ID: minio-s42-dev
+      AWS_SECRET_ACCESS_KEY: minio-s42-dev
       # Interface
       NEXT_PUBLIC_GRAPHQL_API: http://localhost:4000/graphql
       NEXTAUTH_URL: http://localhost:3000
@@ -38,7 +42,6 @@ services:
 
     # Overrides default command so things don't shut down after the process ends.
     command: sleep infinity
-
     # Uncomment the next line to use a non-root user for all processes.
     # user: vscode
 
@@ -55,18 +58,37 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: s42
-
     # Add "forwardPorts": ["5432"] to **devcontainer.json** to forward PostgreSQL locally.
+    # (Adding the "ports" property to this file will not forward from a Codespace.)
+
+  dragonfly:
+    hostname: s42-dragonfly
+    image: 'docker.dragonflydb.io/dragonflydb/dragonfly'
+    restart: unless-stopped
+    ulimits:
+      memlock: -1
+    volumes:
+      - dragonfly-data:/data
+    # Use "forwardPorts" in **devcontainer.json** to forward an workspace port locally.
     # (Adding the "ports" property to this file will not forward from a Codespace.)
 
   rabbitmq:
     hostname: s42-rabbitmq
-    image: ghcr.io/42atomys/s42-rabbitmq:3.10.2-management
+    image: ghcr.io/42atomys/s42-rabbitmq:3.11.13-management
     restart: unless-stopped
     environment:
       RABBITMQ_DEFAULT_USER: rabbitmq
       RABBITMQ_DEFAULT_PASS: rabbitmq
 
+  minio:
+    hostname: s42-minio
+    image: bitnami/minio:latest
+    restart: unless-stopped
+    environment:
+      MINIO_ROOT_USER: minio-s42-dev
+      MINIO_ROOT_PASSWORD: minio-s42-dev
+    volumes:
+      - minio-data:/data
   meilisearch:
     image: getmeili/meilisearch:v0.30
     restart: unless-stopped
@@ -81,7 +103,10 @@ services:
 
 volumes:
   postgres-data:
+  dragonfly-data:
   meilisearch-data:
+  minio-data:
+
 
 networks:
   s42-dev-network:

@@ -1,4 +1,5 @@
 import {
+  AccountProvider,
   InternalCreateUserDocument,
   InternalCreateUserMutation,
   InternalCreateUserMutationVariables,
@@ -14,7 +15,6 @@ import {
   InternalLinkAccountDocument,
   InternalLinkAccountMutation,
   InternalLinkAccountMutationVariables,
-  Provider,
 } from '@graphql.d';
 import { getServiceToken } from '@lib/config';
 import { captureException } from '@sentry/nextjs';
@@ -23,15 +23,23 @@ import { AdapterAccount, AdapterUser } from 'next-auth/adapters';
 import { ProviderType } from 'next-auth/providers';
 import type { DuoContext, S42Adapter } from './types';
 
-if (!process.env.NEXT_PUBLIC_GRAPHQL_API)
-  throw new Error('Missing NEXT_PUBLIC_GRAPHQL_API');
+const manualproviderMap = {
+  '42-school': AccountProvider.DUO,
+} as { [key: string]: AccountProvider };
 
-const url = process.env.NEXT_PUBLIC_GRAPHQL_API;
+const providerMap = (name: string): AccountProvider => {
+  const provider = Object.keys(AccountProvider).find(
+    (key) => key.toUpperCase() === name.toUpperCase()
+  );
+  if (provider) {
+    return AccountProvider[provider as keyof typeof AccountProvider];
+  }
 
-const providerMap: Record<string, Provider> = {
-  github: Provider.GITHUB,
-  '42-school': Provider.DUO,
-  discord: Provider.DISCORD,
+  if (!manualproviderMap[name]) {
+    throw new Error(`Unknown provider ${name}`);
+  }
+
+  return manualproviderMap[name];
 };
 
 /**
@@ -58,7 +66,7 @@ export const GraphQLAdapter = (): S42Adapter => {
           InternalCreateUserMutation,
           InternalCreateUserMutationVariables
         >(
-          url,
+          process.env.NEXT_PUBLIC_GRAPHQL_API!,
           InternalCreateUserDocument,
           {
             email: typedUser.email as string,
@@ -99,7 +107,7 @@ export const GraphQLAdapter = (): S42Adapter => {
           InternalGetUserQuery & { user: AdapterUser },
           InternalGetUserQueryVariables
         >(
-          url,
+          process.env.NEXT_PUBLIC_GRAPHQL_API!,
           InternalGetUserDocument,
           { id },
           { Authorization: `ServiceToken ${getServiceToken()}` }
@@ -122,7 +130,7 @@ export const GraphQLAdapter = (): S42Adapter => {
           InternalGetUserByEmailQuery & { user: AdapterUser },
           InternalGetUserByEmailQueryVariables
         >(
-          url,
+          process.env.NEXT_PUBLIC_GRAPHQL_API!,
           InternalGetUserByEmailDocument,
           { email },
           { Authorization: `ServiceToken ${getServiceToken()}` }
@@ -149,10 +157,10 @@ export const GraphQLAdapter = (): S42Adapter => {
           InternalGetUserByAccountQuery & { user: AdapterUser },
           InternalGetUserByAccountQueryVariables
         >(
-          url,
+          process.env.NEXT_PUBLIC_GRAPHQL_API!,
           InternalGetUserByAccountDocument,
           {
-            provider: providerMap[provider],
+            provider: providerMap(provider),
             providerAccountId,
           },
           { Authorization: `ServiceToken ${getServiceToken()}` }
@@ -182,16 +190,16 @@ export const GraphQLAdapter = (): S42Adapter => {
           InternalLinkAccountMutation,
           InternalLinkAccountMutationVariables
         >(
-          url,
+          process.env.NEXT_PUBLIC_GRAPHQL_API!,
           InternalLinkAccountDocument,
           {
-            provider: providerMap[account.provider],
+            provider: providerMap(account.provider),
             providerAccountId: account.providerAccountId,
             username: account._profile.login,
             access_token: account.access_token || '',
             refresh_token: account.refresh_token,
             scope: account.scope || '',
-            token_type: account.token_type || '',
+            token_type: account.token_type?.toLocaleLowerCase() || 'bearer',
             userId: account.userId,
             expire_at: account.expires_at,
           },
@@ -202,7 +210,7 @@ export const GraphQLAdapter = (): S42Adapter => {
           provider: acc.provider,
           providerAccountId: acc.providerAccountId,
           username: acc.username,
-          type: acc.type as ProviderType,
+          type: acc.type.toLowerCase() as ProviderType,
           userId: acc.user.id,
         };
       } catch (error) {

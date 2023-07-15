@@ -1,45 +1,59 @@
 # API relatives configurations
-api: {}
+api:
+  # s3 configurations for the API to store files
+  s3:
+    # The bucket configuration to store the files of the API for the Users
+    # This bucket is used to store the profile pictures of the users
+    # and the files uploaded by the users in the API (soon)
+    users:
+      bucket: s42-users
+      region: europe-west1
+      endpoint: http://localhost:9000
+      # forcePathStyle is used to force the usage of the path style
+      # in the endpoint. This is used to use minio as a S3 compatible
+      # storage in local development, or in production with a provider
+      # that does not support the virtual host style.
+      forcePathStyle: true
 
 # Interface relatives configurations
 interface: {}
 
-# jwtks service relatives configurations
-jwtks:
+# auth service relatives configurations
+auth:
   # Endpoint of the public JWKSet can be used to validate
   # a JWT Token
   endpoints:
     # The endpoint used to retrieve the public key for the JWT token.
     # This endpoint is a HTTP(S) endpoint. If you have access to the
     # DEVENV, you can use the public dev endpoint. Else, use the
-    # `jwtks-service` configured locally.
+    # `auth-service` configured locally.
     #
-    # In production, the JWTKS endpoint is a HTTPS endpoint. Accessible
+    # In production, the auth endpoint is a HTTPS endpoint. Accessible
     # to the public.
-    sets: https://sandbox.s42.dev/.well-known/jwks
-    # The endpoint used to retrieve the public key for the JWT token.
-    # This endpoint is a gRPC endpoint. In order to use this endpoint,
-    # the `jwtks-service` must be running. If you have access to the DEVENV
-    # you can use the public dev endpoint and set `insecure` to `true` to
-    # bypass the TLS certificate check during development ONLY.
+    sets: http://localhost:5000/.well-known/jwks
+    # The endpoint used to generate a JWT token from a user.
+    # In order to use this endpoint, the `auth-service` must be running.
+    # If you have access to the DEVENV you can use the public dev endpoint.
     #
-    # In production, the endpoint should be `secure` and use a TLS
-    # certificate. The communication with the signing server is cluster
-    # specific and cannot be called from outside the cluster.
-    sign: sandbox.s42.dev:51000
-  # Certs used to sign and validate the JWT
+    # In production, the endpoint should be `secure`.
+    # The communication with the authorization server is cluster
+    # specific and cannot be called from outside the cluster without the
+    # proper credentials.
+    sign: http://localhost:5000/token
+  # Configuration about the JWT
   # Also called : The JWK
   jwk:
-    certPrivateKeyFile: /etc/stud42/certs/private.key
-    certPublicKeyFile: /etc/stud42/certs/public.pem
-  # Certs used to secure the GRPC Endpoint with SSL/TLS
-  grpc:
-    # Set if the JWTKS grpc endpoint need to be insecure
-    # /!\ DONT SET AS TRUE IN PRODUCTION
-    insecure: true
-    certRootCaFile: /etc/stud42/certs/root.ca
-    certPrivateKeyFile: /etc/stud42/certs/server.key
-    certPublicKeyFile: /etc/stud42/certs/server.pem
+    # The issuer of the JWT token (the auth service) should be
+    # the same as the one configured in the auth service. This
+    # is used to validate the JWT token.
+    issuer: "s42-local-provider"
+    # The audience of the JWT token (the app) should be the same
+    # as the one configured in the auth service. This is used to
+    # validate the JWT token too.
+    audience: "app:s42:system"
+    # Certificates used to sign and validate the JWT token.
+    certPrivateKeyFile: /workspace/certs/private.key
+    certPublicKeyFile: /workspace/certs/public.pem
 
 discord:
   guildID: "248936708379246593"

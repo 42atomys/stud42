@@ -1,11 +1,11 @@
-name: 'Package images build 🐳'
+name: 'Packages 🐳'
 on:
   workflow_dispatch:
   push:
     branches:
     - main
     paths:
-    - build/packages/*
+    - build/packages/**
 jobs:
   build_packages:
     name: 'Build ${{ matrix.package }} image & push to ghcr.io 🐳'
@@ -16,7 +16,7 @@ jobs:
         - package: postgres
           version: 14.2-alpine3.15
         - package: rabbitmq
-          version: 3.10.2-management
+          version: 3.11.13-management
     permissions:
       contents: read
       packages: write

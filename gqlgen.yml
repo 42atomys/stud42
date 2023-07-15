@@ -51,3 +51,26 @@ models:
   UUID:
     model:
       - atomys.codes/stud42/internal/models.UUID
+  # Cast Me to User type to avoid circular dependency
+  Me:
+    model:
+      - atomys.codes/stud42/internal/models/generated.User
+  # Cast all intra types to their type to avoid duplicate types
+  IntraUserProxy:
+    model:
+      - atomys.codes/stud42/pkg/duoapi.User
+  IntraCursusUserProxy:
+    model:
+      - atomys.codes/stud42/pkg/duoapi.CursusUser
+  IntraCursusProxy:
+    model:
+      - atomys.codes/stud42/pkg/duoapi.Cursus
+  IntraProjectsUserProxy:
+    model:
+      - atomys.codes/stud42/pkg/duoapi.ProjectsUser
+  IntraProjectProxy:
+    model:
+      - atomys.codes/stud42/pkg/duoapi.Project
+  IntraGroupProxy:
+    model:
+      - atomys.codes/stud42/pkg/duoapi.Group

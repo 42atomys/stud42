@@ -58,7 +58,7 @@ mutation internalCreateUser(
 }
 
 mutation internalLinkAccount(
-  $provider: Provider!
+  $provider: AccountProvider!
   $providerAccountId: String!
   $username: String!
   $token_type: String!
@@ -97,6 +97,10 @@ mutation inviteOnDiscord {
   inviteOnDiscord
 }
 
+mutation readNotice($noticeID: UUID!) {
+  readNotice(noticeID: $noticeID)
+}
+
 query searchUser($query: String!, $onlyOnline: Boolean) {
   searchUser(query: $query, onlyOnline: $onlyOnline) {
     id
@@ -118,24 +122,167 @@ mutation deleteFriendship($userID: UUID!) {
   deleteFriendship(userID: $userID)
 }
 
+mutation createOrUpdateFollowsGroup($input: FollowsGroupInput!) {
+  createOrUpdateFollowsGroup(input: $input) {
+    ...FollowsGroup
+  }
+}
+
+mutation assignFollowsGroupToUser(
+  $userID: UUID!
+  $followsGroupID: UUID!
+  $assign: Boolean!
+) {
+  assignFollowsGroupToUser(
+    userID: $userID
+    followsGroupID: $followsGroupID
+    assign: $assign
+  )
+}
+
+query followsGroupsForUser($userID: UUID!) {
+  followsGroupsForUser(userID: $userID) {
+    ...FollowsGroup
+  }
+}
+
+mutation deleteFollowsGroup($id: UUID!) {
+  deleteFollowsGroup(id: $id)
+}
+
 mutation updateSettings($input: SettingsInput!) {
   updateSettings(input: $input) {
     ...ApparenceSettings
   }
 }
 
-query myApparenceSettings {
+mutation updateMe($input: UpdateMeInput!) {
+  updateMe(input: $input) {
+    nickname
+    coverURL
+    avatarURL
+    pronoun
+  }
+}
+
+mutation updateAccountVisibility($input: UpdateAccountVisibilityInput!) {
+  updateAccountVisibility(input: $input) {
+    id
+    public
+  }
+}
+
+mutation deleteAccount($id: UUID!) {
+  deleteAccount(id: $id)
+}
+
+query presignedUploadURL(
+  $kind: PresignedUploadURLKind!
+  $contentType: String!
+  $contentLength: Int!
+) {
+  presignedUploadURL(
+    kind: $kind
+    contentType: $contentType
+    contentLength: $contentLength
+  )
+}
+
+query me {
   me {
     id
+    duoLogin
+    firstName
+    usualFirstName
+    lastName
+    flags
+    duoAvatarSmallURL
+    pronoun
+    nickname
+    avatarURL
+    coverURL
+    activesNotices {
+      id
+      slug
+      message
+      color
+      icon
+    }
+    accounts {
+      id
+      public
+      ...AccountData
+    }
+    currentCampus {
+      ...CampusBasicData
+    }
+
+    currentLocation {
+      ...LocationBasicData
+    }
     settings {
       ...ApparenceSettings
     }
   }
+
+  myFollowings {
+    id
+    ...UserIdentyData
+  }
 }
 
+query userProfile($userID: UUID!) {
+  user(id: $userID) {
+    id
+    duoLogin
+    firstName
+    usualFirstName
+    lastName
+    duoAvatarSmallURL
+    pronoun
+    poolMonth
+    poolYear
+    isSwimmer
+    nickname
+    avatarURL
+    coverURL
+    flags
+    followersCount
+    followingsCount
+    lastLocation {
+      ...LocationBasicData
+    }
+    currentCampus {
+      ...CampusBasicData
+    }
+    publicAccounts {
+      ...AccountData
+    }
+
+    intraProxy {
+      correctionPoint
+      wallet
+      alumni
+      active
+      cursusUsers {
+        grade
+        level
+        cursus {
+          kind
+          name
+        }
+      }
+    }
+  }
+}
+
+# @deprecated
 query meWithFlags {
   me {
-    ...UserAccountsData
+    id
+    accounts {
+      ...AccountData
+    }
     flags
     currentCampus {
       ...CampusBasicData
@@ -143,10 +290,9 @@ query meWithFlags {
   }
 }
 
-query myFollowings {
-  myFollowing {
+query friendsPage($followsGroupSlug: String) {
+  myFollowings(followsGroupSlug: $followsGroupSlug) {
     id
-    isFollowing
     lastLocation {
       ...LocationBasicData
       campus {
@@ -154,17 +300,24 @@ query myFollowings {
       }
     }
     ...UserIdentyData
-    duoAvatarSmallURL
+  }
+
+  myFollowsGroups {
+    ...FollowsGroup
+  }
+}
+
+query followsGroupManageModal($userID: UUID!) {
+  followsGroupsForUser(userID: $userID) {
+    ...FollowsGroup
+  }
+
+  myFollowsGroups {
+    ...FollowsGroup
   }
 }
 
 query clusterSidebarData($campusName: String!, $clusterPrefixes: [String!]!) {
-  me {
-    currentCampus {
-      ...CampusBasicData
-    }
-  }
-
   locationsStatsByPrefixes(
     campusName: $campusName
     identifierPrefixes: $clusterPrefixes
@@ -195,10 +348,7 @@ query clusterView($campusName: String!, $identifierPrefix: String!) {
         user {
           id
           ...UserIdentyData
-          duoAvatarSmallURL
-          isMe
           isSwimmer
-          isFollowing
         }
       }
     }
@@ -218,7 +368,7 @@ query internalGetUserByEmail($email: String!) {
 }
 
 query internalGetUserByAccount(
-  $provider: Provider!
+  $provider: AccountProvider!
   $providerAccountId: String!
 ) {
   user: internalGetUserByAccount(provider: $provider, uid: $providerAccountId) {
@@ -228,28 +378,39 @@ query internalGetUserByAccount(
 
 fragment UserAccountsData on User {
   id
-  accounts {
-    provider
-    uid: providerAccountId
-    username
+  publicAccounts {
+    ...AccountData
   }
 }
 
+fragment AccountData on Account {
+  provider
+  providerAccountId
+  username
+}
+
 fragment UserIdentyData on User {
+  id
   duoLogin
   firstName
   usualFirstName
   lastName
+  nickname
   flags
+  duoAvatarSmallURL
+  avatarURL
+  coverURL
 }
 
 fragment LocationBasicData on Location {
+  id
   identifier
   beginAt
   endAt
 }
 
 fragment PreciseLocationData on Location {
+  id
   identifier
   campus {
     name
@@ -257,6 +418,7 @@ fragment PreciseLocationData on Location {
 }
 
 fragment CampusBasicData on Campus {
+  id
   name
   city
   country
@@ -265,4 +427,13 @@ fragment CampusBasicData on Campus {
 fragment ApparenceSettings on Settings {
   theme
   clusterMapAvatarSize
+}
+
+fragment FollowsGroup on FollowsGroup {
+  id
+  kind
+  name
+  slug
+  color
+  emoji
 }

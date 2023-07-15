@@ -34,11 +34,26 @@
     {
       "label": "Generate all",
       "detail": "Generate the code on API and on the Interface",
-      "dependsOrder": "sequence",
+      "dependsOrder": "parallel",
       "dependsOn": ["Generate API code", "Generate Interface code"],
       "icon": {
         "id": "rocket",
         "color": "terminal.ansiYellow"
+      },
+      "problemMatcher": ["$go"]
+    },
+    {
+      "label": "Start project",
+      "detail": "Start all services in background",
+      "dependsOrder": "parallel",
+      "dependsOn": [
+        "Start API",
+        "Start Interface",
+        "Start Authorization Service"
+      ],
+      "icon": {
+        "id": "rocket",
+        "color": "terminal.ansiCyan"
       },
       "problemMatcher": ["$go"]
     },
@@ -75,6 +90,23 @@
         "panel": "dedicated"
       },
       "problemMatcher": ["$tsc"]
+    },
+    {
+      "label": "Start Authorization Service",
+      "detail": "Start Authorization service in background",
+      "type": "process",
+      "isBackground": true,
+      "command": "env",
+      "args": ["APP_NAME=auth", "go", "run", "main.go", "serve", "auth"],
+      "problemMatcher": ["$go"],
+      "icon": {
+        "id": "symbol-event",
+        "color": "terminal.ansiCyan"
+      },
+      "presentation": {
+        "focus": true,
+        "panel": "dedicated"
+      }
     },
     {
       "label": "Lint API",
@@ -193,6 +225,23 @@
       },
       "problemMatcher": [],
       "args": ["-h", "database", "-U", "postgres", "-d", "s42"],
+      "presentation": {
+        "focus": true,
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "Run dragonfly cli (redis-cli)",
+      "detail": "Execute redis-cli on container",
+      "type": "process",
+      "isBackground": true,
+      "command": "redis-cli",
+      "icon": {
+        "id": "debug-start",
+        "color": "terminal.ansiRed"
+      },
+      "problemMatcher": [],
+      "args": ["-h", "dragonfly", "-p", "6379"],
       "presentation": {
         "focus": true,
         "panel": "dedicated"

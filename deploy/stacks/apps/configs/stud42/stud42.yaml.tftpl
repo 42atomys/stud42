@@ -1,27 +1,37 @@
 # API relatives configurations
-api: {}
+api:
+  s3:
+    users:
+      bucket: s42-users
+      region: gra
+      endpoint: https://s3.gra.io.cloud.ovh.net
+      forcePathStyle: false
+
 
 # Interface relatives configurations
 interface: {}
 
-# jwtks service relatives configurations
-jwtks:
+# auth service relatives configurations
+auth:
   # Endpoint of the public JWKSet can be used to validate
   # a JWT Token
   endpoints:
     sets: https://${rootDomain}/.well-known/jwks
-    sign: jwtks-service.${namespace}.svc.cluster.local:5000
-  # Certs used to sign and validate the JWT
+    sign: https://${rootDomain}/auth/token
+  # Configuration about the JWT
   # Also called : The JWK
   jwk:
+    # The issuer of the JWT token (the auth service) should be
+    # the same as the one configured in the auth service. This
+    # is used to validate the JWT token.
+    issuer: "s42-id-provider"
+    # The audience of the JWT token (the app) should be the same
+    # as the one configured in the auth service. This is used to
+    # validate the JWT token too.
+    audience: "app:s42:system"
+    # Certificates used to sign and validate the JWT token.
     certPrivateKeyFile: /etc/certs/jwk/private.key
     certPublicKeyFile: /etc/certs/jwk/public.pem
-  # Certs used to secure the GRPC Endpoint with SSL/TLS
-  grpc:
-    insecure: ${namespace == "sandbox"}
-    certRootCaFile: /etc/certs/grpc/ca.crt
-    certPrivateKeyFile: /etc/certs/grpc/tls.key
-    certPublicKeyFile: /etc/certs/grpc/tls.crt
 
 discord:
   guildID: "248936708379246593"

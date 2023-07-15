@@ -13,10 +13,10 @@ module "api" {
 
   nodeSelector = local.nodepoolSelector["services"]
 
-  replicas = 1
+  replicas = 2
   autoscaling = {
     enabled     = true
-    minReplicas = 1
+    minReplicas = 2
     maxReplicas = 10
     metrics = {
       cpu = {
@@ -34,7 +34,7 @@ module "api" {
       memory = "96Mi"
     }
     requests = {
-      cpu    = var.namespace == "production" ? "100m" : "10mi"
+      cpu    = var.namespace == "production" ? "100m" : "10m"
       memory = var.namespace == "production" ? "48Mi" : "24Mi"
     }
   }
@@ -51,6 +51,9 @@ module "api" {
     DATABASE_HOST                 = "postgres.${var.namespace}.svc.cluster.local"
     DATABASE_NAME                 = "s42"
     DATABASE_URL                  = "postgresql://postgres:$(DATABASE_PASSWORD)@$(DATABASE_HOST):5432/$(DATABASE_NAME)?sslmode=disable"
+    KEYVALUE_STORE_HOST           = "dragonfly.${var.namespace}.svc.cluster.local"
+    KEYVALUE_STORE_PORT           = "6379"
+    KEYVALUE_STORE_URL            = "redis://:$(DFLY_PASSWORD)@$(KEYVALUE_STORE_HOST):$(KEYVALUE_STORE_PORT)"
     SEARCHENGINE_MEILISEARCH_HOST = "http://meilisearch.${var.namespace}.svc.cluster.local:7700"
   }
 
@@ -58,6 +61,21 @@ module "api" {
     DATABASE_PASSWORD = {
       key  = "POSTGRES_PASSWORD_ENCODED"
       name = "postgres-credentials"
+    }
+
+    DFLY_PASSWORD = {
+      key  = "DFLY_PASSWORD_ENCODED"
+      name = "dragonfly-credentials"
+    }
+
+    FORTY_TWO_ID = {
+      key  = "FORTY_TWO_ID"
+      name = "oauth2-providers"
+    }
+
+    FORTY_TWO_SECRET = {
+      key  = "FORTY_TWO_SECRET"
+      name = "oauth2-providers"
     }
 
     GITHUB_TOKEN = {
@@ -81,6 +99,16 @@ module "api" {
     SEARCHENGINE_MEILISEARCH_TOKEN = {
       key  = "MEILI_MASTER_KEY"
       name = "meilisearch-token"
+    }
+
+    AWS_ACCESS_KEY_ID = {
+      key  = "AWS_ACCESS_KEY_ID"
+      name = "ovh-s3-credentials"
+    }
+
+    AWS_SECRET_ACCESS_KEY = {
+      key  = "AWS_SECRET_ACCESS_KEY"
+      name = "ovh-s3-credentials"
     }
   }
 

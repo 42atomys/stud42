@@ -1,5 +1,6 @@
 export {
   ClusterEmpty,
+  ClusterPersonalWorkspace,
   ClusterPillar,
   ClusterRow,
   ClusterTableMap,
@@ -7,4 +8,4 @@ export {
   ClusterWorkspaceWithUser,
 } from './ClusterTableMap';
 export type { ClusterContainerProps, MapLocation } from './types';
-export { extractandRemoveNode, extractNode } from './utils';
+export { extractNode, extractandRemoveNode } from './utils';

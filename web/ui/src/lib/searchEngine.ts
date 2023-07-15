@@ -8,18 +8,17 @@ export const clusterURL = (
   identifier: string | null | undefined
 ): string | null => {
   const campusLower = campus?.toLowerCase();
-  const identifierLower = identifier?.toLowerCase();
 
   if (!campusLower || !Object.keys(Campuses).includes(campusLower)) {
     return null;
   }
 
-  if (campusLower && identifierLower) {
+  if (campusLower && identifier) {
     const { clusterWithLetter } =
-      Campuses[campusLower as CampusNames].extractor(identifierLower);
+      Campuses[campusLower as CampusNames].extractor(identifier);
 
     if (clusterWithLetter) {
-      return `/clusters/${campusLower}/${clusterWithLetter}?identifier=${identifierLower}`;
+      return `/clusters/${campusLower}/${clusterWithLetter}?identifier=${identifier}`;
     }
   }
   return null;

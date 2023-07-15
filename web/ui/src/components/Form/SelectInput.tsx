@@ -1,14 +1,12 @@
 import { Listbox, Transition } from '@headlessui/react';
 import classNames from 'classnames';
 import { Fragment, useState } from 'react';
-import { SelectInputFunc } from './types';
+import { PropsWithClassName } from 'types/globals';
+import { SelectInputProps } from './types';
 
-export const SelectInput: SelectInputFunc = ({
-  objects,
-  selectedValue,
-  onChange,
-  className,
-}) => {
+export const SelectInput: React.FC<
+  PropsWithClassName<SelectInputProps<string>>
+> = ({ objects, selectedValue, onChange, className, defaultValue }) => {
   const [value, setValue] = useState(selectedValue);
   const onChangeCallback = (newValue: typeof selectedValue) => {
     setValue(newValue);
@@ -16,9 +14,13 @@ export const SelectInput: SelectInputFunc = ({
   };
 
   return (
-    <Listbox value={value} onChange={onChangeCallback}>
+    <Listbox
+      value={value}
+      onChange={onChangeCallback}
+      defaultValue={defaultValue}
+    >
       <div className={classNames('relative', className)}>
-        <Listbox.Button className="relative w-full cursor-default rounded-lg bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 py-2 pl-3 pr-10 text-left focus:outline-none focus-visible:border-indigo-500 sm:text-sm">
+        <Listbox.Button className="relative w-full cursor-default rounded-lg bg-slate-200 dark:bg-slate-800 border border-slate-200 dark:border-slate-800 py-2 pl-3 pr-10 text-left focus:outline-none focus-visible:border-indigo-500 sm:text-sm">
           <span className="block truncate lowercase first-letter:uppercase">
             {value}
           </span>
@@ -35,7 +37,7 @@ export const SelectInput: SelectInputFunc = ({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <Listbox.Options className="absolute right-0 w-full mt-2 origin-top-right bg-slate-50 dark:bg-slate-900 divide-y divide-gray-100 dark:divide-slate-800/75 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+          <Listbox.Options className="absolute right-0 w-full mt-2 origin-top-right bg-slate-200 dark:bg-slate-800 divide-y divide-gray-100 dark:divide-slate-800/75 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
             {objects.map((object, objectId) => (
               <div
                 className="px-1 py-1"
@@ -69,5 +71,3 @@ export const SelectInput: SelectInputFunc = ({
     </Listbox>
   );
 };
-
-export default SelectInput;

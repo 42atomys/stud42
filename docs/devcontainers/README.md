@@ -60,7 +60,8 @@ To launch and debug services, apps or interface, we have already add all [Debugg
 
 All services except the interface actually can be run separately without dependencies on other service. So you can juste start the debug profile for the service you want to edit with the Debugger of VSCode.
 
-For interface, run the api on your terminal and start the interface with the debugger do the coffee for you. _In the future, the interface fetch data from the sandbox like jwtks-service._
+For interface, run the api and the auth service on your terminal and start the interface with the debugger do the coffee for you.
+_You can start all at once with the [#Tasks](#Tasks) **Start Project**_
 
 ## Tasks
 

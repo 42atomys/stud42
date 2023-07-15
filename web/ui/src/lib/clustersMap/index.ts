@@ -3,6 +3,7 @@ import { Lausanne } from './campus/lausanne';
 import { Malaga } from './campus/malaga';
 import { Paris } from './campus/paris';
 import { Seoul } from './campus/seoul';
+import { Tokyo } from './campus/tokyo';
 import { Vienna } from './campus/vienna';
 import { Nice } from './campus/nice';
 import { CampusNames, ICampus } from './types';
@@ -26,9 +27,11 @@ export const Campuses: {
   malaga: new Malaga(),
   paris: new Paris(),
   seoul: new Seoul(),
+  tokyo: new Tokyo(),
   vienna: new Vienna(),
   nice: new Nice(),
 };
 
+export { countryEmoji } from './countryEmoji';
 export type { CampusNames, ClusterMapEntity } from './types';
 export default Campuses;
