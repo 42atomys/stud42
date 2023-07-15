@@ -41,7 +41,7 @@
     "graphql": "^16.6.0",
     "graphql-request": "^5.1.0",
     "graphql-tag": "^2.12.6",
-    "graphql-ws": "^5.11.2",
+    "graphql-ws": "^5.14.0",
     "isomorphic-unfetch": "^3.1.0",
     "jose": "^4.14.4",
     "js-cookie": "^3.0.1",
