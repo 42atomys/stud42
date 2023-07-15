@@ -5,7 +5,7 @@ import Campuses, { CampusNames } from './clustersMap';
  */
 export const clusterURL = (
   campus: string | null | undefined,
-  identifier: string | null | undefined
+  identifier: string | null | undefined,
 ): string | null => {
   const campusLower = campus?.toLowerCase();
   const identifierLower = identifier?.toLowerCase();

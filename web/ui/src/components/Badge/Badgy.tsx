@@ -11,7 +11,7 @@ export const Badgy: React.FC<PropsWithClassName<{ text: string }>> = ({
   <span
     className={classNames(
       'uppercase rounded-full py-0.5 px-2 text-xs font-bold',
-      className
+      className,
     )}
   >
     {text}

@@ -22,7 +22,7 @@ type SetValue<T> = Dispatch<SetStateAction<T>>;
 
 function useLocalStorage<T>(
   key: string,
-  initialValue: T
+  initialValue: T,
 ): [T, SetValue<T>, boolean] {
   const alreadyPresentOnLocalStorage = useRef(true);
   // Get from local storage then
@@ -88,7 +88,7 @@ function useLocalStorage<T>(
       }
       setStoredValue(readValue());
     },
-    [key, readValue]
+    [key, readValue],
   );
 
   // this only works for other documents, not the current one

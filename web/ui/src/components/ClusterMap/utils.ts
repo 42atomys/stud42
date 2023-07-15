@@ -46,7 +46,7 @@ export const extractNode: NodeFinderFunc = (connection, identifier) => {
  */
 export const extractandRemoveNode: NodeFinderFunc = (
   connection,
-  identifier
+  identifier,
 ) => {
   const { edges } = connection;
 

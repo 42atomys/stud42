@@ -21,7 +21,7 @@ export class Campus implements ICampus {
     const result = this.extractorRegexp().exec(identifier);
     if (!result || !result.groups) {
       const err = new Error(
-        `Invalid identifier for ${this.name()}: ${identifier}`
+        `Invalid identifier for ${this.name()}: ${identifier}`,
       );
       return {
         cluster: err.message,
@@ -49,7 +49,7 @@ export class Campus implements ICampus {
    */
   cluster(identifier: string): ICluster | undefined {
     return this.clusters().find(
-      (cluster) => cluster.identifier() === identifier
+      (cluster) => cluster.identifier() === identifier,
     );
   }
 }

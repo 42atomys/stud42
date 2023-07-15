@@ -22,7 +22,7 @@ describe('snapshots', () => {
 
   it('renders LocationBadge with offline location unchanged', () => {
     const { container } = render(
-      <LocationBadge location={{ endAt: '2022-10-25T00:00:00Z' }} />
+      <LocationBadge location={{ endAt: '2022-10-25T00:00:00Z' }} />,
     );
     expect(container).toMatchSnapshot();
   });
@@ -39,7 +39,7 @@ describe('contexts', () => {
   });
   it('renders offline location', async () => {
     const { findByTestId } = render(
-      <LocationBadge location={{ endAt: '2022-10-25T00:00:00Z' }} />
+      <LocationBadge location={{ endAt: '2022-10-25T00:00:00Z' }} />,
     );
     const container = await findByTestId('badge');
 
@@ -61,7 +61,7 @@ describe('contexts', () => {
 
   it('renders online location', async () => {
     const { findByTestId, findByTitle } = render(
-      <LocationBadge location={validLocation} />
+      <LocationBadge location={validLocation} />,
     );
     const container = await findByTestId('badge');
 
@@ -73,13 +73,13 @@ describe('contexts', () => {
     expect(icon).toBeTruthy();
     expect(icon).toHaveProperty(
       'src',
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1eb-1f1f7.svg'
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1eb-1f1f7.svg',
     );
     expect(icon).toHaveProperty('alt', '🇫🇷');
 
     const link = await findByTestId('location-badge-link');
     expect(link.getAttribute('href')).toContain(
-      `/clusters/paris/f1?identifier=${validLocation.identifier}`
+      `/clusters/paris/f1?identifier=${validLocation.identifier}`,
     );
   });
 });

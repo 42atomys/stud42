@@ -30,7 +30,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 
   const { data: { me } = {} } = await queryAuthenticatedSSR<MeWithFlagsQuery>(
     req,
-    { query: MeWithFlagsDocument }
+    { query: MeWithFlagsDocument },
   );
   const myCampusNameLowerFromAPI = me?.currentCampus?.name?.toLowerCase() || '';
 

@@ -57,7 +57,7 @@ export const Search: SearchComponent = ({
               <div
                 className={classNames(
                   open ? 'visible' : 'invisible',
-                  'contents'
+                  'contents',
                 )}
               >
                 <Combobox.Options
@@ -85,7 +85,7 @@ export const Search: SearchComponent = ({
                           <span
                             className={classNames(
                               'font-bold flex-1 mr-2',
-                              'text-slate-700 dark:text-slate-300'
+                              'text-slate-700 dark:text-slate-300',
                             )}
                           >
                             {user.duoLogin}
@@ -107,14 +107,14 @@ export const Search: SearchComponent = ({
           className={classNames(
             loader
               ? 'hidden'
-              : `${icon} absolute right-0 px-2 fa-light cursor-pointer transition-all opacity-100 peer-focus:opacity-0 peer-focus:scale-125 peer-focus:text-indigo-500`
+              : `${icon} absolute right-0 px-2 fa-light cursor-pointer transition-all opacity-100 peer-focus:opacity-0 peer-focus:scale-125 peer-focus:text-indigo-500`,
           )}
         />
         <i
           className={classNames(
             loader
               ? 'hidden'
-              : 'absolute right-0 fa-regular fa-arrow-turn-down-left px-[0.6rem] pt-[0.1rem] cursor-pointer transition-all opacity-0 peer-focus:opacity-100 peer-focus:scale-125 peer-focus:text-indigo-500'
+              : 'absolute right-0 fa-regular fa-arrow-turn-down-left px-[0.6rem] pt-[0.1rem] cursor-pointer transition-all opacity-0 peer-focus:opacity-100 peer-focus:scale-125 peer-focus:text-indigo-500',
           )}
         />
         <span

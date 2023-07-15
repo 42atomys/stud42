@@ -119,7 +119,7 @@ const createApolloClient = (metadata: ApolloClientMetadata = {}) => {
  */
 export const initializeApollo = (
   metadata: ApolloClientMetadata,
-  initialState: any = null
+  initialState: any = null,
 ) => {
   const client = apolloClient ?? createApolloClient(metadata);
 
@@ -151,11 +151,11 @@ export const initializeApollo = (
  */
 export const useApollo = (
   initialState: any,
-  metadata: ApolloClientMetadata = {}
+  metadata: ApolloClientMetadata = {},
 ) => {
   const store = useMemo(
     () => initializeApollo(metadata, initialState),
-    [initialState, metadata]
+    [initialState, metadata],
   );
   return store;
 };
@@ -166,7 +166,7 @@ export const useApollo = (
  */
 export const queryAuthenticatedSSR = async <T = any>(
   req: ServerSideRequest,
-  opts: QueryOptions<T>
+  opts: QueryOptions<T>,
 ): Promise<ApolloQueryResult<T>> => {
   const { query, context, ...rest } = opts;
   const client = createApolloClient({});

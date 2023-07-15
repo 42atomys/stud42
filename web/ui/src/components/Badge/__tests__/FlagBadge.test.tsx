@@ -16,7 +16,7 @@ describe('FlagBadge', () => {
     const { container } = render(<FlagBadge flag={flag} />);
     expect(container.firstChild).toBeInTheDocument();
     expect(container.firstChild).toHaveTextContent(
-      flagData[flag].description as string
+      flagData[flag].description as string,
     );
   });
 
@@ -30,7 +30,7 @@ describe('FlagBadge', () => {
   });
 
   const flags = Object.keys(flagData).filter(
-    (flag) => !!flagData[flag as UserFlag].link
+    (flag) => !!flagData[flag as UserFlag].link,
   ) as UserFlag[];
   flags.forEach((flag) => {
     it(`renders a link if data.link exists for ${flag}`, () => {
@@ -40,7 +40,7 @@ describe('FlagBadge', () => {
       const linkElement = getByRole('link');
       expect(linkElement).toHaveAttribute(
         'href',
-        flagData[flag].link?.(null).toString()
+        flagData[flag].link?.(null).toString(),
       );
     });
   });

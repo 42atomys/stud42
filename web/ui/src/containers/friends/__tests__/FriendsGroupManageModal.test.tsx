@@ -63,7 +63,7 @@ describe('FriendsGroupManageModal', () => {
         >
           Manage group
         </FriendsGroupManageModal>
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     expect(container.firstChild).not.toContain('friends-group-manage-modal');

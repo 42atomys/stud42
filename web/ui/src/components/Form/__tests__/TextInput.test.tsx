@@ -15,10 +15,10 @@ describe('TextInput', () => {
         label="Test Input"
         defaultValue={defaultValue}
         onChange={onChange}
-      />
+      />,
     );
     const inputElement = document.getElementById(
-      'test-input'
+      'test-input',
     ) as HTMLInputElement;
 
     // Check that the input is rendered
@@ -35,10 +35,10 @@ describe('TextInput', () => {
         name="test-input"
         label="Test Input"
         onChange={onChange}
-      />
+      />,
     );
     const inputElement = document.getElementById(
-      'test-input'
+      'test-input',
     ) as HTMLInputElement;
 
     // Check that the color input is rendered

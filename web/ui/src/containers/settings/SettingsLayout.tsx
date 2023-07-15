@@ -109,7 +109,7 @@ export const SettingsLayout: NextPage<
         <PageContent
           className={classNames(
             `p-4 flex-1 flex flex-col container mx-auto px-8 max-w-7xl`,
-            className
+            className,
           )}
         >
           {children}

@@ -68,7 +68,7 @@ describe('FriendsGroupAddOrEditModal', () => {
     const { container } = render(
       <MockedProvider mocks={mocks(false)} addTypename={false}>
         <FriendsGroupAddOrEditModal>Add Group</FriendsGroupAddOrEditModal>
-      </MockedProvider>
+      </MockedProvider>,
     );
     expect(container.firstChild).not.toContain('friends-group-add-edit-modal');
     expect(container.firstChild).toHaveTextContent('Add Group');
@@ -82,10 +82,10 @@ describe('FriendsGroupAddOrEditModal', () => {
     // Fill out the form
     await waitFor(() => {
       const nameInput = document.getElementById(
-        'group-name'
+        'group-name',
       ) as HTMLInputElement;
       const colorInput = document.getElementById(
-        'group-color'
+        'group-color',
       ) as HTMLInputElement;
 
       fireEvent.change(colorInput, { target: { value: defaultgroup.color } });
@@ -95,7 +95,7 @@ describe('FriendsGroupAddOrEditModal', () => {
     // Submit the form
     await waitFor(() => {
       const submitButton = screen.getByTestId(
-        'modal-action-1'
+        'modal-action-1',
       ) as HTMLButtonElement;
       submitButton.click();
       expect(submitButton).toHaveAttribute('disabled');
@@ -114,7 +114,7 @@ describe('FriendsGroupAddOrEditModal', () => {
         <FriendsGroupAddOrEditModal {...defaultgroup} id={updatedGroup.id}>
           Edit Group
         </FriendsGroupAddOrEditModal>
-      </MockedProvider>
+      </MockedProvider>,
     );
     expect(container.firstChild).not.toContain('friends-group-add-edit-modal');
     expect(container.firstChild).toHaveTextContent('Edit Group');
@@ -128,10 +128,10 @@ describe('FriendsGroupAddOrEditModal', () => {
     // Fill out the form
     await waitFor(() => {
       const nameInput = document.getElementById(
-        'group-name'
+        'group-name',
       ) as HTMLInputElement;
       const colorInput = document.getElementById(
-        'group-color'
+        'group-color',
       ) as HTMLInputElement;
 
       fireEvent.change(colorInput, { target: { value: updatedGroup.color } });
@@ -141,7 +141,7 @@ describe('FriendsGroupAddOrEditModal', () => {
     // Submit the form
     await waitFor(() => {
       const submitButton = screen.getByTestId(
-        'modal-action-1'
+        'modal-action-1',
       ) as HTMLButtonElement;
       submitButton.click();
       expect(submitButton).toHaveAttribute('disabled');

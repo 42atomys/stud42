@@ -29,7 +29,7 @@ const manualproviderMap = {
 
 const providerMap = (name: string): AccountProvider => {
   const provider = Object.keys(AccountProvider).find(
-    (key) => key.toUpperCase() === name.toUpperCase()
+    (key) => key.toUpperCase() === name.toUpperCase(),
   );
   if (provider) {
     return AccountProvider[provider as keyof typeof AccountProvider];
@@ -83,7 +83,7 @@ export const GraphQLAdapter = (): S42Adapter => {
             isStaff: typedUser.duo.isStaff,
             currentDuoCampusID: typedUser.duo.currentCampusID,
           },
-          { Authorization: `ServiceToken ${getServiceToken()}` }
+          { Authorization: `ServiceToken ${getServiceToken()}` },
         );
 
         return {
@@ -110,7 +110,7 @@ export const GraphQLAdapter = (): S42Adapter => {
           process.env.NEXT_PUBLIC_GRAPHQL_API!,
           InternalGetUserDocument,
           { id },
-          { Authorization: `ServiceToken ${getServiceToken()}` }
+          { Authorization: `ServiceToken ${getServiceToken()}` },
         );
 
         return user;
@@ -133,7 +133,7 @@ export const GraphQLAdapter = (): S42Adapter => {
           process.env.NEXT_PUBLIC_GRAPHQL_API!,
           InternalGetUserByEmailDocument,
           { email },
-          { Authorization: `ServiceToken ${getServiceToken()}` }
+          { Authorization: `ServiceToken ${getServiceToken()}` },
         );
         return user;
       } catch (error) {
@@ -163,7 +163,7 @@ export const GraphQLAdapter = (): S42Adapter => {
             provider: providerMap(provider),
             providerAccountId,
           },
-          { Authorization: `ServiceToken ${getServiceToken()}` }
+          { Authorization: `ServiceToken ${getServiceToken()}` },
         );
         return user;
       } catch (error) {
@@ -177,7 +177,7 @@ export const GraphQLAdapter = (): S42Adapter => {
      * about to be linked to an account from a different provider.
      */
     linkAccount: async (
-      account: AdapterAccount
+      account: AdapterAccount,
     ): Promise<AdapterAccount | null | undefined> => {
       try {
         if (!account._profile?.login) {
@@ -203,7 +203,7 @@ export const GraphQLAdapter = (): S42Adapter => {
             userId: account.userId,
             expire_at: account.expires_at,
           },
-          { Authorization: `ServiceToken ${getServiceToken()}` }
+          { Authorization: `ServiceToken ${getServiceToken()}` },
         );
 
         return {

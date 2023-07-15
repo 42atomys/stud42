@@ -52,7 +52,7 @@ export const MenuCategory: React.FC<MenuCategoryProps> = ({
   children,
 }) => {
   const [isCollapsed, setIsCollapsed] = React.useState(
-    isCollapsable && collapsed
+    isCollapsable && collapsed,
   );
 
   return (
@@ -84,7 +84,7 @@ export const MenuCategory: React.FC<MenuCategoryProps> = ({
             <div
               className={classNames(
                 'transition-all',
-                isCollapsed ? 'rotate-0' : 'rotate-90'
+                isCollapsed ? 'rotate-0' : 'rotate-90',
               )}
             >
               <i className="fa-fw fa-light fa-chevron-right" />
@@ -123,7 +123,7 @@ export const MenuItem: React.FC<MenuItemProps> = ({
 }) => {
   const subTextsClasses = classNames(
     active ? '!text-indigo-500' : 'text-slate-400 dark:text-slate-600',
-    'ml-2 text-xs transition-all group-hover:text-indigo-500 anchor-sub-text'
+    'ml-2 text-xs transition-all group-hover:text-indigo-500 anchor-sub-text',
   );
 
   return (
@@ -135,7 +135,7 @@ export const MenuItem: React.FC<MenuItemProps> = ({
         className={classNames(
           active ? '!bg-indigo-500/20 !text-indigo-500' : '',
           'px-2 my-1 rounded hover:bg-indigo-500/10 hover:text-indigo-500 flex flex-row items-center w-full',
-          className
+          className,
         )}
         onClick={onClick}
       >
