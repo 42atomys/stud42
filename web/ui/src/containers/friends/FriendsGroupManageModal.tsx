@@ -111,12 +111,12 @@ export const FriendsGroupManageModal: React.FC<
                       <div
                         className={classNames(
                           'mt-2 grid grid-cols-1 sm:grid-cols-2',
-                          { 'pointer-events-none opacity-50': loading }
+                          { 'pointer-events-none opacity-50': loading },
                         )}
                       >
                         {myFollowsGroups.map((group) => {
                           const isUserInGroup = followsGroupsForUser.some(
-                            (userGroup) => userGroup.id === group.id
+                            (userGroup) => userGroup.id === group.id,
                           );
                           return (
                             <FriendGroupItem

@@ -66,7 +66,7 @@ export const UserPopup = ({
         'bg-slate-200 dark:bg-slate-900 dark:to-slate-900 shadow-2xl shadow-slate-400/50 dark:shadow-black/50 rounded fixed left-0 top-0 overflow-hidden',
         isFollowed(user)
           ? 'border-blue-200 dark:border-blue-800'
-          : 'border-emerald-200 dark:border-emerald-800'
+          : 'border-emerald-200 dark:border-emerald-800',
       )}
       style={{
         top: `${top}px`,
@@ -81,7 +81,7 @@ export const UserPopup = ({
           {
             'bg-gradient-to-b from-fuchsia-500/20 to-transparent':
               user.flags?.includes(UserFlag.SPONSOR),
-          }
+          },
         )}
         buttonAlwaysShow={true}
       />

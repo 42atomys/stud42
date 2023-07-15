@@ -4,10 +4,10 @@ import { fireEvent, render } from '@testing-library/react';
 describe('Switch', () => {
   it('renders the switch with defaultChecked value', () => {
     const { container } = render(
-      <Switch name="test-switch" defaultValue={true} onChange={() => {}} />
+      <Switch name="test-switch" defaultValue={true} onChange={() => {}} />,
     );
     const inputElement = container.querySelector(
-      'input[type="checkbox"]'
+      'input[type="checkbox"]',
     ) as HTMLInputElement;
     expect(inputElement.checked).toBe(true);
   });
@@ -15,7 +15,7 @@ describe('Switch', () => {
   it('calls the onChange callback with the new checked value when clicked', () => {
     const onChange = jest.fn();
     const { container } = render(
-      <Switch name="test-switch" onChange={onChange} />
+      <Switch name="test-switch" onChange={onChange} />,
     );
     const buttonElement = container.firstChild as HTMLButtonElement;
     fireEvent.click(buttonElement);
@@ -24,12 +24,12 @@ describe('Switch', () => {
 
   it('changes the checked value when clicked', () => {
     const { container } = render(
-      <Switch name="test-switch" onChange={() => {}} />
+      <Switch name="test-switch" onChange={() => {}} />,
     );
     const buttonElement = container.firstChild as HTMLButtonElement;
     fireEvent.click(buttonElement);
     const inputElement = container.querySelector(
-      'input[type="checkbox"]'
+      'input[type="checkbox"]',
     ) as HTMLInputElement;
     expect(inputElement.checked).toBe(true);
   });
@@ -37,7 +37,7 @@ describe('Switch', () => {
   it('applies color style when provided', () => {
     const color = 'red';
     const { container } = render(
-      <Switch name="test-switch" color={color} onChange={() => {}} />
+      <Switch name="test-switch" color={color} onChange={() => {}} />,
     );
     const buttonElement = container.firstChild as HTMLButtonElement;
     const spanElement = buttonElement.querySelector('span') as HTMLSpanElement;

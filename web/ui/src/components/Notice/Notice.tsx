@@ -35,7 +35,7 @@ export const Notice: React.FC<NoticeProps> = ({ notice }) => {
     <div
       className={classNames(
         'w-[call(100%_-_0.5rem)] bg-gradient-to-r text-white z-50 m-1 px-4 py-2 rounded-md',
-        colorsClassname[color || NoticeColor.BLACK]
+        colorsClassname[color || NoticeColor.BLACK],
       )}
     >
       <div className="container mx-auto flex justify-between">

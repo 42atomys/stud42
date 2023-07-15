@@ -39,12 +39,12 @@ export const Emoji = ({
     containerProps,
     <Image
       src={`https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/${emojiCode.join(
-        '-'
+        '-',
       )}.svg`}
       height={size}
       width={size}
       alt={emoji}
       {...props}
-    />
+    />,
   );
 };

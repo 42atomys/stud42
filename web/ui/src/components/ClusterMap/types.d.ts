@@ -14,12 +14,12 @@ type Connection = {
 
 type NodeFinderFunc = <T extends Connection>(
   connection: T,
-  identifier: string
+  identifier: string,
 ) => NonNullable<T['edges'][number]>['node'] | null;
 
 type NodeIndexFinderFunc = <T extends Connection>(
   connection: T,
-  identifier: string
+  identifier: string,
 ) => number | -1;
 
 // ClusterContainer.tsx

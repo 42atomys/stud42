@@ -6,14 +6,14 @@ const actual = jest.requireActual('framer-motion');
 const custom = (
   Component: string | React.ComponentType<React.PropsWithChildren<any>>,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _customMotionComponentConfig = {}
+  _customMotionComponentConfig = {},
 ) => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const c = React.forwardRef((props, ref) => {
     const regularProps = Object.fromEntries(
       // do not pass framer props to DOM element
-      Object.entries(props).filter(([key]) => !actual.isValidMotionProp(key))
+      Object.entries(props).filter(([key]) => !actual.isValidMotionProp(key)),
     );
     return typeof Component === 'string' ? (
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment

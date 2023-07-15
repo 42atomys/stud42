@@ -129,7 +129,7 @@ const ProfileSettingPage: NextPage<PageProps> = () => {
                           input: {
                             coverURL: presignedURL.href.replace(
                               presignedURL.search,
-                              ''
+                              '',
                             ),
                           },
                         },

@@ -22,7 +22,7 @@ export const NotificationProvider: React.FC<React.PropsWithChildren> = ({
 
         setNotifications((current) => [...current, notification]);
       },
-      [setNotifications]
+      [setNotifications],
     );
 
   const removeNotification: NotificationContextValue['removeNotification'] =
@@ -32,7 +32,7 @@ export const NotificationProvider: React.FC<React.PropsWithChildren> = ({
           ...current.filter((n) => n.id !== notification.id),
         ]);
       },
-      [setNotifications]
+      [setNotifications],
     );
 
   const value = {
@@ -67,7 +67,7 @@ export const useNotification: () => NotificationContextValue = () => {
   const context = useContext(NotificationContext);
   if (!context) {
     throw new Error(
-      'useNotification must be used within a NotificationProvider'
+      'useNotification must be used within a NotificationProvider',
     );
   }
 
