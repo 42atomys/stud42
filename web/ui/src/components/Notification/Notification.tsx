@@ -35,9 +35,12 @@ export const Notification: NotificationComponent = (notification) => {
     setVisible(true);
 
     if (duration && duration != 0) {
-      setTimeout(() => {
-        hideNotification();
-      }, Math.max(duration, 4000));
+      setTimeout(
+        () => {
+          hideNotification();
+        },
+        Math.max(duration, 4000),
+      );
     }
   }, [hideNotification, duration]);
 
@@ -87,7 +90,7 @@ export const Notification: NotificationComponent = (notification) => {
             'bg-gradient-to-r dark:bg-gradient-to-l relative border-transparent hover:ring-2 overflow-hidden',
             '[&_button]:rounded-lg [&_button]:py-2 [&_button]:px-4 [&_button]:mt-2 [&_button]:text-white [&_button]:transition-all [&_button]:ring-2 [&_button]:ring-transparent',
             '[&_a]:underline max-h-[200px] p-4 mt-2 border-2 relative',
-            containesClasses
+            containesClasses,
           )}
         >
           {duration && (
@@ -95,7 +98,7 @@ export const Notification: NotificationComponent = (notification) => {
               <div
                 className={classNames(
                   'border-2 h-1 animate-progress w-0',
-                  containesClasses
+                  containesClasses,
                 )}
                 style={{
                   animationDuration: `${duration}ms`,
@@ -107,7 +110,7 @@ export const Notification: NotificationComponent = (notification) => {
           <div
             className={classNames(
               'p-1 absolute top-2 right-2 cursor-pointer',
-              textClasses
+              textClasses,
             )}
             onClick={hideNotification}
           >
@@ -116,7 +119,7 @@ export const Notification: NotificationComponent = (notification) => {
           <b
             className={classNames(
               'font-display inline-block first-letter:uppercase',
-              titleClasses
+              titleClasses,
             )}
           >
             {title}
@@ -124,7 +127,7 @@ export const Notification: NotificationComponent = (notification) => {
           <p
             className={classNames(
               'font-light block first-letter:uppercase',
-              textClasses
+              textClasses,
             )}
           >
             {message}

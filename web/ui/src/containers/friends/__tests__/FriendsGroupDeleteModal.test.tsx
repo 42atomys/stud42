@@ -40,7 +40,7 @@ describe('FriendsGroupDeleteModal', () => {
         <FriendsGroupDeleteModal {...group}>
           Delete Group
         </FriendsGroupDeleteModal>
-      </MockedProvider>
+      </MockedProvider>,
     );
     expect(container.firstChild).not.toContain('friends-group-delete-modal');
     expect(container.firstChild).toHaveTextContent('Delete Group');
@@ -60,7 +60,7 @@ describe('FriendsGroupDeleteModal', () => {
         expect(button).toHaveAttribute('disabled');
         expect(button).toHaveTextContent('Deleting...');
       },
-      { timeout: 0 }
+      { timeout: 0 },
     );
 
     // Check that the modal is closed

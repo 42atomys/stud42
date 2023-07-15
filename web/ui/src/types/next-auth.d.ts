@@ -63,11 +63,11 @@ declare module 'next-auth/adapters' {
     getUser: (id: string) => Awaitable<AdapterUser | null>;
     getUserByEmail: (email: string) => Awaitable<AdapterUser | null>;
     getUserByAccount: (
-      providerAccountId: Pick<AdapterAccount, 'provider' | 'providerAccountId'>
+      providerAccountId: Pick<AdapterAccount, 'provider' | 'providerAccountId'>,
     ) => Awaitable<AdapterUser | null>;
 
     linkAccount: (
-      account: AdapterAccount
+      account: AdapterAccount,
     ) => Promise<void> | Awaitable<AdapterAccount | null | undefined>;
   }
 }
@@ -90,10 +90,10 @@ declare module 'next-auth' {
     getUser: (id: string) => Awaitable<AdapterUser | null>;
     getUserByEmail: (email: string) => Awaitable<AdapterUser | null>;
     getUserByAccount: (
-      providerAccountId: Pick<Account, 'provider' | 'providerAccountId'>
+      providerAccountId: Pick<Account, 'provider' | 'providerAccountId'>,
     ) => Awaitable<AdapterUser | null>;
     linkAccount: (
-      account: Account
+      account: Account,
     ) => Promise<void> | Awaitable<Account | null | undefined>;
   }
 }

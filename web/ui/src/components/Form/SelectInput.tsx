@@ -47,7 +47,7 @@ export const SelectInput: React.FC<
                   className={({ active }) =>
                     classNames(
                       'hover:bg-indigo-500 hover:text-white group flex rounded-md items-center w-full px-2 py-2 text-sm',
-                      { 'bg-indigo-500 text-white': active }
+                      { 'bg-indigo-500 text-white': active },
                     )
                   }
                   value={object}

@@ -3,7 +3,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 it('snapshot: renders Tooltip unchanged', () => {
   const { container } = render(
-    <TooltipDefault text="tooltip-test">Test</TooltipDefault>
+    <TooltipDefault text="tooltip-test">Test</TooltipDefault>,
   );
   expect(container).toMatchSnapshot();
 });

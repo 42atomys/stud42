@@ -42,7 +42,7 @@ const ThridPartyIcon: React.FC<{ provider: AccountProvider }> = ({
       <i
         className={classNames(
           'fa-fw text-xl',
-          thridPartyData[provider].className
+          thridPartyData[provider].className,
         )}
       ></i>
     </motion.button>

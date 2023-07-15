@@ -72,7 +72,7 @@ export const MeProvider: React.FC<MeProviderProps> = ({
 
       return me?.me?.id === id;
     },
-    [me]
+    [me],
   );
 
   /**
@@ -87,7 +87,7 @@ export const MeProvider: React.FC<MeProviderProps> = ({
 
       return me?.myFollowings.some((user) => user.id === id) || false;
     },
-    [me]
+    [me],
   );
 
   const [updateSettingsMutation] = useUpdateSettingsMutation({
@@ -123,12 +123,12 @@ export const MeProvider: React.FC<MeProviderProps> = ({
           setTheme(
             settings.theme! === Theme.AUTO
               ? 'system'
-              : settings.theme!.toLowerCase()
+              : settings.theme!.toLowerCase(),
           );
         },
       });
     },
-    [me, setTheme, updateSettingsMutation]
+    [me, setTheme, updateSettingsMutation],
   );
 
   // Apply the theme settings directly on the document element
@@ -139,7 +139,7 @@ export const MeProvider: React.FC<MeProviderProps> = ({
       setTheme(
         me.me.settings.theme! === Theme.AUTO
           ? 'system'
-          : me.me.settings.theme!.toLowerCase()
+          : me.me.settings.theme!.toLowerCase(),
       );
     }
   }, [me, setTheme]);

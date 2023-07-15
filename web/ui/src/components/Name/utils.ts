@@ -4,7 +4,7 @@ export const formatName = (
   obj: NameFormatable,
   opts: { displayLogin: boolean } = {
     displayLogin: false,
-  }
+  },
 ) => {
   const formattedName = [
     obj.usualFirstName || obj.firstName,

@@ -22,7 +22,7 @@ type SetValue<T> = Dispatch<SetStateAction<T>>;
 
 function useSessionStorage<T>(
   key: string,
-  initialValue: T
+  initialValue: T,
 ): [T, SetValue<T>, boolean] {
   const alreadyPresentOnSessionStorage = useRef(true);
   // Get from session storage then
@@ -84,7 +84,7 @@ function useSessionStorage<T>(
       }
       setStoredValue(readValue());
     },
-    [key, readValue]
+    [key, readValue],
   );
 
   // this only works for other documents, not the current one

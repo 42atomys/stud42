@@ -28,8 +28,8 @@ export const middleware: NextMiddleware = async (req) => {
     return NextResponse.redirect(
       new URL(
         '/auth/signin?callbackUrl=' + encodeURIComponent(pathname),
-        req.url
-      )
+        req.url,
+      ),
     );
   }
 

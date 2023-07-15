@@ -44,7 +44,7 @@ export type PayloadOf<T, U = Actions['type']> = T extends { type: U }
 // `dispatch({ type: <type>, payload: <payload> })`
 export type Dispatcher = <
   Type extends Actions['type'],
-  Payload extends ActionsMap[Type]
+  Payload extends ActionsMap[Type],
 >(
   type: Type,
   // This line makes it so if there shouldn't be a payload then

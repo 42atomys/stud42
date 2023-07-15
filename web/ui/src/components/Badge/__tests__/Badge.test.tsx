@@ -11,14 +11,14 @@ describe('snapshots', () => {
     const { container } = render(
       <Badge color="black">
         <i>Testing</i>
-      </Badge>
+      </Badge>,
     );
     expect(container).toMatchSnapshot();
   });
 
   it('renders Badge with className unchanged', () => {
     const { container } = render(
-      <Badge color="black" text="Testing" className="test" />
+      <Badge color="black" text="Testing" className="test" />,
     );
     expect(container).toMatchSnapshot();
   });
@@ -39,16 +39,16 @@ describe('color data', () => {
   ].forEach(({ color, class: className, opacity }) => {
     it(`renders color data with ${color}`, () => {
       const { container } = render(
-        <Badge color={color as BadgeColor} text="Testing" />
+        <Badge color={color as BadgeColor} text="Testing" />,
       );
       expect(container.firstChild).toHaveClass(`bg-${className}-${opacity}/20`);
       expect(container.firstChild).toHaveClass(
-        `border-${className}-${opacity}`
+        `border-${className}-${opacity}`,
       );
       expect(container.firstChild).toHaveClass(`text-${className}-700`);
       expect(container.firstChild).toHaveClass(`dark:text-${className}-300`);
       expect(container.firstChild).toHaveClass(
-        `hover:bg-${className}-${opacity}/50`
+        `hover:bg-${className}-${opacity}/50`,
       );
     });
   });
@@ -72,7 +72,7 @@ describe('children and text', () => {
     const { container } = render(
       <Badge color="transparent">
         <i>Testing</i>
-      </Badge>
+      </Badge>,
     );
 
     expect(container.firstChild).toBeInTheDocument();
@@ -84,12 +84,12 @@ describe('children and text', () => {
       <Badge color="transparent">
         <i>Testing 1</i>
         <b>Testing 2</b>
-      </Badge>
+      </Badge>,
     );
 
     expect(container.firstChild).toBeInTheDocument();
     expect(container.firstChild).toContainHTML(
-      '<i>Testing 1</i><b>Testing 2</b>'
+      '<i>Testing 1</i><b>Testing 2</b>',
     );
   });
 });

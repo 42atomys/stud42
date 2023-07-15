@@ -44,15 +44,15 @@ export const ClusterWorkspaceWithUser = ({
   location: MapLocation;
   onMouseEnter?: (
     e: React.MouseEvent<HTMLDivElement>,
-    location: MapLocation
+    location: MapLocation,
   ) => void;
   onMouseLeave?: (
     e: React.MouseEvent<HTMLDivElement>,
-    location: MapLocation
+    location: MapLocation,
   ) => void;
   onClick?: (
     e: React.MouseEvent<HTMLDivElement>,
-    location: MapLocation
+    location: MapLocation,
   ) => void;
 }) => {
   const {
@@ -83,7 +83,7 @@ export const ClusterWorkspaceWithUser = ({
               : '',
             highlight && hightlightVisibility(location.identifier) == 'DIMMED'
               ? 'opacity-30'
-              : 'opacity-100'
+              : 'opacity-100',
           )}
           onClick={(e) => onClick && onClick(e, location)}
           onMouseEnter={(e) => onMouseEnter && onMouseEnter(e, location)}
