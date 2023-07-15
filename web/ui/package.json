@@ -27,7 +27,7 @@
   "dependencies": {
     "@apollo/client": "^3.7.15",
     "@apollo/react-hooks": "^4.0.0",
-    "@headlessui/react": "^1.7.7",
+    "@headlessui/react": "^1.7.15",
     "@sentry/browser": "^7.47.0",
     "@sentry/nextjs": "^7.47.0",
     "@sentry/node": "^7.47.0",
