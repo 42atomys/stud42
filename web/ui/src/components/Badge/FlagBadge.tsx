@@ -35,7 +35,7 @@ export const FlagBadge: React.FC<{ flag: UserFlag }> = ({ flag }) => {
         trueWrapper={(children) => (
           <Link
             role="link"
-            href={data.link?.() as URL}
+            href={data.link?.(null) as URL}
             className="flex"
             target="_blank"
           >

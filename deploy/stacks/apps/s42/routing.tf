@@ -8,7 +8,7 @@ module "istio" {
       gateways  = [local.reversedRootDomain]
       http = [
         {
-          name = "jwtks-service"
+          name = "auth-service"
           match = [
             {
               uri = {
@@ -20,14 +20,40 @@ module "istio" {
             }
           ]
           rewrite = {
-            uri = "/jwks"
+            uri = "/.well-known/jwks"
           }
           route = [
             {
               destination = {
-                host = "jwtks-service.${var.namespace}.svc.cluster.local"
+                host = "auth-service.${var.namespace}.svc.cluster.local"
                 port = {
-                  number = 5500
+                  number = 5000
+                }
+              }
+            }
+          ]
+        },
+        {
+          name = "auth-service"
+          match = [
+            {
+              uri = {
+                prefix = "/auth/token"
+              }
+              method = {
+                exact = "POST"
+              }
+            }
+          ]
+          rewrite = {
+            uri = "/token"
+          }
+          route = [
+            {
+              destination = {
+                host = "auth-service.${var.namespace}.svc.cluster.local"
+                port = {
+                  number = 5000
                 }
               }
             }

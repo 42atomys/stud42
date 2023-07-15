@@ -20,12 +20,12 @@ export const FileInput: React.FC<
     <div
       className={classNames(
         className,
-        'rounded-md text-left px-3 pt-2.5 pb-1.5 shadow-sm ring-1 ring-inset ring-slate-200 dark:ring-slate-800 focus-within:ring-2 focus-within:ring-indigo-500'
+        'rounded-md text-left px-3 pt-2.5 pb-1.5 shadow-sm ring-1 ring-inset ring-transparent focus-within:ring-2 focus-within:ring-indigo-500'
       )}
     >
       <label
         htmlFor={inputId}
-        className="flex flex-1 justify-center w-full p-4 transition text-slate-500 border-2 border-slate-300 dark:border-slate-700 border-dashed rounded-md appearance-none cursor-pointer hover:border-slate-400 dark:hover:border-slate-600 focus:outline-none"
+        className="flex flex-1 justify-center w-full p-4 transition text-slate-500 border-2 border-slate-200 dark:border-slate-800 border-dashed rounded-md appearance-none cursor-pointer hover:border-slate-400 dark:hover:border-slate-600 focus:outline-none"
       >
         <span className="flex items-center space-x-2">
           <i className="fa-light fa-cloud-arrow-up" />

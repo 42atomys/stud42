@@ -60,9 +60,6 @@
         "[yaml]": {
           "editor.defaultFormatter": "redhat.vscode-yaml"
         },
-        "[proto3]": {
-          "editor.defaultFormatter": "zxh404.vscode-proto3"
-        },
         "[markdown]": {
           "editor.defaultFormatter": "esbenp.prettier-vscode"
         },
@@ -83,7 +80,6 @@
         "aaron-bond.better-comments",
         "IBM.output-colorizer",
         "miguelsolorio.fluent-icons",
-        "peterj.proto",
         "jasonnutter.vscode-codeowners",
         "ms-azuretools.vscode-docker",
         "ms-kubernetes-tools.vscode-kubernetes-tools",
@@ -96,7 +92,6 @@
         "quicktype.quicktype",
         "esbenp.prettier-vscode",
         "bradlc.vscode-tailwindcss",
-        "zxh404.vscode-proto3",
         "redhat.vscode-yaml",
         "hashicorp.terraform",
         "orta.vscode-jest"
@@ -108,8 +103,7 @@
   "forwardPorts": [
     3000, // web-ui port
     4000, // api port
-    5000, // jwtks-service grpc port
-    5500, // jwtks-service http port
+    5000, // Authorization Service http port
     "jaeger:16686", // the jaeger port
     "meilisearch:7700", // the meilisearch port
     "minio:9000", // the minio port
@@ -128,10 +122,7 @@
       "label": "API"
     },
     "5000": {
-      "label": "JWTKS Service GRPC"
-    },
-    "5500": {
-      "label": "JWTKS Service HTTP"
+      "label": "Authorization Service"
     },
     "16686": {
       "label": "Jaeger UI"

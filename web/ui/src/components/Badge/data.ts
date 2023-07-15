@@ -88,21 +88,60 @@ export const thridPartyData: ThridPartyAccountDataMap = {
   DUO: {
     name: 'Intra 42',
     className: 'fa-kit fa-duoquadra',
-    link: (uid) => new URL(`https://profile.intra.42.fr/users/${uid}`),
+    link: ({ username }) =>
+      new URL(`https://profile.intra.42.fr/users/${username}`),
   },
   SLACK: {
     name: 'Slack',
     className: 'fab fa-slack',
-    link: (uid) => new URL(`https://42born2code.slack.com/messages/@${uid}`),
+    link: ({ username }) =>
+      new URL(`https://42born2code.slack.com/messages/@${username}`),
   },
   DISCORD: {
     name: 'Discord',
     className: 'fab fa-discord',
-    link: (uid) => new URL(`https://discord.com/users/${uid}`),
+    link: ({ username }) => new URL(`https://discord.com/users/${username}`),
   },
   GITHUB: {
     name: 'Github',
     className: 'fab fa-github',
-    link: (uid) => new URL(`https://github.com/${uid}`),
+    link: ({ username }) => new URL(`https://github.com/${username}`),
+  },
+  GITLAB: {
+    name: 'Gitlab',
+    className: 'fab fa-gitlab',
+    link: ({ username }) => new URL(`https://gitlab.com/${username}`),
+  },
+  LINKEDIN: {
+    name: 'LinkedIn',
+    className: 'fab fa-linkedin',
+    link: ({ providerAccountId }) =>
+      new URL(`https://www.linkedin.com/in/${providerAccountId}`),
+  },
+  TWITTER: {
+    name: 'Twitter',
+    className: 'fab fa-twitter',
+    link: ({ username }) => new URL(`https://twitter.com/${username}`),
+  },
+  INSTAGRAM: {
+    name: 'Instagram',
+    className: 'fab fa-instagram',
+    link: ({ username }) => new URL(`https://www.instagram.com/${username}`),
+  },
+  REDDIT: {
+    name: 'Reddit',
+    className: 'fab fa-reddit',
+    link: ({ username }) => new URL(`https://www.reddit.com/user/${username}`),
+  },
+  SPOTIFY: {
+    name: 'Spotify',
+    className: 'fab fa-spotify',
+    link: ({ providerAccountId }) =>
+      new URL(`https://open.spotify.com/user/${providerAccountId}`),
+  },
+  TWITCH: {
+    name: 'Twitch',
+    className: 'fab fa-twitch',
+    link: ({ username }) => new URL(`https://www.twitch.tv/${username}`),
   },
 };

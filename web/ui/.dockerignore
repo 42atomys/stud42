@@ -5,7 +5,6 @@
 # Generated code
 src/graphql/schema.json
 src/graphql/generated.ts
-src/grpc/jwtks/jwtks.ts
 
 # dependencies
 node_modules

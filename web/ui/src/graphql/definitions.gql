@@ -97,6 +97,10 @@ mutation inviteOnDiscord {
   inviteOnDiscord
 }
 
+mutation readNotice($noticeID: UUID!) {
+  readNotice(noticeID: $noticeID)
+}
+
 query searchUser($query: String!, $onlyOnline: Boolean) {
   searchUser(query: $query, onlyOnline: $onlyOnline) {
     id
@@ -161,6 +165,17 @@ mutation updateMe($input: UpdateMeInput!) {
   }
 }
 
+mutation updateAccountVisibility($input: UpdateAccountVisibilityInput!) {
+  updateAccountVisibility(input: $input) {
+    id
+    public
+  }
+}
+
+mutation deleteAccount($id: UUID!) {
+  deleteAccount(id: $id)
+}
+
 query presignedUploadURL(
   $kind: PresignedUploadURLKind!
   $contentType: String!
@@ -186,10 +201,17 @@ query me {
     nickname
     avatarURL
     coverURL
+    activesNotices {
+      id
+      slug
+      message
+      color
+      icon
+    }
     accounts {
-      provider
-      providerAccountId
-      username
+      id
+      public
+      ...AccountData
     }
     currentCampus {
       ...CampusBasicData
@@ -233,10 +255,8 @@ query userProfile($userID: UUID!) {
     currentCampus {
       ...CampusBasicData
     }
-    accounts {
-      provider
-      providerAccountId
-      username
+    publicAccounts {
+      ...AccountData
     }
 
     intraProxy {
@@ -261,9 +281,7 @@ query meWithFlags {
   me {
     id
     accounts {
-      provider
-      providerAccountId
-      username
+      ...AccountData
     }
     flags
     currentCampus {
@@ -300,12 +318,6 @@ query followsGroupManageModal($userID: UUID!) {
 }
 
 query clusterSidebarData($campusName: String!, $clusterPrefixes: [String!]!) {
-  me {
-    currentCampus {
-      ...CampusBasicData
-    }
-  }
-
   locationsStatsByPrefixes(
     campusName: $campusName
     identifierPrefixes: $clusterPrefixes
@@ -366,11 +378,15 @@ query internalGetUserByAccount(
 
 fragment UserAccountsData on User {
   id
-  accounts {
-    provider
-    providerAccountId
-    username
+  publicAccounts {
+    ...AccountData
   }
+}
+
+fragment AccountData on Account {
+  provider
+  providerAccountId
+  username
 }
 
 fragment UserIdentyData on User {

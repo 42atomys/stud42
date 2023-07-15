@@ -13,8 +13,8 @@ export type SettingsLayoutProps = {
 };
 
 export type SettingsCategoryProps = {
-  title: string;
-  description: string;
+  title?: string;
+  description?: string;
 };
 
 export type SettingsTableRowProps = {

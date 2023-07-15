@@ -22,6 +22,8 @@ import (
 	"atomys.codes/stud42/internal/models/generated/follow"
 	"atomys.codes/stud42/internal/models/generated/followsgroup"
 	"atomys.codes/stud42/internal/models/generated/location"
+	"atomys.codes/stud42/internal/models/generated/notice"
+	"atomys.codes/stud42/internal/models/generated/noticesuser"
 	"atomys.codes/stud42/internal/models/generated/user"
 	"atomys.codes/stud42/internal/models/gotype"
 	"atomys.codes/stud42/internal/pkg/s3"
@@ -38,6 +40,33 @@ import (
 // IsSwimmer is the resolver for the isSwimmer field.
 func (r *meResolver) IsSwimmer(ctx context.Context, obj *generated.User) (bool, error) {
 	return r.User().IsSwimmer(ctx, obj)
+}
+
+// ActivesNotices is the resolver for the activesNotices field.
+func (r *meResolver) ActivesNotices(ctx context.Context, obj *generated.User) ([]*generated.Notice, error) {
+	cu, err := CurrentUserFromContext(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return r.client.Notice.Query().Modify(func(s *sql.Selector) {
+		t := sql.Table(notice.Table)
+		s.From(t).
+			LeftJoin(sql.Table(noticesuser.Table).As(noticesuser.Table)).
+			OnP(
+				sql.And(
+					sql.ColumnsEQ(t.C(notice.FieldID), sql.Table(noticesuser.Table).C(noticesuser.FieldNoticeID)),
+					sql.EQ(sql.Table(noticesuser.Table).C(noticesuser.FieldUserID), cu.ID),
+				),
+			).
+			Where(
+				sql.And(
+					sql.EQ(t.C(notice.FieldIsActive), true),
+					sql.IsNull(sql.Table(noticesuser.Table).C(noticesuser.FieldID)),
+				),
+			)
+		s.OrderBy(t.C(notice.FieldCreatedAt))
+	}).All(ctx)
 }
 
 // CreateFriendship is the resolver for the createFriendship field.
@@ -126,6 +155,20 @@ func (r *mutationResolver) DeleteFollowsGroup(ctx context.Context, id uuid.UUID)
 	// Delete the relationship between the current user and the group.
 	if _, err := r.client.FollowsGroup.Delete().
 		Where(followsgroup.UserID(cu.ID), followsgroup.ID(id)).Exec(ctx); err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
+// ReadNotice is the resolver for the readNotice field.
+func (r *mutationResolver) ReadNotice(ctx context.Context, noticeID uuid.UUID) (bool, error) {
+	cu, err := CurrentUserFromContext(ctx)
+	if err != nil {
+		return false, err
+	}
+
+	if err := r.client.User.UpdateOneID(cu.ID).AddReadedNoticeIDs(noticeID).Exec(ctx); err != nil {
 		return false, err
 	}
 
@@ -227,6 +270,39 @@ func (r *mutationResolver) UpdateMe(ctx context.Context, input typesgen.UpdateMe
 		return nil, err
 	}
 	return updatedUser, nil
+}
+
+// UpdateAccountVisibility is the resolver for the updateAccountVisibility field.
+func (r *mutationResolver) UpdateAccountVisibility(ctx context.Context, input typesgen.UpdateAccountVisibilityInput) (*generated.Account, error) {
+	cu, err := CurrentUserFromContext(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	if cu.QueryAccounts().Where(account.ID(input.ID)).CountX(ctx) == 0 {
+		return nil, errors.New("you don't own this account or it doesn't exist")
+	}
+
+	return r.client.Account.UpdateOneID(input.ID).
+		SetPublic(input.Public).
+		Save(ctx)
+}
+
+// DeleteAccount is the resolver for the deleteAccount field.
+func (r *mutationResolver) DeleteAccount(ctx context.Context, id uuid.UUID) (bool, error) {
+	cu, err := CurrentUserFromContext(ctx)
+	if err != nil {
+		return false, err
+	}
+
+	_, err = r.client.Account.Delete().
+		Where(account.ID(id), account.UserID(cu.ID)).
+		Exec(ctx)
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
 }
 
 // InternalCreateUser is the resolver for the internalCreateUser field.
@@ -384,7 +460,8 @@ func (r *queryResolver) LocationsByCluster(ctx context.Context, page typesgen.Pa
 func (r *queryResolver) LocationsStatsByPrefixes(ctx context.Context, campusName string, identifierPrefixes []string) ([]*typesgen.LocationStats, error) {
 	sqlResults := []*typesgen.LocationStats{}
 	prefixes := make([]any, len(identifierPrefixes))
-	identifierMaxSize := 2
+	identifierMinSize := 2
+	identifierMaxSize := 10
 
 	// We need to convert the prefixes to any to be able to use them in the query
 	// and we also need to know the max size of the prefixes to be able to
@@ -392,13 +469,10 @@ func (r *queryResolver) LocationsStatsByPrefixes(ctx context.Context, campusName
 	// after the request.
 	for i, prefix := range identifierPrefixes {
 		// Validate the length of the prefix.
-		if len(prefix) < 2 || len(prefix) > 4 {
-			return nil, fmt.Errorf("invalid prefix size. Must be between 2 and 4")
+		if len(prefix) < identifierMinSize || len(prefix) > identifierMaxSize {
+			return nil, fmt.Errorf("invalid prefix size. Must be between %d and %d", identifierMinSize, identifierMaxSize)
 		}
 
-		if len(prefix) > identifierMaxSize {
-			identifierMaxSize = len(prefix)
-		}
 		prefixes[i] = prefix
 	}
 
@@ -612,6 +686,11 @@ func (r *userResolver) IsSwimmer(ctx context.Context, obj *generated.User) (bool
 	now := time.Now()
 	return (*obj.PoolYear == strconv.Itoa(now.Year()) &&
 		strings.EqualFold(*obj.PoolMonth, now.Format("January"))), nil
+}
+
+// PublicAccounts is the resolver for the publicAccounts field.
+func (r *userResolver) PublicAccounts(ctx context.Context, obj *generated.User) ([]*generated.Account, error) {
+	return r.client.User.QueryAccounts(obj).Where(account.Public(true)).All(ctx)
 }
 
 // IntraProxy is the resolver for the intraProxy field.

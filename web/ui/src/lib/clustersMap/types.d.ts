@@ -8,7 +8,8 @@ export type CampusNames =
   | 'malaga'
   | 'vienna'
   | 'seoul'
-  | 'lausanne';
+  | 'lausanne'
+  | 'tokyo';
 
 /**
  * Types of Cluster Map entities
@@ -16,10 +17,16 @@ export type CampusNames =
  * W = WORKSPACE
  * T = TEXT
  */
-export type ClusterMapEntity = null | Pillar | Workspace | Text;
+export type ClusterMapEntity =
+  | null
+  | Pillar
+  | Workspace
+  | PersonalWorkspace
+  | Text;
 
 type Pillar = 'P';
 type Workspace = `W:${string}`;
+type PersonalWorkspace = 'PW' | `PW:${string}`;
 type Text = `T:${string}`;
 
 /**
@@ -55,6 +62,7 @@ export interface ICampus {
   //
   // e.g. for the identifier "c1r2p3" it will return :
   //   {
+  //     building: "paul" | undefined,
   //     cluster: "1",
   //     row: "2",
   //     workspace: "3",
@@ -63,6 +71,8 @@ export interface ICampus {
   //     workspaceWithLetter: "p3",
   //   }
   extractor(identifier: string): {
+    building?: string;
+
     cluster: string;
     row: string;
     workspace: string;

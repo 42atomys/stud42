@@ -13,25 +13,28 @@ jobs:
     runs-on: ubuntu-latest
     # Allow crash due to fork policy
     continue-on-error: true
+    # Only if branch is main or release or a branch in the origin repo
+    if: |
+      github.event_name == 'release' ||
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == '42atomys/stud42')
     env:
-      # Sandbox is not deployed to the production workspace.
       # Compare the changes when plan with production
-      TF_WORKSPACE: ${{ matrix.stack == 'sandbox' && 'sandbox' || 'production' }}
+      TF_WORKSPACE: "production"
       AWS_ACCESS_KEY_ID: ${{ secrets.TERRAFORM_AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.TERRAFORM_AWS_SECRET_ACCESS_KEY }}
       # TF VARS (bind to production to display changes between branch and production)
       # Compare the changes when plan with production
-      TF_VAR_namespace: ${{ matrix.stack == 'sandbox' && 'sandbox' || 'production' }}
+      TF_VAR_namespace: "production"
       TF_ENV_appsVersion: '{"s42": "${{ inputs.imageTag }}"}'
       TF_VAR_baseUrl: "s42.app"
       TF_VAR_webhooksEnabled: "true"
       TF_VAR_crawlerEnabled: "true"
-      TF_VAR_hasProvidedJWTKSCertificates: "false"
       TF_VAR_hasPersistentStorage: "true"
 
     strategy:
       matrix:
-        stack: ["pre-cluster", "cluster", "apps", "sandbox"]
+        stack: ["pre-cluster", "cluster", "apps"]
     defaults:
       run:
         working-directory: "deploy/stacks/${{ matrix.stack }}"
@@ -128,14 +131,6 @@ jobs:
         with:
           go-version: "1.20"
           check-latest: true
-      - name: Setup protoc
-        uses: arduino/setup-protoc@v1
-        with:
-          # TODO: Update to latest version when the issue
-          # https://github.com/arduino/setup-protoc/issues/33
-          # has been fixed
-          version: "3.x"
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Generate code
         run: make -f build/Makefile generate
       - name: Run Unit tests
@@ -176,15 +171,7 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 16
-      - name: Setup protoc
-        uses: arduino/setup-protoc@v1
-        with:
-          # TODO: Update to latest version when the issue
-          # https://github.com/arduino/setup-protoc/issues/33
-          # has been fixed
-          version: "3.x"
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          node-version: 18
       - name: Cache node_modules
         uses: actions/cache@v3
         with:

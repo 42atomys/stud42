@@ -1,10 +1,9 @@
-import { ComponentWithAuthGuard } from '@components/AuthGuard';
 import { useSidebar } from '@components/Sidebar';
 import Soon from '@components/Soon';
 
 type PageProps = {};
 
-const IndexPage: ComponentWithAuthGuard<PageProps> = () => {
+const IndexPage: PageProps = () => {
   const { SidebarProvider, Sidebar, PageContainer, PageContent } = useSidebar();
 
   return (
@@ -22,10 +21,5 @@ const IndexPage: ComponentWithAuthGuard<PageProps> = () => {
 export const getStaticProps = () => ({
   props: {},
 });
-
-IndexPage.auth = {
-  loading: <></>,
-  required: false,
-};
 
 export default IndexPage;

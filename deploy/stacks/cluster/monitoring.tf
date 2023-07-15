@@ -1,11 +1,11 @@
 locals {
   monitoringNamespace = "monitoring"
   grafanaRootUrl      = "dashboards.s42.app"
-  grafanaVersion      = "9.2.4"
-  prometheusVersion   = "v2.40.1"
-  lokiVersion         = "2.7.0"
-  promtailVersion     = "2.7.0"
-  tempoVersion        = "1.5.0"
+  grafanaVersion      = "10.0.1"
+  prometheusVersion   = "v2.45.0"
+  lokiVersion         = "2.8.2"
+  promtailVersion     = "2.8.2"
+  tempoVersion        = "2.1.1"
 
   nodeSelector = {
     "nodepool" = "small"
@@ -290,6 +290,8 @@ module "loki" {
   replicas            = 1
   podManagementPolicy = "OrderedReady"
 
+  fixPermissions = true
+
   podSecurityContext = {
     fsGroup    = 10001
     runAsGroup = 10001
@@ -356,6 +358,7 @@ module "loki" {
     {
       volumeName = "configuration"
       mountPath  = "/etc/loki"
+      readOnly   = true
     },
     {
       volumeName = "data"

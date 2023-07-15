@@ -6,7 +6,7 @@ ENV TERM xterm
 ENV SHELL /usr/bin/zsh
 
 # [Choice] Node.js version: none, lts/*, 16, 14, 12, 10
-ARG NODE_VERSION="16"
+ARG NODE_VERSION="18"
 RUN if [ "${NODE_VERSION}" != "none" ]; then su vscode -c "umask 0002 && . /usr/local/share/nvm/nvm.sh && nvm install ${NODE_VERSION} 2>&1"; fi
 
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
@@ -31,11 +31,6 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 # Install global node packages.
 RUN npm install --location=global tslint-to-eslint-config typescript \
   @commitlint/cli @commitlint/config-conventional && \
-  # Install dependencies
-  wget -qO /tmp/protoc.zip $(curl -s https://api.github.com/repos/protocolbuffers/protobuf/releases/latest | \
-  jq -c ".assets | map(select( .name | contains(\"protoc\") and contains(\"$([ "`uname -m`" = "aarch64" ] && echo "aarch_64" ||  uname -m)\") and contains(\"linux\"))) | .[].browser_download_url" | \
-  tr -d '\"') && \
-  unzip -uo /tmp/protoc -d /usr/local bin/protoc && \
   # Workarround due toyarn dont have permission to write on node_modules
   ln -s "$NVM_DIR/versions/node/$(nvm version)/bin/node" "/usr/local/bin/node" && \
   ln -s "$NVM_DIR/versions/node/$(nvm version)/bin/npm" "/usr/local/bin/npm" && \

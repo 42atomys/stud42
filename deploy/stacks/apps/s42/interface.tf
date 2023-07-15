@@ -102,6 +102,76 @@ module "interface" {
       name = "oauth2-providers"
     }
 
+    GITLAB_ID = {
+      key  = "GITLAB_ID"
+      name = "oauth2-providers"
+    }
+
+    GITLAB_SECRET = {
+      key  = "GITLAB_SECRET"
+      name = "oauth2-providers"
+    }
+
+    INSTAGRAM_ID = {
+      key  = "INSTAGRAM_ID"
+      name = "oauth2-providers"
+    }
+
+    INSTAGRAM_SECRET = {
+      key  = "INSTAGRAM_SECRET"
+      name = "oauth2-providers"
+    }
+
+    LINKEDIN_ID = {
+      key  = "LINKEDIN_ID"
+      name = "oauth2-providers"
+    }
+
+    LINKEDIN_SECRET = {
+      key  = "LINKEDIN_SECRET"
+      name = "oauth2-providers"
+    }
+
+    REDDIT_ID = {
+      key  = "REDDIT_ID"
+      name = "oauth2-providers"
+    }
+
+    REDDIT_SECRET = {
+      key  = "REDDIT_SECRET"
+      name = "oauth2-providers"
+    }
+
+    SPOTIFY_ID = {
+      key  = "SPOTIFY_ID"
+      name = "oauth2-providers"
+    }
+
+    SPOTIFY_SECRET = {
+      key  = "SPOTIFY_SECRET"
+      name = "oauth2-providers"
+    }
+
+    TWITCH_ID = {
+      key  = "TWITCH_ID"
+      name = "oauth2-providers"
+    }
+
+    TWITCH_SECRET = {
+      key  = "TWITCH_SECRET"
+      name = "oauth2-providers"
+    }
+
+    TWITTER_ID = {
+      key  = "TWITTER_ID"
+      name = "oauth2-providers"
+    }
+
+    TWITTER_SECRET = {
+      key  = "TWITTER_SECRET"
+      name = "oauth2-providers"
+    }
+
     NEXTAUTH_SECRET = {
       key  = "NEXTAUTH_SECRET"
       name = "next-auth-secret"
@@ -122,23 +192,12 @@ module "interface" {
       volumeName = "configuration"
       mountPath  = "/config"
       readOnly   = true
-    },
-    {
-      volumeName = "certs-grpc"
-      mountPath  = "/etc/certs/grpc"
-      readOnly   = true
     }
   ]
 
   volumesFromConfig = {
     configuration = {
       configMapName = "stud42-config"
-    }
-  }
-
-  volumesFromSecret = {
-    certs-grpc = {
-      secretName = "jwtks-service-grpc-internal-tls"
     }
   }
 }

@@ -8,7 +8,9 @@ import {
   useMeLazyQuery,
   useUpdateSettingsMutation,
 } from '@graphql.d';
-import { useSession } from 'next-auth/react';
+import { nextAuthOptions } from '@lib/auth';
+import Cookies from 'js-cookie';
+import { useTheme } from 'next-themes';
 import React, {
   createContext,
   useCallback,
@@ -37,8 +39,9 @@ export const MeProvider: React.FC<MeProviderProps> = ({
   children,
   apolloClient,
 }) => {
+  const authToken = Cookies.get(nextAuthOptions.cookies?.sessionToken?.name!);
+  const { setTheme } = useTheme();
   const { addNotification } = useNotification();
-  const { status } = useSession();
   const [me, setMe] = useState<MeQuery>({
     me: { settings: {} } as MeQuery['me'],
     myFollowings: [],
@@ -117,14 +120,15 @@ export const MeProvider: React.FC<MeProviderProps> = ({
           },
         },
         onCompleted: () => {
-          // Update the local storage with the new theme settings
-          // to avoid a flash of the default theme on page load when
-          // the user is not logged in.
-          localStorage.setItem('theme', settings.theme || Theme.AUTO);
+          setTheme(
+            settings.theme! === Theme.AUTO
+              ? 'system'
+              : settings.theme!.toLowerCase()
+          );
         },
       });
     },
-    [me, updateSettingsMutation]
+    [me, setTheme, updateSettingsMutation]
   );
 
   // Apply the theme settings directly on the document element
@@ -132,24 +136,13 @@ export const MeProvider: React.FC<MeProviderProps> = ({
   // Move it to this hook to prevent duplicated provider with same behaviour.
   useEffect(() => {
     if (me.me.settings.theme) {
-      localStorage.setItem('theme', me.me.settings.theme);
+      setTheme(
+        me.me.settings.theme! === Theme.AUTO
+          ? 'system'
+          : me.me.settings.theme!.toLowerCase()
+      );
     }
-
-    if (
-      localStorage.getItem('theme') === Theme.DARK ||
-      me.me.settings.theme === Theme.DARK
-    ) {
-      document.documentElement.classList.add('dark', 'bg-slate-900');
-      return;
-    } else if (
-      me.me.settings.theme === Theme.AUTO &&
-      window.matchMedia('(prefers-color-scheme: dark)').matches
-    ) {
-      document.documentElement.classList.add('dark', 'bg-slate-900');
-    } else {
-      document.documentElement.classList.remove('dark', 'bg-slate-900');
-    }
-  }, [me]);
+  }, [me, setTheme]);
 
   // Remove __typename from me object to avoid errors when using the spread
   // operator
@@ -165,7 +158,7 @@ export const MeProvider: React.FC<MeProviderProps> = ({
 
   return (
     <ConditionalWrapper
-      condition={status === 'authenticated'}
+      condition={authToken !== undefined}
       trueWrapper={(c) => (
         <MeContext.Provider value={value}>{c}</MeContext.Provider>
       )}

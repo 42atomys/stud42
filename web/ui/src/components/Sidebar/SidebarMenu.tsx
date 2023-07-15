@@ -175,7 +175,7 @@ export const MenuItem: React.FC<MenuItemProps> = ({
             )}
           </>
         </ConditionalWrapper>
-        <div className="flex pl-2 py-[var(--menu-padding-y)]">
+        <div className="flex items-center pl-2 py-[var(--menu-padding-y)]">
           {rightChildren && (
             <ConditionalWrapper
               condition={typeof rightChildren === 'string'}

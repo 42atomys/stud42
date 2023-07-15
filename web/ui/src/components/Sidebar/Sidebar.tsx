@@ -1,4 +1,5 @@
 import { ConditionalWrapper } from '@components/ConditionalWrapper';
+import { RemoteNotices } from '@components/Notice';
 import { TooltipProps } from '@components/Tooltip';
 import Tooltip from '@components/Tooltip/Tooltip';
 import { Contribute, Star } from '@lib/github';
@@ -90,7 +91,7 @@ export const Sidebar = ({
   const isPrideMonth = new Date().getMonth() === 5;
   return (
     <div className="md:flex flex-row md:flex-row md:min-h-screen w-full md:w-auto drop-shadow-xl md:drop-shadow-none md:sticky md:top-0 md:h-screen z-40">
-      <div className="flex flex-col text-slate-600 dark:text-slate-400 bg-slate-200 dark:bg-slate-900 flex-shrink-0">
+      <div className="flex flex-col text-slate-600 dark:text-slate-400 bg-slate-200 dark:bg-slate-950 flex-shrink-0">
         <div className="flex-shrink-0 p-4 flex flex-row justify-between">
           <div className="flex flex-col justify-center antialiased focus:outline-none focus:shadow-outline space-y-2">
             <ConditionalWrapper
@@ -184,16 +185,16 @@ export const Sidebar = ({
         <div
           className={`${
             open ? 'block' : 'hidden md:flex'
-          } flex flex-col w-full md:w-72 text-slate-600 dark:text-slate-400 bg-slate-200 dark:bg-slate-900 flex-shrink-0 overflow-y-auto`}
+          } flex flex-col w-full md:w-72 text-slate-600 dark:text-slate-400 bg-slate-200 dark:bg-slate-950 flex-shrink-0 overflow-y-auto`}
           // TODO: put into tailwind when the flex flow is added to tailwind
           style={{ flexFlow: 'column' }}
         >
-          <div className="flex py-6 w-full justify-evenly bg-slate-200 dark:bg-slate-900 sticky top-0 z-10">
+          <div className="flex py-6 w-full justify-evenly sticky top-0 z-10">
             <Star />
             <Contribute />
           </div>
 
-          <div className="p-4 flex flex-col flex-auto bg-slate-100/60 dark:bg-slate-800/40 rounded-tl-md relative">
+          <div className="p-4 flex flex-col flex-auto bg-slate-100/60 dark:bg-slate-900/60 rounded-tl-md relative">
             {React.Children.map(subSidebar, (c) => (
               <>{c}</>
             ))}
@@ -222,7 +223,10 @@ export const PageContent: React.FC<
 export const PageContainer: React.FC<
   React.PropsWithChildren<PropsWithClassName>
 > = ({ children, className }) => (
-  <div className={classNames('flex flex-col md:flex-row', className)}>
-    {children}
+  <div className={classNames('flex flex-col', className)}>
+    <RemoteNotices />
+    <div className={classNames('flex flex-col md:flex-row', className)}>
+      {children}
+    </div>
   </div>
 );

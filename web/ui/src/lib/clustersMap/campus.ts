@@ -21,7 +21,7 @@ export class Campus implements ICampus {
     const result = this.extractorRegexp().exec(identifier);
     if (!result || !result.groups) {
       const err = new Error(
-        `Invalid identifier for ${this.name()}: ${identifier}. Expected format: c1r2p3`
+        `Invalid identifier for ${this.name()}: ${identifier}`
       );
       return {
         cluster: err.message,

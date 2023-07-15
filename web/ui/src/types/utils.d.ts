@@ -30,6 +30,6 @@ export type XOR<T, U> = T | U extends T & U ? never : T | U;
  * The T type parameter allows specifying the type of the object that the link
  * function receives as input.
  */
-export type ClickableLink<T = string> = {
-  link?: (obj?: T) => URL;
+export type ClickableLink<T> = {
+  link?: (obj: T) => URL;
 };

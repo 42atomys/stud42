@@ -50,7 +50,9 @@ export const getServerSideProps: GetServerSideProps = async ({
   // When no campus is found, redirect to the campus of Paris.
   return {
     redirect: {
-      destination: `/clusters/paris/e1`,
+      destination: `/clusters/paris/${Campuses.paris
+        .clusters()[0]
+        .identifier()}`,
       permanent: false,
     },
     props: {},
