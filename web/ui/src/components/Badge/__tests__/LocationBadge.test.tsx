@@ -4,7 +4,7 @@ import { render } from '@testing-library/react';
 const validLocation = {
   beginAt: '2022-10-25T00:00:00Z',
   endAt: null,
-  identifier: 'bess-f1r1s1',
+  identifier: 'paul-f1Ar1s1',
   campus: {
     country: 'France',
     name: 'Paris',
@@ -79,7 +79,7 @@ describe('contexts', () => {
 
     const link = await findByTestId('location-badge-link');
     expect(link.getAttribute('href')).toContain(
-      `/clusters/paris/f1?identifier=${validLocation.identifier}`,
+      `/clusters/paris/paul-f1A?identifier=${validLocation.identifier}`,
     );
   });
 });
