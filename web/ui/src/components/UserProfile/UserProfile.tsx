@@ -49,9 +49,17 @@ const Badges: React.FC<{ flags: UserFlag[] }> = ({ flags }) => {
 const CursusProgress: React.FC<{
   intraProxy: NonNullable<UserProfileQuery['user']>['intraProxy'];
 }> = ({ intraProxy }) => {
-  const mainCursusUser = intraProxy.cursusUsers?.find(
-    (c) => c.cursus?.kind.includes('main'),
-  );
+  const mainCursusUser =
+    intraProxy.cursusUsers?.find(
+      // Find the main cursus user
+      (c) => c.cursus?.kind === 'main',
+    ) ||
+    intraProxy.cursusUsers?.find(
+      // If no main cursus user is found for the old cursus system, find the
+      // deprecated main cursus user
+      (c) => c.cursus?.kind.includes('main'),
+    );
+
   const piscineCursusUser = intraProxy.cursusUsers?.find(
     (c) => c.cursus?.kind.includes('piscine'),
   );
