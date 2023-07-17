@@ -55,7 +55,7 @@ const CursusProgress: React.FC<{
       (c) => c.cursus?.kind === 'main',
     ) ||
     intraProxy.cursusUsers?.find(
-      // If no main cursus user is found for the old cursus system, find the
+      // If no main cursus user is found for the new cursus system, find the
       // deprecated main cursus user
       (c) => c.cursus?.kind.includes('main'),
     );
