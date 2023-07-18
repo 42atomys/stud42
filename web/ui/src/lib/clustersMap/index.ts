@@ -2,6 +2,7 @@ import { Helsinki } from './campus/helsinki';
 import { Lausanne } from './campus/lausanne';
 import { Malaga } from './campus/malaga';
 import { Paris } from './campus/paris';
+import { Mulhouse } from './campus/mulhouse';
 import { Seoul } from './campus/seoul';
 import { Tokyo } from './campus/tokyo';
 import { Vienna } from './campus/vienna';
@@ -25,6 +26,7 @@ export const Campuses: {
   lausanne: new Lausanne(),
   malaga: new Malaga(),
   paris: new Paris(),
+  mulhouse: new Mulhouse(),
   seoul: new Seoul(),
   tokyo: new Tokyo(),
   vienna: new Vienna(),
