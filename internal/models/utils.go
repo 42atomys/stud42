@@ -55,7 +55,6 @@ func UserFirstOrCreateFromComplexLocation(ctx context.Context, l *duoapi.Locatio
 				SetFirstName(l.User.FirstName).
 				SetLastName(l.User.LastName).
 				SetUsualFirstName(l.User.UsualFirstName).
-				SetPhone(l.User.Phone).
 				SetPoolMonth(l.User.PoolMonth).
 				SetPoolYear(l.User.PoolYear).
 				SetDuoAvatarURL(l.User.Image.Link).
@@ -97,7 +96,6 @@ func UserFirstOrCreateFromLocation(ctx context.Context, l *duoapi.Location[duoap
 				SetFirstName(duoUser.FirstName).
 				SetLastName(duoUser.LastName).
 				SetUsualFirstName(duoUser.UsualFirstName).
-				SetPhone(duoUser.Phone).
 				SetPoolMonth(duoUser.PoolMonth).
 				SetPoolYear(duoUser.PoolYear).
 				SetDuoAvatarURL(duoUser.Image.Link).

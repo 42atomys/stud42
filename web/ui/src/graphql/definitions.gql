@@ -34,7 +34,6 @@ mutation internalCreateUser(
   $poolMonth: String
   $duoAvatarURL: String
   $duoAvatarSmallURL: String
-  $phone: String
   $isStaff: Boolean!
   $currentDuoCampusID: Int!
 ) {
@@ -50,7 +49,6 @@ mutation internalCreateUser(
       poolMonth: $poolMonth
       duoAvatarURL: $duoAvatarURL
       duoAvatarSmallURL: $duoAvatarSmallURL
-      phone: $phone
       isStaff: $isStaff
       currentDuoCampusID: $currentDuoCampusID
     }

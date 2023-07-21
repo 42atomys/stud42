@@ -116,6 +116,7 @@ export const MenuItem: React.FC<MenuItemProps> = ({
   icon,
   name,
   href,
+  linkTarget = '_self',
   onClick,
   leftChildren,
   rightChildren,
@@ -144,6 +145,7 @@ export const MenuItem: React.FC<MenuItemProps> = ({
           trueWrapper={(children) => (
             <Link
               href={href as string}
+              target={linkTarget}
               className="flex flex-1 items-center space-x-2 py-[var(--menu-padding-y)]"
             >
               {children}

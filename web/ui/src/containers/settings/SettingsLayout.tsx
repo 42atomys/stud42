@@ -56,31 +56,43 @@ export const SettingsLayout: NextPage<
             <MenuCategory name="About">
               <MenuItem
                 active={page === 'about'}
-                // href="/settings/about"
+                href="/about"
+                linkTarget="_blank"
                 icon="fa-info-circle"
                 name="About"
-                rightChildren="Soon"
+                rightChildren={
+                  <i className="fa-light fa-arrow-up-right-from-square"></i>
+                }
               />
               <MenuItem
                 active={page === 'help'}
-                // href="/settings/help"
+                href="/about/help"
+                linkTarget="_blank"
                 icon="fa-question-circle"
                 name="Help"
-                rightChildren="Soon"
+                rightChildren={
+                  <i className="fa-light fa-arrow-up-right-from-square"></i>
+                }
               />
               <MenuItem
                 active={page === 'terms'}
-                // href="/settings/terms"
+                href="/about/terms"
+                linkTarget="_blank"
                 icon="fa-file-alt"
                 name="Terms"
-                rightChildren="Soon"
+                rightChildren={
+                  <i className="fa-light fa-arrow-up-right-from-square"></i>
+                }
               />
               <MenuItem
                 active={page === 'privacy'}
-                // href="/settings/privacy"
+                href="/about/privacy"
+                linkTarget="_blank"
                 icon="fa-file-alt"
                 name="Privacy"
-                rightChildren="Soon"
+                rightChildren={
+                  <i className="fa-light fa-arrow-up-right-from-square"></i>
+                }
               />
             </MenuCategory>
             <hr className="my-2 border-slate-200 dark:border-slate-800" />
