@@ -322,7 +322,6 @@ func (r *mutationResolver) InternalCreateUser(ctx context.Context, input typesge
 		SetLastName(input.LastName).
 		SetNillablePoolYear(input.PoolYear).
 		SetNillablePoolMonth(input.PoolMonth).
-		SetNillablePhone(input.Phone).
 		SetNillableDuoAvatarURL(input.DuoAvatarURL).
 		SetNillableDuoAvatarSmallURL(input.DuoAvatarSmallURL).
 		SetIsStaff(input.IsStaff).

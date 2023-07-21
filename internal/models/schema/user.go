@@ -38,7 +38,6 @@ func (User) Fields() []ent.Field {
 		field.String("usual_first_name").Nillable().Optional().MaxLen(255),
 		field.String("last_name").NotEmpty().MaxLen(255),
 		field.Enum("pronoun").GoType(gotype.UserPronoun("")).Default(gotype.UserPronounPrivate.String()),
-		field.String("phone").Optional().Nillable().MaxLen(255),
 		field.String("pool_year").Optional().Nillable(),
 		field.String("pool_month").Optional().Nillable(),
 		field.String("nickname").Optional().Nillable().Unique().MaxLen(255),
