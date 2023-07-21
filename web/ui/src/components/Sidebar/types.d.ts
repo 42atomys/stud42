@@ -19,7 +19,10 @@ type MenuItemProps = {
   emoji?: string;
   icon?: string;
   rightChildren?: JSX.Element | string;
-} & XOR<{ href: string }, { onClick: () => void }> &
+} & XOR<
+  { href: string; linkTarget?: React.HTMLAttributeAnchorTarget },
+  { onClick: () => void }
+> &
   XOR<
     { name: string; leftChildren?: JSX.Element | string },
     { name?: string; leftChildren: JSX.Element | string }
