@@ -18,11 +18,15 @@ export const ClusterTableMap = ({
   children: React.ReactNode[] | React.ReactNode;
 }) => {
   return (
-    <div className="flex flex-col w-full h-full">
+    <motion.div
+      layout
+      layoutRoot
+      className="flex flex-col w-full h-full"
+    >
       {Children.map(children, (c) => (
         <>{c}</>
       ))}
-    </div>
+    </motion.div>
   );
 };
 
@@ -65,18 +69,17 @@ export const ClusterWorkspaceWithUser = ({
     <ClusterContext.Consumer>
       {({ highlight, hightlightVisibility }) => (
         <motion.div
-          layout
           layoutId={`user-popup-${location.user.id}`}
-          layoutRoot
+          transition={{ duration: 0 }}
           className={classNames(
             'flex flex-1 flex-col justify-center items-center m-0.5 rounded cursor-pointer transition ease-in-out duration-200',
             isMe(location.user)
               ? 'bg-cyan-300/60 dark:bg-cyan-700/60 text-cyan-500'
               : isFollowed(location.user)
-              ? 'bg-blue-300/60 dark:bg-blue-700/60 text-blue-500'
-              : location.user.isSwimmer
-              ? 'bg-yellow-300/30 dark:bg-yellow-700/30 text-yellow-500'
-              : 'bg-emerald-300/30 dark:bg-emerald-700/30 text-emerald-500',
+                ? 'bg-blue-300/60 dark:bg-blue-700/60 text-blue-500'
+                : location.user.isSwimmer
+                  ? 'bg-yellow-300/30 dark:bg-yellow-700/30 text-yellow-500'
+                  : 'bg-emerald-300/30 dark:bg-emerald-700/30 text-emerald-500',
             highlight &&
               hightlightVisibility(location.identifier) == 'HIGHLIGHT'
               ? '!bg-indigo-500 shadow-sm shadow-indigo-500/50 !text-slate-100'
@@ -100,8 +103,8 @@ export const ClusterWorkspaceWithUser = ({
                   ? 'xl'
                   : settings.clusterMapAvatarSize ===
                     ClusterMapAvatarSize.MEDIUM
-                  ? 'md'
-                  : 'auto-based-on-witdth'
+                    ? 'md'
+                    : 'auto-based-on-witdth'
               }
             />
           </span>

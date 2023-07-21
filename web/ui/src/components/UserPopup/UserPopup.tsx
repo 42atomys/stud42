@@ -12,7 +12,7 @@ const POPUP_HEIGHT = 270;
 export const UserPopup = ({
   user,
   location,
-  position,
+  position = { top: 0, left: 0, width: 0, height: 0 },
   onClickOutside,
 }: {
   user: User;
@@ -26,6 +26,11 @@ export const UserPopup = ({
   useKeyDown(['Escape'], onClickOutside);
 
   const handleClickOutside = (event: MouseEvent) => {
+    if (!ref.current) return;
+    // If target is a child of #user-profile-portal, don't close the popup
+    if (document.getElementById('user-profile-portal')?.contains(event.target as Node))
+      return;
+
     if (ref.current && !ref.current.contains(event.target as Node)) {
       onClickOutside();
     }
@@ -48,22 +53,22 @@ export const UserPopup = ({
     position.top + POPUP_HEIGHT > container.bottom
       ? position.top - POPUP_HEIGHT + position.height
       : position.top - POPUP_HEIGHT / 2 < container.top
-      ? position.top
-      : position.top - (POPUP_HEIGHT - position.height) / 2;
+        ? position.top
+        : position.top - (POPUP_HEIGHT - position.height) / 2;
 
   const left =
     position.left + POPUP_WIDTH + position.width > container.right
       ? position.right - POPUP_WIDTH
       : position.left - POPUP_WIDTH / 2 < container.left
-      ? position.left
-      : position.left - (POPUP_WIDTH - position.width) / 2;
+        ? position.left
+        : position.left - (POPUP_WIDTH - position.width) / 2;
 
   return (
     <motion.div
       layoutId={`user-popup-${user.id}`}
       ref={ref}
       className={classNames(
-        'bg-slate-200 dark:bg-slate-900 dark:to-slate-900 shadow-2xl shadow-slate-400/50 dark:shadow-black/50 rounded fixed left-0 top-0 overflow-hidden',
+        'bg-slate-200 dark:bg-slate-900 dark:to-slate-900 shadow-2xl shadow-slate-400/50 dark:shadow-black/50 rounded fixed left-0 top-0',
         isFollowed(user)
           ? 'border-blue-200 dark:border-blue-800'
           : 'border-emerald-200 dark:border-emerald-800',
