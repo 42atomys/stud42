@@ -79,7 +79,6 @@ export const GraphQLAdapter = (): S42Adapter => {
             duoAvatarSmallURL: typedUser.duo.imageSmallUrl,
             poolYear: typedUser.duo.poolYear,
             poolMonth: typedUser.duo.poolMonth,
-            phone: typedUser.duo.phone,
             isStaff: typedUser.duo.isStaff,
             currentDuoCampusID: typedUser.duo.currentCampusID,
           },

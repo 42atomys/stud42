@@ -123,7 +123,6 @@ type Me {
   firstName: String!
   usualFirstName: String
   lastName: String!
-  phone: String
   pronoun: UserPronoun!
   poolYear: String
   poolMonth: String
@@ -513,7 +512,6 @@ input CreateUserInput {
   poolMonth: String
   duoAvatarURL: String
   duoAvatarSmallURL: String
-  phone: String
   isStaff: Boolean!
   currentDuoCampusID: Int!
 }
