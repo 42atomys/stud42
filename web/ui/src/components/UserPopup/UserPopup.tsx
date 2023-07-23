@@ -1,24 +1,30 @@
 import UserCard from '@components/UserCard';
 import { useMe } from '@ctx/currentUser';
-import { User, UserFlag } from '@graphql.d';
+import { UserFlag } from '@graphql.d';
 import useKeyDown from '@lib/useKeyDown';
 import classNames from 'classnames';
 import { motion } from 'framer-motion';
 import { createRef, useEffect } from 'react';
+import { DOMReactWithoutJSON, UserPopupProps } from './types';
 
 const POPUP_WIDTH = 200;
 const POPUP_HEIGHT = 270;
+const DEFAULT_POSITION = {
+  top: 0,
+  left: 0,
+  width: 0,
+  height: 0,
+  bottom: 0,
+  right: 0,
+  x: 0,
+  y: 0,
+} satisfies DOMReactWithoutJSON;
 
-export const UserPopup = ({
+export const UserPopup: React.FC<UserPopupProps> = ({
   user,
   location,
-  position = { top: 0, left: 0, width: 0, height: 0 },
+  position = DEFAULT_POSITION,
   onClickOutside,
-}: {
-  user: User;
-  location: any;
-  position: DOMRectReadOnly | null;
-  onClickOutside: () => void;
 }) => {
   const { isFollowed } = useMe();
   const ref = createRef<HTMLDivElement>();
