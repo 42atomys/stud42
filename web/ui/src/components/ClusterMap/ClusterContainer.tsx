@@ -1,7 +1,7 @@
 import Loader from '@components/Loader';
 import useSidebar from '@components/Sidebar';
 import { PopupConsumer, PopupProvider, UserPopup } from '@components/UserPopup';
-import { useClusterViewQuery, User } from '@graphql.d';
+import { User, useClusterViewQuery } from '@graphql.d';
 import { isFetchLoading } from '@lib/apollo';
 import { useRouter } from 'next/router';
 import { createContext, useEffect, useState } from 'react';

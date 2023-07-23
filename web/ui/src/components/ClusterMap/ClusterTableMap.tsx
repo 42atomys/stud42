@@ -18,11 +18,11 @@ export const ClusterTableMap = ({
   children: React.ReactNode[] | React.ReactNode;
 }) => {
   return (
-    <div className="flex flex-col w-full h-full">
+    <motion.div layout layoutRoot className="flex flex-col w-full h-full">
       {Children.map(children, (c) => (
         <>{c}</>
       ))}
-    </div>
+    </motion.div>
   );
 };
 
@@ -65,9 +65,8 @@ export const ClusterWorkspaceWithUser = ({
     <ClusterContext.Consumer>
       {({ highlight, hightlightVisibility }) => (
         <motion.div
-          layout
           layoutId={`user-popup-${location.user.id}`}
-          layoutRoot
+          transition={{ duration: 0 }}
           className={classNames(
             'flex flex-1 flex-col justify-center items-center m-0.5 rounded cursor-pointer transition ease-in-out duration-200',
             isMe(location.user)
