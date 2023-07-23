@@ -110,7 +110,7 @@ module "postgres" {
   kind   = "StatefulSet"
 
   appName         = "postgres"
-  appVersion      = "14.1"
+  appVersion      = "15.3"
   name            = "postgres"
   namespace       = var.namespace
   image           = "ghcr.io/42atomys/s42-postgres:15.3-alpine3.18"
