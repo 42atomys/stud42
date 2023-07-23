@@ -1,7 +1,9 @@
 import Avatar from '@components/Avatar';
+import { Tooltip } from '@components/Tooltip';
+import { useMe } from '@ctx/currentUser';
 import { ClusterMapAvatarSize } from '@graphql.d';
-import useSettings from '@lib/useSettings';
 import classNames from 'classnames';
+import { motion } from 'framer-motion';
 import { Children } from 'react';
 import { ClusterContext } from './ClusterContainer';
 import { MapLocation } from './types';
@@ -16,11 +18,11 @@ export const ClusterTableMap = ({
   children: React.ReactNode[] | React.ReactNode;
 }) => {
   return (
-    <div className="flex flex-col w-full h-full">
+    <motion.div layout layoutRoot className="flex flex-col w-full h-full">
       {Children.map(children, (c) => (
         <>{c}</>
       ))}
-    </div>
+    </motion.div>
   );
 };
 
@@ -42,28 +44,34 @@ export const ClusterWorkspaceWithUser = ({
   location: MapLocation;
   onMouseEnter?: (
     e: React.MouseEvent<HTMLDivElement>,
-    location: MapLocation
+    location: MapLocation,
   ) => void;
   onMouseLeave?: (
     e: React.MouseEvent<HTMLDivElement>,
-    location: MapLocation
+    location: MapLocation,
   ) => void;
   onClick?: (
     e: React.MouseEvent<HTMLDivElement>,
-    location: MapLocation
+    location: MapLocation,
   ) => void;
 }) => {
-  const [settings] = useSettings();
+  const {
+    isMe,
+    isFollowed,
+    me: { settings },
+  } = useMe();
 
   return (
     <ClusterContext.Consumer>
       {({ highlight, hightlightVisibility }) => (
-        <div
+        <motion.div
+          layoutId={`user-popup-${location.user.id}`}
+          transition={{ duration: 0 }}
           className={classNames(
-            'flex flex-1 flex-col justify-center items-center m-0.5 rounded text-slate-500 cursor-pointer transition ease-in-out duration-200',
-            location.user.isMe
+            'flex flex-1 flex-col justify-center items-center m-0.5 rounded cursor-pointer transition ease-in-out duration-200',
+            isMe(location.user)
               ? 'bg-cyan-300/60 dark:bg-cyan-700/60 text-cyan-500'
-              : location.user.isFollowing
+              : isFollowed(location.user)
               ? 'bg-blue-300/60 dark:bg-blue-700/60 text-blue-500'
               : location.user.isSwimmer
               ? 'bg-yellow-300/30 dark:bg-yellow-700/30 text-yellow-500'
@@ -74,7 +82,7 @@ export const ClusterWorkspaceWithUser = ({
               : '',
             highlight && hightlightVisibility(location.identifier) == 'DIMMED'
               ? 'opacity-30'
-              : 'opacity-100'
+              : 'opacity-100',
           )}
           onClick={(e) => onClick && onClick(e, location)}
           onMouseEnter={(e) => onMouseEnter && onMouseEnter(e, location)}
@@ -83,6 +91,7 @@ export const ClusterWorkspaceWithUser = ({
           <span className="mb-1">
             <Avatar
               duoAvatarURL={location.user.duoAvatarSmallURL}
+              profileLink={false}
               rounded={false}
               flags={location.user.flags}
               size={
@@ -96,14 +105,14 @@ export const ClusterWorkspaceWithUser = ({
             />
           </span>
           <span className="text-xs">{displayText || location.identifier}</span>
-        </div>
+        </motion.div>
       )}
     </ClusterContext.Consumer>
   );
 };
 
 /**
- * ClusterWorkspace component is used to display a workspace with compouter icon
+ * ClusterWorkspace component is used to display a workspace with computer icon
  * and identifier in a `ClusterRow`
  */
 export const ClusterWorkspace = ({
@@ -119,6 +128,37 @@ export const ClusterWorkspace = ({
         <i className="fa-light fa-computer"></i>
       </span>
       <span className="text-xs">{displayText || identifier}</span>
+    </div>
+  );
+};
+
+/**
+ * ClusterPersonalWorkspace component is used to display a workspace space for
+ * personal computer in a `ClusterRow`
+ */
+export const ClusterPersonalWorkspace = ({
+  identifier,
+  displayText,
+}: {
+  identifier?: string;
+  displayText?: string;
+}) => {
+  const hasDisplayText = displayText || identifier;
+  return (
+    <div className="flex flex-1 flex-col justify-center items-center m-0.5 rounded text-slate-500">
+      <Tooltip
+        text="Personal Workspace"
+        size="xs"
+        color="black"
+        direction="top"
+      >
+        <span className="opacity-50">
+          <i className="fa-light fa-laptop"></i>
+        </span>
+        {hasDisplayText && (
+          <span className="text-xs">{displayText || identifier}</span>
+        )}
+      </Tooltip>
     </div>
   );
 };

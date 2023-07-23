@@ -1,6 +1,7 @@
 import useSessionStorage from '@lib/useSessionStorage';
 import axios from 'axios';
 import { useCallback, useEffect } from 'react';
+import { SessionStorageKeys } from './storageKeys';
 
 export interface Repository {
   id?: number;
@@ -124,7 +125,7 @@ export const Star = (): JSX.Element => {
   const getRepo = useCallback(async () => {
     try {
       const { data }: { data: Repository } = await axios.get(
-        `https://api.github.com/repos/${PROJECT_PATH}`
+        `https://api.github.com/repos/${PROJECT_PATH}`,
       );
       return data;
     } catch {
@@ -132,7 +133,10 @@ export const Star = (): JSX.Element => {
     }
   }, []);
 
-  const [stars, setStars] = useSessionStorage('github-stars', 0);
+  const [stars, setStars] = useSessionStorage(
+    SessionStorageKeys.GithubStars,
+    0,
+  );
   useEffect(() => {
     getRepo().then(({ stargazers_count }) => {
       setStars(isNaN(Number(stargazers_count)) ? 0 : Number(stargazers_count));
@@ -143,7 +147,7 @@ export const Star = (): JSX.Element => {
     <a
       href={`https://github.com/${PROJECT_PATH}`}
       target="_blank"
-      className="px-3 py-1 bg-slate-300 dark:bg-slate-900 rounded-md border dark:border-slate-700 text-slate-600 dark:text-slate-300"
+      className="px-3 py-1 bg-slate-300 dark:bg-slate-950 rounded-md border dark:border-slate-700 text-slate-600 dark:text-slate-300"
       rel="noreferrer"
     >
       <i className="fa-regular fa-star"></i>
@@ -163,7 +167,7 @@ export const Contribute = (): JSX.Element => {
     <a
       href={`https://github.com/${PROJECT_PATH}`}
       target="_blank"
-      className="px-3 py-1 bg-slate-300 dark:bg-slate-900 rounded-md border dark:border-slate-700 text-slate-600 dark:text-slate-300"
+      className="px-3 py-1 bg-slate-300 dark:bg-slate-950 rounded-md border dark:border-slate-700 text-slate-600 dark:text-slate-300"
       rel="noreferrer"
     >
       <i className="fa-brands fa-github"></i>

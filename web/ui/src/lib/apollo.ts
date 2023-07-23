@@ -9,16 +9,23 @@ import {
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
+import { NotificationContextValue } from '@ctx/types';
+import { LocalStorageWrapper, persistCache } from 'apollo3-cache-persist';
 import merge from 'deepmerge';
 import Cookies from 'js-cookie';
 import { useMemo } from 'react';
 import { ServerSideRequest } from 'types/next';
+import { nextAuthOptions } from './auth';
+
+type ApolloClientMetadata = {
+  addNotification?: NotificationContextValue['addNotification'];
+};
 
 /**
  * the token cookie name is used to store the token in the cookie and to read it
  * from the cookie
  */
-const tokenCookieName = '__s42.auth-token';
+const tokenCookieName = nextAuthOptions.cookies?.sessionToken?.name!;
 
 // Reuse client on the client-side.
 let apolloClient: ApolloClient<any>;
@@ -27,22 +34,30 @@ let apolloClient: ApolloClient<any>;
  * Creates and configures the ApolloClient instance.
  * @returns {ApolloClient} The ApolloClient instance.
  */
-const createApolloClient = () => {
-  const errorLink = onError(({ graphQLErrors }) => {
-    if (graphQLErrors)
-      graphQLErrors.forEach(
-        ({ message, locations, path }) =>
-          new Error(
-            `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
-          )
-      );
+const createApolloClient = (metadata: ApolloClientMetadata = {}) => {
+  // Create the error link to handle errors
+  const errorLink = onError(({ graphQLErrors, networkError }) => {
+    const message = graphQLErrors?.[0]?.message || networkError?.message;
+    const { addNotification } = metadata;
+
+    if (message && addNotification)
+      addNotification({
+        type: 'error',
+        title: networkError ? 'Connectivity Error' : 'SORRY!',
+        message,
+        duration: 5000,
+      });
   });
 
+  // Create the http link used to connect to the server
   const httpLink = createHttpLink({
     uri: process.env.NEXT_PUBLIC_GRAPHQL_API,
     credentials: 'include',
   });
 
+  // Add the authorization token to the headers if it exists
+  // This is used to authenticate the user on the server side
+  // and to send the token to the server
   const authLink = setContext(async (_, context) => {
     let authToken = Cookies.get(tokenCookieName);
 
@@ -58,14 +73,41 @@ const createApolloClient = () => {
     };
   });
 
+  // Create the apollo cache instance with the default config (see the docs)
+  // https://www.apollographql.com/docs/react/caching/cache-configuration/
+  const cache = new InMemoryCache({});
+
+  // await before instantiating ApolloClient, else queries might run before the cache is persisted
+  if (
+    typeof window !== 'undefined' &&
+    process.env.NEXT_PUBLIC_ENABLE_PERSIST_CACHE_ON_CLIENT === 'true'
+  ) {
+    persistCache({
+      cache,
+      storage: new LocalStorageWrapper(window.sessionStorage),
+      trigger: 'write',
+    });
+  }
+
+  // Create the Apollo Client instance with the defined config
   return new ApolloClient({
     link: from([authLink, errorLink, httpLink]),
     version: process.env.NEXT_PUBLIC_VERSION,
     ssrMode: typeof window === 'undefined',
     connectToDevTools: process.env.NODE_ENV === 'development',
-    cache: new InMemoryCache(),
+    cache: cache,
     credentials: 'include',
-    defaultOptions: {},
+    defaultOptions: {
+      mutate: {
+        errorPolicy: 'all',
+      },
+      query: {
+        errorPolicy: 'all',
+      },
+      watchQuery: {
+        errorPolicy: 'all',
+      },
+    },
   });
 };
 
@@ -75,8 +117,11 @@ const createApolloClient = () => {
  * @param initialState The initial state to hydrate the client with.
  * @returns The new Apollo Client instance.
  */
-export const initializeApollo = (initialState: any = null) => {
-  const client = apolloClient ?? createApolloClient();
+export const initializeApollo = (
+  metadata: ApolloClientMetadata,
+  initialState: any = null,
+) => {
+  const client = apolloClient ?? createApolloClient(metadata);
 
   // If your page has Next.js data fetching methods that use Apollo Client, the initial state
   // get hydrated here
@@ -104,8 +149,14 @@ export const initializeApollo = (initialState: any = null) => {
  *
  * This is the default function to use when you want to use Apollo Client.
  */
-export const useApollo = (initialState: any) => {
-  const store = useMemo(() => initializeApollo(initialState), [initialState]);
+export const useApollo = (
+  initialState: any,
+  metadata: ApolloClientMetadata = {},
+) => {
+  const store = useMemo(
+    () => initializeApollo(metadata, initialState),
+    [initialState, metadata],
+  );
   return store;
 };
 
@@ -115,10 +166,10 @@ export const useApollo = (initialState: any) => {
  */
 export const queryAuthenticatedSSR = async <T = any>(
   req: ServerSideRequest,
-  opts: QueryOptions<T>
+  opts: QueryOptions<T>,
 ): Promise<ApolloQueryResult<T>> => {
   const { query, context, ...rest } = opts;
-  const client = createApolloClient();
+  const client = createApolloClient({});
 
   const token =
     typeof req.cookies?.get === 'function'

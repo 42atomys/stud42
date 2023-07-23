@@ -1,5 +1,5 @@
 import Tooltip from '@components/Tooltip';
-import { LocalStorageKeys } from '@lib/localStorageKeys';
+import { LocalStorageKeys } from '@lib/storageKeys';
 import useLocalStorage from '@lib/useLocalStorage';
 
 // To use the ping component, the parent of the component must be have the
@@ -7,7 +7,7 @@ import useLocalStorage from '@lib/useLocalStorage';
 export const NewFeaturePing = ({ featureName }: { featureName: string }) => {
   const [visible, setVisible] = useLocalStorage(
     LocalStorageKeys.NewFeatureReadStatus(featureName),
-    true
+    true,
   );
   if (!visible) {
     // Return div to prevent mismatch error between server side component and

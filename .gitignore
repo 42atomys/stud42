@@ -11,6 +11,10 @@
 .devcontainer/codespace_workaround
 .devcontainer/.env
 
+# Binaries
+bin/rabbitmqadmin
+bin/mc
+
 # Configuration Files
 config/*
 !config/*example.yaml
@@ -41,7 +45,6 @@ coverage.out
 # Generated code
 web/ui/src/graphql/schema.json
 web/ui/src/graphql/generated.ts
-web/ui/src/grpc/jwtks/jwtks.ts
 
 # dependencies
 web/ui/node_modules

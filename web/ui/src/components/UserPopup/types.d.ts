@@ -1,6 +1,23 @@
 import { MapLocation } from '@components/ClusterMap';
 import { Location } from '@graphql.d';
 
+// DOMReactWithoutJSON is a type that is the same as DOMRectReadOnly
+// but without the toJSON method. This is because the toJSON method
+// is not serializable and will cause errors when trying to pass
+// the position to the UserPopup component.
+type DOMReactWithoutJSON = Omit<DOMRectReadOnly, 'toJSON'> | null;
+
+// UserPopupProps is the props that the UserPopup component expects
+// to be passed to it. It's a good idea to define this so that you
+// can easily see what props the component expects and what types
+// they should be.
+type UserPopupProps = {
+  user: User;
+  location: any;
+  position: DOMReactWithoutJSON;
+  onClickOutside: () => void;
+};
+
 // Represents that state made available via this reducer
 type PopupState = {
   position: DOMRectReadOnly | null;
@@ -44,7 +61,7 @@ export type PayloadOf<T, U = Actions['type']> = T extends { type: U }
 // `dispatch({ type: <type>, payload: <payload> })`
 export type Dispatcher = <
   Type extends Actions['type'],
-  Payload extends ActionsMap[Type]
+  Payload extends ActionsMap[Type],
 >(
   type: Type,
   // This line makes it so if there shouldn't be a payload then

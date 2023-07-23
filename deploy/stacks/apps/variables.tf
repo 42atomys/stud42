@@ -35,13 +35,6 @@ variable "crawlerEnabled" {
   default     = false
 }
 
-variable "hasProvidedJWTKSCertificates" {
-  type        = bool
-  description = "Whether the jwtks secret needs to be created or not (must be executed after make build/Makefile certs)"
-  default     = false
-}
-
-
 variable "hasPersistentStorage" {
   type        = bool
   description = "Whether the application should use persistent storage or not"

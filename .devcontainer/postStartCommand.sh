@@ -28,3 +28,20 @@ git update-index --assume-unchanged .devcontainer/.env
 git config oh-my-zsh.hide-info 1
 
 make -f build/Makefile devcontainer-init
+
+# Configure RabbitMQ
+./bin/rabbitmqadmin --host rabbitmq --user rabbitmq --password rabbitmq declare exchange name="webhooks" type="direct"
+./bin/rabbitmqadmin --host rabbitmq --user rabbitmq --password rabbitmq declare queue name="webhooks.processing" auto_delete="false" durable="true"
+./bin/rabbitmqadmin --host rabbitmq --user rabbitmq --password rabbitmq declare queue name="webhooks.dlq" auto_delete="false" durable="true"
+./bin/rabbitmqadmin --host rabbitmq --user rabbitmq --password rabbitmq declare binding source="webhooks" destination="webhooks.processing"
+./bin/rabbitmqadmin --host rabbitmq --user rabbitmq --password rabbitmq declare binding source="webhooks" destination="webhooks.dlq" routing_key="webhooks.dlq"
+./bin/rabbitmqadmin --host rabbitmq --user rabbitmq --password rabbitmq declare policy name="webhooks.dlq.policy" pattern="^webhooks.processing$" definition='{"dead-letter-exchange":"webhooks", "dead-letter-routing-key": "webhooks.dlq"}' apply-to=queues
+
+# Configure Minio
+# Create the s42-users bucket
+go install github.com/minio/mc@latest
+mc alias set s3 http://minio:9000 $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
+mc mb s3/s42-users --ignore-existing --region europe-west1 
+
+# Install and configure kubeseal
+go install github.com/bitnami-labs/sealed-secrets/cmd/kubeseal@v0.21.0

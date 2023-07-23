@@ -5,7 +5,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 // the value is the debounced value and the setValue is the function to set the value
 type UseDebounceFunc = <S>(
   initialValue: S | (() => S),
-  delay: number
+  delay: number,
 ) => [S, Dispatch<SetStateAction<S>>];
 
 // useDebounce is a hook that takes an initial value like useState and a delay in

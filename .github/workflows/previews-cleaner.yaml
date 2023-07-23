@@ -57,7 +57,6 @@ jobs:
           TF_VAR_baseUrl: "${{ format('pr-{0}', github.event.number) }}.previews.s42.dev"
           TF_VAR_webhooksEnabled: "false"
           TF_VAR_crawlerEnabled: "false"
-          TF_VAR_hasProvidedJWTKSCertificates: "false"
           TF_VAR_hasPersistentStorage: "false"
         run: terraform destroy -auto-approve -input=false
 

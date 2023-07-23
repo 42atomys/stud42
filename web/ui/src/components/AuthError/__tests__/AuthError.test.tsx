@@ -11,7 +11,7 @@ it('render correct data when error is an ErrorType', async () => {
 
   expect(container.getByText('Callback error')).toBeInTheDocument();
   expect(
-    container.getByText('An error occured while processing the callback')
+    container.getByText('An error occured while processing the callback'),
   ).toBeInTheDocument();
 });
 
@@ -20,7 +20,7 @@ it('render correct data when error is not defined', async () => {
 
   expect(container.getByText('An error occured')).toBeInTheDocument();
   expect(
-    container.getByText('An error occured, please try again later')
+    container.getByText('An error occured, please try again later'),
   ).toBeInTheDocument();
 });
 
@@ -30,6 +30,6 @@ it('render correct data when error is not included', async () => {
 
   expect(container.getByText('An error occured')).toBeInTheDocument();
   expect(
-    container.getByText('An error occured, please try again later')
+    container.getByText('An error occured, please try again later'),
   ).toBeInTheDocument();
 });

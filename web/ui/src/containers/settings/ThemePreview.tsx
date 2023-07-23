@@ -40,7 +40,7 @@ export const ThemePreview = ({
         'border-slate-300 dark:border-slate-700',
         active
           ? 'ring-indigo-500'
-          : 'ring-transparent hover:ring-1 hover:ring-indigo-500 hover:border-indigo-500'
+          : 'ring-transparent hover:ring-1 hover:ring-indigo-500 hover:border-indigo-500',
       )}
     >
       <div className={classNames({ 'bg-slate-900': themeName !== 'light' })}>
@@ -67,7 +67,7 @@ export const ThemePreview = ({
                 <div
                   className={classNames(
                     'h-2 rounded flex-1',
-                    theme.placeholder
+                    theme.placeholder,
                   )}
                 ></div>
               </div>
@@ -76,13 +76,13 @@ export const ThemePreview = ({
                   <div
                     className={classNames(
                       'h-2 rounded col-span-2',
-                      theme.placeholder
+                      theme.placeholder,
                     )}
                   ></div>
                   <div
                     className={classNames(
                       'h-2 rounded col-span-1',
-                      theme.placeholder
+                      theme.placeholder,
                     )}
                   ></div>
                 </div>
@@ -95,14 +95,17 @@ export const ThemePreview = ({
         </div>
       </div>
       <div className="flex flex-row justify-start items-center p-2">
-        <i
-          className={classNames(
-            'fa-regular fa-fw pr-2',
-            active
-              ? 'fa-circle-check text-indigo-500'
-              : 'fa-circle group-hover:text-indigo-500'
-          )}
-        ></i>
+        {(active && (
+          <i
+            key="theme-preview-active"
+            className="fa-regular fa-circle-check fa-fw text-indigo-500 pr-2"
+          ></i>
+        )) || (
+          <i
+            key="theme-preview-inactive"
+            className="fa-regular fa-circle fa-fw group-hover:text-indigo-500 pr-2"
+          ></i>
+        )}
         <p className="first-letter:capitalize text-sm">{themeName} theme</p>
       </div>
     </div>

@@ -1,3 +1,5 @@
+import { ConditionalWrapper } from '@components/ConditionalWrapper';
+import { RemoteNotices } from '@components/Notice';
 import { TooltipProps } from '@components/Tooltip';
 import Tooltip from '@components/Tooltip/Tooltip';
 import { Contribute, Star } from '@lib/github';
@@ -7,6 +9,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useContext } from 'react';
+import { PropsWithClassName } from 'types/globals';
 import { SidebarContext } from './SidebarContext';
 
 /**
@@ -51,7 +54,7 @@ const MenuItem = ({
             activeRoute
               ? 'text-white bg-indigo-200 dark:bg-indigo-500/20 border-2 border-indigo-500'
               : 'border-transparent hover:border-slate-600 dark:hover:border-slate-400 hover:bg-slate-900/10 dark:hover:bg-slate-100/10',
-            className
+            className,
           )}
         >
           <i
@@ -60,7 +63,7 @@ const MenuItem = ({
               activeRoute
                 ? 'text-indigo-500'
                 : 'text-slate-600 dark:text-slate-400',
-              icon
+              icon,
             )}
           />
         </div>
@@ -85,19 +88,39 @@ export const Sidebar = ({
   const { open, setOpen } = useContext(SidebarContext);
   const { publicRuntimeConfig } = getConfig();
 
+  const isPrideMonth = new Date().getMonth() === 5;
   return (
     <div className="md:flex flex-row md:flex-row md:min-h-screen w-full md:w-auto drop-shadow-xl md:drop-shadow-none md:sticky md:top-0 md:h-screen z-40">
-      <div className="flex flex-col text-slate-600 dark:text-slate-400 bg-slate-200 dark:bg-slate-900/80 flex-shrink-0">
+      <div className="flex flex-col text-slate-600 dark:text-slate-400 bg-slate-200 dark:bg-slate-950 flex-shrink-0">
         <div className="flex-shrink-0 p-4 flex flex-row justify-between">
-          <span className="text-lg font-display antialiased font-black tracking-widest text-gray-900 uppercase rounded-lg dark:text-white focus:outline-none focus:shadow-outline">
-            <Image
-              src="/assets/images/logo.svg"
-              alt="logo"
-              width={48}
-              height={48}
-              quality={100}
-            />
-          </span>
+          <div className="flex flex-col justify-center antialiased focus:outline-none focus:shadow-outline space-y-2">
+            <ConditionalWrapper
+              condition={isPrideMonth}
+              trueWrapper={(children) => (
+                <Tooltip
+                  text="Happy Pride Month!"
+                  size="sm"
+                  allowInteractions={false}
+                  direction="right"
+                  tooltipClassName="z-50"
+                >
+                  {children}
+                </Tooltip>
+              )}
+            >
+              <Image
+                src={
+                  isPrideMonth
+                    ? '/assets/images/logo_pride.svg'
+                    : '/assets/images/logo.svg'
+                }
+                alt="logo"
+                width={48}
+                height={48}
+                quality={100}
+              />
+            </ConditionalWrapper>
+          </div>
           <button
             className="rounded-lg md:hidden focus:outline-none focus:shadow-outline"
             onClick={() => setOpen(!open)}
@@ -162,16 +185,16 @@ export const Sidebar = ({
         <div
           className={`${
             open ? 'block' : 'hidden md:flex'
-          } flex flex-col w-full md:w-72 text-slate-600 dark:text-slate-400 bg-slate-200 dark:bg-slate-900/80 flex-shrink-0`}
+          } flex flex-col w-full md:w-72 text-slate-600 dark:text-slate-400 bg-slate-200 dark:bg-slate-950 flex-shrink-0 overflow-y-auto`}
           // TODO: put into tailwind when the flex flow is added to tailwind
           style={{ flexFlow: 'column' }}
         >
-          <div className="flex my-6 w-full justify-evenly">
+          <div className="flex py-6 w-full justify-evenly sticky top-0 z-10">
             <Star />
             <Contribute />
           </div>
 
-          <div className="p-4 flex flex-col flex-auto bg-slate-100/60 dark:bg-slate-800/40 rounded-tl-md relative">
+          <div className="p-4 flex flex-col flex-auto bg-slate-100/60 dark:bg-slate-900/60 rounded-tl-md relative">
             {React.Children.map(subSidebar, (c) => (
               <>{c}</>
             ))}
@@ -181,3 +204,29 @@ export const Sidebar = ({
     </div>
   );
 };
+
+/**
+ * PageContent is the main content of the page (without the sidebar) and is
+ * scrollable if the content is too big for the screen height.
+ */
+export const PageContent: React.FC<
+  React.PropsWithChildren<PropsWithClassName>
+> = ({ children, className }) => (
+  <div id="page-content" className={classNames('flex-auto', className)}>
+    {children}
+  </div>
+);
+
+/**
+ * PageContainer is a container for the page content and the sidebar (if any)
+ */
+export const PageContainer: React.FC<
+  React.PropsWithChildren<PropsWithClassName>
+> = ({ children, className }) => (
+  <div className={classNames('flex flex-col', className)}>
+    <RemoteNotices />
+    <div className={classNames('flex flex-col md:flex-row', className)}>
+      {children}
+    </div>
+  </div>
+);

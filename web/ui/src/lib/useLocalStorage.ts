@@ -22,7 +22,7 @@ type SetValue<T> = Dispatch<SetStateAction<T>>;
 
 function useLocalStorage<T>(
   key: string,
-  initialValue: T
+  initialValue: T,
 ): [T, SetValue<T>, boolean] {
   const alreadyPresentOnLocalStorage = useRef(true);
   // Get from local storage then
@@ -58,6 +58,10 @@ function useLocalStorage<T>(
       // Allow value to be a function so we have the same API as useState
       const newValue = value instanceof Function ? value(storedValue) : value;
 
+      if (newValue === storedValue) {
+        return;
+      }
+
       // Save to local storage
       window.localStorage.setItem(key, JSON.stringify(newValue));
 
@@ -84,7 +88,7 @@ function useLocalStorage<T>(
       }
       setStoredValue(readValue());
     },
-    [key, readValue]
+    [key, readValue],
   );
 
   // this only works for other documents, not the current one

@@ -64,7 +64,7 @@ func directiveAuthorization(client *modelgen.Client) func(ctx context.Context, o
 			return nil, errUnauthenticated
 		}
 
-		jwks, err := jwk.Fetch(ctx, viper.GetString("jwtks.endpoints.sets"))
+		jwks, err := jwk.Fetch(ctx, viper.GetString("auth.endpoints.sets"))
 		if err != nil {
 			log.Error().Err(err).Msg("error fetching jwks")
 			return nil, err
@@ -83,8 +83,7 @@ func directiveAuthorization(client *modelgen.Client) func(ctx context.Context, o
 		if ctx.Value(currentUserContextKey) == nil {
 			user, err := client.User.Query().
 				Where(user.ID(uuid.MustParse(tok.Subject()))).
-				WithFollowing().
-				WithFollowers().
+				WithFollowings().
 				WithCurrentLocation().
 				Only(ctx)
 			if err != nil {

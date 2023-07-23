@@ -18,24 +18,6 @@ module "istio" {
       tlsMode             = "SIMPLE"
       tlsCredentialName   = "app-s42-next-tls"
     },
-    "dev-s42-sandbox" = {
-      ingressSelectorName = "ingressgateway"
-      namespace           = "sandbox"
-      serverHttpsRedirect = true
-      hosts               = ["sandbox.s42.dev"]
-      tlsMode             = "SIMPLE"
-      tlsCredentialName   = "dev-s42-sandbox-tls"
-      extraServers = [
-        {
-          port = {
-            number   = 51000
-            name     = "grpc"
-            protocol = "GRPC"
-          }
-          hosts = ["sandbox.s42.dev"]
-        }
-      ]
-    },
     "dev-s42-previews" = {
       ingressSelectorName = "ingressgateway"
       namespace           = "previews"

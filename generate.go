@@ -10,6 +10,7 @@ import (
 	"log"
 	"os"
 
+	"atomys.codes/stud42/pkg/cache"
 	"entgo.io/contrib/entgql"
 	"entgo.io/ent/entc"
 	"entgo.io/ent/entc/gen"
@@ -35,6 +36,15 @@ func generateEntc() {
 		log.Fatalf("creating entgql extension: %v", err)
 	}
 
+	opts := []entc.Option{
+		entc.Extensions(ex),
+		entc.TemplateDir("./internal/models/templates"),
+		entc.Dependency(
+			entc.DependencyName("Cache"),
+			entc.DependencyType(&cache.Client{}),
+		),
+	}
+
 	err = entc.Generate("./internal/models/schema", &gen.Config{
 		Features: []gen.Feature{
 			gen.FeaturePrivacy,
@@ -45,7 +55,7 @@ func generateEntc() {
 		},
 		Target:  "./internal/models/generated",
 		Package: "atomys.codes/stud42/internal/models/generated",
-	}, entc.Extensions(ex))
+	}, opts...)
 	if err != nil {
 		log.Fatalf("running ent codegen: %v", err)
 	}

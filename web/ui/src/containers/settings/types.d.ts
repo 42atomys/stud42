@@ -1,29 +1,25 @@
-import { ClassNameProps } from 'types/globals';
+const SettingsPages =
+  'profile' |
+  'apparence' |
+  'awesomeness' |
+  'accounts' |
+  'about' |
+  'help' |
+  'terms' |
+  'privacy';
 
-type SettingsCategoryFunc = (
-  props: SettingsCategoryProps & ClassNameProps
-) => JSX.Element;
-
-type SettingsCategoryProps = {
-  children: JSX.Element;
-  title: string;
-  description: string;
+export type SettingsLayoutProps = {
+  page: (typeof SettingsPages)[number];
 };
 
-type SettingsTableFunc = (
-  props: SettingsTableProps & ClassNameProps
-) => JSX.Element;
-
-type SettingsTableProps = {
-  children: JSX.Element;
+export type SettingsCategoryProps = {
+  title?: string;
+  description?: string;
 };
 
-type SettingsTableRowFunc = (
-  props: SettingsTableRowProps & ClassNameProps
-) => JSX.Element;
-
-type SettingsTableRowProps = {
-  children: JSX.Element;
+export type SettingsTableRowProps = {
+  children: React.ReactNode[] | React.ReactNode;
   title: string;
   description?: string;
+  isSponsorOnly?: boolean;
 };

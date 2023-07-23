@@ -4,7 +4,6 @@
 
 generate:
 	go generate generate.go
-	go generate cmd/jwtks.go
 
 build:
 	CGO_ENABLED=0 GOARCH=amd64 GOOS=linux go build -o stud42cli
@@ -20,18 +19,16 @@ certs:
 	openssl genrsa -out certs/private.key 8192
 	openssl rsa -in certs/private.key -out certs/public.pem -pubout -outform PEM
 
-deps:
-	./build/install-dependencies.sh
-
-devcontainer-init: generate certs deps
+devcontainer-init: generate certs
+	wget -O ./bin/rabbitmqadmin http://rabbitmq:15672/cli/rabbitmqadmin && chmod +x ./bin/rabbitmqadmin
 	cp config/stud42.example.yaml config/stud42.yaml
 	go mod download
 	yarn --cwd web/ui install
 	yarn --cwd web/ui generate
 
 all:
-	deps
+	certs
 	generate
 	build
 
-.PHONY: certs clean deps generate build all
+.PHONY: certs clean generate build all

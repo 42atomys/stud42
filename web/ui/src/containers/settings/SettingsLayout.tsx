@@ -1,32 +1,16 @@
+import { NewBadgy } from '@components/Badge';
 import { Menu, MenuCategory, MenuItem, useSidebar } from '@components/Sidebar';
-import Tooltip from '@components/Tooltip';
 import classNames from 'classnames';
 import { NextPage } from 'next';
 import { signOut } from 'next-auth/react';
 import Head from 'next/head';
-import { ClassNameProps } from 'types/globals';
+import { PropsWithChildren } from 'react';
+import { PropsWithClassName } from 'types/globals';
+import { SettingsLayoutProps } from './types';
 
-const SettingsPages = [
-  'profile',
-  'apparence',
-  'awesomeness',
-  'accounts',
-  'about',
-  'help',
-  'terms',
-  'privacy',
-] as const;
-
-type PageProps = {
-  page: (typeof SettingsPages)[number];
-  children: React.ReactNode;
-} & ClassNameProps;
-
-export const SettingsLayout: NextPage<PageProps> = ({
-  page,
-  children,
-  className,
-}) => {
+export const SettingsLayout: NextPage<
+  PropsWithClassName<PropsWithChildren<SettingsLayoutProps>>
+> = ({ page, children, className }) => {
   const { SidebarProvider, Sidebar, PageContainer, PageContent } = useSidebar();
 
   return (
@@ -40,10 +24,10 @@ export const SettingsLayout: NextPage<PageProps> = ({
             <MenuCategory name="Settings">
               <MenuItem
                 active={page === 'profile'}
-                // href="/settings/profile"
+                href="/settings/profile"
                 icon="fa-user"
                 name="Public profile"
-                rightText="Soon"
+                rightChildren={<NewBadgy />}
               />
               <MenuItem
                 active={page === 'apparence'}
@@ -53,60 +37,62 @@ export const SettingsLayout: NextPage<PageProps> = ({
               />
               <MenuItem
                 active={page === 'awesomeness'}
-                // href="/settings/awesomeness"
+                href="/settings/awesomeness"
                 icon="fa-sparkles"
                 name="Awesomess"
-                rightText={
-                  <Tooltip
-                    text="Sponsors Only"
-                    subText="This feature is only accessible for Github Sponsors."
-                    direction="left"
-                    size="sm"
-                    color="fuchsia"
-                  >
-                    <i className="fa-solid fa-user-astronaut" />
-                  </Tooltip>
-                }
+                rightChildren={<NewBadgy />}
                 className='!text-fuchsia-400 dark:!text-fuchsia-600 hover:!bg-fuchsia-500/20 hover:!text-fuchsia-500 [&_.anchor-sub-text]:hover:!text-fuchsia-500 [&[data-active="true"]]:!bg-fuchsia-500/20 [&[data-active="true"]_.anchor-sub-text]:!text-fuchsia-500 '
               />
             </MenuCategory>
             <MenuCategory name="Access">
               <MenuItem
                 active={page === 'accounts'}
-                // href="/settings/accounts"
+                href="/settings/accounts"
                 icon="fa-shield-check"
                 name="Accounts"
-                rightText="Soon"
+                rightChildren={<NewBadgy />}
               />
             </MenuCategory>
             <MenuCategory name="About">
               <MenuItem
                 active={page === 'about'}
-                // href="/settings/about"
+                href="/about"
+                linkTarget="_blank"
                 icon="fa-info-circle"
                 name="About"
-                rightText="Soon"
+                rightChildren={
+                  <i className="fa-light fa-arrow-up-right-from-square"></i>
+                }
               />
               <MenuItem
                 active={page === 'help'}
-                // href="/settings/help"
+                href="/about/help"
+                linkTarget="_blank"
                 icon="fa-question-circle"
                 name="Help"
-                rightText="Soon"
+                rightChildren={
+                  <i className="fa-light fa-arrow-up-right-from-square"></i>
+                }
               />
               <MenuItem
                 active={page === 'terms'}
-                // href="/settings/terms"
+                href="/about/terms"
+                linkTarget="_blank"
                 icon="fa-file-alt"
                 name="Terms"
-                rightText="Soon"
+                rightChildren={
+                  <i className="fa-light fa-arrow-up-right-from-square"></i>
+                }
               />
               <MenuItem
                 active={page === 'privacy'}
-                // href="/settings/privacy"
+                href="/about/privacy"
+                linkTarget="_blank"
                 icon="fa-file-alt"
                 name="Privacy"
-                rightText="Soon"
+                rightChildren={
+                  <i className="fa-light fa-arrow-up-right-from-square"></i>
+                }
               />
             </MenuCategory>
             <hr className="my-2 border-slate-200 dark:border-slate-800" />
@@ -135,7 +121,7 @@ export const SettingsLayout: NextPage<PageProps> = ({
         <PageContent
           className={classNames(
             `p-4 flex-1 flex flex-col container mx-auto px-8 max-w-7xl`,
-            className
+            className,
           )}
         >
           {children}

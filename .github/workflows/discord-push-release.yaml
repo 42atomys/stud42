@@ -16,7 +16,7 @@ jobs:
       - name: Push pre-release note to Discord
         if: ${{ github.event.release.prerelease == true }}
         run: |
-          jq -r '.content = "<:s42next:1000046992250126376> **CHANGELOG ${{ github.event.release.name }}** \n\n" + .content[0:1800]' << EOF | jq -sRr . | curl --request POST \
+          jq -r '.content = "<:s42next:1000046992250126376> <@&1130464635846402139> \n\n" + .content[0:1800]' << EOF | jq -sRr . | curl --request POST \
             --url 'https://discord.com/api/v9/channels/${{ env.DISCORD_CHANNEL }}/messages' \
             --header 'Authorization: Bot ${{ secrets.DISCORD_BOT_TOKEN }}' \
             --header 'Content-Type: application/json' \
@@ -57,7 +57,7 @@ jobs:
       - name: Push release note to Discord
         if: ${{ github.event.release.prerelease == false }}
         run: |
-          jq -r '.content = "<:s42:972976005604081744> **CHANGELOG ${{ github.event.release.name }}** \n\n" + .content[0:1800]' << EOF | jq -sRr . | curl --request POST \
+          jq -r '.content = "<:s42:972976005604081744> <@&1130464635846402139> \n\n" + .content[0:1800]' << EOF | jq -sRr . | curl --request POST \
             --url 'https://discord.com/api/v9/channels/${{ env.DISCORD_CHANNEL }}/messages' \
             --header 'Authorization: Bot ${{ secrets.DISCORD_BOT_TOKEN }}' \
             --header 'Content-Type: application/json' \
