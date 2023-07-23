@@ -39,6 +39,7 @@ func (Location) Edges() []ent.Edge {
 func (Location) Indexes() []ent.Index {
 	return []ent.Index{
 		index.Fields("duo_id").Unique(),
+		index.Fields("user_id").Annotations(entsql.IndexAnnotation{Type: "gin"}),
 		index.Fields("identifier"),
 		index.Fields("end_at").StorageKey("locations_actives_idx").Annotations(
 			entsql.IndexWhere("end_at IS NULL"),
