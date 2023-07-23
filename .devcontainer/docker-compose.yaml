@@ -50,7 +50,7 @@ services:
 
   database:
     hostname: s42-database
-    image: ghcr.io/42atomys/s42-postgres:15.3-alpine3.18
+    image: ghcr.io/42atomys/s42-postgres:14.8-alpine3.18
     restart: unless-stopped
     volumes:
       - postgres-data:/var/lib/postgresql/data
