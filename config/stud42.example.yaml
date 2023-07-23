@@ -17,8 +17,8 @@ api:
     # The bucket configuration to store the files of the API for the User Exports
     # This bucket is used to store the files exported by the users in the
     # API. This bucket will keep the files for a limited time (24 hours).
-    users-exports:
-      bucket: s42-users-exports
+    exports:
+      bucket: s42-exports
       region: europe-west1
       endpoint: http://minio:9000
       forcePathStyle: true
