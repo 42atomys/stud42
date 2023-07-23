@@ -1,5 +1,8 @@
 {
   "yaml.schemas": {
     "https://json.schemastore.org/github-workflow.json": "file:///workspace/.github/workflows/deploy.yaml"
-  }
+  },
+  "tailwindCSS.experimental.classRegex": [
+    ["tv\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
+  ]
 }
