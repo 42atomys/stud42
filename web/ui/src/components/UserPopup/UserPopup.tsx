@@ -28,7 +28,11 @@ export const UserPopup = ({
   const handleClickOutside = (event: MouseEvent) => {
     if (!ref.current) return;
     // If target is a child of #user-profile-portal, don't close the popup
-    if (document.getElementById('user-profile-portal')?.contains(event.target as Node))
+    if (
+      document
+        .getElementById('user-profile-portal')
+        ?.contains(event.target as Node)
+    )
       return;
 
     if (ref.current && !ref.current.contains(event.target as Node)) {
@@ -53,15 +57,15 @@ export const UserPopup = ({
     position.top + POPUP_HEIGHT > container.bottom
       ? position.top - POPUP_HEIGHT + position.height
       : position.top - POPUP_HEIGHT / 2 < container.top
-        ? position.top
-        : position.top - (POPUP_HEIGHT - position.height) / 2;
+      ? position.top
+      : position.top - (POPUP_HEIGHT - position.height) / 2;
 
   const left =
     position.left + POPUP_WIDTH + position.width > container.right
       ? position.right - POPUP_WIDTH
       : position.left - POPUP_WIDTH / 2 < container.left
-        ? position.left
-        : position.left - (POPUP_WIDTH - position.width) / 2;
+      ? position.left
+      : position.left - (POPUP_WIDTH - position.width) / 2;
 
   return (
     <motion.div
