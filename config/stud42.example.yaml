@@ -14,6 +14,14 @@ api:
       # storage in local development, or in production with a provider
       # that does not support the virtual host style.
       forcePathStyle: true
+    # The bucket configuration to store the files of the API for the User Exports
+    # This bucket is used to store the files exported by the users in the
+    # API. This bucket will keep the files for a limited time (24 hours).
+    exports:
+      bucket: s42-exports
+      region: europe-west1
+      endpoint: http://minio:9000
+      forcePathStyle: true
 
 # Interface relatives configurations
 interface: {}

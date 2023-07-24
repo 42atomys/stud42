@@ -142,7 +142,6 @@ export const nextAuthOptions: NextAuthOptions = {
           imageSmallUrl: (profile.image as any)?.versions?.small,
           poolYear: profile.pool_year,
           poolMonth: profile.pool_month,
-          phone: profile.phone,
           isStaff: profile['staff?'] || false,
           currentCampusID: (profile as DuoProfile).campus_users.find(
             (cu) => cu.is_primary,

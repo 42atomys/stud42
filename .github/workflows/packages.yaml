@@ -14,7 +14,7 @@ jobs:
       matrix:
         include:
         - package: postgres
-          version: 14.2-alpine3.15
+          version: 14.8-alpine3.18
         - package: rabbitmq
           version: 3.11.13-management
     permissions:
