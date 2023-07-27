@@ -110,10 +110,10 @@ module "postgres" {
   kind   = "StatefulSet"
 
   appName         = "postgres"
-  appVersion      = "14.1"
+  appVersion      = "14.8"
   name            = "postgres"
   namespace       = var.namespace
-  image           = "ghcr.io/42atomys/s42-postgres:14.2-alpine3.15"
+  image           = "ghcr.io/42atomys/s42-postgres:14.8-alpine3.18"
   imagePullPolicy = "IfNotPresent"
 
   nodeSelector = local.nodepoolSelector["storages"]
