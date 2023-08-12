@@ -23,4 +23,19 @@ locals {
       nodepool = var.namespace == "production" ? "small" : var.namespace == "staging" ? "small" : "small-shared"
     }
   }
+
+  // campusToRefreshEachHourManually is a list of campus IDs that should be
+  // refreshed each hour manually. This is a workaround for a bug in the
+  // interconnection between the Intra API and S42. This is a workaround for
+  // the following bug
+  campusToRefreshEachHourManually = {
+    helsinki = 13
+    lausanne = 47
+    malaga   = 37
+    mulhouse = 48
+    paris    = 1
+    seoul    = 29
+    tokyo    = 26
+    vienna   = 53
+  }
 }
