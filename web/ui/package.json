@@ -29,7 +29,7 @@
     "@apollo/react-hooks": "^4.0.0",
     "@headlessui/react": "^1.7.7",
     "@sentry/browser": "^7.47.0",
-    "@sentry/nextjs": "^7.47.0",
+    "@sentry/nextjs": "^7.66.0",
     "@sentry/node": "^7.47.0",
     "@types/uuid": "^9.0.1",
     "apollo3-cache-persist": "^0.14.1",
