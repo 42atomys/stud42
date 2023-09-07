@@ -106,7 +106,7 @@ const IndexPage: NextPage<PageProps> = () => {
       <Head>
         {(currentGroup && (
           <title>
-            {currentGroup.emoji} {currentGroup.name} - Friendship - Stud42
+            {currentGroup.emoji} {currentGroup.name} - Friendship - S42
           </title>
         )) || <title>All Friendship - Stud42</title>}
       </Head>

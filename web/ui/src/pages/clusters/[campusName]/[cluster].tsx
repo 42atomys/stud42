@@ -11,6 +11,7 @@ import {
 } from '@components/ClusterMap';
 import { ClusterContainer } from '@components/ClusterMap/ClusterContainer';
 import { CampusNames, Campuses } from '@lib/clustersMap';
+import '@lib/prototypes/string';
 import {
   GetStaticPaths,
   GetStaticPathsResult,
@@ -18,6 +19,7 @@ import {
   NextPage,
 } from 'next';
 import Error from 'next/error';
+import Head from 'next/head';
 
 export const IndexPage: NextPage<
   ClusterContainerProps & { campusName: CampusNames }
@@ -30,64 +32,72 @@ export const IndexPage: NextPage<
   }
 
   return (
-    <ClusterContainer campus={campusData.name()} cluster={cluster}>
-      {({ locations, showPopup }) => (
-        <ClusterTableMap>
-          {clusterData.map().map((row, i) => (
-            <ClusterRow key={`cluster-row-${i}`}>
-              {row.map((entity, j) => {
-                const key = `cluster-workspace-${i}-${entity}-${j}`;
+    <>
+      <Head>
+        <title>
+          {cluster.toUpperCase()} @ {campusData.name().toTitleCase()} - Clusters
+          - S42
+        </title>
+      </Head>
+      <ClusterContainer campus={campusData.name()} cluster={cluster}>
+        {({ locations, showPopup }) => (
+          <ClusterTableMap>
+            {clusterData.map().map((row, i) => (
+              <ClusterRow key={`cluster-row-${i}`}>
+                {row.map((entity, j) => {
+                  const key = `cluster-workspace-${i}-${entity}-${j}`;
 
-                if (entity === null) return <ClusterEmpty key={key} />;
-                if (entity === 'P') return <ClusterPillar key={key} />;
-                if (entity.startsWith('PW')) {
-                  return (
-                    <ClusterPersonalWorkspace
-                      key={key}
-                      displayText={entity.slice(3)}
-                    />
-                  );
-                }
-                if (entity.startsWith('T:')) {
-                  return (
-                    <ClusterEmpty key={key} displayText={entity.slice(2)} />
-                  );
-                }
+                  if (entity === null) return <ClusterEmpty key={key} />;
+                  if (entity === 'P') return <ClusterPillar key={key} />;
+                  if (entity.startsWith('PW')) {
+                    return (
+                      <ClusterPersonalWorkspace
+                        key={key}
+                        displayText={entity.slice(3)}
+                      />
+                    );
+                  }
+                  if (entity.startsWith('T:')) {
+                    return (
+                      <ClusterEmpty key={key} displayText={entity.slice(2)} />
+                    );
+                  }
 
-                const identifier = entity.slice(2);
-                const loc = extractNode(locations, identifier);
+                  const identifier = entity.slice(2);
+                  const loc = extractNode(locations, identifier);
 
-                if (loc) {
+                  if (loc) {
+                    return (
+                      <ClusterWorkspaceWithUser
+                        key={key}
+                        identifier={identifier}
+                        displayText={campusData.extractor(identifier).workspace}
+                        location={loc}
+                        onClick={({ currentTarget }, location) => {
+                          showPopup({
+                            location: location,
+                            user: location.user,
+                            position: currentTarget.getBoundingClientRect(),
+                          });
+                        }}
+                      />
+                    );
+                  }
+
                   return (
-                    <ClusterWorkspaceWithUser
+                    <ClusterWorkspace
                       key={key}
                       identifier={identifier}
                       displayText={campusData.extractor(identifier).workspace}
-                      location={loc}
-                      onClick={({ currentTarget }, location) => {
-                        showPopup({
-                          location: location,
-                          user: location.user,
-                          position: currentTarget.getBoundingClientRect(),
-                        });
-                      }}
                     />
                   );
-                }
-
-                return (
-                  <ClusterWorkspace
-                    key={key}
-                    identifier={identifier}
-                    displayText={campusData.extractor(identifier).workspace}
-                  />
-                );
-              })}
-            </ClusterRow>
-          ))}
-        </ClusterTableMap>
-      )}
-    </ClusterContainer>
+                })}
+              </ClusterRow>
+            ))}
+          </ClusterTableMap>
+        )}
+      </ClusterContainer>
+    </>
   );
 };
 
