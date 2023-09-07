@@ -169,12 +169,12 @@ export const ClusterPersonalWorkspace = ({
  */
 export const ClusterPillar = () => {
   return (
-    <div className="flex flex-1 flex-col justify-center items-center m-0.5 rounded bg-slate-200 dark:bg-slate-900"></div>
+    <div className="flex flex-1 flex-col justify-center items-center m-0.5 rounded bg-slate-200 dark:bg-slate-950"></div>
   );
 };
 
 /**
- * ClusterPillar component is used to display an empty space in a `ClusterRow`.
+ * ClusterEmpty component is used to display an empty space in a `ClusterRow`.
  * Principally used to display a path in the cluster.
  */
 export const ClusterEmpty = ({ displayText }: { displayText?: string }) => {
