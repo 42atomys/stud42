@@ -146,13 +146,13 @@ export const MenuItem: React.FC<MenuItemProps> = ({
             <Link
               href={href as string}
               target={linkTarget}
-              className="flex flex-1 items-center space-x-2 py-[var(--menu-padding-y)]"
+              className="flex flex-1 min-w-0 items-center space-x-2 py-[var(--menu-padding-y)]"
             >
               {children}
             </Link>
           )}
           falseWrapper={(children) => (
-            <div className="flex flex-1 items-center space-x-2 py-[var(--menu-padding-y)]">
+            <div className="flex flex-1 min-w-0 items-center space-x-2 py-[var(--menu-padding-y)]">
               {children}
             </div>
           )}
