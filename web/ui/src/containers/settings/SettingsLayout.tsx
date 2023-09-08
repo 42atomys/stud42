@@ -1,5 +1,6 @@
 import { NewBadgy } from '@components/Badge';
 import { Menu, MenuCategory, MenuItem, useSidebar } from '@components/Sidebar';
+import '@lib/prototypes/string';
 import classNames from 'classnames';
 import { NextPage } from 'next';
 import { signOut } from 'next-auth/react';
@@ -16,7 +17,7 @@ export const SettingsLayout: NextPage<
   return (
     <SidebarProvider>
       <Head>
-        <title>Settings - Stud42</title>
+        <title>{page.toSentenceCase()} Settings - S42</title>
       </Head>
       <PageContainer>
         <Sidebar>
