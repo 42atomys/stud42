@@ -1,0 +1,513 @@
+/app $ stud42cli jobs crawler locations -c 2
+5:11PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:11PM INF Database URL is set, connecting to database... version=v0.29
+5:11PM INF Migrating database... version=v0.29
+5:11PM INF Start the crawling of active locations of campus Cluj (2) version=v0.29
+5:11PM INF Successfully close 0 inactive locations version=v0.29
+5:11PM INF Successfully sync the campus of Cluj with 0 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 3
+5:11PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:11PM INF Database URL is set, connecting to database... version=v0.29
+5:11PM INF Migrating database... version=v0.29
+5:11PM FTL Failed to get campus error="generated: campus not found" version=v0.29
+/app $ stud42cli jobs crawler locations -c 4
+5:11PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:11PM INF Database URL is set, connecting to database... version=v0.29
+5:11PM INF Migrating database... version=v0.29
+5:11PM FTL Failed to get campus error="generated: campus not found" version=v0.29
+/app $ stud42cli jobs crawler locations -c 5
+5:11PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:11PM INF Database URL is set, connecting to database... version=v0.29
+5:11PM INF Migrating database... version=v0.29
+5:11PM INF Start the crawling of active locations of campus Johannesburg (5) version=v0.29
+5:11PM INF Successfully close 0 inactive locations version=v0.29
+5:11PM INF Successfully sync the campus of Johannesburg with 0 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 6
+5:11PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:11PM INF Database URL is set, connecting to database... version=v0.29
+5:11PM INF Migrating database... version=v0.29
+5:11PM INF Start the crawling of active locations of campus Chisinau (6) version=v0.29
+5:11PM INF Successfully close 0 inactive locations version=v0.29
+5:11PM INF Successfully sync the campus of Chisinau with 0 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 7
+5:11PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:11PM INF Database URL is set, connecting to database... version=v0.29
+5:11PM INF Migrating database... version=v0.29
+5:11PM INF Start the crawling of active locations of campus Fremont (7) version=v0.29
+5:11PM INF Successfully close 0 inactive locations version=v0.29
+5:11PM INF Successfully sync the campus of Fremont with 0 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 8
+5:11PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:11PM INF Database URL is set, connecting to database... version=v0.29
+5:11PM INF Migrating database... version=v0.29
+5:11PM INF Start the crawling of active locations of campus Kyiv (8) version=v0.29
+5:11PM INF Successfully close 0 inactive locations version=v0.29
+5:11PM INF Successfully sync the campus of Kyiv with 0 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 9
+5:11PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:11PM INF Database URL is set, connecting to database... version=v0.29
+5:11PM INF Migrating database... version=v0.29
+5:11PM INF Start the crawling of active locations of campus Lyon (9) version=v0.29
+5:11PM INF Successfully close 9 inactive locations version=v0.29
+5:11PM INF Successfully sync the campus of Lyon with 95 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 10
+5:11PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:11PM INF Database URL is set, connecting to database... version=v0.29
+5:11PM INF Migrating database... version=v0.29
+5:11PM INF Start the crawling of active locations of campus Bucharest (10) version=v0.29
+5:11PM INF Successfully close 0 inactive locations version=v0.29
+5:11PM INF Successfully sync the campus of Bucharest with 0 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 11
+5:11PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:11PM INF Database URL is set, connecting to database... version=v0.29
+5:11PM INF Migrating database... version=v0.29
+5:11PM INF Start the crawling of active locations of campus Montrouge (11) version=v0.29
+5:11PM INF Successfully close 0 inactive locations version=v0.29
+5:11PM INF Successfully sync the campus of Montrouge with 0 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 12
+5:11PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:11PM INF Database URL is set, connecting to database... version=v0.29
+5:11PM INF Migrating database... version=v0.29
+5:11PM INF Start the crawling of active locations of campus 19 (12) version=v0.29
+^[[A5:11PM INF Successfully close 8 inactive locations version=v0.29
+5:11PM INF Successfully sync the campus of 19 with 51 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 13
+5:11PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:11PM INF Database URL is set, connecting to database... version=v0.29
+5:11PM INF Migrating database... version=v0.29
+5:11PM INF Start the crawling of active locations of campus Helsinki (13) version=v0.29
+5:11PM INF Successfully close 4 inactive locations version=v0.29
+5:11PM INF Successfully sync the campus of Helsinki with 56 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 14
+5:11PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:11PM INF Database URL is set, connecting to database... version=v0.29
+5:11PM INF Migrating database... version=v0.29
+5:11PM INF Start the crawling of active locations of campus Amsterdam (14) version=v0.29
+5:11PM INF Successfully close 1 inactive locations version=v0.29
+5:11PM INF Successfully sync the campus of Amsterdam with 7 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 15
+5:11PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:11PM INF Database URL is set, connecting to database... version=v0.29
+5:11PM INF Migrating database... version=v0.29
+5:11PM INF Start the crawling of active locations of campus Cape-Town (15) version=v0.29
+5:11PM INF Successfully close 0 inactive locations version=v0.29
+5:11PM INF Successfully sync the campus of Cape-Town with 0 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 16
+5:11PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:11PM INF Database URL is set, connecting to database... version=v0.29
+5:11PM INF Migrating database... version=v0.29
+5:11PM INF Start the crawling of active locations of campus Khouribga (16) version=v0.29
+^[[A5:12PM INF Successfully close 45 inactive locations version=v0.29
+5:12PM INF Successfully sync the campus of Khouribga with 229 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 17
+5:12PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:12PM INF Database URL is set, connecting to database... version=v0.29
+5:12PM INF Migrating database... version=v0.29
+5:12PM INF Start the crawling of active locations of campus Moscow (17) version=v0.29
+5:12PM INF Successfully close 0 inactive locations version=v0.29
+5:12PM INF Successfully sync the campus of Moscow with 3 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 18
+5:12PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:12PM INF Database URL is set, connecting to database... version=v0.29
+5:12PM INF Migrating database... version=v0.29
+5:12PM INF Start the crawling of active locations of campus iTouchUP (18) version=v0.29
+5:12PM INF Successfully close 0 inactive locations version=v0.29
+5:12PM INF Successfully sync the campus of iTouchUP with 0 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 19
+5:12PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:12PM INF Database URL is set, connecting to database... version=v0.29
+5:12PM INF Migrating database... version=v0.29
+5:12PM INF Start the crawling of active locations of campus CoderDojoSV (19) version=v0.29
+5:12PM INF Successfully close 0 inactive locations version=v0.29
+5:12PM INF Successfully sync the campus of CoderDojoSV with 0 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 20
+5:12PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:12PM INF Database URL is set, connecting to database... version=v0.29
+5:12PM INF Migrating database... version=v0.29
+5:12PM INF Start the crawling of active locations of campus São-Paulo (20) version=v0.29
+5:12PM INF Successfully close 2 inactive locations version=v0.29
+5:12PM INF Successfully sync the campus of São-Paulo with 23 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 21
+5:12PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:12PM INF Database URL is set, connecting to database... version=v0.29
+5:12PM INF Migrating database... version=v0.29
+5:12PM INF Start the crawling of active locations of campus Benguerir (21) version=v0.29
+^[[A5:12PM INF Successfully close 25 inactive locations version=v0.29
+5:12PM INF Successfully sync the campus of Benguerir with 190 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 22
+5:12PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:12PM INF Database URL is set, connecting to database... version=v0.29
+5:12PM INF Migrating database... version=v0.29
+5:12PM INF Start the crawling of active locations of campus Madrid (22) version=v0.29
+5:12PM INF Successfully close 12 inactive locations version=v0.29
+5:12PM INF Successfully sync the campus of Madrid with 116 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 23
+5:12PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:12PM INF Database URL is set, connecting to database... version=v0.29
+5:12PM INF Migrating database... version=v0.29
+5:12PM INF Start the crawling of active locations of campus Kazan (23) version=v0.29
+5:12PM INF Successfully close 0 inactive locations version=v0.29
+5:12PM INF Successfully sync the campus of Kazan with 5 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 24
+5:12PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:12PM INF Database URL is set, connecting to database... version=v0.29
+5:12PM INF Migrating database... version=v0.29
+5:12PM INF Start the crawling of active locations of campus Novosibirsk (24) version=v0.29
+5:12PM INF Successfully close 0 inactive locations version=v0.29
+5:12PM INF Successfully sync the campus of Novosibirsk with 0 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 25
+5:12PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:12PM INF Database URL is set, connecting to database... version=v0.29
+5:12PM INF Migrating database... version=v0.29
+5:12PM INF Start the crawling of active locations of campus Quebec (25) version=v0.29
+5:12PM INF Successfully close 2 inactive locations version=v0.29
+5:12PM INF Successfully sync the campus of Quebec with 6 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 26
+5:13PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:13PM INF Database URL is set, connecting to database... version=v0.29
+5:13PM INF Migrating database... version=v0.29
+5:13PM INF Start the crawling of active locations of campus Tokyo (26) version=v0.29
+5:13PM INF Successfully close 4 inactive locations version=v0.29
+5:13PM INF Successfully sync the campus of Tokyo with 12 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 27
+5:13PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:13PM INF Database URL is set, connecting to database... version=v0.29
+5:13PM INF Migrating database... version=v0.29
+5:13PM INF Start the crawling of active locations of campus Hack High School - Fremont  (27) version=v0.29
+5:13PM INF Successfully close 0 inactive locations version=v0.29
+5:13PM INF Successfully sync the campus of Hack High School - Fremont  with 0 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 28
+5:13PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:13PM INF Database URL is set, connecting to database... version=v0.29
+5:13PM INF Migrating database... version=v0.29
+5:13PM INF Start the crawling of active locations of campus Rio de Janeiro (28) version=v0.29
+5:13PM INF Successfully close 0 inactive locations version=v0.29
+5:13PM INF Successfully sync the campus of Rio de Janeiro with 54 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 29
+5:13PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:13PM INF Database URL is set, connecting to database... version=v0.29
+5:13PM INF Migrating database... version=v0.29
+5:13PM INF Start the crawling of active locations of campus Seoul (29) version=v0.29
+5:13PM INF Successfully close 61 inactive locations version=v0.29
+5:13PM INF Successfully sync the campus of Seoul with 19 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 30
+5:13PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:13PM INF Database URL is set, connecting to database... version=v0.29
+5:13PM INF Migrating database... version=v0.29
+5:13PM INF Start the crawling of active locations of campus Rome (30) version=v0.29
+5:13PM INF Successfully close 1 inactive locations version=v0.29
+5:13PM INF Successfully sync the campus of Rome with 16 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 31
+5:13PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:13PM INF Database URL is set, connecting to database... version=v0.29
+5:13PM INF Migrating database... version=v0.29
+5:13PM INF Start the crawling of active locations of campus Angouleme (31) version=v0.29
+5:13PM INF Successfully close 4 inactive locations version=v0.29
+5:13PM INF Successfully sync the campus of Angouleme with 23 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 32
+5:13PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:13PM INF Database URL is set, connecting to database... version=v0.29
+5:13PM INF Migrating database... version=v0.29
+5:13PM INF Start the crawling of active locations of campus Yerevan (32) version=v0.29
+5:13PM INF Successfully close 2 inactive locations version=v0.29
+5:13PM INF Successfully sync the campus of Yerevan with 10 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 33
+5:13PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:13PM INF Database URL is set, connecting to database... version=v0.29
+5:13PM INF Migrating database... version=v0.29
+5:13PM INF Start the crawling of active locations of campus Bangkok (33) version=v0.29
+5:13PM INF Successfully close 10 inactive locations version=v0.29
+5:13PM INF Successfully sync the campus of Bangkok with 13 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 34
+5:13PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:13PM INF Database URL is set, connecting to database... version=v0.29
+5:13PM INF Migrating database... version=v0.29
+5:13PM INF Start the crawling of active locations of campus Kuala Lumpur (34) version=v0.29
+5:13PM INF Successfully close 9 inactive locations version=v0.29
+5:13PM INF Successfully sync the campus of Kuala Lumpur with 9 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 35
+5:13PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:13PM INF Database URL is set, connecting to database... version=v0.29
+5:13PM INF Migrating database... version=v0.29
+5:13PM INF Start the crawling of active locations of campus Amman (35) version=v0.29
+5:13PM INF Successfully close 0 inactive locations version=v0.29
+5:13PM INF Successfully sync the campus of Amman with 0 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 36
+5:13PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:13PM INF Database URL is set, connecting to database... version=v0.29
+5:13PM INF Migrating database... version=v0.29
+5:13PM INF Start the crawling of active locations of campus Adelaide (36) version=v0.29
+5:13PM INF Successfully close 5 inactive locations version=v0.29
+5:13PM INF Successfully sync the campus of Adelaide with 1 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 37
+5:13PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:13PM INF Database URL is set, connecting to database... version=v0.29
+5:13PM INF Migrating database... version=v0.29
+5:13PM INF Start the crawling of active locations of campus Malaga (37) version=v0.29
+^[[5:13PM INF Successfully close 7 inactive locations version=v0.29
+5:13PM INF Successfully sync the campus of Malaga with 63 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 38
+5:13PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:13PM INF Database URL is set, connecting to database... version=v0.29
+5:13PM INF Migrating database... version=v0.29
+5:13PM INF Start the crawling of active locations of campus Lisboa (38) version=v0.29
+5:14PM INF Successfully close 1 inactive locations version=v0.29
+5:14PM INF Successfully sync the campus of Lisboa with 79 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 39
+5:14PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:14PM INF Database URL is set, connecting to database... version=v0.29
+5:14PM INF Migrating database... version=v0.29
+5:14PM INF Start the crawling of active locations of campus Heilbronn (39) version=v0.29
+5:14PM INF Successfully close 16 inactive locations version=v0.29
+5:14PM INF Successfully sync the campus of Heilbronn with 41 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 40
+5:14PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:14PM INF Database URL is set, connecting to database... version=v0.29
+5:14PM INF Migrating database... version=v0.29
+5:14PM INF Start the crawling of active locations of campus Urduliz (40) version=v0.29
+5:14PM INF Successfully close 6 inactive locations version=v0.29
+5:14PM INF Successfully sync the campus of Urduliz with 5 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 41
+5:14PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:14PM INF Database URL is set, connecting to database... version=v0.29
+5:14PM INF Migrating database... version=v0.29
+5:14PM INF Start the crawling of active locations of campus Nice (41) version=v0.29
+5:14PM INF Successfully close 5 inactive locations version=v0.29
+5:14PM INF Successfully sync the campus of Nice with 1 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 42
+5:14PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:14PM INF Database URL is set, connecting to database... version=v0.29
+5:14PM INF Migrating database... version=v0.29
+5:14PM INF Start the crawling of active locations of campus 42Network (42) version=v0.29
+5:14PM INF Successfully close 0 inactive locations version=v0.29
+5:14PM INF Successfully sync the campus of 42Network with 2 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 43
+5:14PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:14PM INF Database URL is set, connecting to database... version=v0.29
+5:14PM INF Migrating database... version=v0.29
+5:14PM INF Start the crawling of active locations of campus Abu Dhabi (43) version=v0.29
+5:14PM INF Successfully close 17 inactive locations version=v0.29
+5:14PM INF Successfully sync the campus of Abu Dhabi with 49 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 44
+5:14PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:14PM INF Database URL is set, connecting to database... version=v0.29
+5:14PM INF Migrating database... version=v0.29
+5:14PM INF Start the crawling of active locations of campus Wolfsburg (44) version=v0.29
+5:14PM INF Successfully close 7 inactive locations version=v0.29
+5:14PM INF Successfully sync the campus of Wolfsburg with 21 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 45
+5:14PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:14PM INF Database URL is set, connecting to database... version=v0.29
+5:14PM INF Migrating database... version=v0.29
+5:14PM INF Start the crawling of active locations of campus Alicante (45) version=v0.29
+5:14PM INF Successfully close 0 inactive locations version=v0.29
+5:14PM INF Successfully sync the campus of Alicante with 0 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 46
+5:14PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:14PM INF Database URL is set, connecting to database... version=v0.29
+5:14PM INF Migrating database... version=v0.29
+5:14PM INF Start the crawling of active locations of campus Barcelona (46) version=v0.29
+5:14PM INF Successfully close 7 inactive locations version=v0.29
+5:14PM INF Successfully sync the campus of Barcelona with 65 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 47
+5:14PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:14PM INF Database URL is set, connecting to database... version=v0.29
+5:14PM INF Migrating database... version=v0.29
+5:14PM INF Start the crawling of active locations of campus Lausanne (47) version=v0.29
+5:14PM INF Successfully close 9 inactive locations version=v0.29
+5:14PM INF Successfully sync the campus of Lausanne with 9 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 48
+5:14PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:14PM INF Database URL is set, connecting to database... version=v0.29
+5:14PM INF Migrating database... version=v0.29
+5:14PM INF Start the crawling of active locations of campus Mulhouse (48) version=v0.29
+5:14PM INF Successfully close 0 inactive locations version=v0.29
+5:14PM INF Successfully sync the campus of Mulhouse with 3 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 49
+5:14PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:14PM INF Database URL is set, connecting to database... version=v0.29
+5:14PM INF Migrating database... version=v0.29
+5:14PM INF Start the crawling of active locations of campus Istanbul (49) version=v0.29
+5:14PM INF Successfully close 3 inactive locations version=v0.29
+5:14PM INF Successfully sync the campus of Istanbul with 32 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 50
+5:14PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:14PM INF Database URL is set, connecting to database... version=v0.29
+5:14PM INF Migrating database... version=v0.29
+5:14PM INF Start the crawling of active locations of campus Kocaeli (50) version=v0.29
+5:14PM INF Successfully close 5 inactive locations version=v0.29
+5:14PM INF Successfully sync the campus of Kocaeli with 49 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 51
+5:14PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:14PM INF Database URL is set, connecting to database... version=v0.29
+5:14PM INF Migrating database... version=v0.29
+5:14PM INF Start the crawling of active locations of campus Berlin (51) version=v0.29
+5:14PM INF Successfully close 8 inactive locations version=v0.29
+5:14PM INF Successfully sync the campus of Berlin with 6 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 52
+5:14PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:14PM INF Database URL is set, connecting to database... version=v0.29
+5:14PM INF Migrating database... version=v0.29
+5:14PM INF Start the crawling of active locations of campus Florence (52) version=v0.29
+5:14PM INF Successfully close 3 inactive locations version=v0.29
+5:14PM INF Successfully sync the campus of Florence with 76 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 53
+5:14PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:14PM INF Database URL is set, connecting to database... version=v0.29
+5:14PM INF Migrating database... version=v0.29
+5:14PM INF Start the crawling of active locations of campus Vienna (53) version=v0.29
+5:14PM INF Successfully close 3 inactive locations version=v0.29
+5:14PM INF Successfully sync the campus of Vienna with 4 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 54
+5:14PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:14PM INF Database URL is set, connecting to database... version=v0.29
+5:14PM INF Migrating database... version=v0.29
+5:14PM INF Start the crawling of active locations of campus 42-test (54) version=v0.29
+5:15PM INF Successfully close 0 inactive locations version=v0.29
+5:15PM INF Successfully sync the campus of 42-test with 4 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 55
+5:15PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:15PM INF Database URL is set, connecting to database... version=v0.29
+5:15PM INF Migrating database... version=v0.29
+5:15PM INF Start the crawling of active locations of campus Tétouan (55) version=v0.29
+5:15PM INF Successfully close 7 inactive locations version=v0.29
+5:15PM INF Successfully sync the campus of Tétouan with 44 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 56
+5:15PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:15PM INF Database URL is set, connecting to database... version=v0.29
+5:15PM INF Migrating database... version=v0.29
+5:15PM INF Start the crawling of active locations of campus Prague (56) version=v0.29
+5:15PM INF Successfully close 1 inactive locations version=v0.29
+5:15PM INF Successfully sync the campus of Prague with 3 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 57
+5:15PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:15PM INF Database URL is set, connecting to database... version=v0.29
+5:15PM INF Migrating database... version=v0.29
+5:15PM INF Start the crawling of active locations of campus London (57) version=v0.29
+5:15PM INF Successfully close 1 inactive locations version=v0.29
+5:15PM INF Successfully sync the campus of London with 0 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 56
+5:15PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:15PM INF Database URL is set, connecting to database... version=v0.29
+5:15PM INF Migrating database... version=v0.29
+5:15PM INF Start the crawling of active locations of campus Prague (56) version=v0.29
+5:15PM INF Successfully close 0 inactive locations version=v0.29
+5:15PM INF Successfully sync the campus of Prague with 3 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 57
+5:15PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:15PM INF Database URL is set, connecting to database... version=v0.29
+5:15PM INF Migrating database... version=v0.29
+5:15PM INF Start the crawling of active locations of campus London (57) version=v0.29
+5:15PM INF Successfully close 0 inactive locations version=v0.29
+5:15PM INF Successfully sync the campus of London with 0 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 58
+5:15PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:15PM INF Database URL is set, connecting to database... version=v0.29
+5:15PM INF Migrating database... version=v0.29
+5:15PM INF Start the crawling of active locations of campus Porto (58) version=v0.29
+5:15PM INF Successfully close 7 inactive locations version=v0.29
+5:15PM INF Successfully sync the campus of Porto with 17 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 59
+5:15PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:15PM INF Database URL is set, connecting to database... version=v0.29
+5:15PM INF Migrating database... version=v0.29
+5:15PM INF Start the crawling of active locations of campus Luxembourg (59) version=v0.29
+5:15PM INF Successfully close 0 inactive locations version=v0.29
+5:15PM INF Successfully sync the campus of Luxembourg with 0 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 60
+5:15PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:15PM INF Database URL is set, connecting to database... version=v0.29
+5:15PM INF Migrating database... version=v0.29
+5:15PM INF Start the crawling of active locations of campus Perpignan (60) version=v0.29
+5:15PM INF Successfully close 5 inactive locations version=v0.29
+5:15PM INF Successfully sync the campus of Perpignan with 117 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 61
+5:16PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:16PM INF Database URL is set, connecting to database... version=v0.29
+5:16PM INF Migrating database... version=v0.29
+5:16PM INF Start the crawling of active locations of campus Belo Horizonte (61) version=v0.29
+5:16PM INF Successfully close 0 inactive locations version=v0.29
+5:16PM INF Successfully sync the campus of Belo Horizonte with 0 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 62
+5:16PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:16PM INF Database URL is set, connecting to database... version=v0.29
+5:16PM INF Migrating database... version=v0.29
+5:16PM INF Start the crawling of active locations of campus Le Havre (62) version=v0.29
+5:16PM INF Successfully close 2 inactive locations version=v0.29
+5:16PM INF Successfully sync the campus of Le Havre with 54 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 63
+5:16PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:16PM INF Database URL is set, connecting to database... version=v0.29
+5:16PM INF Migrating database... version=v0.29
+5:16PM FTL Failed to get campus error="generated: campus not found" version=v0.29
+/app $ stud42cli jobs crawler locations -c 64
+5:16PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:16PM INF Database URL is set, connecting to database... version=v0.29
+5:16PM INF Migrating database... version=v0.29
+5:16PM INF Start the crawling of active locations of campus Singapore (64) version=v0.29
+5:16PM INF Successfully close 1 inactive locations version=v0.29
+5:16PM INF Successfully sync the campus of Singapore with 16 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 65
+5:16PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:16PM INF Database URL is set, connecting to database... version=v0.29
+5:16PM INF Migrating database... version=v0.29
+5:16PM INF Start the crawling of active locations of campus Antananarivo (65) version=v0.29
+5:16PM INF Successfully close 0 inactive locations version=v0.29
+5:16PM INF Successfully sync the campus of Antananarivo with 0 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 66
+5:16PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:16PM INF Database URL is set, connecting to database... version=v0.29
+5:16PM INF Migrating database... version=v0.29
+5:16PM FTL Failed to get campus error="generated: campus not found" version=v0.29
+/app $ stud42cli jobs crawler locations -c 67
+5:16PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:16PM INF Database URL is set, connecting to database... version=v0.29
+5:16PM INF Migrating database... version=v0.29
+5:16PM INF Start the crawling of active locations of campus Warsaw (67) version=v0.29
+5:16PM INF Successfully close 0 inactive locations version=v0.29
+5:16PM INF Successfully sync the campus of Warsaw with 0 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 68
+5:16PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:16PM INF Database URL is set, connecting to database... version=v0.29
+5:16PM INF Migrating database... version=v0.29
+5:16PM INF Start the crawling of active locations of campus Luanda (68) version=v0.29
+5:16PM INF Successfully close 0 inactive locations version=v0.29
+5:16PM INF Successfully sync the campus of Luanda with 0 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 69
+5:16PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:16PM INF Database URL is set, connecting to database... version=v0.29
+5:16PM INF Migrating database... version=v0.29
+5:16PM INF Start the crawling of active locations of campus Gyeongsan (69) version=v0.29
+5:16PM INF Successfully close 0 inactive locations version=v0.29
+5:16PM INF Successfully sync the campus of Gyeongsan with 0 locations active version=v0.29
+/app $ stud42cli jobs crawler locations -c 70
+5:16PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:16PM INF Database URL is set, connecting to database... version=v0.29
+5:16PM INF Migrating database... version=v0.29
+5:16PM FTL Failed to get campus error="generated: campus not found" version=v0.29
+/app $ stud42cli jobs crawler locations -c 71
+5:16PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:16PM INF Database URL is set, connecting to database... version=v0.29
+5:16PM INF Migrating database... version=v0.29
+5:16PM FTL Failed to get campus error="generated: campus not found" version=v0.29
+/app $ stud42cli jobs crawler locations -c 72
+5:16PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:16PM INF Database URL is set, connecting to database... version=v0.29
+5:16PM INF Migrating database... version=v0.29
+5:16PM FTL Failed to get campus error="generated: campus not found" version=v0.29
+/app $ stud42cli jobs crawler locations -c 73
+5:16PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:16PM INF Database URL is set, connecting to database... version=v0.29
+5:16PM INF Migrating database... version=v0.29
+5:16PM FTL Failed to get campus error="generated: campus not found" version=v0.29
+/app $ stud42cli jobs crawler locations -c 74
+5:16PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:16PM INF Database URL is set, connecting to database... version=v0.29
+5:16PM INF Migrating database... version=v0.29
+5:16PM FTL Failed to get campus error="generated: campus not found" version=v0.29
+/app $ stud42cli jobs crawler locations -c 75
+5:16PM INF Key-value store URL is set, connecting to it... version=v0.29
+5:16PM INF Database URL is set, connecting to database... version=v0.29
+5:16PM INF Migrating database... version=v0.29
+5:16PM FTL Failed to get campus error="generated: campus not found" version=v0.29
+/app $

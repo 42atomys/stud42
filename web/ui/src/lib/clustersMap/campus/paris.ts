@@ -117,7 +117,6 @@ export class Paris extends Campus implements ICampus {
       new Cluster({
         identifier: 'made-f0A',
         name: '',
-        totalWorkspaces: 145,
         // prettier-ignore
         map: [
           ['T:r13', 'W:made-f0Ar13s1', 'W:made-f0Ar13s2', 'W:made-f0Ar13s3', 'W:made-f0Ar13s4', 'W:made-f0Ar13s5', 'W:made-f0Ar13s6', 'T:r13', null, null, null, null, null, null, null, null, null,    null,               null,              null,              null,               null,               null,               null  ],
@@ -139,7 +138,6 @@ export class Paris extends Campus implements ICampus {
       new Cluster({
         identifier: 'made-f0B',
         name: '',
-        totalWorkspaces: 105,
         // prettier-ignore
         map: [
           ['T:r8', 'W:made-f0Br8s1', 'W:made-f0Br8s2', 'W:made-f0Br8s3', 'W:made-f0Br8s4', 'W:made-f0Br8s5', 'W:made-f0Br8s6', null, null,  'W:made-f0Br8s7', 'W:made-f0Br8s8', 'W:made-f0Br8s9', 'W:made-f0Br8s10', 'W:made-f0Br8s11', 'W:made-f0Br8s12', 'W:made-f0Br8s13', null, null, 'W:made-f0Br8s14', 'W:made-f0Br8s15', 'W:made-f0Br8s16', 'W:made-f0Br8s17', 'W:made-f0Br8s18', 'W:made-f0Br8s19', 'T:r8'],
@@ -155,7 +153,6 @@ export class Paris extends Campus implements ICampus {
       new Cluster({
         identifier: 'made-f0C',
         name: '',
-        totalWorkspaces: 72,
         // prettier-ignore
         map: [
           ['T:r13', 'W:made-f0Cr13s1', 'W:made-f0Cr13s2', 'W:made-f0Cr13s3', 'W:made-f0Cr13s4', 'W:made-f0Cr13s5', 'W:made-f0Cr13s6', 'T:r13' ],
@@ -176,7 +173,6 @@ export class Paris extends Campus implements ICampus {
       new Cluster({
         identifier: 'made-f0D',
         name: '',
-        totalWorkspaces: 115,
         // prettier-ignore
         map: [
           ['T:r11', 'W:made-f0Dr11s1', 'W:made-f0Dr11s2', 'W:made-f0Dr11s3', 'W:made-f0Dr11s4', 'W:made-f0Dr11s5', 'W:made-f0Dr11s6', null, null, 'W:made-f0Dr11s7', 'W:made-f0Dr11s8', 'W:made-f0Dr11s9', 'W:made-f0Dr11s10', 'W:made-f0Dr11s11', 'W:made-f0Dr11s12', 'W:made-f0Dr11s13', null, null, 'W:made-f0Dr11s14', 'W:made-f0Dr11s15', 'W:made-f0Dr11s16', 'W:made-f0Dr11s17', 'W:made-f0Dr11s18', 'W:made-f0Dr11s19', 'T:r11'],
