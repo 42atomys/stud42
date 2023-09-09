@@ -5,5 +5,36 @@
 @tailwind utilities;
 
 .bg-grid-400 {
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='rgb(148 163 184 / 0.05)'%3e%3cpath d='M0 .5H31.5V32'/%3e%3c/svg%3e")
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='rgb(148 163 184 / 0.05)'%3e%3cpath d='M0 .5H31.5V32'/%3e%3c/svg%3e");
+}
+
+@layer base {
+  /* width */
+  ::-webkit-scrollbar {
+    @apply w-2;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    @apply bg-slate-300;
+  }
+  .dark ::-webkit-scrollbar-track {
+    @apply bg-slate-950/50;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-lg bg-indigo-300 transition-all cursor-pointer;
+  }
+  .dark ::-webkit-scrollbar-thumb {
+    @apply bg-indigo-900;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-indigo-400;
+  }
+  .dark ::-webkit-scrollbar-thumb:hover {
+    @apply bg-indigo-700;
+  }
 }

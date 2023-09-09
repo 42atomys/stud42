@@ -189,7 +189,7 @@ export const Sidebar = ({
           // TODO: put into tailwind when the flex flow is added to tailwind
           style={{ flexFlow: 'column' }}
         >
-          <div className="flex py-6 w-full justify-evenly sticky top-0 z-10">
+          <div className="flex py-6 w-full justify-evenly z-10">
             <Star />
             <Contribute />
           </div>

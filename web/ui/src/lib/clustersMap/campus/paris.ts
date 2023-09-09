@@ -17,7 +17,6 @@ export class Paris extends Campus implements ICampus {
       new Cluster({
         identifier: 'bess-f1',
         name: 'Ada',
-        totalWorkspaces: 73,
         // prettier-ignore
         map: [
           ['T:r1',  'PW', 'PW', 'PW', 'PW', null, null, 'W:bess-f1r1s1', 'W:bess-f1r1s2', 'W:bess-f1r1s3', 'W:bess-f1r1s4', 'W:bess-f1r1s5', 'W:bess-f1r1s6', 'W:bess-f1r1s7', 'W:bess-f1r1s8', null, null, 'W:bess-f1r1s9', 'W:bess-f1r1s10', 'W:bess-f1r1s11', 'W:bess-f1r1s12', 'W:bess-f1r1s13', 'W:bess-f1r1s14',  null           , 'T:r1'],
@@ -31,7 +30,6 @@ export class Paris extends Campus implements ICampus {
       new Cluster({
         identifier: 'bess-f2',
         name: 'Hyrule',
-        totalWorkspaces: 100,
         // prettier-ignore
         map: [
           ['T:r1',  'W:bess-f2r1s1', 'W:bess-f2r1s2', 'W:bess-f2r1s3', 'W:bess-f2r1s4', 'W:bess-f2r1s5', 'W:bess-f2r1s6', null, null, 'W:bess-f2r1s7', 'W:bess-f2r1s8', 'W:bess-f2r1s9', 'W:bess-f2r1s10', 'W:bess-f2r1s11', 'W:bess-f2r1s12', 'W:bess-f2r1s13', 'W:bess-f2r1s14', null, null, 'W:bess-f2r1s15', 'W:bess-f2r1s16', 'W:bess-f2r1s17', 'W:bess-f2r1s18', 'W:bess-f2r1s19', 'W:bess-f2r1s20', 'W:bess-f2r1s21', 'T:r1'],
@@ -45,7 +43,6 @@ export class Paris extends Campus implements ICampus {
       new Cluster({
         identifier: 'bess-f3',
         name: 'Turing',
-        totalWorkspaces: 74,
         // prettier-ignore
         map: [
           ['T:r1',  null, null, null, null, null, null, 'W:bess-f3r1s1', 'W:bess-f3r1s2', 'W:bess-f3r1s3', 'W:bess-f3r1s4', 'W:bess-f3r1s5', 'W:bess-f3r1s6', 'W:bess-f3r1s7', 'W:bess-f3r1s8', null, null, 'W:bess-f3r1s9', 'W:bess-f3r1s10', 'W:bess-f3r1s11', 'W:bess-f3r1s12', 'W:bess-f3r1s13', 'W:bess-f3r1s14', 'W:bess-f3r1s15', 'T:r1'],
@@ -59,7 +56,6 @@ export class Paris extends Campus implements ICampus {
       new Cluster({
         identifier: 'bess-f4',
         name: 'Carthage',
-        totalWorkspaces: 70,
         // prettier-ignore
         map: [
           ['T:r1',  null, null, null, null, null, null, 'W:bess-f4r1s1', 'W:bess-f4r1s2', 'W:bess-f4r1s3', 'W:bess-f4r1s4', 'W:bess-f4r1s5', 'W:bess-f4r1s6', 'W:bess-f4r1s7', 'W:bess-f4r1s8', null, null, 'W:bess-f4r1s9',  'W:bess-f4r1s10', 'W:bess-f4r1s11', 'W:bess-f4r1s12', 'W:bess-f4r1s13', 'W:bess-f4r1s14', 'T:r1'],
@@ -73,7 +69,6 @@ export class Paris extends Campus implements ICampus {
       new Cluster({
         identifier: 'paul-f3',
         name: 'Pandora & Citadel',
-        totalWorkspaces: 122,
         // prettier-ignore
         map: [
           [  null,  null           ,  null           ,  null           ,  null           ,  null           ,  null           ,  null           ,  null           , null, null,  null           ,   null           ,   null           ,   null,  'P', 'T:r10', 'W:paul-f3Br1s1',  'W:paul-f3Br1s2',  null           , null, null,  null           ,  null           ,  null           ,  null           ,  null           , 'T:r10'],
@@ -91,7 +86,6 @@ export class Paris extends Campus implements ICampus {
       new Cluster({
         identifier: 'paul-f4',
         name: 'Grid & Upside',
-        totalWorkspaces: 105,
         // prettier-ignore
         map: [
           [  null,  null           ,  null           ,  null           ,  null           ,  null           ,  null           ,  null           ,  null           , null, null,  null           ,   null           ,  null           ,    null, 'P', 'T:r9', 'W:paul-f4Br9s1', 'W:paul-f4Br9s2', 'W:paul-f4Br9s3', null, null,  null           ,  null           ,  null           ,  null           ,  null           , 'T:r9'],
@@ -100,7 +94,7 @@ export class Paris extends Campus implements ICampus {
           ['T:r8', 'W:paul-f4Ar8s1', 'W:paul-f4Ar8s2', 'W:paul-f4Ar8s3', 'W:paul-f4Ar8s4', 'W:paul-f4Ar8s5',  null           ,  null           ,  null           , null, null, 'W:paul-f4Ar8s8',  'W:paul-f4Ar8s9', 'W:paul-f4Ar8s10', 'T:r8', 'P', 'T:r6', 'W:paul-f4Br6s1', 'W:paul-f4Br6s2', 'W:paul-f4Br6s3', null, null, 'W:paul-f4Br6s4', 'W:paul-f4Br6s5', 'W:paul-f4Br6s6', 'W:paul-f4Br6s7', 'W:paul-f4Br6s8', 'T:r6'],
           ['T:r7', 'W:paul-f4Ar7s1', 'W:paul-f4Ar7s2', 'W:paul-f4Ar7s3', 'W:paul-f4Ar7s4', 'W:paul-f4Ar7s5', 'W:paul-f4Ar7s6', 'W:paul-f4Ar7s7', 'W:paul-f4Ar7s8', null, null, 'W:paul-f4Ar7s9', 'W:paul-f4Ar7s10', 'W:paul-f4Ar7s11', 'T:r7', 'P', 'T:r5', 'W:paul-f4Br5s1', 'W:paul-f4Br5s2', 'W:paul-f4Br5s3', null, null, 'W:paul-f4Br5s4', 'W:paul-f4Br5s5', 'W:paul-f4Br5s6', 'W:paul-f4Br5s7', 'W:paul-f4Br5s8', 'T:r5'],
           ['T:r6', 'W:paul-f4Ar6s1', 'W:paul-f4Ar6s2', 'W:paul-f4Ar6s3', 'W:paul-f4Ar6s4', 'W:paul-f4Ar6s5',  null           , 'W:paul-f4Ar6s6', 'W:paul-f4Ar6s7', null, null, 'W:paul-f4Ar6s8',  'W:paul-f4Ar6s9', 'W:paul-f4Ar6s10', 'T:r6', 'P', 'T:r4', 'W:paul-f4Br4s1', 'W:paul-f4Br4s2', 'W:paul-f4Br4s3', null, null, 'W:paul-f4Br4s4', 'W:paul-f4Br4s5', 'W:paul-f4Br4s6', 'W:paul-f4Br4s7', 'W:paul-f4Br4s8', 'T:r4'],
-          ['T:r5', 'W:paul-f4Ar5s1', 'W:paul-f4Ar5s2', 'W:paul-f4Ar5s3', 'W:paul-f4Ar5s4', 'W:paul-f4Ar5s5', 'W:paul-f4Ar5s6', 'W:paul-f4Ar5s7', 'W:paul-f4Ar5s8', null, null, 'W:paul-f4Ar5s9', 'W:paul-f4Ar5s10', 'W:paul-f4Ar5s11', 'T:r5', 'P', 'T:r3', 'W:paul-f4Br3s1', 'W:paul-f4Br3s2', 'W:paul-f4Br3s3', null, null, 'W:paul-f4Br3s4', 'W:paul-f4Br3s5',  null           , 'W:paul-f4Br3s7', 'W:paul-f4Br3s8', 'T:r3'],
+          ['T:r5', 'W:paul-f4Ar5s1', 'W:paul-f4Ar5s2', 'W:paul-f4Ar5s3', 'W:paul-f4Ar5s4', 'W:paul-f4Ar5s5', 'W:paul-f4Ar5s6', 'W:paul-f4Ar5s7', 'W:paul-f4Ar5s8', null, null, 'W:paul-f4Ar5s9', 'W:paul-f4Ar5s10', 'W:paul-f4Ar5s11', 'T:r5', 'P', 'T:r3', 'W:paul-f4Br3s1', 'W:paul-f4Br3s2', 'W:paul-f4Br3s3', null, null, 'W:paul-f4Br3s4', 'W:paul-f4Br3s5',  null           , 'W:paul-f4Br3s6', 'W:paul-f4Br3s7', 'T:r3'],
           ['T:r4', 'W:paul-f4Ar4s1', 'W:paul-f4Ar4s2', 'W:paul-f4Ar4s3', 'W:paul-f4Ar4s4', 'W:paul-f4Ar4s5',  null           ,  null           ,  null           , null, null,  null           ,  null           ,    null           , 'T:r4', 'P', 'T:r2',  null           ,  null           ,  null           , null, null, 'W:paul-f4Br2s1', 'W:paul-f4Br2s2',  null           ,  null           ,  null           , 'T:r2'],
           ['T:r3', 'W:paul-f4Ar3s1', 'W:paul-f4Ar3s2',  null           ,  null           ,  null           ,  null           ,  null           ,  null           , null, null,  null           ,  null           ,    null           , 'T:r3', 'P', 'T:r1',  null           ,  null           ,  null           , null, null, 'W:paul-f4Br1s1', 'W:paul-f4Br1s2',  null           ,  null           ,  null           , 'T:r1'],
           ['T:r2', 'W:paul-f4Ar2s1', 'W:paul-f4Ar2s2', 'W:paul-f4Ar2s3', 'W:paul-f4Ar2s4', 'W:paul-f4Ar2s5',  null           ,  null           ,  null           , null, null,  null           ,  null           ,    null           , 'T:r2', 'P',   null,  null           ,  null           ,  null           , null, null,  null           ,  null           ,  null           ,  null           ,  null           ,   null],
@@ -110,7 +104,6 @@ export class Paris extends Campus implements ICampus {
       new Cluster({
         identifier: 'paul-f5',
         name: 'Hogwarts & Cyberdyne',
-        totalWorkspaces: 62,
         // prettier-ignore
         map: [
           ['T:r6',  null           ,  null           ,  null           ,  null           ,  null           ,  null           ,  null           ,  null           ,  null, null,  null           , 'W:paul-f5Ar6s1',  'W:paul-f5Ar6s2', 'T:r6', 'P', 'T:r6', 'W:paul-f5Br6s1', 'W:paul-f5Br6s2', 'W:paul-f5Br6s3', null, null, 'W:paul-f5Br6s4', 'W:paul-f5Br6s5', 'W:paul-f5Br6s6', 'W:paul-f5Br6s7', 'T:r6'],
@@ -124,7 +117,6 @@ export class Paris extends Campus implements ICampus {
       new Cluster({
         identifier: 'made-f0A',
         name: '',
-        totalWorkspaces: 145,
         // prettier-ignore
         map: [
           ['T:r13', 'W:made-f0Ar13s1', 'W:made-f0Ar13s2', 'W:made-f0Ar13s3', 'W:made-f0Ar13s4', 'W:made-f0Ar13s5', 'W:made-f0Ar13s6', 'T:r13', null, null, null, null, null, null, null, null, null,    null,               null,              null,              null,               null,               null,               null  ],
@@ -146,7 +138,6 @@ export class Paris extends Campus implements ICampus {
       new Cluster({
         identifier: 'made-f0B',
         name: '',
-        totalWorkspaces: 105,
         // prettier-ignore
         map: [
           ['T:r8', 'W:made-f0Br8s1', 'W:made-f0Br8s2', 'W:made-f0Br8s3', 'W:made-f0Br8s4', 'W:made-f0Br8s5', 'W:made-f0Br8s6', null, null,  'W:made-f0Br8s7', 'W:made-f0Br8s8', 'W:made-f0Br8s9', 'W:made-f0Br8s10', 'W:made-f0Br8s11', 'W:made-f0Br8s12', 'W:made-f0Br8s13', null, null, 'W:made-f0Br8s14', 'W:made-f0Br8s15', 'W:made-f0Br8s16', 'W:made-f0Br8s17', 'W:made-f0Br8s18', 'W:made-f0Br8s19', 'T:r8'],
@@ -162,7 +153,6 @@ export class Paris extends Campus implements ICampus {
       new Cluster({
         identifier: 'made-f0C',
         name: '',
-        totalWorkspaces: 72,
         // prettier-ignore
         map: [
           ['T:r13', 'W:made-f0Cr13s1', 'W:made-f0Cr13s2', 'W:made-f0Cr13s3', 'W:made-f0Cr13s4', 'W:made-f0Cr13s5', 'W:made-f0Cr13s6', 'T:r13' ],
@@ -183,7 +173,6 @@ export class Paris extends Campus implements ICampus {
       new Cluster({
         identifier: 'made-f0D',
         name: '',
-        totalWorkspaces: 115,
         // prettier-ignore
         map: [
           ['T:r11', 'W:made-f0Dr11s1', 'W:made-f0Dr11s2', 'W:made-f0Dr11s3', 'W:made-f0Dr11s4', 'W:made-f0Dr11s5', 'W:made-f0Dr11s6', null, null, 'W:made-f0Dr11s7', 'W:made-f0Dr11s8', 'W:made-f0Dr11s9', 'W:made-f0Dr11s10', 'W:made-f0Dr11s11', 'W:made-f0Dr11s12', 'W:made-f0Dr11s13', null, null, 'W:made-f0Dr11s14', 'W:made-f0Dr11s15', 'W:made-f0Dr11s16', 'W:made-f0Dr11s17', 'W:made-f0Dr11s18', 'W:made-f0Dr11s19', 'T:r11'],
