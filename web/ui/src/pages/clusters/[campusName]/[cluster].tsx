@@ -1,7 +1,6 @@
 import {
   ClusterContainerProps,
   ClusterEmpty,
-  ClusterPersonalWorkspace,
   ClusterPillar,
   ClusterRow,
   ClusterTableMap,
@@ -49,14 +48,6 @@ export const IndexPage: NextPage<
 
                   if (entity === null) return <ClusterEmpty key={key} />;
                   if (entity === 'P') return <ClusterPillar key={key} />;
-                  if (entity.startsWith('PW')) {
-                    return (
-                      <ClusterPersonalWorkspace
-                        key={key}
-                        displayText={entity.slice(3)}
-                      />
-                    );
-                  }
                   if (entity.startsWith('T:')) {
                     return (
                       <ClusterEmpty key={key} displayText={entity.slice(2)} />
@@ -88,7 +79,16 @@ export const IndexPage: NextPage<
                     <ClusterWorkspace
                       key={key}
                       identifier={identifier}
-                      displayText={campusData.extractor(identifier).workspace}
+                      displayText={
+                        entity.startsWith('W:')
+                          ? campusData.extractor(identifier).workspace
+                          : undefined
+                      }
+                      kind={
+                        entity.startsWith('PW')
+                          ? 'PERSONAL_WORKSPACE'
+                          : 'WORKSPACE'
+                      }
                     />
                   );
                 })}
