@@ -15,7 +15,6 @@ export class Malaga extends Campus implements ICampus {
     return [
       new Cluster({
         identifier: 'c1',
-        totalWorkspaces: 90,
         // prettier-ignore
         map: [
           ['T:r15', 'W:c1r15p1', 'W:c1r15p2', 'W:c1r15p3', 'W:c1r15p4', 'W:c1r15p5', 'W:c1r15p6', 'T:r15'],
@@ -37,7 +36,6 @@ export class Malaga extends Campus implements ICampus {
       }),
       new Cluster({
         identifier: 'c2',
-        totalWorkspaces: 60,
         // prettier-ignore
         map: [
           ['T:r10', 'W:c2r10p1', 'W:c2r10p2', 'W:c2r10p3', 'W:c2r10p4', 'W:c2r10p5', 'W:c2r10p6', 'T:r10'],
@@ -54,7 +52,6 @@ export class Malaga extends Campus implements ICampus {
       }),
       new Cluster({
         identifier: 'c3',
-        totalWorkspaces: 60,
         // prettier-ignore
         map: [
           ['T:r10', 'W:c2r10p6', 'W:c2r10p5', 'W:c2r10p4', 'W:c2r10p3', 'W:c2r10p2', 'W:c2r10p1', 'T:r10'],

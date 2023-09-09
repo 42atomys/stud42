@@ -79,7 +79,7 @@ describe('contexts', () => {
 
     const link = await findByTestId('location-badge-link');
     expect(link.getAttribute('href')).toContain(
-      `/clusters/paris/paul-f1A?identifier=${validLocation.identifier}`,
+      `/clusters/paris/paul-f1?identifier=${validLocation.identifier}`,
     );
   });
 });

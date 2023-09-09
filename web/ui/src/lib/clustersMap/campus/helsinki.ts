@@ -15,7 +15,6 @@ export class Helsinki extends Campus implements ICampus {
     return [
       new Cluster({
         identifier: 'c1',
-        totalWorkspaces: 79,
         // prettier-ignore
         map: [
           ['T:r6', 'W:c1r6p1', 'W:c1r6p2', 'W:c1r6p3', 'W:c1r6p4', 'W:c1r6p5', 'W:c1r6p6', 'W:c1r6p7', 'W:c1r6p8', 'W:c1r6p9', null,       null,       null,       'W:c1r6p10', 'W:c1r6p11', 'W:c1r6p12', 'W:c1r6p13', 'W:c1r6p14', 'W:c1r6p15', 'W:c1r6p16', 'W:c1r6p17', 'W:c1r6p18', 'W:c1r6p19', 'W:c1r6p20', 'W:c1r6p21', 'T:r6'],
@@ -28,7 +27,6 @@ export class Helsinki extends Campus implements ICampus {
       }),
       new Cluster({
         identifier: 'c2',
-        totalWorkspaces: 76,
         // prettier-ignore
         map: [
           ['T:r6', 'W:c2r6p1', 'W:c2r6p2', 'W:c2r6p3', 'W:c2r6p4', 'W:c2r6p5', 'W:c2r6p6', 'W:c2r6p7', 'W:c2r6p8', 'W:c2r6p9', 'W:c2r6p10', 'W:c2r6p11', 'W:c2r6p12', 'W:c2r6p13', 'T:r6'],
@@ -41,7 +39,6 @@ export class Helsinki extends Campus implements ICampus {
       }),
       new Cluster({
         identifier: 'c3',
-        totalWorkspaces: 32,
         // prettier-ignore
         map: [
           [null, null,   'T:r5',     'W:c3r5p1', 'W:c3r5p2', 'W:c3r5p3', 'W:c3r5p4', 'W:c3r5p5', 'W:c3r5p6' ,'T:r5' , null, null],

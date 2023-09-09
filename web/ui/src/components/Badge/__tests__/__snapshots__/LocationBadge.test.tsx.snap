@@ -58,7 +58,7 @@ exports[`snapshots renders LocationBadge with online location unchanged 1`] = `
 <div>
   <a
     data-testid="location-badge-link"
-    href="/clusters/paris/paul-f1A?identifier=paul-f1Ar1s1"
+    href="/clusters/paris/paul-f1?identifier=paul-f1Ar1s1"
   >
     <div
       class="transition-colors flex w-fit text-gray items-center rounded-full border py-1 px-2 my-2 text-sm bg-emerald-500/20 border-emerald-500 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-500/50 max-w-full"

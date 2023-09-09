@@ -1,6 +1,5 @@
 export {
   ClusterEmpty,
-  ClusterPersonalWorkspace,
   ClusterPillar,
   ClusterRow,
   ClusterTableMap,
