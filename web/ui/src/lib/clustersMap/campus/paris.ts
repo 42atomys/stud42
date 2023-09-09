@@ -17,7 +17,6 @@ export class Paris extends Campus implements ICampus {
       new Cluster({
         identifier: 'bess-f1',
         name: 'Ada',
-        totalWorkspaces: 73,
         // prettier-ignore
         map: [
           ['T:r1',  'PW', 'PW', 'PW', 'PW', null, null, 'W:bess-f1r1s1', 'W:bess-f1r1s2', 'W:bess-f1r1s3', 'W:bess-f1r1s4', 'W:bess-f1r1s5', 'W:bess-f1r1s6', 'W:bess-f1r1s7', 'W:bess-f1r1s8', null, null, 'W:bess-f1r1s9', 'W:bess-f1r1s10', 'W:bess-f1r1s11', 'W:bess-f1r1s12', 'W:bess-f1r1s13', 'W:bess-f1r1s14',  null           , 'T:r1'],
@@ -31,7 +30,6 @@ export class Paris extends Campus implements ICampus {
       new Cluster({
         identifier: 'bess-f2',
         name: 'Hyrule',
-        totalWorkspaces: 100,
         // prettier-ignore
         map: [
           ['T:r1',  'W:bess-f2r1s1', 'W:bess-f2r1s2', 'W:bess-f2r1s3', 'W:bess-f2r1s4', 'W:bess-f2r1s5', 'W:bess-f2r1s6', null, null, 'W:bess-f2r1s7', 'W:bess-f2r1s8', 'W:bess-f2r1s9', 'W:bess-f2r1s10', 'W:bess-f2r1s11', 'W:bess-f2r1s12', 'W:bess-f2r1s13', 'W:bess-f2r1s14', null, null, 'W:bess-f2r1s15', 'W:bess-f2r1s16', 'W:bess-f2r1s17', 'W:bess-f2r1s18', 'W:bess-f2r1s19', 'W:bess-f2r1s20', 'W:bess-f2r1s21', 'T:r1'],
@@ -45,7 +43,6 @@ export class Paris extends Campus implements ICampus {
       new Cluster({
         identifier: 'bess-f3',
         name: 'Turing',
-        totalWorkspaces: 74,
         // prettier-ignore
         map: [
           ['T:r1',  null, null, null, null, null, null, 'W:bess-f3r1s1', 'W:bess-f3r1s2', 'W:bess-f3r1s3', 'W:bess-f3r1s4', 'W:bess-f3r1s5', 'W:bess-f3r1s6', 'W:bess-f3r1s7', 'W:bess-f3r1s8', null, null, 'W:bess-f3r1s9', 'W:bess-f3r1s10', 'W:bess-f3r1s11', 'W:bess-f3r1s12', 'W:bess-f3r1s13', 'W:bess-f3r1s14', 'W:bess-f3r1s15', 'T:r1'],
@@ -59,7 +56,6 @@ export class Paris extends Campus implements ICampus {
       new Cluster({
         identifier: 'bess-f4',
         name: 'Carthage',
-        totalWorkspaces: 70,
         // prettier-ignore
         map: [
           ['T:r1',  null, null, null, null, null, null, 'W:bess-f4r1s1', 'W:bess-f4r1s2', 'W:bess-f4r1s3', 'W:bess-f4r1s4', 'W:bess-f4r1s5', 'W:bess-f4r1s6', 'W:bess-f4r1s7', 'W:bess-f4r1s8', null, null, 'W:bess-f4r1s9',  'W:bess-f4r1s10', 'W:bess-f4r1s11', 'W:bess-f4r1s12', 'W:bess-f4r1s13', 'W:bess-f4r1s14', 'T:r1'],
@@ -73,7 +69,6 @@ export class Paris extends Campus implements ICampus {
       new Cluster({
         identifier: 'paul-f3',
         name: 'Pandora & Citadel',
-        totalWorkspaces: 122,
         // prettier-ignore
         map: [
           [  null,  null           ,  null           ,  null           ,  null           ,  null           ,  null           ,  null           ,  null           , null, null,  null           ,   null           ,   null           ,   null,  'P', 'T:r10', 'W:paul-f3Br1s1',  'W:paul-f3Br1s2',  null           , null, null,  null           ,  null           ,  null           ,  null           ,  null           , 'T:r10'],
@@ -91,7 +86,6 @@ export class Paris extends Campus implements ICampus {
       new Cluster({
         identifier: 'paul-f4',
         name: 'Grid & Upside',
-        totalWorkspaces: 105,
         // prettier-ignore
         map: [
           [  null,  null           ,  null           ,  null           ,  null           ,  null           ,  null           ,  null           ,  null           , null, null,  null           ,   null           ,  null           ,    null, 'P', 'T:r9', 'W:paul-f4Br9s1', 'W:paul-f4Br9s2', 'W:paul-f4Br9s3', null, null,  null           ,  null           ,  null           ,  null           ,  null           , 'T:r9'],
@@ -110,7 +104,6 @@ export class Paris extends Campus implements ICampus {
       new Cluster({
         identifier: 'paul-f5',
         name: 'Hogwarts & Cyberdyne',
-        totalWorkspaces: 62,
         // prettier-ignore
         map: [
           ['T:r6',  null           ,  null           ,  null           ,  null           ,  null           ,  null           ,  null           ,  null           ,  null, null,  null           , 'W:paul-f5Ar6s1',  'W:paul-f5Ar6s2', 'T:r6', 'P', 'T:r6', 'W:paul-f5Br6s1', 'W:paul-f5Br6s2', 'W:paul-f5Br6s3', null, null, 'W:paul-f5Br6s4', 'W:paul-f5Br6s5', 'W:paul-f5Br6s6', 'W:paul-f5Br6s7', 'T:r6'],
