@@ -17,6 +17,15 @@ export const clusterURL = (
     const { clusterWithLetter } =
       Campuses[campusLower as CampusNames].extractor(identifier);
 
+    //! FIXME : this is a hack to fix the fact that the clusterWithLetter is not
+    //! always the same as the cluster name due to paul cluster merging
+    //! (paul-F3A and paul-F3B are now paul-F3) and the fact that the cluster
+    //! name is used in the url to retrieve the cluster data from the API
+    if (clusterWithLetter.startsWith('paul') && campusLower === 'paris') {
+      const mergedIdentifier = clusterWithLetter.slice(0, -1);
+      return `/clusters/${campusLower}/${mergedIdentifier}?identifier=${identifier}`;
+    }
+
     if (clusterWithLetter) {
       return `/clusters/${campusLower}/${clusterWithLetter}?identifier=${identifier}`;
     }
