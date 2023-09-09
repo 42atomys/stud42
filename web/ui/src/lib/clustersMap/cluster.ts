@@ -38,6 +38,12 @@ export class Cluster implements ICluster {
   name = (): string => this._name;
 
   /**
+   * Returns true if the cluster has a custom name.
+   * Returns false if the cluster name is the same as the cluster identifier.
+   */
+  hasName = (): boolean => this._name !== this._identifier;
+
+  /**
    * Cluster identifier (e.g. "c1", "e1").
    */
   identifier = (): string => this._identifier;
