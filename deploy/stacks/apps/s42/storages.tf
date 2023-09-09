@@ -23,7 +23,7 @@ resource "kubernetes_manifest" "rabbitmq" {
       replicas = 1
       # Custom image available at build/packages/rabbitmq used to enable the custom 
       # plugins on rabbitmq (rabbitmq_delayed_message_exchange)
-      image = "ghcr.io/42atomys/s42-rabbitmq:3.10.2-management"
+      image = "ghcr.io/42atomys/s42-rabbitmq:3.11.13-management"
       imagePullSecrets = [
         {
           name = "ghcr-creds"
