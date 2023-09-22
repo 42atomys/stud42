@@ -38,7 +38,7 @@
     "dayjs": "^1.11.7",
     "deepmerge": "^4.2.2",
     "framer-motion": "^10.12.16",
-    "graphql": "^16.6.0",
+    "graphql": "^16.8.1",
     "graphql-request": "^5.1.0",
     "graphql-tag": "^2.12.6",
     "graphql-ws": "^5.14.0",
