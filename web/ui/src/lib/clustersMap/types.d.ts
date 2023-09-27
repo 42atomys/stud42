@@ -10,7 +10,7 @@ export type CampusNames =
   | 'lausanne'
   | 'mulhouse'
   | 'tokyo'
-  | 'sp';
+  | 'São Paulo';
 
 /**
  * Types of Cluster Map entities

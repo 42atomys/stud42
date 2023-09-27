@@ -6,7 +6,7 @@ import { CampusNames, ICampus } from '../types';
 export class SP extends Campus implements ICampus {
   emoji = (): string => '🇧🇷';
 
-  name = (): CampusNames => 'sp';
+  name = (): CampusNames => 'São Paulo';
 
   extractorRegexp = (): RegExp =>
     /(?<clusterWithLetter>c(?<cluster>\d+))(?<rowWithLetter>r(?<row>\d+))(?<workspaceWithLetter>p(?<workspace>\d+))/i;

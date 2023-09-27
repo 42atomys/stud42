@@ -29,7 +29,7 @@ export const Campuses: {
   mulhouse: new Mulhouse(),
   paris: new Paris(),
   seoul: new Seoul(),
-  sp: new SP(),
+  'São Paulo': new SP(),
   tokyo: new Tokyo(),
   vienna: new Vienna(),
 };
