@@ -1,9 +1,10 @@
 import { Helsinki } from './campus/helsinki';
 import { Lausanne } from './campus/lausanne';
 import { Malaga } from './campus/malaga';
-import { Paris } from './campus/paris';
 import { Mulhouse } from './campus/mulhouse';
+import { Paris } from './campus/paris';
 import { Seoul } from './campus/seoul';
+import { SP } from './campus/sp';
 import { Tokyo } from './campus/tokyo';
 import { Vienna } from './campus/vienna';
 import { CampusNames, ICampus } from './types';
@@ -25,9 +26,10 @@ export const Campuses: {
   helsinki: new Helsinki(),
   lausanne: new Lausanne(),
   malaga: new Malaga(),
-  paris: new Paris(),
   mulhouse: new Mulhouse(),
+  paris: new Paris(),
   seoul: new Seoul(),
+  sp: new SP(),
   tokyo: new Tokyo(),
   vienna: new Vienna(),
 };
