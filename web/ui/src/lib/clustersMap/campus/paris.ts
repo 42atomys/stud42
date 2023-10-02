@@ -68,24 +68,24 @@ export class Paris extends Campus implements ICampus {
       }),
       new Cluster({
         identifier: 'paul-f3',
-        name: 'Pandora & Citadel',
+        name: 'Grace & The Citadel',
         // prettier-ignore
         map: [
-          [  null,  null           ,  null           ,  null           ,  null           ,  null           ,  null           ,  null           ,  null           , null, null,  null           ,   null           ,   null           ,   null,  'P', 'T:r10', 'W:paul-f3Br1s1',  'W:paul-f3Br1s2',  null           , null, null,  null           ,  null           ,  null           ,  null           ,  null           , 'T:r10'],
-          ['T:r9',  null           ,  null           ,  null           ,  null           ,  null           ,  null           ,  null           ,  null           , null, null,  null           ,   null           ,  'W:paul-f3Ar9s1',  'T:r9', 'P', 'T:r9',  'W:paul-f3Br9s1',  'W:paul-f3Br9s2', 'W:paul-f3Br9s3', null, null,  null           ,  null           ,  null           ,  null           ,  null           ,  'T:r9'],
-          ['T:r8',  null           ,  null           ,  null           ,  null           ,  null           ,  null           ,  null           ,  null           , null, null, 'W:paul-f3Ar8s1',  'W:paul-f3Ar8s2',  'W:paul-f3Ar8s3',  'T:r8', 'P', 'T:r8',  'W:paul-f3Br8s1',  'W:paul-f3Br8s2', 'W:paul-f3Br8s3', null, null,  null           ,  null           ,  null           ,  null           ,  null           ,  'T:r8'],
-          ['T:r7',  null           ,  null           ,  null           ,  null           ,  null           ,  null           , 'W:paul-f3Ar7s1', 'W:paul-f3Ar7s2', null, null, 'W:paul-f3Ar7s3',  'W:paul-f3Ar7s4',  'W:paul-f3Ar7s5',  'T:r7', 'P', 'T:r7',  'W:paul-f3Br7s1',  'W:paul-f3Br7s2', 'W:paul-f3Br7s3', null, null, 'W:paul-f3Br7s4', 'W:paul-f3Br7s5',  null           , 'W:paul-f3Br7s6', 'W:paul-f3Br7s7',  'T:r7'],
-          ['T:r6',  null           , 'W:paul-f3Ar6s1', 'W:paul-f3Ar6s2', 'W:paul-f3Ar6s3', 'W:paul-f3Ar6s4', 'W:paul-f3Ar6s5', 'W:paul-f3Ar6s6', 'W:paul-f3Ar6s7', null, null, 'W:paul-f3Ar6s8',  'W:paul-f3Ar6s9',  'W:paul-f3Ar6s10', 'T:r6', 'P', 'T:r6',  'W:paul-f3Br6s1',  'W:paul-f3Br6s2', 'W:paul-f3Br6s3', null, null, 'W:paul-f3Br6s4', 'W:paul-f3Br6s5', 'W:paul-f3Br6s6', 'W:paul-f3Br6s7', 'W:paul-f3Br6s8',  'T:r6'],
-          ['T:r5', 'W:paul-f3Ar5s1', 'W:paul-f3Ar5s2', 'W:paul-f3Ar5s3', 'W:paul-f3Ar5s4', 'W:paul-f3Ar5s5', 'W:paul-f3Ar5s6', 'W:paul-f3Ar5s7', 'W:paul-f3Ar5s8', null, null, 'W:paul-f3Ar5s9',  'W:paul-f3Ar5s10', 'W:paul-f3Ar5s11', 'T:r5', 'P', 'T:r5',  'W:paul-f3Br5s1',  'W:paul-f3Br5s2', 'W:paul-f3Br5s3', null, null, 'W:paul-f3Br5s4', 'W:paul-f3Br5s5', 'W:paul-f3Br5s6', 'W:paul-f3Br5s7', 'W:paul-f3Br5s8',  'T:r5'],
-          ['T:r4', 'W:paul-f3Ar4s1', 'W:paul-f3Ar4s2', 'W:paul-f3Ar4s3', 'W:paul-f3Ar4s4', 'W:paul-f3Ar4s5',  null           , 'W:paul-f3Ar4s6', 'W:paul-f3Ar4s7', null, null, 'W:paul-f3Ar4s8',  'W:paul-f3Ar4s9',  'W:paul-f3Ar4s10', 'T:r4', 'P', 'T:r4',  'W:paul-f3Br4s1',  'W:paul-f3Br4s2', 'W:paul-f3Br4s3', null, null, 'W:paul-f3Br4s4', 'W:paul-f3Br4s5', 'W:paul-f3Br4s6', 'W:paul-f3Br4s7', 'W:paul-f3Br4s8',  'T:r4'],
-          ['T:r3', 'W:paul-f3Ar3s1', 'W:paul-f3Ar3s2', 'W:paul-f3Ar3s3', 'W:paul-f3Ar3s4', 'W:paul-f3Ar3s5', 'W:paul-f3Ar3s6', 'W:paul-f3Ar3s7', 'W:paul-f3Ar3s8', null, null, 'W:paul-f3Ar3s9',  'W:paul-f3Ar3s10', 'W:paul-f3Ar3s11', 'T:r3', 'P', 'T:r3',  'W:paul-f3Br3s1',  'W:paul-f3Br3s2', 'W:paul-f3Br3s3', null, null, 'W:paul-f3Br3s4', 'W:paul-f3Br3s5',  null           , 'W:paul-f3Br3s6', 'W:paul-f3Br3s7',  'T:r3'],
-          ['T:r2', 'W:paul-f3Ar2s1', 'W:paul-f3Ar2s2', 'W:paul-f3Ar2s3', 'W:paul-f3Ar2s4', 'W:paul-f3Ar2s5',  null           ,  null           ,  null           , null, null,  null           ,   null           ,   null           ,  'T:r2', 'P', 'T:r2',   null           ,   null           ,  null           , null, null, 'W:paul-f3Br2s1', 'W:paul-f3Br2s2',  null           ,  null           ,  null           ,  'T:r2'],
-          ['T:r1', 'W:paul-f3Ar1s1', 'W:paul-f3Ar1s2',  null           ,  null           ,  null           ,  null           ,  null           ,  null           , null, null,  null           ,   null           ,   null           ,  'T:r1', 'P', 'T:r1',   null           ,   null           ,  null           , null, null, 'W:paul-f3Br1s1', 'W:paul-f3Br1s2',  null           ,  null           ,  null           ,  'T:r1'],
+          [  null,  null           ,  null           ,  null           ,  null           ,  null           ,  null           ,  null           ,  null           , null, null,  null           ,   null           ,   null           ,   null,  'P', 'T:r10', 'W:paul-f3Br10s1', 'W:paul-f3Br10s2', null            , null, null, 'PW'           ,  'PW'           ,  'P'            ,  'PW'           ,  'PW'           , 'T:r10'],
+          ['T:r9',  null           ,  null           ,  null           ,  null           ,  null           ,  null           ,  null           ,  null           , null, null,  null           ,   null           ,  'W:paul-f3Ar9s1',  'T:r9', 'P', 'T:r9',  'W:paul-f3Br9s1',  'W:paul-f3Br9s2',  'W:paul-f3Br9s3', null, null, null           ,  'PW'           ,  'PW'           ,  'PW'           ,  'PW'           ,  'T:r9'],
+          ['T:r8',  null           ,  null           ,  null           ,  null           ,  null           ,  null           ,  null           ,  null           , null, null, 'W:paul-f3Ar8s1',  'W:paul-f3Ar8s2',  'W:paul-f3Ar8s3',  'T:r8', 'P', 'T:r8',  'W:paul-f3Br8s1',  'W:paul-f3Br8s2',  'W:paul-f3Br8s3', null, null, null           ,  null           ,  null           ,  null           ,  null           ,  'T:r8'],
+          ['T:r7',  null           ,  null           ,  null           ,  null           ,  null           ,  null           , 'W:paul-f3Ar7s1', 'W:paul-f3Ar7s2', null, null, 'W:paul-f3Ar7s3',  'W:paul-f3Ar7s4',  'W:paul-f3Ar7s5',  'T:r7', 'P', 'T:r7',  'W:paul-f3Br7s1',  'W:paul-f3Br7s2',  'W:paul-f3Br7s3', null, null, 'W:paul-f3Br7s4', 'W:paul-f3Br7s5',  null           , 'W:paul-f3Br7s6', 'W:paul-f3Br7s7',  'T:r7'],
+          ['T:r6',  null           , 'W:paul-f3Ar6s1', 'W:paul-f3Ar6s2', 'W:paul-f3Ar6s3', 'W:paul-f3Ar6s4', 'W:paul-f3Ar6s5', 'W:paul-f3Ar6s6', 'W:paul-f3Ar6s7', null, null, 'W:paul-f3Ar6s8',  'W:paul-f3Ar6s9',  'W:paul-f3Ar6s10', 'T:r6', 'P', 'T:r6',  'W:paul-f3Br6s1',  'W:paul-f3Br6s2',  'W:paul-f3Br6s3', null, null, 'W:paul-f3Br6s4', 'W:paul-f3Br6s5', 'W:paul-f3Br6s6', 'W:paul-f3Br6s7', 'W:paul-f3Br6s8',  'T:r6'],
+          ['T:r5', 'W:paul-f3Ar5s1', 'W:paul-f3Ar5s2', 'W:paul-f3Ar5s3', 'W:paul-f3Ar5s4', 'W:paul-f3Ar5s5', 'W:paul-f3Ar5s6', 'W:paul-f3Ar5s7', 'W:paul-f3Ar5s8', null, null, 'W:paul-f3Ar5s9',  'W:paul-f3Ar5s10', 'W:paul-f3Ar5s11', 'T:r5', 'P', 'T:r5',  'W:paul-f3Br5s1',  'W:paul-f3Br5s2',  'W:paul-f3Br5s3', null, null, 'W:paul-f3Br5s4', 'W:paul-f3Br5s5', 'W:paul-f3Br5s6', 'W:paul-f3Br5s7', 'W:paul-f3Br5s8',  'T:r5'],
+          ['T:r4', 'W:paul-f3Ar4s1', 'W:paul-f3Ar4s2', 'W:paul-f3Ar4s3', 'W:paul-f3Ar4s4', 'W:paul-f3Ar4s5',  null           , 'W:paul-f3Ar4s6', 'W:paul-f3Ar4s7', null, null, 'W:paul-f3Ar4s8',  'W:paul-f3Ar4s9',  'W:paul-f3Ar4s10', 'T:r4', 'P', 'T:r4',  'W:paul-f3Br4s1',  'W:paul-f3Br4s2',  'W:paul-f3Br4s3', null, null, 'W:paul-f3Br4s4', 'W:paul-f3Br4s5', 'W:paul-f3Br4s6', 'W:paul-f3Br4s7', 'W:paul-f3Br4s8',  'T:r4'],
+          ['T:r3', 'W:paul-f3Ar3s1', 'W:paul-f3Ar3s2', 'W:paul-f3Ar3s3', 'W:paul-f3Ar3s4', 'W:paul-f3Ar3s5', 'W:paul-f3Ar3s6', 'W:paul-f3Ar3s7', 'W:paul-f3Ar3s8', null, null, 'W:paul-f3Ar3s9',  'W:paul-f3Ar3s10', 'W:paul-f3Ar3s11', 'T:r3', 'P', 'T:r3',  'W:paul-f3Br3s1',  'W:paul-f3Br3s2',  'W:paul-f3Br3s3', null, null, 'W:paul-f3Br3s4', 'W:paul-f3Br3s5',  null           , 'W:paul-f3Br3s6', 'W:paul-f3Br3s7',  'T:r3'],
+          ['T:r2', 'W:paul-f3Ar2s1', 'W:paul-f3Ar2s2', 'W:paul-f3Ar2s3', 'W:paul-f3Ar2s4', 'W:paul-f3Ar2s5',  null           ,  null           ,  null           , null, null,  null           ,   null           ,   null           ,  'T:r2', 'P', 'T:r2',   null           ,   null           ,  null            , null, null, 'W:paul-f3Br2s1', 'W:paul-f3Br2s2',  null           ,  null           ,  null           ,  'T:r2'],
+          ['T:r1', 'W:paul-f3Ar1s1', 'W:paul-f3Ar1s2',  null           ,  null           ,  null           ,  null           ,  null           ,  null           , null, null,  null           ,   null           ,   null           ,  'T:r1', 'P', 'T:r1',   null           ,   null           ,  null            , null, null, 'W:paul-f3Br1s1', 'W:paul-f3Br1s2',  null           ,  null           ,  null           ,  'T:r1'],
         ],
       }),
       new Cluster({
         identifier: 'paul-f4',
-        name: 'Grid & Upside',
+        name: 'The Grid & The Upside Down',
         // prettier-ignore
         map: [
           [  null,  null           ,  null           ,  null           ,  null           ,  null           ,  null           ,  null           ,  null           , null, null,  null           ,   null           ,  null           ,    null, 'P', 'T:r9', 'W:paul-f4Br9s1', 'W:paul-f4Br9s2', 'W:paul-f4Br9s3', null, null,  null           ,  null           ,  null           ,  null           ,  null           , 'T:r9'],
@@ -110,13 +110,13 @@ export class Paris extends Campus implements ICampus {
           ['T:r5',  null           ,  null           ,  null           ,  null           ,  null           ,  null           ,  null           ,  null           ,  null, null, 'W:paul-f5Ar5s1', 'W:paul-f5Ar5s2',  'W:paul-f5Ar5s3', 'T:r5', 'P', 'T:r5', 'W:paul-f5Br5s1', 'W:paul-f5Br5s2', 'W:paul-f5Br5s3', null, null, 'W:paul-f5Br5s4', 'W:paul-f5Br5s5', 'W:paul-f5Br5s6', 'W:paul-f5Br5s7', 'T:r5'],
           ['T:r4',  null           ,  null           ,  null           ,  null           ,  null           ,  null           , 'W:paul-f5Ar4s1', 'W:paul-f5Ar4s2',  null, null, 'W:paul-f5Ar4s3', 'W:paul-f5Ar4s4',  'W:paul-f5Ar4s5', 'T:r4', 'P', 'T:r4', 'W:paul-f5Br4s1', 'W:paul-f5Br4s2', 'W:paul-f5Br4s3', null, null, 'W:paul-f5Br4s4', 'W:paul-f5Br4s5', 'W:paul-f5Br4s6', 'W:paul-f5Br4s7', 'T:r4'],
           ['T:r3',  null           , 'W:paul-f5Ar3s1', 'W:paul-f5Ar3s2', 'W:paul-f5Ar3s3', 'W:paul-f5Ar3s4', 'W:paul-f5Ar3s5', 'W:paul-f5Ar3s6', 'W:paul-f5Ar3s7',  null, null, 'W:paul-f5Ar3s8', 'W:paul-f5Ar3s9', 'W:paul-f5Ar3s10', 'T:r3', 'P', 'T:r3', 'W:paul-f5Br3s1', 'W:paul-f5Br3s2', 'W:paul-f5Br3s3', null, null, 'W:paul-f5Br3s4', 'W:paul-f5Br3s5',  null           , 'W:paul-f5Br3s6', 'T:r3'],
-          ['T:r2', 'W:paul-f5Ar3s1', 'W:paul-f5Ar3s2', 'W:paul-f5Ar3s3', 'W:paul-f5Ar3s4', 'W:paul-f5Ar3s5',  null           ,  null           ,  null           ,  null, null,  null           ,  null           ,   null           , 'T:r2', 'P', 'T:r2',  null           ,  null           ,  null           , null, null,  null           , 'W:paul-f5Br2s1',  null           , 'W:paul-f5Br2s2', 'T:r2'],
+          ['T:r2', 'W:paul-f5Ar2s1', 'W:paul-f5Ar2s2', 'W:paul-f5Ar2s3', 'W:paul-f5Ar2s4', 'W:paul-f5Ar2s5',  null           ,  null           ,  null           ,  null, null,  null           ,  null           ,   null           , 'T:r2', 'P', 'T:r2',  null           ,  null           ,  null           , null, null,  null           , 'W:paul-f5Br2s1',  null           , 'W:paul-f5Br2s2', 'T:r2'],
           ['T:r1', 'W:paul-f5Ar1s1', 'W:paul-f5Ar1s2', 'W:paul-f5Ar1s3', 'W:paul-f5Ar1s4', 'W:paul-f5Ar1s5',  null           ,  null           ,  null           ,  null, null,  null           ,  null           ,   null           , 'T:r1', 'P', 'T:r1',  null           ,  null           ,  null           , null, null,  null           , 'W:paul-f5Br1s1', 'W:paul-f5Br1s2', 'W:paul-f5Br1s3', 'T:r1'],
         ],
       }),
       new Cluster({
         identifier: 'made-f0A',
-        name: '',
+        name: 'Bogden 3',
         // prettier-ignore
         map: [
           ['T:r13', 'W:made-f0Ar13s1', 'W:made-f0Ar13s2', 'W:made-f0Ar13s3', 'W:made-f0Ar13s4', 'W:made-f0Ar13s5', 'W:made-f0Ar13s6', 'T:r13', null, null, null, null, null, null, null, null, null,    null,               null,              null,              null,               null,               null,               null  ],
@@ -137,7 +137,7 @@ export class Paris extends Campus implements ICampus {
       }),
       new Cluster({
         identifier: 'made-f0B',
-        name: '',
+        name: 'The Void',
         // prettier-ignore
         map: [
           ['T:r8', 'W:made-f0Br8s1', 'W:made-f0Br8s2', 'W:made-f0Br8s3', 'W:made-f0Br8s4', 'W:made-f0Br8s5', 'W:made-f0Br8s6', null, null,  'W:made-f0Br8s7', 'W:made-f0Br8s8', 'W:made-f0Br8s9', 'W:made-f0Br8s10', 'W:made-f0Br8s11', 'W:made-f0Br8s12', 'W:made-f0Br8s13', null, null, 'W:made-f0Br8s14', 'W:made-f0Br8s15', 'W:made-f0Br8s16', 'W:made-f0Br8s17', 'W:made-f0Br8s18', 'W:made-f0Br8s19', 'T:r8'],
@@ -152,7 +152,7 @@ export class Paris extends Campus implements ICampus {
       }),
       new Cluster({
         identifier: 'made-f0C',
-        name: '',
+        name: 'Kaer morhen',
         // prettier-ignore
         map: [
           ['T:r13', 'W:made-f0Cr13s1', 'W:made-f0Cr13s2', 'W:made-f0Cr13s3', 'W:made-f0Cr13s4', 'W:made-f0Cr13s5', 'W:made-f0Cr13s6', 'T:r13' ],
@@ -168,11 +168,12 @@ export class Paris extends Campus implements ICampus {
           ['T:r3',  'W:made-f0Cr3s1',  'W:made-f0Cr3s2',  'W:made-f0Cr3s3',  'W:made-f0Cr3s4',  'W:made-f0Cr3s5',  'W:made-f0Cr3s6',  'T:r3'  ],
           ['T:r2',  'W:made-f0Cr2s1',  'W:made-f0Cr2s2',  'W:made-f0Cr2s3',  'W:made-f0Cr2s4',  'W:made-f0Cr2s5',  'W:made-f0Cr2s6',  'T:r2'  ],
           ['T:r1',  'P',               'W:made-f0Cr1s1',  'P',               'W:made-f0Cr1s2',  'P',               'W:made-f0Cr1s3',  'T:r1'  ],
+          ['T:',    'PW',              'PW'            ,  'PW',              'PW',              'PW',              'PW',              'T:'    ],
         ],
       }),
       new Cluster({
         identifier: 'made-f0D',
-        name: '',
+        name: 'Gallifrey',
         // prettier-ignore
         map: [
           ['T:r11', 'W:made-f0Dr11s1', 'W:made-f0Dr11s2', 'W:made-f0Dr11s3', 'W:made-f0Dr11s4', 'W:made-f0Dr11s5', 'W:made-f0Dr11s6', null, null, 'W:made-f0Dr11s7', 'W:made-f0Dr11s8', 'W:made-f0Dr11s9', 'W:made-f0Dr11s10', 'W:made-f0Dr11s11', 'W:made-f0Dr11s12', 'W:made-f0Dr11s13', null, null, 'W:made-f0Dr11s14', 'W:made-f0Dr11s15', 'W:made-f0Dr11s16', 'W:made-f0Dr11s17', 'W:made-f0Dr11s18', 'W:made-f0Dr11s19', 'T:r11'],
