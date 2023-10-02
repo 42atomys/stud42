@@ -1,8 +1,8 @@
 import { Helsinki } from './campus/helsinki';
 import { Lausanne } from './campus/lausanne';
 import { Malaga } from './campus/malaga';
-import { Paris } from './campus/paris';
 import { Mulhouse } from './campus/mulhouse';
+import { Paris } from './campus/paris';
 import { Seoul } from './campus/seoul';
 import { Tokyo } from './campus/tokyo';
 import { Vienna } from './campus/vienna';
@@ -31,7 +31,7 @@ export const Campuses: {
   seoul: new Seoul(),
   tokyo: new Tokyo(),
   vienna: new Vienna(),
-	wolfsburg: new Wolfsburg(),
+  wolfsburg: new Wolfsburg(),
 };
 
 export { countryEmoji } from './countryEmoji';

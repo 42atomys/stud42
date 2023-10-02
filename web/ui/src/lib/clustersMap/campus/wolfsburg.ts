@@ -3,7 +3,7 @@ import { Cluster } from '../cluster';
 import { CampusNames, ICampus } from '../types';
 
 //
-export class Malaga extends Campus implements ICampus {
+export class Wolfsburg extends Campus implements ICampus {
   emoji = (): string => '🇩🇪';
 
   name = (): CampusNames => 'wolfsburg';
@@ -15,7 +15,6 @@ export class Malaga extends Campus implements ICampus {
     return [
       new Cluster({
         identifier: 'c1',
-        totalWorkspaces: 75,
         // prettier-ignore
         map: [
           ['T:s17', 'W:c1s15d73', 'W:c1s15d74', 'W:c1s15d75',null, null, null, 'T:s15'],
@@ -38,7 +37,6 @@ export class Malaga extends Campus implements ICampus {
       }),
       new Cluster({
         identifier: 'c2',
-        totalWorkspaces: 129,
         // prettier-ignore
         map: [
           ['T:s19', 'W:c2s10d120', 'W:c2s10d121', 'W:c2s10d122', 'W:c2s10d123', 'W:c2s10d124', 'W:c2s10d125', 'W:c2s10d126', 'W:c2s10d127', 'W:c2s10d128', 'W:c2s10d129','T:s19'],
@@ -61,7 +59,7 @@ export class Malaga extends Campus implements ICampus {
           ['T:s2',  'W:c2s2d3',  'W:c2s2d4',  'W:c2s2d5',  		null,  			 null, 			  null, 		'T:s2' ],
 					['T:s1',  'W:c2s1d1',  'W:c2s1d2',     null, 				null,        null,        null, 		'T:s1' ],
         ],
-      })
-   ];
+      }),
+    ];
   }
 }
