@@ -25,7 +25,7 @@ jobs:
     steps:
       # Checkout the repository to the GitHub Actions runner
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       # Configure the kube config
       - env:
           KUBECONFIG_ADMIN: ${{ secrets.KUBECONFIG_ADMIN }}
@@ -73,7 +73,7 @@ jobs:
     steps:
       # Checkout the repository to the GitHub Actions runner
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       # Get all deployement from "previews" environment and set it as inactive
       - name: Turn of deployment
         uses: actions/github-script@v6
