@@ -54,7 +54,7 @@
     "tailwind-variants": "^0.1.13",
     "twemoji": "^14.0.2",
     "uuid": "^9.0.0",
-    "yaml": "^2.3.1"
+    "yaml": "^2.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.7",
