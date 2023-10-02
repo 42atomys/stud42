@@ -37,6 +37,8 @@ export interface ICluster {
   // Custom cluster name (e.g. "Metropolis").
   // If not set, the cluster name will be the cluster identifier.
   name(): string;
+  // hasName() returns true if the cluster has a custom name.
+  hasName(): boolean;
   // Cluster identifier (e.g. "c1", "e1").
   identifier(): string;
   // Total number of available workspaces in the cluster (e.g. 20).

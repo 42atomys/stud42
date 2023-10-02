@@ -1,5 +1,6 @@
 import { useSidebar } from '@components/Sidebar';
 import Soon from '@components/Soon';
+import Head from 'next/head';
 
 type PageProps = {};
 
@@ -11,6 +12,9 @@ const IndexPage: PageProps = () => {
       <PageContainer>
         <Sidebar></Sidebar>
         <PageContent className="flex-1 flex h-100vh justify-center items-center">
+          <Head>
+            <title>Feed - S42</title>
+          </Head>
           <Soon />
         </PageContent>
       </PageContainer>

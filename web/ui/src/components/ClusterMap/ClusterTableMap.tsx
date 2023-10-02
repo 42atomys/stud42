@@ -118,46 +118,30 @@ export const ClusterWorkspaceWithUser = ({
 export const ClusterWorkspace = ({
   identifier,
   displayText,
+  kind = 'WORKSPACE',
 }: {
   identifier: string;
   displayText?: string;
+  kind?: 'WORKSPACE' | 'PERSONAL_WORKSPACE';
 }) => {
-  return (
-    <div className="flex flex-1 flex-col justify-center items-center m-0.5 rounded text-slate-500">
-      <span className="opacity-50">
-        <i className="fa-light fa-computer"></i>
-      </span>
-      <span className="text-xs">{displayText || identifier}</span>
-    </div>
-  );
-};
-
-/**
- * ClusterPersonalWorkspace component is used to display a workspace space for
- * personal computer in a `ClusterRow`
- */
-export const ClusterPersonalWorkspace = ({
-  identifier,
-  displayText,
-}: {
-  identifier?: string;
-  displayText?: string;
-}) => {
-  const hasDisplayText = displayText || identifier;
   return (
     <div className="flex flex-1 flex-col justify-center items-center m-0.5 rounded text-slate-500">
       <Tooltip
-        text="Personal Workspace"
+        text={kind === 'WORKSPACE' ? identifier : 'Personal Workspace'}
         size="xs"
         color="black"
         direction="top"
+        className="flex flex-col justify-center items-center"
       >
         <span className="opacity-50">
-          <i className="fa-light fa-laptop"></i>
+          <i
+            className={classNames('fa-light', {
+              'fa-computer': kind === 'WORKSPACE',
+              'fa-laptop': kind === 'PERSONAL_WORKSPACE',
+            })}
+          ></i>
         </span>
-        {hasDisplayText && (
-          <span className="text-xs">{displayText || identifier}</span>
-        )}
+        <span className="text-xs">{displayText || identifier}</span>
       </Tooltip>
     </div>
   );
@@ -169,12 +153,12 @@ export const ClusterPersonalWorkspace = ({
  */
 export const ClusterPillar = () => {
   return (
-    <div className="flex flex-1 flex-col justify-center items-center m-0.5 rounded bg-slate-200 dark:bg-slate-900"></div>
+    <div className="flex flex-1 flex-col justify-center items-center m-0.5 rounded bg-slate-200 dark:bg-slate-950"></div>
   );
 };
 
 /**
- * ClusterPillar component is used to display an empty space in a `ClusterRow`.
+ * ClusterEmpty component is used to display an empty space in a `ClusterRow`.
  * Principally used to display a path in the cluster.
  */
 export const ClusterEmpty = ({ displayText }: { displayText?: string }) => {

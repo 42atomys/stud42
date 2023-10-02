@@ -87,7 +87,9 @@ module "crawler_locations" {
   enabled = var.crawlerEnabled
   kind    = "CronJob"
 
-  name            = "crawler-locations"
+  for_each = local.campusToRefreshEachHourManually
+
+  name            = "crawler-locations-${each.key}"
   appName         = "crawler-locations"
   appVersion      = var.appVersion
   namespace       = var.namespace
@@ -95,7 +97,7 @@ module "crawler_locations" {
   imagePullPolicy = var.namespace == "previews" ? "Always" : "IfNotPresent"
 
   command = ["stud42cli"]
-  args    = ["--config", "/config/stud42.yaml", "jobs", "crawler", "locations"]
+  args    = ["--config", "/config/stud42.yaml", "jobs", "crawler", "locations", "-c", "${each.value}"]
 
   nodeSelector = local.nodepoolSelector["services"]
 
@@ -107,7 +109,7 @@ module "crawler_locations" {
 
   # Each hour due to webhooks is not correctly triggered on 42API
   # THIS IS USED AS WORKAROUND FOR THIS BUG.
-  jobSchedule                   = "0 * * * *"
+  jobSchedule                   = "${index(keys(local.campusToRefreshEachHourManually), each.key)} * * * *"
   jobSuccessfulJobsHistoryLimit = 1
   jobFailedJobsHistoryLimit     = 3
   jobConcurrencyPolicy          = "Forbid"

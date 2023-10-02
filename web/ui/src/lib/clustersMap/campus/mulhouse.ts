@@ -15,7 +15,6 @@ export class Mulhouse extends Campus implements ICampus {
     return [
       new Cluster({
         identifier: 'k0',
-        totalWorkspaces: 56,
         // prettier-ignore
         map: [
           ['T:r4', 'W:k0r4p1', 'W:k0r4p2', 'W:k0r4p3', 'W:k0r4p4', 'W:k0r4p5', 'W:k0r4p6', 'W:k0r4p7', 'W:k0r4p8', 'W:k0r4p9', 'W:k0r4p10', 'W:k0r4p11', 'W:k0r4p12', null, null, 'W:k0r4p13', 'W:k0r4p14', 'T:r4'],
@@ -28,7 +27,6 @@ export class Mulhouse extends Campus implements ICampus {
       }),
       new Cluster({
         identifier: 'k1',
-        totalWorkspaces: 64,
         // prettier-ignore
         map: [
           ['T:r4', 'W:k1r4p1', 'W:k1r4p2', 'W:k1r4p3', 'W:k1r4p4', 'W:k1r4p5', 'W:k1r4p6', 'W:k1r4p7', 'W:k1r4p8', null, null, 'W:k1r4p9', 'W:k1r4p10', 'W:k1r4p11', 'W:k1r4p12', 'W:k1r4p13', 'W:k1r4p14', 'W:k1r4p15', 'W:k1r4p16', 'T:r4'],
@@ -41,7 +39,6 @@ export class Mulhouse extends Campus implements ICampus {
       }),
       new Cluster({
         identifier: 'k2',
-        totalWorkspaces: 40,
         // prettier-ignore
         map: [
           ['T:r4', 'W:k2r4p1', 'W:k2r4p2', null, null, 'W:k2r4p3', 'W:k2r4p4', 'W:k2r4p5', 'W:k2r4p6', 'W:k2r4p7', 'W:k2r4p8', 'W:k2r4p9', 'W:k2r4p10', 'T:r4'],

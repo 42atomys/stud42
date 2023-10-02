@@ -128,8 +128,17 @@ export const ClusterSidebar = ({
                             activeCampus &&
                             clusterIdentifier == activeClusterIdentifier
                           }
-                          name={cluster.name()}
-                          leftChildren={clusterIdentifier.toUpperCase()}
+                          name={
+                            cluster.hasName()
+                              ? cluster.name()
+                              : clusterIdentifier.toUpperCase()
+                          }
+                          className="[&>div>span:first-of-type]:overflow-hidden [&>div>span]:whitespace-pre [&>div>span]:text-ellipsis"
+                          leftChildren={
+                            cluster.hasName()
+                              ? clusterIdentifier.toUpperCase()
+                              : null
+                          }
                           rightChildren={
                             activeCampus ? (
                               <>

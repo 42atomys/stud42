@@ -5,7 +5,6 @@ import { ClusterMapEntity, ICluster } from './types';
  * cluster name, identifier, total number of workspaces and the cluster map.
  * @param name Cluster name (e.g. "Metropolis")
  * @param identifier Cluster identifier (e.g. "c1", "e1")
- * @param totalWorkspaces Total number of available workspaces in the cluster (e.g. 20)
  * @param map Cluster map (2D array of ClusterMapEntity)
  */
 export class Cluster implements ICluster {
@@ -20,17 +19,15 @@ export class Cluster implements ICluster {
   constructor({
     name,
     identifier,
-    totalWorkspaces,
     map,
   }: {
     name?: string;
     identifier: string;
-    totalWorkspaces: number;
     map: ClusterMapEntity[][];
   }) {
     this._name = name || identifier;
     this._identifier = identifier;
-    this._totalWorkspaces = totalWorkspaces;
+    this._totalWorkspaces = this.calculateTotalWorkspaces(map);
     this._map = map;
   }
 
@@ -39,6 +36,12 @@ export class Cluster implements ICluster {
    * If not set, the cluster name will be the cluster identifier.
    */
   name = (): string => this._name;
+
+  /**
+   * Returns true if the cluster has a custom name.
+   * Returns false if the cluster name is the same as the cluster identifier.
+   */
+  hasName = (): boolean => this._name !== this._identifier;
 
   /**
    * Cluster identifier (e.g. "c1", "e1").
@@ -56,4 +59,12 @@ export class Cluster implements ICluster {
    * Each entry in the row represents an `ClusterMapEntity` in the cluster map.
    */
   map = (): ClusterMapEntity[][] => this._map;
+
+  /**
+   * Calculates the total number of workspaces in the cluster map by counting
+   * the number of entities has identified as a workspace.
+   */
+  private calculateTotalWorkspaces(map: ClusterMapEntity[][]): number {
+    return map.flat().filter((entity) => entity?.startsWith('W:')).length;
+  }
 }

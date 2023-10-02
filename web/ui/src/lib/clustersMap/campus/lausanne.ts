@@ -16,7 +16,6 @@ export class Lausanne extends Campus implements ICampus {
       new Cluster({
         identifier: 'c1',
         name: 'Gotham',
-        totalWorkspaces: 110,
         // prettier-ignore
         map: [
           [   null,        null,        null,        null,        null,        null,        null,        null,        null,        null,        null,     'T:r11',        null,     'T:r9',        null,     'T:r7',        null,     'T:r5',        null,     'T:r3',        null,     'T:r1'],
@@ -43,7 +42,6 @@ export class Lausanne extends Campus implements ICampus {
       new Cluster({
         identifier: 'c2',
         name: 'Asgard',
-        totalWorkspaces: 71,
         // prettier-ignore
         map: [
           [null,        null,        null,        null,        null,        null,        null,        null,        null,     'T:r4',     'T:r5',     'T:r6',     'T:r7',     'T:r8',     'T:r9' ],
@@ -64,7 +62,6 @@ export class Lausanne extends Campus implements ICampus {
       new Cluster({
         identifier: 'c3',
         name: 'Salle sur demande',
-        totalWorkspaces: 30,
         // prettier-ignore
         map: [
           [null, 'T:r6', 'W:c3r6s1', 'W:c3r6s2', 'W:c3r6s3', 'W:c3r6s4', 'W:c3r6s5', null, null, null, null,  null],

@@ -5,7 +5,7 @@ const Home: NextPage = () => {
   return (
     <div>
       <Head>
-        <title>Stud42 UI</title>
+        <title>S42.App</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
     </div>
