@@ -102,10 +102,10 @@ export const ClusterSidebar = ({
                 ? 1
                 : a.localeCompare(b);
             })
-            .map((campusName) => {
-              const campusData = Campuses[campusName];
+            .map((campusIdentifier) => {
+              const campusData = Campuses[campusIdentifier];
               const isMyCampus =
-                campusName?.equalsIgnoreCase(myCampusidentifier);
+                campusIdentifier?.equalsIgnoreCase(myCampusidentifier);
               const activeCampus =
                 activeCampusIdentifier == campusData.identifier();
 
