@@ -43,7 +43,7 @@ jobs:
       stacks: ${{ steps.detected_stack.outputs.stacks }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Expose stack to deploy
         uses: actions/github-script@v6
         id: detected_stack
@@ -84,7 +84,7 @@ jobs:
     steps:
       # Checkout the repository to the GitHub Actions runner
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       # Configure the kube config
       - env:
           KUBECONFIG_ADMIN: ${{ secrets.KUBECONFIG_ADMIN }}

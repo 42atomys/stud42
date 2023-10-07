@@ -7,6 +7,7 @@ import { Seoul } from './campus/seoul';
 import { SP } from './campus/sp';
 import { Tokyo } from './campus/tokyo';
 import { Vienna } from './campus/vienna';
+import { Wolfsburg } from './campus/wolfsburg';
 import { CampusNames, ICampus } from './types';
 
 /**
@@ -32,6 +33,7 @@ export const Campuses: {
   'São Paulo': new SP(),
   tokyo: new Tokyo(),
   vienna: new Vienna(),
+  wolfsburg: new Wolfsburg(),
 };
 
 export { countryEmoji } from './countryEmoji';
