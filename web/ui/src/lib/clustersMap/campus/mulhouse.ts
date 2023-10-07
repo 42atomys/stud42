@@ -1,12 +1,12 @@
 import { Campus } from '../campus';
 import { Cluster } from '../cluster';
-import { CampusNames, ICampus } from '../types';
+import { ICampus } from '../types';
 
 //
 export class Mulhouse extends Campus implements ICampus {
   emoji = (): string => '🇫🇷';
 
-  name = (): CampusNames => 'mulhouse';
+  name = (): string => 'Mulhouse';
 
   extractorRegexp = (): RegExp =>
     /(?<clusterWithLetter>k(?<cluster>\d+))(?<rowWithLetter>r(?<row>\d+))(?<workspaceWithLetter>p(?<workspace>\d+))/i;

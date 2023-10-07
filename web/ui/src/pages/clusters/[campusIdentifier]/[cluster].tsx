@@ -9,7 +9,7 @@ import {
   extractNode,
 } from '@components/ClusterMap';
 import { ClusterContainer } from '@components/ClusterMap/ClusterContainer';
-import { CampusNames, Campuses } from '@lib/clustersMap';
+import { CampusIdentifier, Campuses } from '@lib/clustersMap';
 import '@lib/prototypes/string';
 import {
   GetStaticPaths,
@@ -21,9 +21,9 @@ import Error from 'next/error';
 import Head from 'next/head';
 
 export const IndexPage: NextPage<
-  ClusterContainerProps & { campusName: CampusNames }
-> = ({ campusName = 'vienna', cluster }) => {
-  const campusData = Campuses[campusName];
+  ClusterContainerProps & { campusIdentifier: CampusIdentifier }
+> = ({ campusIdentifier, cluster }) => {
+  const campusData = Campuses[campusIdentifier];
   const clusterData = campusData?.cluster(cluster);
 
   if (!campusData || !clusterData) {
@@ -38,7 +38,7 @@ export const IndexPage: NextPage<
           - S42
         </title>
       </Head>
-      <ClusterContainer campus={campusData.name()} cluster={cluster}>
+      <ClusterContainer campus={campusData.identifier()} cluster={cluster}>
         {({ locations, showPopup }) => (
           <ClusterTableMap>
             {clusterData.map().map((row, i) => (
@@ -104,12 +104,15 @@ export const IndexPage: NextPage<
 export const getStaticPaths: GetStaticPaths = async () => {
   const paths = [] as GetStaticPathsResult['paths'];
 
-  Object.keys(Campuses).map((campusName) => {
-    const campus = Campuses[campusName as CampusNames];
+  Object.keys(Campuses).map((key) => {
+    const campus = Campuses[key as CampusIdentifier];
 
     campus.clusters().map((cluster) => {
       paths.push({
-        params: { campusName: campusName, cluster: cluster.identifier() },
+        params: {
+          campusIdentifier: campus.link(),
+          cluster: cluster.identifier(),
+        },
       });
     });
   });
@@ -121,11 +124,21 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps = ({ params = {} }) => {
-  const { campusName, cluster } = params;
+  const { campusIdentifier, cluster } = params;
+
+  const campus = Object.values(Campuses).find(
+    (v) => v.name().toSafeLink() === campusIdentifier,
+  );
+
+  if (!campus) {
+    return {
+      notFound: true,
+    };
+  }
 
   return {
     props: {
-      campusName,
+      campusIdentifier: campus?.identifier(),
       cluster,
     },
   };

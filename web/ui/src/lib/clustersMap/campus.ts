@@ -1,4 +1,5 @@
-import { CampusNames, ICampus, ICluster } from './types';
+import Campuses from '.';
+import { CampusIdentifier, CampusLink, ICampus, ICluster } from './types';
 
 /**
  * Campus class represents a campus in the cluster map. It contains the
@@ -9,8 +10,20 @@ export class Campus implements ICampus {
     throw new Error('Method not implemented.');
   }
 
-  name(): CampusNames {
+  name(): string {
     throw new Error('Method not implemented.');
+  }
+
+  identifier(): CampusIdentifier {
+    return Object.keys(Campuses).find(
+      (key) => Campuses[key as CampusIdentifier] === this,
+    ) as CampusIdentifier;
+  }
+
+  link(): CampusLink {
+    return this.identifier()
+      .replace(/([A-Z])/g, '-$1')
+      .toLowerCase() as CampusLink;
   }
 
   extractorRegexp(): RegExp {

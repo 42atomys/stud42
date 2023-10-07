@@ -88,7 +88,7 @@ export const ClusterContainer: ClusterContainerComponent = ({
             }}
           >
             <ClusterSidebar
-              activeCampusName={campus}
+              activeCampusIdentifier={campus}
               activeClusterIdentifier={cluster}
             />
             <PageContent

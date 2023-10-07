@@ -7,22 +7,23 @@ import { Seoul } from './campus/seoul';
 import { Tokyo } from './campus/tokyo';
 import { Vienna } from './campus/vienna';
 import { Wolfsburg } from './campus/wolfsburg';
-import { CampusNames, ICampus } from './types';
+import { CampusIdentifier, ICampus } from './types';
 
 /**
  * Campuses represents the list of campuses present in the application.
  * Particulary, used in the cluster map.
  *
  * It is a const, so it can be accessed from anywhere in the application.
- * You can add a new campus by adding it to the list of campuses.
+ * You can add a new campus by adding it to the list of campuses in
+ * alphabetical order.
  * And define the campus in the `campus` folder (see `campus/paris.ts` for
- * an example). Don't forget to add the campus to the `CampusNames` type in
+ * an example). The name of the file must be the same as the campus identifier.
+ *
+ * Don't forget to add the campus to the `CampusIdentifier` type in
  * `types.d.ts`.
  *
  */
-export const Campuses: {
-  [key in CampusNames]: ICampus;
-} = {
+export const Campuses: Record<CampusIdentifier, ICampus> = {
   helsinki: new Helsinki(),
   lausanne: new Lausanne(),
   malaga: new Malaga(),
@@ -35,5 +36,8 @@ export const Campuses: {
 };
 
 export { countryEmoji } from './countryEmoji';
-export type { CampusNames, ClusterMapEntity } from './types';
+export type {
+  CampusIdentifier as CampusIdentifier,
+  ClusterMapEntity,
+} from './types';
 export default Campuses;

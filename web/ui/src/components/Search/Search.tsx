@@ -120,7 +120,7 @@ export const Search: SearchComponent = ({
         <span
           className={
             loader
-              ? 'absolute right-0 bg-white dark:bg-slate-900 z-10'
+              ? 'absolute right-2 bg-white dark:bg-slate-950 z-10'
               : 'hidden'
           }
         >

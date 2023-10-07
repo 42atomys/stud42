@@ -18,4 +18,26 @@ String.prototype.toSentenceCase = function () {
   return this.charAt(0).toUpperCase() + this.slice(1);
 };
 
+// toCamelCase will return the string with the first letter of each word
+// capitalized and all spaces removed (except the first letter of the first word)
+String.prototype.toCamelCase = function () {
+  return this.toLowerCase().replace(/[-_\s]+(.)?/g, (_, c) =>
+    c ? c.toUpperCase() : '',
+  );
+};
+
+// removeAccents will return the string with all accents removed
+// Example: 'héllö wórld' -> 'hello world'
+String.prototype.removeAccents = function () {
+  return this.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+};
+
+// toSafeLink will return the string with all accents removed, all characters
+// lowercased, and all non-alphanumeric characters replaced with a dash.
+String.prototype.toSafeLink = function () {
+  return this.removeAccents()
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, '-');
+};
+
 module.exports = {};
