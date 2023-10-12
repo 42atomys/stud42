@@ -29,7 +29,7 @@ export const Campuses: {
   lausanne: new Lausanne(),
   madrid: new Madrid(),
   malaga: new Malaga(),
-	urduliz: new Urduliz(),
+  urduliz: new Urduliz(),
   paris: new Paris(),
   mulhouse: new Mulhouse(),
   seoul: new Seoul(),

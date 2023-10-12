@@ -6,7 +6,7 @@ export type CampusNames =
   | 'helsinki'
   | 'madrid'
   | 'malaga'
-	| 'urduliz'
+  | 'urduliz'
   | 'vienna'
   | 'seoul'
   | 'lausanne'
