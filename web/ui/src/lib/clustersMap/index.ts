@@ -6,6 +6,7 @@ import { Mulhouse } from './campus/mulhouse';
 import { Paris } from './campus/paris';
 import { Seoul } from './campus/seoul';
 import { Tokyo } from './campus/tokyo';
+import { Urduliz } from './campus/urduliz';
 import { Vienna } from './campus/vienna';
 import { Wolfsburg } from './campus/wolfsburg';
 import { CampusNames, ICampus } from './types';
@@ -28,6 +29,7 @@ export const Campuses: {
   lausanne: new Lausanne(),
   madrid: new Madrid(),
   malaga: new Malaga(),
+	urduliz: new Urduliz(),
   paris: new Paris(),
   mulhouse: new Mulhouse(),
   seoul: new Seoul(),
