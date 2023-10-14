@@ -1,4 +1,4 @@
-import { CampusIdentifier } from './types.generated';
+import { CampusIdentifier, CampusLink } from './types.generated';
 
 /**
  * Types of Cluster Map entities
