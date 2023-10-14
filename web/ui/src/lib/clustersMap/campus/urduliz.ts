@@ -55,7 +55,7 @@ export class Urduliz extends Campus implements ICampus {
           ['T:r1',  'W:c3r1s1',  'W:c3r1s2',  'W:c3r1s3',  'W:c3r1s4',  'W:c3r1s5',  'W:c3r1s6',  'T:r1' ],
         ],
       }),
-			new Cluster({
+      new Cluster({
         identifier: 'c4',
         // prettier-ignore
         map: [
