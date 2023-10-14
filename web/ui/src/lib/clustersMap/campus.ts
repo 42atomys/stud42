@@ -1,5 +1,6 @@
 import Campuses from '.';
-import { CampusIdentifier, CampusLink, ICampus, ICluster } from './types';
+import { ICampus, ICluster } from './types';
+import { CampusIdentifier, CampusLink } from './types.generated';
 
 /**
  * Campus class represents a campus in the cluster map. It contains the

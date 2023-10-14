@@ -6,10 +6,10 @@ import { CampusIdentifier } from './types.generated';
 
 import { Helsinki } from './campus/helsinki';
 import { Lausanne } from './campus/lausanne';
+import { Madrid } from './campus/madrid';
 import { Malaga } from './campus/malaga';
 import { Mulhouse } from './campus/mulhouse';
 import { Paris } from './campus/paris';
-import { SaoPaulo } from './campus/saoPaulo';
 import { Seoul } from './campus/seoul';
 import { Tokyo } from './campus/tokyo';
 import { Vienna } from './campus/vienna';
@@ -18,10 +18,10 @@ import { Wolfsburg } from './campus/wolfsburg';
 export const Campuses: Record<CampusIdentifier, ICampus> = {
   helsinki: new Helsinki(),
   lausanne: new Lausanne(),
+  madrid: new Madrid(),
   malaga: new Malaga(),
   mulhouse: new Mulhouse(),
   paris: new Paris(),
-  saoPaulo: new SaoPaulo(),
   seoul: new Seoul(),
   tokyo: new Tokyo(),
   vienna: new Vienna(),

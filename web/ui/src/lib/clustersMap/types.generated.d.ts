@@ -9,10 +9,10 @@
 export type CampusIdentifier =
   | 'helsinki'
   | 'lausanne'
+  | 'madrid'
   | 'malaga'
   | 'mulhouse'
   | 'paris'
-  | 'saoPaulo'
   | 'seoul'
   | 'tokyo'
   | 'vienna'
@@ -26,10 +26,10 @@ export type CampusIdentifier =
 export type CampusLink =
   | 'helsinki'
   | 'lausanne'
+  | 'madrid'
   | 'malaga'
   | 'mulhouse'
   | 'paris'
-  | 'saopaulo'
   | 'seoul'
   | 'tokyo'
   | 'vienna'
