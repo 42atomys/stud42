@@ -57,6 +57,14 @@ ${campusIdentifiers
   .map((id) => `import { ${id.toTitleCase()} } from './campus/${id}';`)
   .join('\n')}
 
+/**
+ * Campuses represents the list of campuses present in the application.
+ * Particulary, used in the cluster map.
+ *
+ * It is a const, so it can be accessed from anywhere in the application.
+ * You can add a new campus by define the campus in the \`campus\` folder
+ * (see \`campus/paris.ts\` for an example) and run \`yarn generate:campus\`
+ */
 export const Campuses: Record<CampusIdentifier, ICampus> = {
 ${campusIdentifiers
   .map((id) => `  ${id}: new ${id.toTitleCase()}(),`)

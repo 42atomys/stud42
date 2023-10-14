@@ -15,6 +15,14 @@ import { Tokyo } from './campus/tokyo';
 import { Vienna } from './campus/vienna';
 import { Wolfsburg } from './campus/wolfsburg';
 
+/**
+ * Campuses represents the list of campuses present in the application.
+ * Particulary, used in the cluster map.
+ *
+ * It is a const, so it can be accessed from anywhere in the application.
+ * You can add a new campus by define the campus in the `campus` folder
+ * (see `campus/paris.ts` for an example) and run `yarn generate:campus`
+ */
 export const Campuses: Record<CampusIdentifier, ICampus> = {
   helsinki: new Helsinki(),
   lausanne: new Lausanne(),
