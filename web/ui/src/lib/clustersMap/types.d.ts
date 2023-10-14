@@ -1,18 +1,4 @@
-/**
- * List of all campus names present in the interface as their identifier.
- * Identifier must be in camelCase without spaces or special characters. It
- * must be unique in the list.
- */
-export type CampusIdentifier =
-  | 'paris'
-  | 'helsinki'
-  | 'malaga'
-  | 'vienna'
-  | 'seoul'
-  | 'lausanne'
-  | 'tokyo'
-  | 'mulhouse'
-  | 'wolfsburg';
+import { CampusIdentifier } from './types.generated';
 
 /**
  * CampusLink is the same as CampusIdentifier but with a dash between words.
