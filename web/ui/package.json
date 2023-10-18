@@ -58,6 +58,7 @@
     "yaml": "^2.3.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.20.7",
     "@graphql-codegen/cli": "^2.16.1",
     "@graphql-codegen/introspection": "^2.2.3",
     "@graphql-codegen/typescript": "^3.0.1",
@@ -70,7 +71,7 @@
     "@testing-library/user-event": "^14.4.3",
     "@types/jest": "^29.5.3",
     "@types/js-cookie": "^3.0.3",
-    "@types/node": "^20.8.5",
+    "@types/node": "^18.16.3",
     "@types/react": "^18.0.26",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.59.9",

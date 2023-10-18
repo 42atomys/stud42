@@ -1,4 +1,4 @@
-import { findCampusPerSafeLink } from '@components/ClusterMap';
+import { findCampusPerSafeLink } from '@lib/clustersMap';
 
 /**
  * retrieve the cluster url for the given campus and identifier

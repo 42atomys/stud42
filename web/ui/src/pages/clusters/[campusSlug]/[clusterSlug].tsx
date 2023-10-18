@@ -6,10 +6,13 @@ import {
   ClusterWorkspace,
   ClusterWorkspaceWithUser,
   extractNode,
-  findCampusPerSafeLink,
 } from '@components/ClusterMap';
 import { ClusterContainer } from '@components/ClusterMap/ClusterContainer';
-import { CampusIdentifier, Campuses } from '@lib/clustersMap';
+import {
+  CampusIdentifier,
+  Campuses,
+  findCampusPerSafeLink,
+} from '@lib/clustersMap';
 import '@lib/prototypes/string';
 import {
   GetStaticPaths,
