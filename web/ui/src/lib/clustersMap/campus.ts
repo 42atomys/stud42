@@ -1,7 +1,7 @@
 import Campuses from '.';
 import { ICampus, ICluster } from './types';
-import { CampusIdentifier, CampusLink } from './types.generated';
-
+import { CampusIdentifier } from './types.generated';
+import '@lib/prototypes/string';
 /**
  * Campus class represents a campus in the cluster map. It contains the
  * campus name, emoji, extractor function, and the list of clusters.
@@ -19,12 +19,6 @@ export class Campus implements ICampus {
     return Object.keys(Campuses).find(
       (key) => Campuses[key as CampusIdentifier] === this,
     ) as CampusIdentifier;
-  }
-
-  link(): CampusLink {
-    return this.identifier()
-      .replace(/([A-Z])/g, '-$1')
-      .toLowerCase() as CampusLink;
   }
 
   extractorRegexp(): RegExp {

@@ -3,39 +3,41 @@ import useSidebar, { Menu, MenuCategory, MenuItem } from '@components/Sidebar';
 import { useMe } from '@ctx/currentUser';
 import { useClusterSidebarDataQuery } from '@graphql.d';
 import { isFirstLoading } from '@lib/apollo';
-import Campuses, { CampusIdentifier } from '@lib/clustersMap';
+import Campuses, {
+  CampusIdentifier,
+  ICampus,
+  ICluster,
+} from '@lib/clustersMap';
 import '@lib/prototypes/string';
 import { clusterURL } from '@lib/searchEngine';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
+import '@lib/prototypes/string';
 
 /**
  * ClusterSidebar is the sidebar for the cluster page. It contains the cluster
  * menu statically defined. Used accross all cluster pages.
- * @param {string} activeCampusIdentifier - The campus used to match the current campus
- * @param {string} activeClusterIdentifier - The cluster used to match the current cluster
+ * @param {string} activeCampus - The campus used to match the current campus
+ * @param {string} activeCluster - The cluster used to match the current cluster
  * @returns {JSX.Element} The sub sidebar component
  */
 export const ClusterSidebar = ({
-  activeCampusIdentifier,
-  activeClusterIdentifier,
+  activeCampus,
+  activeCluster,
 }: {
-  activeCampusIdentifier: CampusIdentifier;
-  activeClusterIdentifier: string;
+  activeCampus: ICampus;
+  activeCluster: ICluster;
 }) => {
   const { Sidebar } = useSidebar();
   const router = useRouter();
   const campusKeys = Object.keys(Campuses) as Array<CampusIdentifier>;
-  const currentCampusData = Campuses[activeCampusIdentifier];
   const { me } = useMe();
   const { data: { locationsStatsByPrefixes = [] } = {}, networkStatus } =
     useClusterSidebarDataQuery({
       variables: {
-        campusName: currentCampusData.name(),
-        clusterPrefixes: currentCampusData
-          .clusters()
-          .map((c) => c.identifier()),
+        campusName: activeCampus.name(),
+        clusterPrefixes: activeCampus.clusters().map((c) => c.identifier()),
       },
     });
   const myCampusidentifier =
@@ -44,7 +46,7 @@ export const ClusterSidebar = ({
     locationsStatsByPrefixes
       .map((l) => {
         const totalWorkspaces =
-          currentCampusData.cluster(l.prefix)?.totalWorkspaces() || 0;
+          activeCampus.cluster(l.prefix)?.totalWorkspaces() || 0;
         return [l.prefix, totalWorkspaces - l.occupiedWorkspace];
       })
       .reduce(
@@ -106,30 +108,32 @@ export const ClusterSidebar = ({
               const campusData = Campuses[campusIdentifier];
               const isMyCampus =
                 campusIdentifier?.equalsIgnoreCase(myCampusidentifier);
-              const activeCampus =
-                activeCampusIdentifier == campusData.identifier();
+              const isActiveCampus =
+                activeCampus.identifier() == campusData.identifier();
 
               return (
                 <MenuCategory
-                  key={`sidebar-campus-${campusData.link()}`}
+                  key={`sidebar-campus-${campusData.identifier()}`}
                   emoji={campusData.emoji()}
                   name={campusData.name()}
                   text={isMyCampus ? 'Your campus' : undefined}
                   isCollapsable={!isMyCampus}
-                  collapsed={!activeCampus && !isMyCampus}
+                  collapsed={!isActiveCampus && !isMyCampus}
                 >
                   {campusData.clusters().map((cluster) => {
                     const clusterIdentifier = cluster.identifier();
                     return (
                       <Link
-                        href={`/clusters/${campusData.link()}/${clusterIdentifier}`}
+                        href={`/clusters/${campusData
+                          .identifier()
+                          .toSafeLink()}/${clusterIdentifier}`}
                         passHref={true}
-                        key={`sidebar-clusters-${campusData.link()}-${clusterIdentifier}`}
+                        key={`sidebar-clusters-${campusData.identifier()}-${clusterIdentifier}`}
                       >
                         <MenuItem
                           active={
-                            activeCampus &&
-                            clusterIdentifier == activeClusterIdentifier
+                            isActiveCampus &&
+                            clusterIdentifier == activeCluster.identifier()
                           }
                           name={
                             cluster.hasName()
@@ -143,7 +147,7 @@ export const ClusterSidebar = ({
                               : null
                           }
                           rightChildren={
-                            activeCampus ? (
+                            isActiveCampus ? (
                               <>
                                 <span className="pr-1 text-xs">
                                   {freePlacesPerCluster[clusterIdentifier]}

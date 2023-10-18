@@ -1,7 +1,7 @@
 import type { Actions, PayloadOf } from '@components/UserPopup';
 import type { ClusterViewQuery } from '@graphql.d';
-import { CampusIdentifier } from '@lib/clustersMap';
 import { NonNullable } from 'types/utils';
+import { ICampus, ICluster } from '@lib/clustersMap';
 
 // ClusterMap.tsx
 export type MapLocation = NonNullable<
@@ -30,13 +30,10 @@ type ClusterContainerChildrenProps = {
 };
 
 export type ClusterContainerProps = {
-  [Key in CampusIdentifier as readonly Key]: {
-    campus: Key;
-    // TODO Found a way to make this type more specific than `string`?
-    cluster: string;
-    children: (props: ClusterContainerChildrenProps) => JSX.Element;
-  };
-}[CampusIdentifier];
+  campus: ICampus;
+  cluster: ICluster;
+  children: (props: ClusterContainerChildrenProps) => JSX.Element;
+};
 
 type ClusterContainerComponent = (props: ClusterContainerProps) => JSX.Element;
 

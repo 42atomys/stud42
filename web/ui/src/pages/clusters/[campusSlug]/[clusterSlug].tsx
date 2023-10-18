@@ -1,5 +1,4 @@
 import {
-  ClusterContainerProps,
   ClusterEmpty,
   ClusterPillar,
   ClusterRow,
@@ -7,6 +6,7 @@ import {
   ClusterWorkspace,
   ClusterWorkspaceWithUser,
   extractNode,
+  findCampusPerSafeLink,
 } from '@components/ClusterMap';
 import { ClusterContainer } from '@components/ClusterMap/ClusterContainer';
 import { CampusIdentifier, Campuses } from '@lib/clustersMap';
@@ -20,28 +20,34 @@ import {
 import Error from 'next/error';
 import Head from 'next/head';
 
-export const IndexPage: NextPage<
-  ClusterContainerProps & { campusIdentifier: CampusIdentifier }
-> = ({ campusIdentifier, cluster }) => {
-  const campusData = Campuses[campusIdentifier];
-  const clusterData = campusData?.cluster(cluster);
+type PageProps = {
+  campusIdentifier: CampusIdentifier;
+  clusterIdentifier: string;
+};
 
-  if (!campusData || !clusterData) {
-    return <Error statusCode={404} />;
-  }
+export const IndexPage: NextPage<PageProps> = ({
+  campusIdentifier,
+  clusterIdentifier,
+}) => {
+  const campus = findCampusPerSafeLink(campusIdentifier);
+  const cluster = campus?.cluster(clusterIdentifier);
+
+  if (!campus || !cluster) return <Error statusCode={404} />;
 
   return (
     <>
       <Head>
         <title>
-          {cluster.toUpperCase()} @ {campusData.name().toTitleCase()} - Clusters
-          - S42
+          {cluster.hasName()
+            ? cluster.name()
+            : cluster.identifier().toUpperCase()}{' '}
+          @ {campus.name().toTitleCase()} - Clusters - S42
         </title>
       </Head>
-      <ClusterContainer campus={campusData.identifier()} cluster={cluster}>
+      <ClusterContainer campus={campus} cluster={cluster}>
         {({ locations, showPopup }) => (
           <ClusterTableMap>
-            {clusterData.map().map((row, i) => (
+            {cluster.map().map((row, i) => (
               <ClusterRow key={`cluster-row-${i}`}>
                 {row.map((entity, j) => {
                   const key = `cluster-workspace-${i}-${entity}-${j}`;
@@ -62,7 +68,7 @@ export const IndexPage: NextPage<
                       <ClusterWorkspaceWithUser
                         key={key}
                         identifier={identifier}
-                        displayText={campusData.extractor(identifier).workspace}
+                        displayText={campus.extractor(identifier).workspace}
                         location={loc}
                         onClick={({ currentTarget }, location) => {
                           showPopup({
@@ -81,7 +87,7 @@ export const IndexPage: NextPage<
                       identifier={identifier}
                       displayText={
                         entity.startsWith('W:')
-                          ? campusData.extractor(identifier).workspace
+                          ? campus.extractor(identifier).workspace
                           : undefined
                       }
                       kind={
@@ -110,8 +116,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
     campus.clusters().map((cluster) => {
       paths.push({
         params: {
-          campusIdentifier: campus.link(),
-          cluster: cluster.identifier(),
+          campusSlug: campus.identifier().toSafeLink(),
+          clusterSlug: cluster.identifier(),
         },
       });
     });
@@ -123,14 +129,13 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 };
 
-export const getStaticProps: GetStaticProps = ({ params = {} }) => {
-  const { campusIdentifier, cluster } = params;
+export const getStaticProps: GetStaticProps<PageProps> = ({ params = {} }) => {
+  const { campusSlug, clusterSlug } = params;
 
-  const campus = Object.values(Campuses).find(
-    (v) => v.name().toSafeLink() === campusIdentifier,
-  );
+  const campus = findCampusPerSafeLink(campusSlug as string);
+  const cluster = campus?.cluster(clusterSlug as string);
 
-  if (!campus) {
+  if (!campus || !cluster) {
     return {
       notFound: true,
     };
@@ -138,8 +143,8 @@ export const getStaticProps: GetStaticProps = ({ params = {} }) => {
 
   return {
     props: {
-      campusIdentifier: campus?.identifier(),
-      cluster,
+      campusIdentifier: campus.identifier(),
+      clusterIdentifier: cluster.identifier(),
     },
   };
 };

@@ -7,4 +7,8 @@ export {
   ClusterWorkspaceWithUser,
 } from './ClusterTableMap';
 export type { ClusterContainerProps, MapLocation } from './types';
-export { extractNode, extractandRemoveNode } from './utils';
+export {
+  extractNode,
+  extractandRemoveNode,
+  findCampusPerSafeLink,
+} from './utils';

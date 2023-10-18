@@ -1,4 +1,4 @@
-import { CampusIdentifier, CampusLink } from './types.generated';
+import { CampusIdentifier } from './types.generated';
 
 /**
  * Types of Cluster Map entities
@@ -49,9 +49,6 @@ export interface ICampus {
   // basically, it's the name of the campus without spaces and special
   // characters (e.g. "saoPaulo").
   identifier(): CampusIdentifier;
-  // link is the name of the campus used in links in the interface. This is the
-  // same as identifier but in kebab-case instead of camelCase.
-  link(): CampusLink;
   // extrator function will extract the cluster, row and workspace from a given
   // identifier for this campus. It will return an object with the data present
   // in the identifier.

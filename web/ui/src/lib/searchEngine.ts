@@ -1,4 +1,4 @@
-import Campuses from './clustersMap';
+import { findCampusPerSafeLink } from '@components/ClusterMap';
 
 /**
  * retrieve the cluster url for the given campus and identifier
@@ -9,9 +9,7 @@ export const clusterURL = (
 ): string | null => {
   const campusLink = campus?.toSafeLink();
 
-  const campusData = Object.values(Campuses).find(
-    (c) => c.link() === campusLink,
-  );
+  const campusData = findCampusPerSafeLink(campusLink);
 
   if (!campusData) {
     return null;
