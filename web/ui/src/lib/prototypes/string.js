@@ -36,8 +36,9 @@ String.prototype.removeAccents = function () {
 // lowercased, and all non-alphanumeric characters replaced with a dash.
 String.prototype.toSafeLink = function () {
   return this.removeAccents()
+    .replace(/([a-z])([A-Z])/g, '$1-$2') // separate camelCase and PascalCase segments with a dash
     .toLowerCase()
-    .replace(/[^a-z0-9]/g, '-');
+    .replace(/[^a-z0-9-]/g, '-'); // replace all non-alphanumeric characters with a dash
 };
 
 module.exports = {};
