@@ -53,7 +53,10 @@ export const ClusterContainer: ClusterContainerComponent = ({
   } = useRouter();
   const [highlight, setHighlight] = useState(false);
   const { data, error, networkStatus } = useClusterViewQuery({
-    variables: { campusName: campus, identifierPrefix: cluster },
+    variables: {
+      campusName: campus.name(),
+      identifierPrefix: cluster.identifier(),
+    },
     fetchPolicy: 'network-only',
     // This is a workaround due to missing websocket implementation.
     // TODO: Remove this when websocket is implemented.
@@ -87,10 +90,7 @@ export const ClusterContainer: ClusterContainerComponent = ({
                 highlightedIdentifier === identifier ? 'HIGHLIGHT' : 'DIMMED',
             }}
           >
-            <ClusterSidebar
-              activeCampusName={campus}
-              activeClusterIdentifier={cluster}
-            />
+            <ClusterSidebar activeCampus={campus} activeCluster={cluster} />
             <PageContent
               className={
                 'p-2 flex-1 flex justify-center min-h-screen items-center'
