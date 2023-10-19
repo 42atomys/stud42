@@ -35,7 +35,7 @@ export const Badge: React.FC<
       className={classNames(
         'transition-colors flex w-fit text-gray items-center rounded-full border py-1 px-2 my-2 text-sm',
         colorClasses[color],
-        className
+        className,
       )}
     >
       {Children.map(children, (c) => <>{c}</>) || <span>{text}</span>}

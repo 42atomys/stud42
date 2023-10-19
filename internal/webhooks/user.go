@@ -63,7 +63,6 @@ func (p *userProcessor) Update(u *duoapi.User, metadata *duoapi.WebhookMetadata)
 		SetLastName(u.LastName).
 		SetEmail(u.Email).
 		SetIsStaff(u.Staff).
-		SetPhone(u.Phone).
 		SetPoolYear(u.PoolYear).
 		SetPoolMonth(u.PoolMonth).
 		SetDuoAvatarURL(u.Image.Link).

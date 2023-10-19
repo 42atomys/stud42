@@ -34,7 +34,7 @@ export const TextInput: React.FC<
       key={`text-input-${inputId}`}
       className={classNames(
         className,
-        'rounded-md text-left px-3 pt-2.5 pb-1.5 shadow-sm ring-1 ring-inset ring-slate-200 dark:ring-slate-800 focus-within:ring-2 focus-within:!ring-indigo-500'
+        'rounded-md text-left px-3 pt-2.5 pb-1.5 shadow-sm ring-1 ring-inset ring-slate-200 dark:ring-slate-800 focus-within:ring-2 focus-within:!ring-indigo-500',
       )}
     >
       {labelName && (

@@ -1,15 +1,4 @@
-/**
- * List of all campus names present in the application (interface only)
- */
-export type CampusNames =
-  | 'paris'
-  | 'istanbul'
-  | 'helsinki'
-  | 'malaga'
-  | 'vienna'
-  | 'seoul'
-  | 'lausanne'
-  | 'tokyo';
+import { CampusIdentifier } from './types.generated';
 
 /**
  * Types of Cluster Map entities
@@ -36,6 +25,8 @@ export interface ICluster {
   // Custom cluster name (e.g. "Metropolis").
   // If not set, the cluster name will be the cluster identifier.
   name(): string;
+  // hasName() returns true if the cluster has a custom name.
+  hasName(): boolean;
   // Cluster identifier (e.g. "c1", "e1").
   identifier(): string;
   // Total number of available workspaces in the cluster (e.g. 20).
@@ -52,8 +43,12 @@ export interface ICluster {
 export interface ICampus {
   // Campus emoji (e.g. 🇫🇷)
   emoji(): string;
-  // Campus name (e.g. "paris")
-  name(): CampusNames;
+  // Campus name (e.g. "Paris") used as display on UI.
+  name(): string;
+  // identifier is the name of the campus used in api communication, links, etc.
+  // basically, it's the name of the campus without spaces and special
+  // characters (e.g. "saoPaulo").
+  identifier(): CampusIdentifier;
   // extrator function will extract the cluster, row and workspace from a given
   // identifier for this campus. It will return an object with the data present
   // in the identifier.

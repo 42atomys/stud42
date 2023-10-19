@@ -31,6 +31,11 @@ export type Maybe<T> = T | null | undefined;
 declare global {
   interface String {
     equalsIgnoreCase(searchString: string): boolean;
+    toTitleCase(): string;
+    toSentenceCase(): string;
+    toCamelCase(): string;
+    removeAccents(): string;
+    toSafeLink(): string;
   }
 
   interface WindowEventMap {

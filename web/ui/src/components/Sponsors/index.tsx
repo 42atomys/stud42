@@ -7,7 +7,7 @@ export const SponsorIcon: React.FC<PropsWithClassName> = ({ className }) => (
   <i
     className={classNames(
       className,
-      'fa-solid fa-user-astronaut text-fuchsia-400 dark:text-fuchsia-600'
+      'fa-solid fa-user-astronaut text-fuchsia-400 dark:text-fuchsia-600',
     )}
   ></i>
 );

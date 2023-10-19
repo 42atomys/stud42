@@ -4,11 +4,11 @@ export type TooltipProps = {
   tooltipClassName?: string;
   text: string | React.ReactNode;
   subText?: string | React.ReactNode;
-  showArrow?: boolean = true;
-  size?: 'xs' | 'sm' | 'md' = 'md';
-  color?: 'red' | 'orange' | 'green' | 'info' | 'black' | 'fuchsia' = 'black';
+  showArrow?: boolean;
+  size?: 'xs' | 'sm' | 'md';
+  color?: 'red' | 'orange' | 'green' | 'info' | 'black' | 'fuchsia';
   direction?: 'top' | 'bottom' | 'left' | 'right';
-  allowInteractions?: boolean = false;
+  allowInteractions?: boolean;
 };
 
 type TooltipComponent = (props: TooltipProps) => JSX.Element;

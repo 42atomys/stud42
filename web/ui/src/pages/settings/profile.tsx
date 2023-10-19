@@ -1,5 +1,12 @@
-import { FileInput, SelectInput, TextInput } from '@components/Form';
+import {
+  ThridPartyBadge,
+  thirdPartySorted,
+  thridPartyData,
+} from '@components/Badge';
+import { Button } from '@components/Button';
+import { FileInput, SelectInput, Switch, TextInput } from '@components/Form';
 import { Loader } from '@components/Loader';
+import { Tooltip } from '@components/Tooltip';
 import { UserProfile } from '@components/UserProfile';
 import {
   SettingsCategory,
@@ -10,19 +17,112 @@ import SettingsLayout from '@containers/settings/SettingsLayout';
 import { useMe } from '@ctx/currentUser';
 import { useNotification } from '@ctx/notifications';
 import {
+  Account,
+  AccountProvider,
   PresignedUploadUrlKind,
   UserFlag,
   UserPronoun,
+  useDeleteAccountMutation,
   usePresignedUploadUrlLazyQuery,
+  useUpdateAccountVisibilityMutation,
   useUpdateMeMutation,
 } from '@graphql.d';
+import classNames from 'classnames';
+import { motion } from 'framer-motion';
 import { NextPage } from 'next';
+import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 
 type PageProps = {};
 
+const ThridPartyIcon: React.FC<{ provider: AccountProvider }> = ({
+  provider,
+}) => (
+  <Tooltip
+    text={thridPartyData[provider].name}
+    size="xs"
+    direction="top"
+    color="black"
+  >
+    <motion.button
+      className="p-3 bg-slate-200 dark:bg-slate-900 rounded-md hover:bg-slate-300 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+      initial={{ scale: 1 }}
+      whileHover={{ scale: 1.2 }}
+      onClick={() =>
+        signIn(provider.toLowerCase(), { callbackUrl: '/settings/accounts' })
+      }
+    >
+      <i
+        className={classNames(
+          'fa-fw text-xl',
+          thridPartyData[provider].className,
+        )}
+      ></i>
+    </motion.button>
+  </Tooltip>
+);
+
+const AccountRow: React.FC<
+  Pick<Account, 'id' | 'provider' | 'providerAccountId' | 'username' | 'public'>
+> = (account) => {
+  const { refetchMe } = useMe();
+  const [updateVisibility] = useUpdateAccountVisibilityMutation({
+    onCompleted: () => refetchMe(),
+  });
+  const [deleteAccount] = useDeleteAccountMutation({
+    onCompleted: () => refetchMe(),
+  });
+
+  return (
+    <>
+      <div className="col-span-2 space-x-4 flex flex-row items-center">
+        <ThridPartyBadge {...account} />
+        {/* Tweak to display new Discord username */}
+        <span>
+          {account.username.endsWith('#0')
+            ? account.username.replace(/(.*)#0$/, '@$1')
+            : account.username}
+        </span>
+      </div>
+      {(account.provider === AccountProvider.DUO && (
+        <div className="justify-self-center col-span-2 text-xs opacity-50 italic">
+          Primary account cannot be hidden or removed.
+        </div>
+      )) || (
+        <>
+          <div className="place-self-center">
+            <Switch
+              name="account-switch"
+              defaultValue={
+                account.provider === AccountProvider.DUO ? true : account.public
+              }
+              disabled={account.provider === AccountProvider.DUO}
+              onChange={() =>
+                updateVisibility({
+                  variables: {
+                    input: { id: account.id, public: !account.public },
+                  },
+                })
+              }
+            />
+          </div>
+          <div className="place-self-center justify-self-end">
+            <button
+              className="p-2 rounded-md text-red-500 hover:bg-red-500 hover:text-white transition-all"
+              onClick={() => deleteAccount({ variables: { id: account.id } })}
+            >
+              <i className="fa-fw fal fa-trash"></i>
+            </button>
+          </div>
+        </>
+      )}
+    </>
+  );
+};
+
 const ProfileSettingPage: NextPage<PageProps> = () => {
   const { me, refetchMe } = useMe();
+  const accounts = thirdPartySorted(me.accounts);
   const { addNotification } = useNotification();
   const [showProfile, setShowProfile] = useState(false);
   const [presignedUrl] = usePresignedUploadUrlLazyQuery({
@@ -56,12 +156,7 @@ const ProfileSettingPage: NextPage<PageProps> = () => {
         <span>
           You want to preview your profile? Click on the button on the right.
         </span>
-        <button
-          className="inline-flex justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 sm:col-start-2 disabled:opacity-50 disabled:pointer-events-none"
-          onClick={() => setShowProfile(true)}
-        >
-          Preview profile
-        </button>
+        <Button onClick={() => setShowProfile(true)}>Preview profile</Button>
         <UserProfile
           open={showProfile}
           setOpen={setShowProfile}
@@ -129,7 +224,7 @@ const ProfileSettingPage: NextPage<PageProps> = () => {
                           input: {
                             coverURL: presignedURL.href.replace(
                               presignedURL.search,
-                              ''
+                              '',
                             ),
                           },
                         },
@@ -175,6 +270,51 @@ const ProfileSettingPage: NextPage<PageProps> = () => {
             />
           </SettingsTableRow>
         </SettingsTable>
+      </SettingsCategory>
+
+      <SettingsCategory
+        title="Third-party accounts"
+        description="Add and manage your thrid-party accounts to your S42 account."
+        className="bg-transparent"
+      >
+        <h2 className="text-xl font-semibold mb-4">Add an account</h2>
+        <div className="flex space-x-2 mb-4">
+          {/* 
+            ! DISABLED UNTIL ALL PROVIDERS ARE APPROVED
+            {Object.keys(AccountProvider).
+            filter(provider => provider !== AccountProvider.DUO).
+            map((provider) => (
+              <ThridPartyIcon key={provider} provider={provider as AccountProvider} />
+            ))} */}
+          <ThridPartyIcon provider={AccountProvider.DISCORD} />
+          <ThridPartyIcon provider={AccountProvider.GITHUB} />
+          <ThridPartyIcon provider={AccountProvider.GITLAB} />
+          <ThridPartyIcon provider={AccountProvider.REDDIT} />
+          <ThridPartyIcon provider={AccountProvider.SPOTIFY} />
+          <ThridPartyIcon provider={AccountProvider.TWITCH} />
+        </div>
+
+        <h2 className="text-xl font-semibold mb-4">Manage your accounts</h2>
+        <div className="bg-slate-500/10 rounded-md px-4 py-2 mb-4 space-x-2 flex justify-center items-center">
+          <i className="fas fa-fw fa-info-circle"></i>
+          <span>
+            <b>Remember</b>, when you change your handle on any of your
+            accounts, you will need to update it here as well.
+          </span>
+        </div>
+        <div className="grid grid-cols-4 gap-2 font-display font-semibold border-b-2 border-b-slate-500/30 mb-4 pb-4">
+          <div className="col-span-2">Account</div>
+          <div className="text-center">Visiblility</div>
+          <div className="text-right">Actions</div>
+        </div>
+        <div className="grid grid-cols-4 gap-2 items-center">
+          {accounts.map((account) => (
+            <AccountRow
+              key={`${account.provider}-${account.providerAccountId}`}
+              {...account}
+            />
+          ))}
+        </div>
       </SettingsCategory>
     </SettingsLayout>
   );

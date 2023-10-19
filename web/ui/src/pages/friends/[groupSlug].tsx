@@ -106,7 +106,7 @@ const IndexPage: NextPage<PageProps> = () => {
       <Head>
         {(currentGroup && (
           <title>
-            {currentGroup.emoji} {currentGroup.name} - Friendship - Stud42
+            {currentGroup.emoji} {currentGroup.name} - Friendship - S42
           </title>
         )) || <title>All Friendship - Stud42</title>}
       </Head>
@@ -176,7 +176,7 @@ const IndexPage: NextPage<PageProps> = () => {
           className={classNames(
             `p-2 flex-1 flex flex-wrap justify-center`,
             hasFollowing ? 'h-fit' : 'min-h-screen items-center',
-            isFirstLoading(networkStatus) && 'min-h-screen items-center'
+            isFirstLoading(networkStatus) && 'min-h-screen items-center',
           )}
         >
           {isFirstLoading(networkStatus) && <Loader />}

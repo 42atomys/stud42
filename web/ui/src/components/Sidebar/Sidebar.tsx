@@ -54,7 +54,7 @@ const MenuItem = ({
             activeRoute
               ? 'text-white bg-indigo-200 dark:bg-indigo-500/20 border-2 border-indigo-500'
               : 'border-transparent hover:border-slate-600 dark:hover:border-slate-400 hover:bg-slate-900/10 dark:hover:bg-slate-100/10',
-            className
+            className,
           )}
         >
           <i
@@ -63,7 +63,7 @@ const MenuItem = ({
               activeRoute
                 ? 'text-indigo-500'
                 : 'text-slate-600 dark:text-slate-400',
-              icon
+              icon,
             )}
           />
         </div>
@@ -189,7 +189,7 @@ export const Sidebar = ({
           // TODO: put into tailwind when the flex flow is added to tailwind
           style={{ flexFlow: 'column' }}
         >
-          <div className="flex py-6 w-full justify-evenly sticky top-0 z-10">
+          <div className="flex py-6 w-full justify-evenly z-10">
             <Star />
             <Contribute />
           </div>

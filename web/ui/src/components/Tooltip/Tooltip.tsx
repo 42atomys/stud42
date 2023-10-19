@@ -84,7 +84,7 @@ export const Tooltip: TooltipComponent = ({
     <div
       className={classNames(
         'relative flex items-center justify-center group',
-        className
+        className,
       )}
       onMouseEnter={() => setVisible(true)}
       onMouseLeave={() => setVisible(false)}
@@ -97,7 +97,7 @@ export const Tooltip: TooltipComponent = ({
           'max-w-[250px] flex-col w-max items-start m-1 z-10',
           'group-hover:pointer-events-auto group-hover:opacity-100 group-hover:ml-[var(--tooltip-ml)] group-hover:mr-[var(--tooltip-mr)] group-hover:mt-[var(--tooltip-mt)] group-hover:mb-[var(--tooltip-mb)]',
           containerClasses,
-          tooltipClassName
+          tooltipClassName,
         )}
         data-testid="tooltip"
         onMouseEnter={allowInteractions ? undefined : () => setVisible(false)}
@@ -108,7 +108,7 @@ export const Tooltip: TooltipComponent = ({
               'absolute whitespace-nowrap rotate-45',
               'w-[var(--tooltip-size)] h-[var(--tooltip-size)]',
               '',
-              arrowClasses
+              arrowClasses,
             )}
           />
         )}

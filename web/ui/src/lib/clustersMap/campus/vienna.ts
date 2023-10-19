@@ -1,12 +1,12 @@
 import { Campus } from '../campus';
 import { Cluster } from '../cluster';
-import { CampusNames, ICampus } from '../types';
+import { ICampus } from '../types';
 
 //
 export class Vienna extends Campus implements ICampus {
   emoji = (): string => '🇦🇹';
 
-  name = (): CampusNames => 'vienna';
+  name = (): string => 'Vienna';
 
   extractorRegexp = (): RegExp =>
     /(?<clusterWithLetter>c(?<cluster>\d+))(?<rowWithLetter>r(?<row>\d+))(?<workspaceWithLetter>p(?<workspace>\d+))/i;
@@ -15,7 +15,6 @@ export class Vienna extends Campus implements ICampus {
     return [
       new Cluster({
         identifier: 'c1',
-        totalWorkspaces: 20,
         // prettier-ignore
         map: [
           [null, null, 'T:r1', 'W:c1r1p1', 'W:c1r1p2', 'W:c1r1p3', 'W:c1r1p4', 'W:c1r1p5', 'W:c1r1p6', null, null, null, null, 'W:c1r1p7', 'W:c1r1p8', 'W:c1r1p9', 'W:c1r1p10', 'T:r1', null, null],
@@ -24,7 +23,6 @@ export class Vienna extends Campus implements ICampus {
       }),
       new Cluster({
         identifier: 'c2',
-        totalWorkspaces: 64,
         // prettier-ignore
         map: [
           [null, 'T:r7',      null, 'T:r6',     null, null,   null,       null,       null,       null,       null,       null,       null,       null,       null,       null,         null, null,         null,         null,         null,         null  ],
@@ -39,7 +37,6 @@ export class Vienna extends Campus implements ICampus {
       }),
       new Cluster({
         identifier: 'c3',
-        totalWorkspaces: 64,
         // prettier-ignore
         map: [
           [null, 'T:r10',     'T:r9',     null, null,   null,       null,       null,       null,       null,       null,      null,    null, 'T:r8', 'W:c3r8p1', 'W:c3r8p2', 'W:c3r8p3', 'W:c3r8p4', 'W:c3r8p5', 'W:c3r8p6', 'T:r8'],

@@ -11,13 +11,13 @@ describe('ThridPartyBadge component', () => {
   };
 
   const providers = Object.keys(thridPartyData).filter(
-    (provider) => !!thridPartyData[provider as AccountProvider].link
+    (provider) => !!thridPartyData[provider as AccountProvider].link,
   ) as AccountProvider[];
 
   providers.forEach((provider) => {
     it(`renders a link if data.link exists for ${provider}`, () => {
       const { container, getByRole } = render(
-        <ThridPartyBadge {...props} provider={provider} />
+        <ThridPartyBadge {...props} provider={provider} />,
       );
       expect(container.firstChild).toBeInTheDocument();
 
@@ -29,7 +29,7 @@ describe('ThridPartyBadge component', () => {
             username: props.username,
             providerAccountId: props.providerAccountId,
           })
-          .toString()
+          .toString(),
       );
     });
   });
@@ -44,14 +44,14 @@ describe('ThridPartyBadge component', () => {
 
     expect(icon).toBeInTheDocument();
     expect(icon).toHaveClass(
-      thridPartyData[props.provider].className as string
+      thridPartyData[props.provider].className as string,
     );
   });
 
   it('throw an error if the provider is unknown', () => {
     const unknownProvider = 'unknown' as AccountProvider;
     expect(() =>
-      render(<ThridPartyBadge {...props} provider={unknownProvider} />)
+      render(<ThridPartyBadge {...props} provider={unknownProvider} />),
     ).toThrowError(ThridPartyUnkwownError);
   });
 });

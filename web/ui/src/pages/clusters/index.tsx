@@ -1,6 +1,6 @@
 import { MeWithFlagsDocument, MeWithFlagsQuery } from '@graphql.d';
 import { queryAuthenticatedSSR } from '@lib/apollo';
-import Campuses, { CampusNames } from '@lib/clustersMap';
+import Campuses from '@lib/clustersMap';
 import { clusterURL } from '@lib/searchEngine';
 import type { GetServerSideProps, NextPage } from 'next';
 
@@ -30,17 +30,19 @@ export const getServerSideProps: GetServerSideProps = async ({
 
   const { data: { me } = {} } = await queryAuthenticatedSSR<MeWithFlagsQuery>(
     req,
-    { query: MeWithFlagsDocument }
+    { query: MeWithFlagsDocument },
   );
-  const myCampusNameLowerFromAPI = me?.currentCampus?.name?.toLowerCase() || '';
+  const myCampusNameFromAPI = me?.currentCampus?.name?.toSafeLink() || '';
 
-  if (Object.keys(Campuses).includes(myCampusNameLowerFromAPI)) {
-    const clusterKey = Campuses[myCampusNameLowerFromAPI as CampusNames]
-      .clusters()[0]
-      .identifier();
+  const myCampus = Object.values(Campuses).find(
+    (v) => v.name().toSafeLink() === myCampusNameFromAPI,
+  );
+
+  if (!!myCampus) {
+    const clusterKey = myCampus.clusters()[0].identifier();
     return {
       redirect: {
-        destination: `/clusters/${myCampusNameLowerFromAPI}/${clusterKey}`,
+        destination: `/clusters/${myCampusNameFromAPI}/${clusterKey}`,
         permanent: false,
       },
       props: {},

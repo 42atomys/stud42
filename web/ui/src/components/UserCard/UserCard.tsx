@@ -27,7 +27,7 @@ export const UserCard: React.FC<PropsWithClassName<UserCardProps>> = ({
         'relative group',
         'text-center grow-[1] min-w-[var(--card-width)] max-w-[var(--card-width)] transition-all',
         'rounded-lg border-2 border-transparent hover:cursor-pointer',
-        className
+        className,
       )}
     >
       {hasCover && (
@@ -36,7 +36,7 @@ export const UserCard: React.FC<PropsWithClassName<UserCardProps>> = ({
             className={classNames(
               'bg-cover bg-center w-full h-full blur-sm scale-110',
               '[-webkit-mask-image:linear-gradient(rgb(0,0,0)0%,rgba(0,0,0,0)58%)]',
-              'dark:[-webkit-mask-image:linear-gradient(rgb(0,0,0)42%,rgba(0,0,0,0.2)58%)]'
+              'dark:[-webkit-mask-image:linear-gradient(rgb(0,0,0)42%,rgba(0,0,0,0.2)58%)]',
             )}
             style={{
               backgroundImage: `url(${user.coverURL})`,

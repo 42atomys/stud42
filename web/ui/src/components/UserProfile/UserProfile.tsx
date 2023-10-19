@@ -49,11 +49,19 @@ const Badges: React.FC<{ flags: UserFlag[] }> = ({ flags }) => {
 const CursusProgress: React.FC<{
   intraProxy: NonNullable<UserProfileQuery['user']>['intraProxy'];
 }> = ({ intraProxy }) => {
-  const mainCursusUser = intraProxy.cursusUsers?.find((c) =>
-    c.cursus?.kind.includes('main')
-  );
-  const piscineCursusUser = intraProxy.cursusUsers?.find((c) =>
-    c.cursus?.kind.includes('piscine')
+  const mainCursusUser =
+    intraProxy.cursusUsers?.find(
+      // Find the main cursus user
+      (c) => c.cursus?.kind === 'main',
+    ) ||
+    intraProxy.cursusUsers?.find(
+      // If no main cursus user is found for the new cursus system, find the
+      // deprecated main cursus user
+      (c) => c.cursus?.kind.includes('main'),
+    );
+
+  const piscineCursusUser = intraProxy.cursusUsers?.find(
+    (c) => c.cursus?.kind.includes('piscine'),
   );
   const cursusUser = mainCursusUser || piscineCursusUser;
 
@@ -81,13 +89,13 @@ const CursusProgress: React.FC<{
           'relative rounded-lg w-full h-8 overflow-hidden',
           isAPool
             ? 'bg-yellow-300 dark:bg-yellow-950'
-            : 'bg-indigo-300 dark:bg-indigo-950'
+            : 'bg-indigo-300 dark:bg-indigo-950',
         )}
       >
         <div
           className={classNames(
             'h-full',
-            isAPool ? 'bg-yellow-500' : 'bg-indigo-500'
+            isAPool ? 'bg-yellow-500' : 'bg-indigo-500',
           )}
           style={{ width: `${progress}%` }}
         />
@@ -124,7 +132,7 @@ const ThridPartyAccounts: React.FC<{
               key={`user-profile-account-tooltip-${account.provider}`}
               {...account}
             />
-          )
+          ),
       )}
     </ul>
   );
@@ -223,7 +231,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({
                               'absolute bottom-0 w-full h-1/3 rounded-lg bg-gradient-to-t to-transparent',
                               user.coverURL
                                 ? 'from-slate-700/75 dark:from-slate-950/75'
-                                : 'from-transparent'
+                                : 'from-transparent',
                             )}
                           />
                           <div className="absolute bottom-0 left-4 translate-y-1/3 flex flex-row w-[calc(100%_-_1rem)]">
@@ -246,7 +254,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({
                                 <div className="flex flex-col text-center drop-shadow-2xl">
                                   <p className="text-white/90 font-display font-bold">
                                     {numberFormater.format(
-                                      user.followingsCount
+                                      user.followingsCount,
                                     )}
                                   </p>
                                   <h5 className="text-white/80">Following</h5>

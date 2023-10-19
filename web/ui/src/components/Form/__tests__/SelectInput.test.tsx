@@ -12,7 +12,7 @@ describe('SelectInput', () => {
         objects={objects}
         selectedValue={selectedValue}
         onChange={onChange}
-      />
+      />,
     );
     const selectedObjectElement = getByText(selectedValue);
     expect(selectedObjectElement).toBeInTheDocument();
@@ -24,7 +24,7 @@ describe('SelectInput', () => {
         objects={objects}
         selectedValue={selectedValue}
         onChange={onChange}
-      />
+      />,
     );
     const selectButtonElement = getByRole('button');
     fireEvent.click(selectButtonElement);
@@ -39,7 +39,7 @@ describe('SelectInput', () => {
         objects={objects}
         selectedValue={selectedValue}
         onChange={onChange}
-      />
+      />,
     );
     const selectButtonElement = getByRole('button');
     fireEvent.click(selectButtonElement);

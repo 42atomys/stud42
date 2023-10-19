@@ -7,7 +7,7 @@ import useLocalStorage from '@lib/useLocalStorage';
 export const NewFeaturePing = ({ featureName }: { featureName: string }) => {
   const [visible, setVisible] = useLocalStorage(
     LocalStorageKeys.NewFeatureReadStatus(featureName),
-    true
+    true,
   );
   if (!visible) {
     // Return div to prevent mismatch error between server side component and

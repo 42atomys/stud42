@@ -39,7 +39,7 @@ const DropdownMenu: React.FC<PropsWithClassName<DropdownMenuProps>> = ({
                   'fa-light fa-ellipsis-vertical fa-fw',
                   buttonAlwaysShow || open
                     ? 'visible'
-                    : 'invisible group-hover:visible'
+                    : 'invisible group-hover:visible',
                 )}
               ></i>
             </Menu.Button>
@@ -47,7 +47,7 @@ const DropdownMenu: React.FC<PropsWithClassName<DropdownMenuProps>> = ({
               static
               className={classNames(
                 'absolute flex flex-col space-y-2 right-0 w-56 origin-top-right bg-slate-50 dark:bg-slate-950 divide-y divide-gray-100 dark:divide-slate-900 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none',
-                open ? 'visible flex' : 'invisible hidden'
+                open ? 'visible flex' : 'invisible hidden',
               )}
             >
               <div className="px-1 py-1 flex flex-col">

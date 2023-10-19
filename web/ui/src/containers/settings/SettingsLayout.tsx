@@ -1,5 +1,6 @@
 import { NewBadgy } from '@components/Badge';
 import { Menu, MenuCategory, MenuItem, useSidebar } from '@components/Sidebar';
+import '@lib/prototypes/string';
 import classNames from 'classnames';
 import { NextPage } from 'next';
 import { signOut } from 'next-auth/react';
@@ -16,7 +17,7 @@ export const SettingsLayout: NextPage<
   return (
     <SidebarProvider>
       <Head>
-        <title>Settings - Stud42</title>
+        <title>{page.toSentenceCase()} Settings - S42</title>
       </Head>
       <PageContainer>
         <Sidebar>
@@ -25,8 +26,15 @@ export const SettingsLayout: NextPage<
               <MenuItem
                 active={page === 'profile'}
                 href="/settings/profile"
-                icon="fa-user"
+                icon="fa-id-badge"
                 name="Public profile"
+                rightChildren={<NewBadgy />}
+              />
+              <MenuItem
+                active={page === 'account'}
+                href="/settings/account"
+                icon="fa-user"
+                name="Account"
                 rightChildren={<NewBadgy />}
               />
               <MenuItem
@@ -44,43 +52,46 @@ export const SettingsLayout: NextPage<
                 className='!text-fuchsia-400 dark:!text-fuchsia-600 hover:!bg-fuchsia-500/20 hover:!text-fuchsia-500 [&_.anchor-sub-text]:hover:!text-fuchsia-500 [&[data-active="true"]]:!bg-fuchsia-500/20 [&[data-active="true"]_.anchor-sub-text]:!text-fuchsia-500 '
               />
             </MenuCategory>
-            <MenuCategory name="Access">
-              <MenuItem
-                active={page === 'accounts'}
-                href="/settings/accounts"
-                icon="fa-shield-check"
-                name="Accounts"
-                rightChildren={<NewBadgy />}
-              />
-            </MenuCategory>
             <MenuCategory name="About">
               <MenuItem
                 active={page === 'about'}
-                // href="/settings/about"
+                href="/about"
+                linkTarget="_blank"
                 icon="fa-info-circle"
                 name="About"
-                rightChildren="Soon"
+                rightChildren={
+                  <i className="fa-light fa-arrow-up-right-from-square"></i>
+                }
               />
               <MenuItem
                 active={page === 'help'}
-                // href="/settings/help"
+                href="/about/help"
+                linkTarget="_blank"
                 icon="fa-question-circle"
                 name="Help"
-                rightChildren="Soon"
+                rightChildren={
+                  <i className="fa-light fa-arrow-up-right-from-square"></i>
+                }
               />
               <MenuItem
                 active={page === 'terms'}
-                // href="/settings/terms"
+                href="/about/terms"
+                linkTarget="_blank"
                 icon="fa-file-alt"
                 name="Terms"
-                rightChildren="Soon"
+                rightChildren={
+                  <i className="fa-light fa-arrow-up-right-from-square"></i>
+                }
               />
               <MenuItem
                 active={page === 'privacy'}
-                // href="/settings/privacy"
+                href="/about/privacy"
+                linkTarget="_blank"
                 icon="fa-file-alt"
                 name="Privacy"
-                rightChildren="Soon"
+                rightChildren={
+                  <i className="fa-light fa-arrow-up-right-from-square"></i>
+                }
               />
             </MenuCategory>
             <hr className="my-2 border-slate-200 dark:border-slate-800" />
@@ -109,7 +120,7 @@ export const SettingsLayout: NextPage<
         <PageContent
           className={classNames(
             `p-4 flex-1 flex flex-col container mx-auto px-8 max-w-7xl`,
-            className
+            className,
           )}
         >
           {children}

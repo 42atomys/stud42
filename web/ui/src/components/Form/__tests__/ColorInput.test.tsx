@@ -14,13 +14,13 @@ describe('ColorInput', () => {
         name="test-color-input"
         label="Test Color Input"
         onChange={onChange}
-      />
+      />,
     );
     const labelElement = container.querySelector(
-      'label>span'
+      'label>span',
     ) as HTMLSpanElement;
     const colorInputElement = document.getElementById(
-      'test-color-input'
+      'test-color-input',
     ) as HTMLInputElement;
 
     expect(labelElement).toHaveTextContent('Test Color Input');
@@ -33,10 +33,10 @@ describe('ColorInput', () => {
         name="test-color-input"
         label="Test Color Input"
         onChange={onChange}
-      />
+      />,
     );
     const colorInputElement = document.getElementById(
-      'test-color-input'
+      'test-color-input',
     ) as HTMLInputElement;
 
     // Check that the color input is rendered

@@ -1,7 +1,7 @@
 import type { Actions, PayloadOf } from '@components/UserPopup';
 import type { ClusterViewQuery } from '@graphql.d';
-import { CampusNames } from '@lib/clustersMap';
 import { NonNullable } from 'types/utils';
+import { ICampus, ICluster } from '@lib/clustersMap';
 
 // ClusterMap.tsx
 export type MapLocation = NonNullable<
@@ -14,12 +14,12 @@ type Connection = {
 
 type NodeFinderFunc = <T extends Connection>(
   connection: T,
-  identifier: string
+  identifier: string,
 ) => NonNullable<T['edges'][number]>['node'] | null;
 
 type NodeIndexFinderFunc = <T extends Connection>(
   connection: T,
-  identifier: string
+  identifier: string,
 ) => number | -1;
 
 // ClusterContainer.tsx
@@ -30,13 +30,10 @@ type ClusterContainerChildrenProps = {
 };
 
 export type ClusterContainerProps = {
-  [Key in CampusNames as readonly Key]: {
-    campus: Key;
-    // TODO Found a way to make this type more specific than `string`?
-    cluster: string;
-    children: (props: ClusterContainerChildrenProps) => JSX.Element;
-  };
-}[CampusNames];
+  campus: ICampus;
+  cluster: ICluster;
+  children: (props: ClusterContainerChildrenProps) => JSX.Element;
+};
 
 type ClusterContainerComponent = (props: ClusterContainerProps) => JSX.Element;
 

@@ -40,7 +40,7 @@ export const ThemePreview = ({
         'border-slate-300 dark:border-slate-700',
         active
           ? 'ring-indigo-500'
-          : 'ring-transparent hover:ring-1 hover:ring-indigo-500 hover:border-indigo-500'
+          : 'ring-transparent hover:ring-1 hover:ring-indigo-500 hover:border-indigo-500',
       )}
     >
       <div className={classNames({ 'bg-slate-900': themeName !== 'light' })}>
@@ -67,7 +67,7 @@ export const ThemePreview = ({
                 <div
                   className={classNames(
                     'h-2 rounded flex-1',
-                    theme.placeholder
+                    theme.placeholder,
                   )}
                 ></div>
               </div>
@@ -76,13 +76,13 @@ export const ThemePreview = ({
                   <div
                     className={classNames(
                       'h-2 rounded col-span-2',
-                      theme.placeholder
+                      theme.placeholder,
                     )}
                   ></div>
                   <div
                     className={classNames(
                       'h-2 rounded col-span-1',
-                      theme.placeholder
+                      theme.placeholder,
                     )}
                   ></div>
                 </div>

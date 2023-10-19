@@ -3,52 +3,55 @@ import useSidebar, { Menu, MenuCategory, MenuItem } from '@components/Sidebar';
 import { useMe } from '@ctx/currentUser';
 import { useClusterSidebarDataQuery } from '@graphql.d';
 import { isFirstLoading } from '@lib/apollo';
-import Campuses, { CampusNames } from '@lib/clustersMap';
+import Campuses, {
+  CampusIdentifier,
+  ICampus,
+  ICluster,
+} from '@lib/clustersMap';
 import '@lib/prototypes/string';
 import { clusterURL } from '@lib/searchEngine';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
+import '@lib/prototypes/string';
 
 /**
  * ClusterSidebar is the sidebar for the cluster page. It contains the cluster
  * menu statically defined. Used accross all cluster pages.
- * @param {string} activeCampusName - The campus used to match the current campus
- * @param {string} activeClusterIdentifier - The cluster used to match the current cluster
+ * @param {string} activeCampus - The campus used to match the current campus
+ * @param {string} activeCluster - The cluster used to match the current cluster
  * @returns {JSX.Element} The sub sidebar component
  */
 export const ClusterSidebar = ({
-  activeCampusName,
-  activeClusterIdentifier,
+  activeCampus,
+  activeCluster,
 }: {
-  activeCampusName: CampusNames;
-  activeClusterIdentifier: string;
+  activeCampus: ICampus;
+  activeCluster: ICluster;
 }) => {
   const { Sidebar } = useSidebar();
   const router = useRouter();
-  const campusKeys = Object.keys(Campuses) as Array<CampusNames>;
-  const currentCampusData = Campuses[activeCampusName];
+  const campusKeys = Object.keys(Campuses) as Array<CampusIdentifier>;
   const { me } = useMe();
   const { data: { locationsStatsByPrefixes = [] } = {}, networkStatus } =
     useClusterSidebarDataQuery({
       variables: {
-        campusName: activeCampusName,
-        clusterPrefixes: currentCampusData
-          .clusters()
-          .map((c) => c.identifier()),
+        campusName: activeCampus.name(),
+        clusterPrefixes: activeCampus.clusters().map((c) => c.identifier()),
       },
     });
-  const myCampusName = me?.currentCampus?.name?.toLowerCase() || '';
+  const myCampusidentifier =
+    me?.currentCampus?.name?.removeAccents().toCamelCase() || '';
   const freePlacesPerCluster: { [key: string]: number } =
     locationsStatsByPrefixes
       .map((l) => {
         const totalWorkspaces =
-          currentCampusData.cluster(l.prefix)?.totalWorkspaces() || 0;
+          activeCampus.cluster(l.prefix)?.totalWorkspaces() || 0;
         return [l.prefix, totalWorkspaces - l.occupiedWorkspace];
       })
       .reduce(
         (acc, [prefix, freePlaces]) => ({ ...acc, [prefix]: freePlaces }),
-        {}
+        {},
       );
 
   if (isFirstLoading(networkStatus)) {
@@ -80,7 +83,7 @@ export const ClusterSidebar = ({
         action={async (user) => {
           const url = clusterURL(
             user?.currentLocation?.campus?.name as string,
-            user?.currentLocation?.identifier as string
+            user?.currentLocation?.identifier as string,
           );
 
           if (url) {
@@ -95,43 +98,56 @@ export const ClusterSidebar = ({
             .sort((a, b) => {
               // Sort the campus list in alphabetical order and put the current
               // campus at the top.
-              return a?.equalsIgnoreCase(myCampusName)
+              return a?.equalsIgnoreCase(myCampusidentifier)
                 ? -1
-                : b?.equalsIgnoreCase(myCampusName)
+                : b?.equalsIgnoreCase(myCampusidentifier)
                 ? 1
                 : a.localeCompare(b);
             })
-            .map((campusName) => {
-              const campusData = Campuses[campusName];
-              const isMyCampus = campusName?.equalsIgnoreCase(myCampusName);
-              const activeCampus = activeCampusName == campusName;
+            .map((campusIdentifier) => {
+              const campusData = Campuses[campusIdentifier];
+              const isMyCampus =
+                campusIdentifier?.equalsIgnoreCase(myCampusidentifier);
+              const isActiveCampus =
+                activeCampus.identifier() == campusData.identifier();
 
               return (
                 <MenuCategory
-                  key={`sidebar-campus-${campusName}`}
+                  key={`sidebar-campus-${campusData.identifier()}`}
                   emoji={campusData.emoji()}
-                  name={campusName}
+                  name={campusData.name()}
                   text={isMyCampus ? 'Your campus' : undefined}
                   isCollapsable={!isMyCampus}
-                  collapsed={!activeCampus}
+                  collapsed={!isActiveCampus && !isMyCampus}
                 >
                   {campusData.clusters().map((cluster) => {
                     const clusterIdentifier = cluster.identifier();
                     return (
                       <Link
-                        href={`/clusters/${campusName}/${clusterIdentifier}`}
+                        href={`/clusters/${campusData
+                          .identifier()
+                          .toSafeLink()}/${clusterIdentifier}`}
                         passHref={true}
-                        key={`sidebar-clusters-${campusName}-${clusterIdentifier}`}
+                        key={`sidebar-clusters-${campusData.identifier()}-${clusterIdentifier}`}
                       >
                         <MenuItem
                           active={
-                            activeCampus &&
-                            clusterIdentifier == activeClusterIdentifier
+                            isActiveCampus &&
+                            clusterIdentifier == activeCluster.identifier()
                           }
-                          name={cluster.name()}
-                          leftChildren={clusterIdentifier.toUpperCase()}
+                          name={
+                            cluster.hasName()
+                              ? cluster.name()
+                              : clusterIdentifier.toUpperCase()
+                          }
+                          className="[&>div>span:first-of-type]:overflow-hidden [&>div>span]:whitespace-pre [&>div>span]:text-ellipsis"
+                          leftChildren={
+                            cluster.hasName()
+                              ? clusterIdentifier.toUpperCase()
+                              : null
+                          }
                           rightChildren={
-                            activeCampus ? (
+                            isActiveCampus ? (
                               <>
                                 <span className="pr-1 text-xs">
                                   {freePlacesPerCluster[clusterIdentifier]}

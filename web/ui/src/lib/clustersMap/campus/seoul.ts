@@ -1,12 +1,12 @@
 import { Campus } from '../campus';
 import { Cluster } from '../cluster';
-import { CampusNames, ICampus } from '../types';
+import { ICampus } from '../types';
 
 //
 export class Seoul extends Campus implements ICampus {
   emoji = (): string => '🇰🇷';
 
-  name = (): CampusNames => 'seoul';
+  name = (): string => 'Seoul';
 
   extractorRegexp = (): RegExp =>
     /(?<clusterWithLetter>cx?(?<cluster>[\d]+))(?<rowWithLetter>r(?<row>\d+))(?<workspaceWithLetter>s(?<workspace>\d+))/i;
@@ -15,7 +15,6 @@ export class Seoul extends Campus implements ICampus {
     return [
       new Cluster({
         identifier: 'c1',
-        totalWorkspaces: 63,
         // prettier-ignore
         map: [
           ['T:r1', 'W:c1r1s7', 'W:c1r1s6', 'W:c1r1s5', 'W:c1r1s4', 'W:c1r1s3', 'W:c1r1s2', 'W:c1r1s1', 'T:r1'],
@@ -31,7 +30,6 @@ export class Seoul extends Campus implements ICampus {
       }),
       new Cluster({
         identifier: 'c2',
-        totalWorkspaces: 80,
         // prettier-ignore
         map: [
           ['T:r10', 'W:c2r10s8', 'W:c2r10s7', 'W:c2r10s6', 'W:c2r10s5', 'W:c2r10s4', 'W:c2r10s3', 'W:c2r10s2', 'W:c2r10s1', 'T:r10'],
@@ -48,7 +46,6 @@ export class Seoul extends Campus implements ICampus {
       }),
       new Cluster({
         identifier: 'c3',
-        totalWorkspaces: 63,
         // prettier-ignore
         map: [
           ['T:r1', 'W:c3r1s7', 'W:c3r1s6', 'W:c3r1s5', 'W:c3r1s4', 'W:c3r1s3', 'W:c3r1s2', 'W:c3r1s1', 'T:r1'],
@@ -64,7 +61,6 @@ export class Seoul extends Campus implements ICampus {
       }),
       new Cluster({
         identifier: 'c4',
-        totalWorkspaces: 80,
         // prettier-ignore
         map: [
           ['T:r10', 'W:c4r10s8', 'W:c4r10s7', 'W:c4r10s6', 'W:c4r10s5', 'W:c4r10s4', 'W:c4r10s3', 'W:c4r10s2', 'W:c4r10s1', 'T:r10'],
@@ -81,7 +77,6 @@ export class Seoul extends Campus implements ICampus {
       }),
       new Cluster({
         identifier: 'c5',
-        totalWorkspaces: 63,
         // prettier-ignore
         map: [
           ['T:r1', 'W:c5r1s7', 'W:c5r1s6', 'W:c5r1s5', 'W:c5r1s4', 'W:c5r1s3', 'W:c5r1s2', 'W:c5r1s1', 'T:r1'],
@@ -97,7 +92,6 @@ export class Seoul extends Campus implements ICampus {
       }),
       new Cluster({
         identifier: 'c6',
-        totalWorkspaces: 80,
         // prettier-ignore
         map: [
           ['T:r10', 'W:c6r10s8', 'W:c6r10s7', 'W:c6r10s6', 'W:c6r10s5', 'W:c6r10s4', 'W:c6r10s3', 'W:c6r10s2', 'W:c6r10s1', 'T:r10'],
@@ -114,7 +108,6 @@ export class Seoul extends Campus implements ICampus {
       }),
       new Cluster({
         identifier: 'c7',
-        totalWorkspaces: 74,
         // prettier-ignore
         map: [
           [null,   null,        null,       null,       null,       null,       null,       null,       null,       null,       null,       null,   null, null, null,   null,       'T:r9',     'W:c7r5s1', 'W:c7r5s2', 'W:c7r5s3', 'W:c7r5s4', 'W:c7r5s5', 'W:c7r5s6', 'T:r9'],
@@ -126,7 +119,6 @@ export class Seoul extends Campus implements ICampus {
       }),
       new Cluster({
         identifier: 'c8',
-        totalWorkspaces: 110,
         // prettier-ignore
         map: [
           ['T:r8',      'T:r7',      'T:r6'     , 'T:r5',      'T:r4',      'T:r3',      'T:r2',      'T:r1'     ],
@@ -149,7 +141,6 @@ export class Seoul extends Campus implements ICampus {
       }),
       new Cluster({
         identifier: 'c9',
-        totalWorkspaces: 52,
         // prettier-ignore
         map: [
           ['T:r5', 'W:c9r5s8',  'W:c9r5s7',  'W:c9r5s6',  'W:c9r5s5', 'W:c9r5s4', 'W:c9r5s3', 'W:c9r5s2', 'W:c9r5s1', 'T:r5',     null,       null,       null,       null  ],
@@ -161,7 +152,6 @@ export class Seoul extends Campus implements ICampus {
       }),
       new Cluster({
         identifier: 'c10',
-        totalWorkspaces: 110,
         // prettier-ignore
         map: [
           ['T:r8',       'T:r7',       'T:r6',       'T:r5',       'T:r4',       'T:r3',       'T:r2',       'T:r1'      ],
@@ -184,7 +174,6 @@ export class Seoul extends Campus implements ICampus {
       }),
       new Cluster({
         identifier: 'cx1',
-        totalWorkspaces: 28,
         // prettier-ignore
         map: [
           [null,   'T:r3',      'T:r3',      null,   null, null, null,   null,        null,        null,        null,        null  ],
@@ -209,7 +198,6 @@ export class Seoul extends Campus implements ICampus {
       }),
       new Cluster({
         identifier: 'cx2',
-        totalWorkspaces: 56,
         // prettier-ignore
         map: [
           ['T:r8', null,         null,        null,        null,        'W:cx2r8s3', 'W:cx2r8s2', null,        null,        null,        null,        'T:r8'],

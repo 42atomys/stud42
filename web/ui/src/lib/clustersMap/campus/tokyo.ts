@@ -1,12 +1,12 @@
 import { Campus } from '../campus';
 import { Cluster } from '../cluster';
-import { CampusNames, ICampus } from '../types';
+import { ICampus } from '../types';
 
 //
 export class Tokyo extends Campus implements ICampus {
   emoji = (): string => '🇯🇵';
 
-  name = (): CampusNames => 'tokyo';
+  name = (): string => 'Tokyo';
 
   extractorRegexp = (): RegExp =>
     /(?<clusterWithLetter>c(?<cluster>\d+))(?<rowWithLetter>r(?<row>\d+))(?<workspaceWithLetter>s(?<workspace>\d+))/i;
@@ -15,7 +15,6 @@ export class Tokyo extends Campus implements ICampus {
     return [
       new Cluster({
         identifier: 'c1',
-        totalWorkspaces: 218,
         // prettier-ignore
         map: [
           ['T:r5',  'W:c1r5s1',  'W:c1r5s2',  'W:c1r5s3',  'W:c1r5s4',  'W:c1r5s5',  'W:c1r5s6',  'W:c1r5s7',  'W:c1r5s8',  'W:c1r5s9',  'T:r5',      null,         null,         null   ],

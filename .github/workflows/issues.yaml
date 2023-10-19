@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'issues' || github.event_name == 'pull_request' }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/github-script@v6
         with:
           script: |
@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'issues' || github.event_name == 'pull_request' }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/github-script@v6
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN_SPONSOR_CHECKING }}
@@ -74,7 +74,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'schedule' }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/stale@v8
         with:
           exempt-all-milestones: true

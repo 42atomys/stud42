@@ -17,7 +17,7 @@ export const SettingsTableRow: React.FC<
     <div
       className={classNames(
         'flex flex-col md:flex-row items-center space-x-4',
-        className
+        className,
       )}
     >
       <div className="flex-1">

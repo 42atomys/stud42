@@ -48,7 +48,7 @@ export const Avatar: React.FC<PropsWithClassName<AvatarProps>> = ({
           {
             'outline outline-fuchsia-500': flags?.includes(UserFlag.SPONSOR),
             'group/avatar flex overflow-hidden transition-none': profileLink,
-          }
+          },
         )}
       >
         {profileLink && (
