@@ -13,11 +13,11 @@ export const SettingsLayout: NextPage<
   PropsWithClassName<PropsWithChildren<SettingsLayoutProps>>
 > = ({ page, children, className }) => {
   const { SidebarProvider, Sidebar, PageContainer, PageContent } = useSidebar();
-
+  const pageTitle = `${page.toSentenceCase()} Settings - S42`;
   return (
     <SidebarProvider>
       <Head>
-        <title>{page.toSentenceCase()} Settings - S42</title>
+        <title>{pageTitle}</title>
       </Head>
       <PageContainer>
         <Sidebar>

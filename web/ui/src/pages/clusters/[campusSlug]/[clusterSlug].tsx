@@ -37,15 +37,14 @@ export const IndexPage: NextPage<PageProps> = ({
 
   if (!campus || !cluster) return <Error statusCode={404} />;
 
+  const pageTitle = `${
+    cluster.hasName() ? cluster.name() : cluster.identifier().toUpperCase()
+  } @ ${campus.name().toTitleCase()} - Clusters - S42`;
+
   return (
     <>
       <Head>
-        <title>
-          {cluster.hasName()
-            ? cluster.name()
-            : cluster.identifier().toUpperCase()}{' '}
-          @ {campus.name().toTitleCase()} - Clusters - S42
-        </title>
+        <title>{pageTitle}</title>
       </Head>
       <ClusterContainer campus={campus} cluster={cluster}>
         {({ locations, showPopup }) => (
