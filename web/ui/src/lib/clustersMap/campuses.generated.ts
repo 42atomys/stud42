@@ -12,6 +12,7 @@ import { Mulhouse } from './campus/mulhouse';
 import { Paris } from './campus/paris';
 import { Seoul } from './campus/seoul';
 import { Tokyo } from './campus/tokyo';
+import { Urduliz } from './campus/urduliz';
 import { Vienna } from './campus/vienna';
 import { Wolfsburg } from './campus/wolfsburg';
 
@@ -32,6 +33,7 @@ export const Campuses: Record<CampusIdentifier, ICampus> = {
   paris: new Paris(),
   seoul: new Seoul(),
   tokyo: new Tokyo(),
+  urduliz: new Urduliz(),
   vienna: new Vienna(),
   wolfsburg: new Wolfsburg(),
 };
