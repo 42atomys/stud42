@@ -33,6 +33,9 @@ declare global {
     equalsIgnoreCase(searchString: string): boolean;
     toTitleCase(): string;
     toSentenceCase(): string;
+    toCamelCase(): string;
+    removeAccents(): string;
+    toSafeLink(): string;
   }
 
   interface WindowEventMap {
