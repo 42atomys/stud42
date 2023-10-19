@@ -101,14 +101,14 @@ const IndexPage: NextPage<PageProps> = () => {
   const { myFollowings, myFollowsGroups } = data || {};
   const hasFollowing = (myFollowings?.length || 0) > 0;
   const currentGroup = myFollowsGroups?.find((g) => g?.slug === groupSlug);
+  const pageTitle = currentGroup
+    ? `${currentGroup?.emoji} ${currentGroup?.name} - Friendship - S42`
+    : `All Friendship - S42`;
+
   return (
     <SidebarProvider>
       <Head>
-        {(currentGroup && (
-          <title>
-            {currentGroup.emoji} {currentGroup.name} - Friendship - S42
-          </title>
-        )) || <title>All Friendship - Stud42</title>}
+        <title>{pageTitle}</title>
       </Head>
       <PageContainer>
         <Sidebar>
