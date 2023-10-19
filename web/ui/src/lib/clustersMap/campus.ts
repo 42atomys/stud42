@@ -1,5 +1,7 @@
-import { CampusNames, ICampus, ICluster } from './types';
-
+import Campuses from '.';
+import { ICampus, ICluster } from './types';
+import { CampusIdentifier } from './types.generated';
+import '@lib/prototypes/string';
 /**
  * Campus class represents a campus in the cluster map. It contains the
  * campus name, emoji, extractor function, and the list of clusters.
@@ -9,8 +11,14 @@ export class Campus implements ICampus {
     throw new Error('Method not implemented.');
   }
 
-  name(): CampusNames {
+  name(): string {
     throw new Error('Method not implemented.');
+  }
+
+  identifier(): CampusIdentifier {
+    return Object.keys(Campuses).find(
+      (key) => Campuses[key as CampusIdentifier] === this,
+    ) as CampusIdentifier;
   }
 
   extractorRegexp(): RegExp {

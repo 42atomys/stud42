@@ -39,7 +39,8 @@
     "**/*.tsx",
     "next.config.ts",
     "src/lib/prototypes/string.js",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "generators/*.ts"
   ],
   "exclude": ["node_modules"]
 }
