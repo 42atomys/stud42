@@ -15,5 +15,6 @@ export type CampusIdentifier =
   | 'paris'
   | 'seoul'
   | 'tokyo'
+  | 'urduliz'
   | 'vienna'
   | 'wolfsburg';
