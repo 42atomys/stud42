@@ -86,10 +86,7 @@ export const ClusterSidebar = ({
             user?.currentLocation?.identifier as string,
           );
 
-          if (url) {
-            router.replace(url);
-            return new Promise(() => {});
-          }
+          return url ? router.replace(url) : Promise.reject();
         }}
       />
       <div>
