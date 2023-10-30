@@ -1,5 +1,5 @@
 locals {
-  meilisearchVersion = "v0.30"
+  meilisearchVersion = "v1.4.2"
 }
 
 resource "random_password" "meilisearch_token" {
