@@ -102,7 +102,9 @@ const IndexPage: NextPage<PageProps> = () => {
   const hasFollowing = (myFollowings?.length || 0) > 0;
   const currentGroup = myFollowsGroups?.find((g) => g?.slug === groupSlug);
   const pageTitle = currentGroup
-    ? `${currentGroup?.emoji} ${currentGroup?.name} - Friendship - S42`
+    ? `${
+        currentGroup?.emoji + ' ' || ''
+      }${currentGroup?.name} - Friendship - S42`
     : `All Friendship - S42`;
 
   return (
