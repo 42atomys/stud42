@@ -15,7 +15,7 @@ jobs:
       - name: Checkout project
         uses: actions/checkout@v4
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
+        uses: hashicorp/setup-terraform@v3
       - name: Terraform Format
         env:
           TF_WORKSPACE: "production"
