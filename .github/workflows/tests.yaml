@@ -46,7 +46,7 @@ jobs:
           KUBECONFIG_ADMIN: ${{ secrets.KUBECONFIG_ADMIN }}
         run: mkdir -p ~/.kube && echo "$KUBECONFIG_ADMIN" >> ~/.kube/config
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
+        uses: hashicorp/setup-terraform@v3
         with:
           # Force the version due to crash on latest
           # https://github.com/hashicorp/terraform/issues/32200
