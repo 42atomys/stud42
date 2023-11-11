@@ -14,8 +14,6 @@ services:
         # Optional Node.js version to install
         NODE_VERSION: "lts/*"
     tty: true
-    env_file:
-      - .env
     environment:
       # Cross service
       DEBUG: 'true'
@@ -64,6 +62,7 @@ services:
   dragonfly:
     hostname: s42-dragonfly
     image: 'docker.dragonflydb.io/dragonflydb/dragonfly'
+    command: dragonfly --force_epoll
     restart: unless-stopped
     ulimits:
       memlock: -1

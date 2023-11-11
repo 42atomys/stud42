@@ -11,6 +11,8 @@ import { useRouter } from 'next/router';
 import React, { useContext } from 'react';
 import { PropsWithClassName } from 'types/globals';
 import { SidebarContext } from './SidebarContext';
+import { useMe } from '@ctx/currentUser';
+import { UserFlag } from '@graphql.d';
 
 /**
  * Menu item component. This is used to create the menu items in the sidebar
@@ -87,6 +89,7 @@ export const Sidebar = ({
 }) => {
   const { open, setOpen } = useContext(SidebarContext);
   const { publicRuntimeConfig } = getConfig();
+  const { me } = useMe()
 
   const isPrideMonth = new Date().getMonth() === 5;
   return (
@@ -142,9 +145,8 @@ export const Sidebar = ({
           </button>
         </div>
         <nav
-          className={`${
-            open ? 'block' : 'hidden md:block'
-          } flex-grow md:block px-4 pb-4 md:pb-0`}
+          className={`${open ? 'block' : 'hidden md:block'
+            } flex-grow md:block px-4 pb-4 md:pb-0`}
         >
           <MenuItem href="/feed" icon="fa-seedling" name="Feed" />
           <MenuItem href="/clusters" icon="fa-sitemap" name="Clusters" />
@@ -157,9 +159,8 @@ export const Sidebar = ({
           />
         </nav>
         <div
-          className={`${
-            open ? 'block' : 'hidden md:block'
-          } flex flex-col justify-center items-center text-center py-2 md:px-4 md:pb-4 `}
+          className={`${open ? 'block' : 'hidden md:block'
+            } flex flex-col justify-center items-center text-center py-2 md:px-4 md:pb-4 `}
         >
           {!subSidebar && (
             <MenuItem
@@ -183,14 +184,13 @@ export const Sidebar = ({
       </div>
       {subSidebar && (
         <div
-          className={`${
-            open ? 'block' : 'hidden md:flex'
-          } flex flex-col w-full md:w-72 text-slate-600 dark:text-slate-400 bg-slate-200 dark:bg-slate-950 flex-shrink-0 overflow-y-auto`}
+          className={`${open ? 'block' : 'hidden md:flex'
+            } flex flex-col w-full md:w-72 text-slate-600 dark:text-slate-400 bg-slate-200 dark:bg-slate-950 flex-shrink-0 overflow-y-auto`}
           // TODO: put into tailwind when the flex flow is added to tailwind
           style={{ flexFlow: 'column' }}
         >
           <div className="flex py-6 w-full justify-evenly z-10">
-            <Star />
+            <Star starred={me.flags.includes(UserFlag.STARGAZER)} />
             <Contribute />
           </div>
 

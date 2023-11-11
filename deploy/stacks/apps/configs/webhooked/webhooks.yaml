@@ -2,7 +2,7 @@ apiVersion: v1alpha1
 observability:
   metricsEnabled: true
 specs:
-  - name: users-create
+  - name: duo-users-create
     entrypointUrl: /users/create
     security:
       - header:
@@ -27,7 +27,7 @@ specs:
           queueName: webhooks.processing
           contentType: application/json
           durable: true
-  - name: users-update
+  - name: duo-users-update
     entrypointUrl: /users/update
     security:
       - header:
@@ -52,7 +52,7 @@ specs:
           queueName: webhooks.processing
           contentType: application/json
           durable: true
-  - name: locations-create
+  - name: duo-locations-create
     entrypointUrl: /locations/create
     security:
       - header:
@@ -77,7 +77,7 @@ specs:
           queueName: webhooks.processing
           contentType: application/json
           durable: true
-  - name: locations-close
+  - name: duo-locations-close
     entrypointUrl: /locations/close
     security:
       - header:
@@ -102,7 +102,7 @@ specs:
           queueName: webhooks.processing
           contentType: application/json
           durable: true
-  - name: locations-destroy
+  - name: duo-locations-destroy
     entrypointUrl: /locations/destroy
     security:
       - header:
@@ -127,7 +127,7 @@ specs:
           queueName: webhooks.processing
           contentType: application/json
           durable: true
-  - name: campus-users-create
+  - name: duo-campus-users-create
     entrypointUrl: /campus_users/create
     security:
       - header:
@@ -152,7 +152,7 @@ specs:
           queueName: webhooks.processing
           contentType: application/json
           durable: true
-  - name: campus-users-update
+  - name: duo-campus-users-update
     entrypointUrl: /campus_users/update
     security:
       - header:
@@ -177,7 +177,7 @@ specs:
           queueName: webhooks.processing
           contentType: application/json
           durable: true
-  - name: campus-users-destroy
+  - name: duo-campus-users-destroy
     entrypointUrl: /campus_users/destroy
     security:
       - header:
@@ -223,7 +223,38 @@ specs:
             - name: second
               value: "sha256={{ .Outputs.generate_hmac_256.value }}"
     formatting:
-      templatePath: /config/template.tpl
+      templatePath: /config/github_template.tpl
+    storage:
+      - type: rabbitmq
+        specs:
+          databaseUrl:
+            valueFrom:
+              envRef: RABBITMQ_DATABASE_URL
+          queueName: webhooks.processing
+          contentType: application/json
+          durable: true
+  - name: github-repository-dispatch
+    entrypointUrl: /github/repository/dispatch
+    security:
+      - generateHmac256:
+          inputs:
+            - name: payload
+              value: "{{ .Inputs.payload }}"
+            - name: secret
+              valueFrom:
+                envRef: GITHUB_WEBHOOK_SECRET
+      - header:
+          inputs:
+            - name: headerName
+              value: X-Hub-Signature-256
+      - compare:
+          inputs:
+            - name: first
+              value: "{{ .Outputs.header.value }}"
+            - name: second
+              value: "sha256={{ .Outputs.generate_hmac_256.value }}"
+    formatting:
+      templatePath: /config/github_template.tpl
     storage:
       - type: rabbitmq
         specs:

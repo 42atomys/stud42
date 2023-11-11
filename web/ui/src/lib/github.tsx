@@ -121,7 +121,7 @@ const PROJECT_PATH = '42Atomys/stud42';
  * Star get the repository information from the GitHub API about the stars
  * of the current project and display it like a badge.
  */
-export const Star = (): JSX.Element => {
+export const Star = ({ starred = false }: { starred: boolean }): JSX.Element => {
   const getRepo = useCallback(async () => {
     try {
       const { data }: { data: Repository } = await axios.get(
