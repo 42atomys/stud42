@@ -4,6 +4,7 @@
 import { ICampus } from './types';
 import { CampusIdentifier } from './types.generated';
 
+import { Angouleme } from './campus/angouleme';
 import { Helsinki } from './campus/helsinki';
 import { Lausanne } from './campus/lausanne';
 import { Madrid } from './campus/madrid';
@@ -26,6 +27,7 @@ import { Wolfsburg } from './campus/wolfsburg';
  * (see `campus/paris.ts` for an example) and run `yarn generate:campus`
  */
 export const Campuses: Record<CampusIdentifier, ICampus> = {
+  angouleme: new Angouleme(),
   helsinki: new Helsinki(),
   lausanne: new Lausanne(),
   madrid: new Madrid(),
