@@ -15,7 +15,7 @@ export class Angouleme extends Campus implements ICampus {
     return [
       new Cluster({
         identifier: '1',
-        name : "The silent one",
+        name: 'The silent one',
         // prettier-ignore
         map: [
           ['T:A', 'W:1A1', 'W:1A2', 'W:1A3', 'W:1A4', 'W:1A5', 'W:1A6', 'W:1A7', 'T:A'],
@@ -30,7 +30,7 @@ export class Angouleme extends Campus implements ICampus {
       }),
       new Cluster({
         identifier: '2',
-        name : "The very cool one",
+        name: 'The very cool one',
         // prettier-ignore
         map: [
           ['T:A', 'W:2A1', 'W:2A2', 'W:2A3','W:2A4', null, null, 'W:2A5', 'W:2A6', 'W:2A7' ,'T:A'],
@@ -46,7 +46,7 @@ export class Angouleme extends Campus implements ICampus {
       }),
       new Cluster({
         identifier: '3',
-        name : "The best, when it's cold",
+        name: 'The best, when it's cold',
         // prettier-ignore
         map: [
           ['T:A', 'W:3A1', 'W:3A2', 'W:3A3', 'W:3A4', null, null, 'W:3A5', 'W:3A6' ,'W:3A7' , 'T:A'],
