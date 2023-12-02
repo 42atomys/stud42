@@ -45,7 +45,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Expose stack to deploy
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         id: detected_stack
         with:
           script: |
@@ -92,7 +92,7 @@ jobs:
       # Generate the url of the environment
       - name: Generate url of the environment
         id: envurl
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         if: matrix.stack == 'apps'
         with:
           script: |
