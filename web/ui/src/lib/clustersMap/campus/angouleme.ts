@@ -14,7 +14,7 @@ export class Angouleme extends Campus implements ICampus {
   clusters(): Cluster[] {
     return [
       new Cluster({
-        identifier: 'c1',
+        identifier: '1',
         name : "The silent one",
         // prettier-ignore
         map: [
