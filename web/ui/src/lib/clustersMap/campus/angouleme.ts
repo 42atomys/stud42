@@ -16,6 +16,7 @@ export class Angouleme extends Campus implements ICampus {
       new Cluster({
         identifier: 'c1',
         name : "The silent one",
+        // prettier-ignore
         map: [
           ['T:A', 'W:1A1', 'W:1A2', 'W:1A3', 'W:1A4', 'W:1A5', 'W:1A6', 'W:1A7', 'T:A'],
           ['T:B', 'W:1B1', 'W:1B2', 'W:1B3',  null,   'W:1B4', 'W:1B5', 'W:1B6', 'T:B'],
