@@ -45,7 +45,7 @@ export class Angouleme extends Campus implements ICampus {
         ],
       }),
       new Cluster({
-        identifier: 'c3',
+        identifier: '3',
         name : "The best, when it's cold",
         // prettier-ignore
         map: [
