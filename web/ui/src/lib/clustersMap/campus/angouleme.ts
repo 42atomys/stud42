@@ -47,15 +47,15 @@ export class Angouleme extends Campus implements ICampus {
         name : "The best, when it's cold",
         // prettier-ignore
         map: [
-          ['T:A', 'W:3A1', 'T:3A2', 'W:3A3', 'W:3A4', null, null, 'W:3A5', 'W:3A6' ,'T:3A7' , 'T:A'],
-          ['T:B', 'W:3B1', 'T:3B2', 'W:3B3', 'W:3B4', null, null, 'W:3B5', 'W:3B6' ,'T:3B7' , 'T:B'],
+          ['T:A', 'W:3A1', 'W:3A2', 'W:3A3', 'W:3A4', null, null, 'W:3A5', 'W:3A6' ,'W:3A7' , 'T:A'],
+          ['T:B', 'W:3B1', 'W:3B2', 'W:3B3', 'W:3B4', null, null, 'W:3B5', 'W:3B6' ,'W:3B7' , 'T:B'],
           [null,   null,    null,    null,    null,   null, null,  null,    null,    null,     null],
-          ['T:C', 'W:3C1', 'T:3C2', 'W:3C3', 'W:3C4', null, null, 'W:3C5', 'W:3C6' ,'T:3C7' , 'T:C'],
-          ['T:D', 'W:3D1', 'T:3D2', 'W:3D3', 'W:3D4', null, null, 'W:3D5', 'W:3D6' ,'T:3D7' , 'T:D'],
+          ['T:C', 'W:3C1', 'W:3C2', 'W:3C3', 'W:3C4', null, null, 'W:3C5', 'W:3C6' ,'W:3C7' , 'T:C'],
+          ['T:D', 'W:3D1', 'W:3D2', 'W:3D3', 'W:3D4', null, null, 'W:3D5', 'W:3D6' ,'W:3D7' , 'T:D'],
           [null,   null,    null,    null,    null,   null, null,  null,    null,    null,     null],
-          ['T:E', 'W:3E1', 'T:3E2', 'W:3E3', 'W:3E4', null, null, 'W:3E5', 'W:3E6' ,'T:3E7' , 'T:E'],
-          ['T:F', 'W:3F1', 'T:3F2', 'W:3F3', 'W:3F4', null, null, 'W:3F5', 'W:3F6' ,'T:3F7' , 'T:F'],
-          ['T:G', 'W:3G1', 'T:3G2', 'W:3G3', 'W:3G4', null, null, 'W:3G5', 'W:3G6' ,'T:3G7' , 'T:G'],
+          ['T:E', 'W:3E1', 'W:3E2', 'W:3E3', 'W:3E4', null, null, 'W:3E5', 'W:3E6' ,'W:3E7' , 'T:E'],
+          ['T:F', 'W:3F1', 'W:3F2', 'W:3F3', 'W:3F4', null, null, 'W:3F5', 'W:3F6' ,'W:3F7' , 'T:F'],
+          ['T:G', 'W:3G1', 'W:3G2', 'W:3G3', 'W:3G4', null, null, 'W:3G5', 'W:3G6' ,'W:3G7' , 'T:G'],
         ],
       }),
     ];
