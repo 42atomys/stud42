@@ -9,7 +9,7 @@ export class Angouleme extends Campus implements ICampus {
   name = (): string => 'Angouleme';
 
   extractorRegexp = (): RegExp =>
-    /(?<clusterWithLetter>c(?<cluster>\d+))(?<rowWithLetter>r(?<row>\d+))(?<workspaceWithLetter>p(?<workspace>\d+))/i;
+    /(?<clusterWithLetter>(?<cluster>\d+))(?<rowWithLetter>(?<row>\w))(?<workspaceWithLetter>(?<workspace>\d+))/i;
 
   clusters(): Cluster[] {
     return [
