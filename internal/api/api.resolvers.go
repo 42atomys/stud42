@@ -459,7 +459,7 @@ func (r *queryResolver) LocationsByCluster(ctx context.Context, page typesgen.Pa
 func (r *queryResolver) LocationsStatsByPrefixes(ctx context.Context, campusName string, identifierPrefixes []string) ([]*typesgen.LocationStats, error) {
 	sqlResults := []*typesgen.LocationStats{}
 	prefixes := make([]any, len(identifierPrefixes))
-	identifierMinSize := 2
+	identifierMinSize := 1
 	identifierMaxSize := 10
 
 	// We need to convert the prefixes to any to be able to use them in the query
