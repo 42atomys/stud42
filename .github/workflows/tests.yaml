@@ -61,7 +61,7 @@ jobs:
         id: plan
         run: terraform plan -no-color -input=false -out=${{ matrix.stack }}-tfplan
       - name: Store terraform plan as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.stack }}-tfplan
           path: deploy/stacks/${{ matrix.stack }}/${{ matrix.stack }}-tfplan
