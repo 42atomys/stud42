@@ -28,9 +28,8 @@ const ErrorPage: NextPage<Props> = ({
 };
 
 ErrorPage.getInitialProps = async (context: NextPageContext) => {
-  const errorInitialProps: Props = await NextErrorComponent.getInitialProps(
-    context,
-  );
+  const errorInitialProps: Props =
+    await NextErrorComponent.getInitialProps(context);
 
   const { res, err, asPath } = context;
 

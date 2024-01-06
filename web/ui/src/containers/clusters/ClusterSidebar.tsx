@@ -98,8 +98,8 @@ export const ClusterSidebar = ({
               return a?.equalsIgnoreCase(myCampusidentifier)
                 ? -1
                 : b?.equalsIgnoreCase(myCampusidentifier)
-                ? 1
-                : a.localeCompare(b);
+                  ? 1
+                  : a.localeCompare(b);
             })
             .map((campusIdentifier) => {
               const campusData = Campuses[campusIdentifier];
