@@ -121,6 +121,11 @@ module "webhooked" {
       mountPath  = "/config/template.tpl"
       readOnly   = true
       subPath    = "template.tpl"
+      }, {
+      volumeName = "configuration"
+      mountPath  = "/config/github_template.tpl"
+      readOnly   = true
+      subPath    = "github_template.tpl"
     }
   ]
 
@@ -133,8 +138,9 @@ module "webhooked" {
   configMaps = {
     "config" = {
       data = {
-        "template.tpl"  = file("${path.root}/configs/webhooked/template.tpl")
-        "webhooks.yaml" = file("${path.root}/configs/webhooked/webhooks.yaml")
+        "template.tpl"        = file("${path.root}/configs/webhooked/template.tpl")
+        "github_template.tpl" = file("${path.root}/configs/webhooked/github_template.tpl")
+        "webhooks.yaml"       = file("${path.root}/configs/webhooked/webhooks.yaml")
       }
       immutable = false
     }

@@ -49,7 +49,7 @@ const ThridPartyIcon: React.FC<{ provider: AccountProvider }> = ({
       initial={{ scale: 1 }}
       whileHover={{ scale: 1.2 }}
       onClick={() =>
-        signIn(provider.toLowerCase(), { callbackUrl: '/settings/accounts' })
+        signIn(provider.toLowerCase(), { callbackUrl: '/settings/profile' })
       }
     >
       <i

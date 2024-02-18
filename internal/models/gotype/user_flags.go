@@ -13,6 +13,7 @@ const (
 	UserFlagCollaborator UserFlag = "COLLABORATOR"
 	UserFlagContributor  UserFlag = "CONTRIBUTOR"
 	UserFlagSponsor      UserFlag = "SPONSOR"
+	UserFlagStargazer    UserFlag = "STARGAZER"
 	UserFlagBeta         UserFlag = "BETA"
 	UserFlagDiscord      UserFlag = "DISCORD"
 )
@@ -23,6 +24,7 @@ var (
 		UserFlagCollaborator,
 		UserFlagContributor,
 		UserFlagSponsor,
+		UserFlagStargazer,
 		UserFlagBeta,
 		UserFlagDiscord,
 	}
@@ -33,7 +35,7 @@ var (
 func (e UserFlag) IsValid() bool {
 	switch e {
 	case UserFlagStaff, UserFlagCollaborator, UserFlagContributor,
-		UserFlagSponsor, UserFlagBeta, UserFlagDiscord:
+		UserFlagSponsor, UserFlagStargazer, UserFlagBeta, UserFlagDiscord:
 		return true
 	}
 	return false
