@@ -60,7 +60,7 @@
     {
       "label": "Start API",
       "detail": "Start API in background",
-      "type": "process",
+      "type": "shell",
       "isBackground": true,
       "command": "env",
       "args": ["APP_NAME=api", "go", "run", "main.go", "serve", "api", "-g"],
@@ -77,7 +77,7 @@
     {
       "label": "Start Interface",
       "detail": "Start Interface in background",
-      "type": "process",
+      "type": "shell",
       "isBackground": true,
       "command": "yarn",
       "args": ["--cwd", "web/ui", "dev"],
@@ -94,7 +94,7 @@
     {
       "label": "Start Authorization Service",
       "detail": "Start Authorization service in background",
-      "type": "process",
+      "type": "shell",
       "isBackground": true,
       "command": "env",
       "args": ["APP_NAME=auth", "go", "run", "main.go", "serve", "auth"],
@@ -216,7 +216,7 @@
     {
       "label": "Run postgresql cli (psql)",
       "detail": "Execute psql on container",
-      "type": "process",
+      "type": "shell",
       "isBackground": true,
       "command": "psql",
       "icon": {
@@ -233,7 +233,7 @@
     {
       "label": "Run dragonfly cli (redis-cli)",
       "detail": "Execute redis-cli on container",
-      "type": "process",
+      "type": "shell",
       "isBackground": true,
       "command": "redis-cli",
       "icon": {

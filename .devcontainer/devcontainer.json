@@ -1,9 +1,13 @@
 {
+  "$schema": "https://raw.githubusercontent.com/devcontainers/spec/main/schemas/devContainer.schema.json",
   "name": "s42.app",
   "dockerComposeFile": "docker-compose.yaml",
   "service": "workspace",
   "workspaceFolder": "/workspace",
-
+  "containerUser": "vscode",
+  "shutdownAction": "stopCompose",
+  "waitFor": "postStartCommand",
+  "userEnvProbe": "loginInteractiveShell",
   // Configure tool-specific properties.
   "customizations": {
     // Configure properties specific to VS Code.
@@ -20,6 +24,8 @@
         "editor.formatOnSave": true,
         "go.lintTool": "golangci-lint",
         "terminal.integrated.fontFamily": "'DejaVu Sans Mono for Powerline', monospace",
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "terminal.integrated.defaultProfile.osx": "zsh",
         "editor.tabSize": 2,
         "editor.renderWhitespace": "all",
         "gopls": {
@@ -30,8 +36,8 @@
           "staticcheck": true
         },
         "editor.codeActionsOnSave": {
-          "source.organizeImports": true,
-          "source.fixAll": true
+          "source.organizeImports": "explicit",
+          "source.fixAll": "explicit"
         },
         "editor.bracketPairColorization.enabled": true,
         "editor.guides.bracketPairs": "active",
@@ -47,8 +53,19 @@
           "showGlobalVariables": false
         },
         "editor.inlineSuggest.enabled": true,
-        "editor.rulers": [80],
-        "eslint.packageManager": "yarn",
+        "editor.rulers": [80, 120],
+        "jest.jestCommandLine": "yarn test",
+        "jest.runMode": {
+          "runAllTestsOnStartup": false,
+          "type": "on-demand",
+          "showInlineError": true,
+          "coverage": true
+        },
+        "jest.outputConfig": {
+          "revealOn": "error",
+          "clearOnRun": "none",
+          "revealWithFocus": "none"
+        },
         "eslint.workingDirectories": [
           {
             "directory": "web/ui"
@@ -94,7 +111,8 @@
         "bradlc.vscode-tailwindcss",
         "redhat.vscode-yaml",
         "hashicorp.terraform",
-        "orta.vscode-jest"
+        "orta.vscode-jest",
+        "ms-vscode.makefile-tools"
       ]
     }
   },

@@ -8,6 +8,7 @@
       "mode": "debug",
       "program": "${workspaceFolder}/main.go",
       "args": ["serve", "api", "-g"],
+      "envFile": "${workspaceFolder}/.devcontainer/.env",
       "env": {
         "DEBUG": "true"
       },
@@ -20,6 +21,7 @@
       "mode": "debug",
       "program": "${workspaceFolder}/main.go",
       "args": ["serve", "auth"],
+      "envFile": "${workspaceFolder}/.devcontainer/.env",
       "env": {
         "DEBUG": "true"
       }
@@ -30,6 +32,7 @@
       "request": "launch",
       "cwd": "${workspaceFolder}/web/ui",
       "command": "yarn dev",
+      "envFile": "${workspaceFolder}/.devcontainer/.env",
       "serverReadyAction": {
         "pattern": "started server on .+, url: (https?://.+)",
         "uriFormat": "%s",
@@ -43,6 +46,7 @@
       "mode": "debug",
       "program": "${workspaceFolder}/main.go",
       "args": ["jobs", "webhooks"],
+      "envFile": "${workspaceFolder}/.devcontainer/.env",
       "env": {
         "DEBUG": "true"
       }
@@ -54,6 +58,7 @@
       "mode": "debug",
       "program": "${workspaceFolder}/main.go",
       "args": ["jobs", "crawler", "campus"],
+      "envFile": "${workspaceFolder}/.devcontainer/.env",
       "env": {
         "DEBUG": "true"
       }
@@ -65,6 +70,7 @@
       "mode": "debug",
       "program": "${workspaceFolder}/main.go",
       "args": ["jobs", "crawler", "locations"],
+      "envFile": "${workspaceFolder}/.devcontainer/.env",
       "env": {
         "DEBUG": "true"
       }

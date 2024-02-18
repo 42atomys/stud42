@@ -36,6 +36,7 @@ services:
       NEXTAUTH_URL: http://localhost:3000
       NEXTAUTH_SECRET: private-secret-for-dev-only
     volumes:
+      - ./.zshrc:/home/vscode/.zshrc:cached
       - ..:/workspace:cached
 
     # Overrides default command so things don't shut down after the process ends.
