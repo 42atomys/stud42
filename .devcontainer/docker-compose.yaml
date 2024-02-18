@@ -14,8 +14,6 @@ services:
         # Optional Node.js version to install
         NODE_VERSION: "lts/*"
     tty: true
-    env_file:
-      - .env
     environment:
       # Cross service
       DEBUG: 'true'
@@ -38,6 +36,7 @@ services:
       NEXTAUTH_URL: http://localhost:3000
       NEXTAUTH_SECRET: private-secret-for-dev-only
     volumes:
+      - ./.zshrc:/home/vscode/.zshrc:cached
       - ..:/workspace:cached
 
     # Overrides default command so things don't shut down after the process ends.
@@ -64,6 +63,7 @@ services:
   dragonfly:
     hostname: s42-dragonfly
     image: 'docker.dragonflydb.io/dragonflydb/dragonfly'
+    command: dragonfly --force_epoll
     restart: unless-stopped
     ulimits:
       memlock: -1

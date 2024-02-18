@@ -1,6 +1,7 @@
 import useSessionStorage from '@lib/useSessionStorage';
 import axios from 'axios';
 import { useCallback, useEffect } from 'react';
+import { tv } from 'tailwind-variants';
 import { SessionStorageKeys } from './storageKeys';
 
 export interface Repository {
@@ -117,11 +118,36 @@ export interface Owner {
 
 const PROJECT_PATH = '42Atomys/stud42';
 
+const starButton = tv({
+  slots: {
+    link: 'px-2 py-1 bg-slate-300 dark:bg-slate-950 rounded-md border dark:border-slate-700 text-slate-600 dark:text-slate-300',
+    star: 'fa-regular fa-star',
+    text: 'pl-2 font-medium',
+  },
+
+  variants: {
+    starred: {
+      false: {},
+      true: {
+        star: 'text-yellow-500 fa-solid',
+      },
+    },
+  },
+
+  defaultVariants: {
+    starred: false,
+  },
+});
+
 /**
  * Star get the repository information from the GitHub API about the stars
  * of the current project and display it like a badge.
  */
-export const Star = (): JSX.Element => {
+export const Star = ({
+  starred = false,
+}: {
+  starred: boolean;
+}): JSX.Element => {
   const getRepo = useCallback(async () => {
     try {
       const { data }: { data: Repository } = await axios.get(
@@ -147,12 +173,14 @@ export const Star = (): JSX.Element => {
     <a
       href={`https://github.com/${PROJECT_PATH}`}
       target="_blank"
-      className="px-3 py-1 bg-slate-300 dark:bg-slate-950 rounded-md border dark:border-slate-700 text-slate-600 dark:text-slate-300"
+      className={starButton().link({ starred })}
       rel="noreferrer"
     >
-      <i className="fa-regular fa-star"></i>
-      <span className="pl-3 font-medium">Star</span>
-      <span className="pl-3 font-medium" suppressHydrationWarning>
+      <i className={starButton().star({ starred })}></i>
+      <span className={starButton().text({ starred })}>
+        {starred ? 'Thanks' : 'Star'}
+      </span>
+      <span className={starButton().text({ starred })} suppressHydrationWarning>
         {stars}
       </span>
     </a>
@@ -167,11 +195,11 @@ export const Contribute = (): JSX.Element => {
     <a
       href={`https://github.com/${PROJECT_PATH}`}
       target="_blank"
-      className="px-3 py-1 bg-slate-300 dark:bg-slate-950 rounded-md border dark:border-slate-700 text-slate-600 dark:text-slate-300"
+      className="px-2 py-1 bg-slate-300 dark:bg-slate-950 rounded-md border dark:border-slate-700 text-slate-600 dark:text-slate-300"
       rel="noreferrer"
     >
       <i className="fa-brands fa-github"></i>
-      <span className="pl-3 font-medium">Contribute</span>
+      <span className="pl-2 font-medium">Contribute</span>
     </a>
   );
 };
