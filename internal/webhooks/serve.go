@@ -2,10 +2,10 @@ package webhooks
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/getsentry/sentry-go"
 	"github.com/rs/zerolog/log"
@@ -112,76 +112,46 @@ func (p *processor) Serve(amqpUrl, channel string) error {
 	return nil
 }
 
-// metadataWebhooked is the structure of the webhook metadata sent by the
-// webhooked project formatted following this schema:
-type metadataWebhooked struct {
-	Metadata struct {
-		// For duoapi webhooks the strcut is the type of the object with additionnal
-		// fields
-		duoapi.WebhookMetadata
-		// SpecName represents the spec name on wehooked configuration.
-		// Internally usage only.
-		SpecName string `json:"specName"`
-	} `json:"metadata"`
-	//Payload
-	Payload map[string]interface{} `json:"payload"`
-}
-
 // handler is the main function that processes the webhooks. It parses the
 // webhook metadata and calls the appropriate processor function.
 // This function is called by the Serve function on each incoming message.
 func (p *processor) handler(data []byte) error {
-	md := &metadataWebhooked{}
-
-	if err := json.Unmarshal(data, &md); err != nil {
-		log.Error().Err(err).Msg("Failed to unmarshal webhook metadata")
+	webhook, err := unmarshalWebhook[githubWebhookMetadata, any](data)
+	if err != nil {
+		return err
 	}
 
-	if md == nil || md.Metadata.SpecName == "" {
+	if webhook == nil || webhook.Metadata.SpecName == "" {
 		log.Error().Str("payload", string(data)).Msg("Webhook metadata is invalid")
 		return ErrInvalidWebhook
 	}
-	log.Debug().Msgf("Received a message(%s.%s): %+v", md.Metadata.Model, md.Metadata.Event, md.Payload)
 
-	// TODO: implement the processor for github and other webhooks
-	// Why: Bet need to be open and github sponsorship is a requirement to open it
-	if md.Metadata.SpecName == "github-sponsorships" {
-		// Marshal the payload to the expected format for the github processor
-		// FUTURE: rework it
-		b, err := json.Marshal(md.Payload)
-		if err != nil {
-			log.Error().Err(err).Msg("Failed to marshal payload")
-			return err
-		}
+	handler := strings.Split(webhook.Metadata.SpecName, "-")[0]
 
-		return p.githubHandler(b)
+	log.Debug().Msgf("Received a message(%s): %+v", webhook.Metadata.SpecName, webhook.Payload)
+	switch handler {
+	case "github":
+		return p.githubHandler(data)
+	case "duo":
+		return p.duoHandler(data)
 	}
 
-	return p.duoHandler(data)
+	return nil
 }
 
 // githubHandler is the processor for the github webhooks.
 func (p *processor) githubHandler(data []byte) error {
-	webhookPayload := &GithubSponsorshipWebhook{}
-	if err := json.Unmarshal(data, &webhookPayload); err != nil {
-		log.Error().Err(err).Msg("Failed to unmarshal webhook payload")
+	webhook, err := unmarshalWebhook[githubWebhookMetadata, githubWebhookPayload](data)
+	if err != nil {
 		return err
 	}
-
-	sentry.CaptureEvent(&sentry.Event{
-		Level:   sentry.LevelInfo,
-		Message: "Received a message(github-sponsorships)",
-		Extra: map[string]interface{}{
-			"webhook": webhookPayload,
-		},
-	})
 
 	user, err := p.db.User.
 		Query().
 		Where(
 			user.HasAccountsWith(
 				account.ProviderEQ(gotype.AccountProviderGithub),
-				account.ProviderAccountID(strconv.Itoa(webhookPayload.Sender.ID)),
+				account.ProviderAccountID(strconv.Itoa(webhook.Payload.Sender.ID)),
 			),
 		).
 		First(p.ctx)
@@ -192,11 +162,29 @@ func (p *processor) githubHandler(data []byte) error {
 	}
 
 	var flags = user.Flags
-	switch webhookPayload.Action {
-	case "created", "edited":
-		flags = append(flags, gotype.UserFlagSponsor)
-	case "cancelled":
-		flags = utils.Remove(flags, gotype.UserFlagSponsor)
+	switch webhook.Metadata.Event {
+	case "star":
+		if webhook.Payload.Action == "created" {
+			flags = append(flags, gotype.UserFlagStargazer)
+		} else {
+			flags = utils.Remove(flags, gotype.UserFlagStargazer)
+		}
+	case "sponsorship":
+		webhook, _ := unmarshalWebhook[githubWebhookMetadata, githubSponsorshipWebhookPayload](data)
+		// Do nothing if the sponsorship is one time. The sponsorship is
+		// automatically cancelled after the first payment and create a double
+		// webhook. The first webhook is the created event and the second is the
+		// cancelled event.
+		// FUTURE: Handle the one time sponsorship for one month.
+		if webhook.Payload.Sponsorship.Tier.IsOneTime {
+			return nil
+		}
+
+		if utils.Contains([]string{"created", "edited"}, webhook.Payload.Action) {
+			flags = append(flags, gotype.UserFlagSponsor)
+		} else if webhook.Payload.Action == "cancelled" {
+			flags = utils.Remove(flags, gotype.UserFlagSponsor)
+		}
 	}
 
 	_, err = p.db.User.UpdateOne(user).SetFlags(utils.Uniq(flags)).Save(p.ctx)
@@ -205,22 +193,21 @@ func (p *processor) githubHandler(data []byte) error {
 
 // duoHandler is the processor for the duo webhooks.
 func (p *processor) duoHandler(data []byte) error {
-	mdDuo := &duoapi.Webhook{}
-	if err := json.Unmarshal(data, &mdDuo); err != nil {
-		log.Error().Err(err).Msg("Failed to unmarshal webhook metadata")
+	webhook, err := unmarshalWebhook[*duoapi.WebhookMetadata, duoapi.IWebhookPayload](data)
+	if err != nil {
+		return err
 	}
 
-	var err error
-	switch mdDuo.Metadata.Model {
+	switch webhook.Metadata.Model {
 	case "campus_user":
-		err = mdDuo.Payload.ProcessWebhook(p.ctx, mdDuo.Metadata, &campusUserProcessor{processor: p})
+		err = webhook.Payload.ProcessWebhook(p.ctx, webhook.Metadata, &campusUserProcessor{processor: p})
 	case "location":
-		err = mdDuo.Payload.ProcessWebhook(p.ctx, mdDuo.Metadata, &locationProcessor{processor: p})
+		err = webhook.Payload.ProcessWebhook(p.ctx, webhook.Metadata, &locationProcessor{processor: p})
 	case "user":
-		err = mdDuo.Payload.ProcessWebhook(p.ctx, mdDuo.Metadata, &userProcessor{processor: p})
+		err = webhook.Payload.ProcessWebhook(p.ctx, webhook.Metadata, &userProcessor{processor: p})
 	}
 	if err != nil {
-		log.Error().Err(err).Str("model", mdDuo.Metadata.Model).Str("event", mdDuo.Metadata.Event).Msg("Failed to process webhook")
+		log.Error().Err(err).Str("model", webhook.Metadata.Model).Str("event", webhook.Metadata.Event).Msg("Failed to process webhook")
 		return err
 	}
 

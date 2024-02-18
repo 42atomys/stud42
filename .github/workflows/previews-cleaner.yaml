@@ -1,7 +1,7 @@
 name: "Previews cleaner 🗑"
 on:
   pull_request_target:
-    types: [closed, unlabeled]
+    types: [closed]
 
 jobs:
   terraform:

@@ -2,6 +2,8 @@ import { ConditionalWrapper } from '@components/ConditionalWrapper';
 import { RemoteNotices } from '@components/Notice';
 import { TooltipProps } from '@components/Tooltip';
 import Tooltip from '@components/Tooltip/Tooltip';
+import { useMe } from '@ctx/currentUser';
+import { UserFlag } from '@graphql.d';
 import { Contribute, Star } from '@lib/github';
 import classNames from 'classnames';
 import getConfig from 'next/config';
@@ -87,6 +89,7 @@ export const Sidebar = ({
 }) => {
   const { open, setOpen } = useContext(SidebarContext);
   const { publicRuntimeConfig } = getConfig();
+  const { me } = useMe();
 
   const isPrideMonth = new Date().getMonth() === 5;
   return (
@@ -170,9 +173,17 @@ export const Sidebar = ({
           )}
           <MenuItem
             href="https://github.com/sponsors/42Atomys"
-            icon="fa-light fa-heart !text-fuchsia-500"
+            icon={
+              me.flags?.includes(UserFlag.SPONSOR)
+                ? 'fa-solid fa-heart !text-fuchsia-500'
+                : 'fa-light fa-heart !text-fuchsia-500'
+            }
             className="border-transparent hover:border-fuchsia-500 dark:hover:border-fuchsia-400 hover:bg-fuchsia-500/20 dark:hover:bg-fuchsia-500/20"
-            name="Support the project"
+            name={
+              me.flags?.includes(UserFlag.SPONSOR)
+                ? 'Thanks for your support'
+                : 'Support the project'
+            }
             tooltipColor="fuchsia"
           />
           <MenuItem href="/settings" icon="fa-cog" name="Settings" />
@@ -189,8 +200,8 @@ export const Sidebar = ({
           // TODO: put into tailwind when the flex flow is added to tailwind
           style={{ flexFlow: 'column' }}
         >
-          <div className="flex py-6 w-full justify-evenly z-10">
-            <Star />
+          <div className="flex py-6 w-full justify-evenly z-10 whitespace-nowrap">
+            <Star starred={me.flags?.includes(UserFlag.STARGAZER)} />
             <Contribute />
           </div>
 

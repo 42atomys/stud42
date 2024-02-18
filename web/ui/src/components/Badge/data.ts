@@ -77,6 +77,12 @@ export const flagData: FlagDataMap = {
     className: 'fa-duotone fa-user-astronaut text-pink-500',
     link: () => new URL('https://github.com/sponsors/42Atomys'),
   },
+  STARGAZER: {
+    name: 'Stargazer',
+    description: 'Starred the project on Github',
+    className: 'fa-duotone fa-star text-yellow-500',
+    link: () => new URL('https://github.com/sponsors/42Atomys'),
+  },
 };
 
 /**
