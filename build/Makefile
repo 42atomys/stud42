@@ -24,3 +24,5 @@ devcontainer-init: generate certs
 	cp config/stud42.example.yaml config/stud42.yaml
 	yarn --cwd web/ui install
 	yarn --cwd web/ui generate
+
+.PHONY: build generate 

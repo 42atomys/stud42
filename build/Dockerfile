@@ -9,8 +9,7 @@ ENV APP_VERSION=$APP_VERSION
 
 RUN apt-get update && \
   apt-get install -y unzip jq && \
-  make -f build/Makefile generate && \
-  make -f build/Makefile build
+  make -f build/Makefile generate build
 
 # INTERFACE BUILD - DEPS
 FROM node:18 AS node-deps
