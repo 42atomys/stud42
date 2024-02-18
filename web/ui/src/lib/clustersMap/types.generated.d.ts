@@ -7,6 +7,7 @@
  * must be unique in the list.
  */
 export type CampusIdentifier =
+  | 'angouleme'
   | 'helsinki'
   | 'lausanne'
   | 'madrid'

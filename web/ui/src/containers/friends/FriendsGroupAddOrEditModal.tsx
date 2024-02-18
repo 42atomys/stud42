@@ -153,8 +153,8 @@ export const FriendsGroupAddOrEditModal: React.FC<
                           ? 'Updating...'
                           : 'Creating...'
                         : isAnUpdate
-                        ? 'Update'
-                        : 'Create'}
+                          ? 'Update'
+                          : 'Create'}
                     </button>
                     <button
                       type="button"

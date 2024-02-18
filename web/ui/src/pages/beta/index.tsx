@@ -91,8 +91,8 @@ const Step = ({
           done
             ? 'bg-indigo-500 text-slate-900'
             : next
-            ? 'border-2 border-indigo-500 text-indigo-500'
-            : 'border-2 border-slate-500 text-slate-500',
+              ? 'border-2 border-indigo-500 text-indigo-500'
+              : 'border-2 border-slate-500 text-slate-500',
         )}
       >
         <i className={icon}></i>

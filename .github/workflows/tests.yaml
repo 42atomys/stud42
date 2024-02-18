@@ -61,14 +61,14 @@ jobs:
         id: plan
         run: terraform plan -no-color -input=false -out=${{ matrix.stack }}-tfplan
       - name: Store terraform plan as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.stack }}-tfplan
           path: deploy/stacks/${{ matrix.stack }}/${{ matrix.stack }}-tfplan
           retention-days: 7
       # On pull request, build or change infrastructure according
       # to Terraform configuration files
-      - uses: actions/github-script@v6
+      - uses: actions/github-script@v7
         if: always() && github.event_name == 'pull_request'
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -127,7 +127,7 @@ jobs:
       - name: Checkout project
         uses: actions/checkout@v4
       - name: Setup go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
           go-version: "1.20"
           check-latest: true
