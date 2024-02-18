@@ -89,33 +89,33 @@ const AccountRow: React.FC<
           Primary account cannot be hidden or removed.
         </div>
       )) || (
-          <>
-            <div className="place-self-center">
-              <Switch
-                name="account-switch"
-                defaultValue={
-                  account.provider === AccountProvider.DUO ? true : account.public
-                }
-                disabled={account.provider === AccountProvider.DUO}
-                onChange={() =>
-                  updateVisibility({
-                    variables: {
-                      input: { id: account.id, public: !account.public },
-                    },
-                  })
-                }
-              />
-            </div>
-            <div className="place-self-center justify-self-end">
-              <button
-                className="p-2 rounded-md text-red-500 hover:bg-red-500 hover:text-white transition-all"
-                onClick={() => deleteAccount({ variables: { id: account.id } })}
-              >
-                <i className="fa-fw fal fa-trash"></i>
-              </button>
-            </div>
-          </>
-        )}
+        <>
+          <div className="place-self-center">
+            <Switch
+              name="account-switch"
+              defaultValue={
+                account.provider === AccountProvider.DUO ? true : account.public
+              }
+              disabled={account.provider === AccountProvider.DUO}
+              onChange={() =>
+                updateVisibility({
+                  variables: {
+                    input: { id: account.id, public: !account.public },
+                  },
+                })
+              }
+            />
+          </div>
+          <div className="place-self-center justify-self-end">
+            <button
+              className="p-2 rounded-md text-red-500 hover:bg-red-500 hover:text-white transition-all"
+              onClick={() => deleteAccount({ variables: { id: account.id } })}
+            >
+              <i className="fa-fw fal fa-trash"></i>
+            </button>
+          </div>
+        </>
+      )}
     </>
   );
 };
