@@ -29,13 +29,18 @@ locals {
   // interconnection between the Intra API and S42. This is a workaround for
   // the following bug
   campusToRefreshEachHourManually = {
-    helsinki = 13
-    lausanne = 47
-    malaga   = 37
-    mulhouse = 48
-    paris    = 1
-    seoul    = 29
-    tokyo    = 26
-    vienna   = 53
+    paris     = 1
+    angouleme = 31
+    helsinki  = 13
+    lausanne  = 47
+    madrid    = 22
+    malaga    = 37
+    mulhouse  = 48
+    sao-paulo = 20
+    seoul     = 29
+    tokyo     = 26
+    urduliz   = 40
+    vienna    = 53
+    wolfsburg = 44
   }
 }
