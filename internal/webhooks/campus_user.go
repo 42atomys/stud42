@@ -12,6 +12,14 @@ type campusUserProcessor struct {
 	duoapi.CampusUserWebhookProcessor
 }
 
+func unmarshalAndProcessCampusUser(data []byte, metadata duoapi.WebhookMetadata, p *processor) error {
+	webhookCampusUser, err := unmarshalWebhook[duoapi.WebhookMetadata, duoapi.CampusUser](data)
+	if err != nil {
+		return err
+	}
+	return webhookCampusUser.Payload.ProcessWebhook(p.ctx, &metadata, &campusUserProcessor{processor: p})
+}
+
 func (p *campusUserProcessor) Create(cu *duoapi.CampusUser, metadata *duoapi.WebhookMetadata) error {
 	// Do nothing if the primary campus is not true. Due to the fact of when an
 	// User switch of campus : the current campus is set to false and the new

@@ -128,12 +128,14 @@ func (p *processor) handler(data []byte) error {
 
 	handler := strings.Split(webhook.Metadata.SpecName, "-")[0]
 
-	log.Debug().Msgf("Received a message(%s): %+v", webhook.Metadata.SpecName, webhook.Payload)
+	log.Debug().Msgf("Received a message[%s](%s): %+v", handler, webhook.Metadata.SpecName, webhook.Payload)
 	switch handler {
 	case "github":
 		return p.githubHandler(data)
 	case "duo":
 		return p.duoHandler(data)
+	default:
+		log.Error().Str("handler", handler).Msg("Unknown handler")
 	}
 
 	return nil
@@ -193,24 +195,27 @@ func (p *processor) githubHandler(data []byte) error {
 
 // duoHandler is the processor for the duo webhooks.
 func (p *processor) duoHandler(data []byte) error {
-	webhook, err := unmarshalWebhook[*duoapi.WebhookMetadata, any](data)
+	webhook, err := unmarshalWebhook[duoapi.WebhookMetadata, any](data)
 	if err != nil {
 		return err
 	}
 
-	payload, ok := webhook.Payload.(duoapi.IWebhookPayload)
-	if !ok {
-		return errors.New("invalid duo webhook payload. Cannot cast to IWebhookPayload interface")
+	var modelToFunction = map[string]func([]byte, duoapi.WebhookMetadata, *processor) error{
+		"campus_user": unmarshalAndProcessCampusUser,
+		"location":    unmarshalAndProcessLocation,
+		"user":        unmarshalAndProcessUser,
 	}
 
-	switch webhook.Metadata.Model {
-	case "campus_user":
-		err = payload.ProcessWebhook(p.ctx, webhook.Metadata, &campusUserProcessor{processor: p})
-	case "location":
-		err = payload.ProcessWebhook(p.ctx, webhook.Metadata, &locationProcessor{processor: p})
-	case "user":
-		err = payload.ProcessWebhook(p.ctx, webhook.Metadata, &userProcessor{processor: p})
+	if function, exists := modelToFunction[webhook.Metadata.Model]; exists {
+		err = function(data, webhook.Metadata, p)
+		if err != nil {
+			log.Error().Err(err).Str("model", webhook.Metadata.Model).Str("event", webhook.Metadata.Event).Msg("Failed to process webhook")
+			return err
+		}
+	} else {
+		log.Error().Str("model", webhook.Metadata.Model).Msg("Unknown model")
 	}
+
 	if err != nil {
 		log.Error().Err(err).Str("model", webhook.Metadata.Model).Str("event", webhook.Metadata.Event).Msg("Failed to process webhook")
 		return err
