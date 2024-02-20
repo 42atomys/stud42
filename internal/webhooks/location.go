@@ -19,6 +19,14 @@ type locationProcessor struct {
 	duoapi.LocationWebhookProcessor[duoapi.LocationUser]
 }
 
+func unmarshalAndProcessLocation(data []byte, metadata duoapi.WebhookMetadata, p *processor) error {
+	webhookLocation, err := unmarshalWebhook[duoapi.WebhookMetadata, duoapi.Location[duoapi.LocationUser]](data)
+	if err != nil {
+		return err
+	}
+	return webhookLocation.Payload.ProcessWebhook(p.ctx, &metadata, &locationProcessor{processor: p})
+}
+
 func (p *locationProcessor) Create(loc *duoapi.Location[duoapi.LocationUser], metadata *duoapi.WebhookMetadata) error {
 	campus, err := p.db.Campus.Query().Where(campus.DuoID(loc.CampusID)).Only(p.ctx)
 	if err != nil {

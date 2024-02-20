@@ -13,6 +13,14 @@ type userProcessor struct {
 	duoapi.UserWebhookProcessor
 }
 
+func unmarshalAndProcessUser(data []byte, metadata duoapi.WebhookMetadata, p *processor) error {
+	webhookUser, err := unmarshalWebhook[duoapi.WebhookMetadata, duoapi.User](data)
+	if err != nil {
+		return err
+	}
+	return webhookUser.Payload.ProcessWebhook(p.ctx, &metadata, &userProcessor{processor: p})
+}
+
 func (p *userProcessor) Create(u *duoapi.User, metadata *duoapi.WebhookMetadata) error {
 	ok, err := p.db.User.Query().Where(user.DuoID(u.ID)).Exist(p.ctx)
 	if err != nil && !modelgen.IsNotFound(err) {
