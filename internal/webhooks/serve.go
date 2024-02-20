@@ -193,18 +193,23 @@ func (p *processor) githubHandler(data []byte) error {
 
 // duoHandler is the processor for the duo webhooks.
 func (p *processor) duoHandler(data []byte) error {
-	webhook, err := unmarshalWebhook[*duoapi.WebhookMetadata, duoapi.IWebhookPayload](data)
+	webhook, err := unmarshalWebhook[*duoapi.WebhookMetadata, any](data)
 	if err != nil {
 		return err
 	}
 
+	payload, ok := webhook.Payload.(duoapi.IWebhookPayload)
+	if !ok {
+		return errors.New("invalid duo webhook payload. Cannot cast to IWebhookPayload interface")
+	}
+
 	switch webhook.Metadata.Model {
 	case "campus_user":
-		err = webhook.Payload.ProcessWebhook(p.ctx, webhook.Metadata, &campusUserProcessor{processor: p})
+		err = payload.ProcessWebhook(p.ctx, webhook.Metadata, &campusUserProcessor{processor: p})
 	case "location":
-		err = webhook.Payload.ProcessWebhook(p.ctx, webhook.Metadata, &locationProcessor{processor: p})
+		err = payload.ProcessWebhook(p.ctx, webhook.Metadata, &locationProcessor{processor: p})
 	case "user":
-		err = webhook.Payload.ProcessWebhook(p.ctx, webhook.Metadata, &userProcessor{processor: p})
+		err = payload.ProcessWebhook(p.ctx, webhook.Metadata, &userProcessor{processor: p})
 	}
 	if err != nil {
 		log.Error().Err(err).Str("model", webhook.Metadata.Model).Str("event", webhook.Metadata.Event).Msg("Failed to process webhook")
