@@ -83,7 +83,7 @@
     "cypress": "^13.3.2",
     "eslint": "^8.39.0",
     "eslint-config-airbnb-typescript": "^17.0.0",
-    "eslint-config-next": "^13.0.7",
+    "eslint-config-next": "^14.1.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-import": "^2.27.5",
     "husky": "^8.0.3",
