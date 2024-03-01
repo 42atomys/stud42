@@ -81,7 +81,7 @@
     "babel-plugin-inline-react-svg": "^2.0.1",
     "concurrently": "^8.2.2",
     "cypress": "^13.3.2",
-    "eslint": "^8.39.0",
+    "eslint": "^8.57.0",
     "eslint-config-airbnb-typescript": "^17.0.0",
     "eslint-config-next": "^13.0.7",
     "eslint-config-prettier": "^8.8.0",
