@@ -14,15 +14,12 @@ RUN ARCH=$([ "`uname -m`" = "aarch64" ] && echo "arm64" || echo "amd64") && \
   && apt-get -y install --no-install-recommends gnupg2 postgresql-client \
   iputils-ping dnsutils vim htop nano sudo curl build-essential zsh wget jq \
   fonts-powerline tig ca-certificates software-properties-common redis-tools && \
-  # Register kubectl source list
-  curl -fsSLo /etc/apt/trusted.gpg.d/kubernetes-archive-keyring.gpg https://dl.k8s.io/apt/doc/apt-key.gpg && \
-  echo "deb [signed-by=/etc/apt/trusted.gpg.d/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | tee /etc/apt/sources.list.d/kubernetes.list && \
-  # Register helm source list
-  curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | tee /etc/apt/trusted.gpg.d/helm.gpg > /dev/null && \
-  echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/trusted.gpg.d/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | tee /etc/apt/sources.list.d/helm-stable-debian.list && \
-  # Run install of kubectl, helm and terraform
-  apt-get update && \
-  apt-get install kubectl helm && \
+  # Install kubectl from binaries
+  curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/${ARCH}/kubectl" && \
+  install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
+  kubectl version --client && \
+  # Install helm from binaries
+  curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash && \
   # Install terraform from binaries
   # See: https://github.com/42Atomys/stud42/issues/298
   # if $(uname -m) == "aarch64" set TERRAFORM_ARCH to "arm64" in shell format
