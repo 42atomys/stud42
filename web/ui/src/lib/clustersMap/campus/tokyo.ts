@@ -9,7 +9,7 @@ export class Tokyo extends Campus implements ICampus {
   name = (): string => 'Tokyo';
 
   extractorRegexp = (): RegExp =>
-  /(?<clusterWithLetter>c(?<cluster>\d+))(?<rowWithLetter>r(?<row>\d+))(?<workspaceWithLetter>s(?<workspace>\d+))/i;
+    /(?<clusterWithLetter>c(?<cluster>\d+))(?<rowWithLetter>r(?<row>\d+))(?<workspaceWithLetter>s(?<workspace>\d+))/i;
 
   clusters(): Cluster[] {
     return [
