@@ -9,36 +9,135 @@ export class Tokyo extends Campus implements ICampus {
   name = (): string => 'Tokyo';
 
   extractorRegexp = (): RegExp =>
-    /(?<clusterWithLetter>c(?<cluster>\d+))(?<rowWithLetter>r(?<row>\d+))(?<workspaceWithLetter>s(?<workspace>\d+))/i;
+  /(?<clusterWithLetter>c(?<cluster>\d+))(?<rowWithLetter>r(?<row>\d+))(?<workspaceWithLetter>s(?<workspace>\d+))/i;
 
   clusters(): Cluster[] {
     return [
       new Cluster({
         identifier: 'c1',
+        name: 'KOI',
         // prettier-ignore
         map: [
-          ['T:r5',  'W:c1r5s1',  'W:c1r5s2',  'W:c1r5s3',  'W:c1r5s4',  'W:c1r5s5',  'W:c1r5s6',  'W:c1r5s7',  'W:c1r5s8',  'W:c1r5s9',  'T:r5',      null,         null,         null   ],
-          ['T:r6',  'W:c1r6s1',  'W:c1r6s2',  'W:c1r6s3',  'W:c1r6s4',  'W:c1r6s5',  'W:c1r6s6',  'W:c1r6s7',  'W:c1r6s8',  'W:c1r6s9',  'T:r6',      null,         null,         null   ],
-          ['T:r7',  'W:c1r7s1',  'W:c1r7s2',  'W:c1r7s3',  'W:c1r7s4',  'W:c1r7s5',  'W:c1r7s6',  'W:c1r7s7',  'W:c1r7s8',  'W:c1r7s9',  'T:r7',      null,         null,         null   ],
-          ['T:r8',  'W:c1r8s1',  'W:c1r8s2',  'W:c1r8s3',  'W:c1r8s4',  'W:c1r8s5',  'W:c1r8s6',  'W:c1r8s7',  'W:c1r8s8',  'W:c1r8s9',  'T:r8',      null,         null,         null   ],
-          ['T:r9',  'W:c1r9s1',  'W:c1r9s2',  'W:c1r9s3',  'W:c1r9s4',  'W:c1r9s5',  'W:c1r9s6',  'W:c1r9s7',  'W:c1r9s8',  'W:c1r9s9',  'T:r9',      null,         null,         null   ],
-          ['T:r10', 'W:c1r10s1', 'W:c1r10s2', 'W:c1r10s3', 'W:c1r10s4', 'W:c1r10s5', 'W:c1r10s6', 'W:c1r10s7', 'W:c1r10s8', 'W:c1r10s9', 'T:r10',     null,         null,         null   ],
-          ['T:r11', 'W:c1r11s1', 'W:c1r11s2', 'W:c1r11s3', 'W:c1r11s4', 'W:c1r11s5', 'W:c1r11s6', 'W:c1r11s7', 'W:c1r11s8', 'W:c1r11s9', 'T:r11',     null,         null,         null   ],
-          ['T:r12', 'W:c1r12s1', 'W:c1r12s2', 'W:c1r12s3', 'W:c1r12s4', 'W:c1r12s5', 'W:c1r12s6', 'W:c1r12s7', 'W:c1r12s8', 'W:c1r12s9', 'T:r12',     null,         null,         null   ],
-          ['T:r13', 'W:c1r13s1', 'W:c1r13s2', 'W:c1r13s3', 'W:c1r13s4', 'W:c1r13s5', 'W:c1r13s6', 'W:c1r13s7', 'W:c1r13s8', 'W:c1r13s9', 'T:r13',     null,         null,         null   ],
-          ['T:r14', 'W:c1r14s1', 'W:c1r14s2', 'W:c1r14s3', 'W:c1r14s4', 'W:c1r14s5', 'W:c1r14s6', 'W:c1r14s7', 'W:c1r14s8', 'W:c1r14s9', 'T:r14',     null,         null,         null   ],
-          ['T:r15', 'W:c1r15s1', 'W:c1r15s2', 'W:c1r15s3', 'W:c1r15s4', 'W:c1r15s5', 'W:c1r15s6', 'W:c1r15s7', 'W:c1r15s8', 'W:c1r15s9', 'T:r15',     null,         null,         null   ],
-          ['T:r16', 'W:c1r16s1', 'W:c1r16s2', 'W:c1r16s3', 'W:c1r16s4', 'W:c1r16s5', 'W:c1r16s6', 'W:c1r16s7', 'W:c1r16s8', 'W:c1r16s9', 'T:r16',     null,         null,         null   ],
-          [null,    'T:r18',     'W:c1r18s1', 'W:c1r18s2', 'W:c1r18s3', 'W:c1r18s4', 'W:c1r18s5', 'W:c1r18s6', 'W:c1r18s7', 'W:c1r18s8', 'W:c1r18s9', 'W:c1r18s10', 'W:c1r18s11', 'T:r18'],
-          [null,    'T:r19',     'W:c1r19s1', 'W:c1r19s2', 'W:c1r19s3', 'W:c1r19s4', 'W:c1r19s5', 'W:c1r19s6', 'W:c1r19s7', 'W:c1r19s8', 'W:c1r19s9', 'W:c1r19s10', 'W:c1r19s11', 'T:r19'],
-          [null,    'T:r20',     'W:c1r20s1', 'W:c1r20s2', 'W:c1r20s3', 'W:c1r20s4', 'W:c1r20s5', 'W:c1r20s6', 'W:c1r20s7', 'W:c1r20s8', 'W:c1r20s9', 'W:c1r20s10', 'W:c1r20s11', 'T:r20'],
-          [null,    'T:r21',     'W:c1r21s1', 'W:c1r21s2', 'W:c1r21s3', 'W:c1r21s4', 'W:c1r21s5', 'W:c1r21s6', 'W:c1r21s7', 'W:c1r21s8', 'W:c1r21s9', 'W:c1r21s10', 'W:c1r21s11', 'T:r21'],
-          [null,    'T:r22',     'W:c1r22s1', 'W:c1r22s2', 'W:c1r22s3', 'W:c1r22s4', 'W:c1r22s5', 'W:c1r22s6', 'W:c1r22s7', 'W:c1r22s8', 'W:c1r22s9', 'W:c1r22s10', 'W:c1r22s11', 'T:r22'],
-          [null,    'T:r23',     'W:c1r23s1', 'W:c1r23s2', 'W:c1r23s3', 'W:c1r23s4', 'W:c1r23s5', 'W:c1r23s6', 'W:c1r23s7', 'W:c1r23s8', 'W:c1r23s9', 'W:c1r23s10', 'W:c1r23s11', 'T:r23'],
-          [null,    'T:r24',     'W:c1r24s1', 'W:c1r24s2', 'W:c1r24s3', 'W:c1r24s4', 'W:c1r24s5', 'W:c1r24s6', 'W:c1r24s7', 'W:c1r24s8', 'W:c1r24s9', 'W:c1r24s10', 'W:c1r24s11', 'T:r24'],
-          [null,    'T:r25',     'W:c1r25s1', 'W:c1r25s2', 'W:c1r25s3', 'W:c1r25s4', 'W:c1r25s5', 'W:c1r25s6', 'W:c1r25s7', 'W:c1r25s8', 'W:c1r25s9', 'W:c1r25s10', 'W:c1r25s11', 'T:r25'],
-          [null,    'T:r26',     'W:c1r26s1', 'W:c1r26s2', 'W:c1r26s3', 'W:c1r26s4', 'W:c1r26s5', 'W:c1r26s6', 'W:c1r26s7', 'W:c1r26s8', 'W:c1r26s9', 'W:c1r26s10', 'W:c1r26s11', 'T:r26'],
-          [null,    'T:r27',     'W:c1r27s1', 'W:c1r27s2', 'W:c1r27s3', 'W:c1r27s4', 'W:c1r27s5', 'W:c1r27s6', 'W:c1r27s7', 'W:c1r27s8', 'W:c1r27s9', 'W:c1r27s10', 'W:c1r27s11', 'T:r27'],
+          [null,   null,       null,       null,       null,       null,       null,       null,       null,       null,   'P',  'PW',       'PW',       'W:c1r8s4', 'W:c1r8s3', 'W:c1r8s2', 'W:c1r8s1', 'T:r8'],
+          [null,   null,       null,       null,       null,       null,       null,       null,       null,       null,   'P',  'PW',       'PW',       'W:c1r9s4', 'W:c1r9s3', 'W:c1r9s2', 'W:c1r9s1', 'T:r9'],
+          ['T:r1', 'W:c1r1s8', 'W:c1r1s7', 'W:c1r1s6', 'W:c1r1s5', 'W:c1r1s4', 'W:c1r1s3', 'W:c1r1s2', 'W:c1r1s1', 'T:r1', 'P',  'W:c1r8s5', 'W:c1r9s5', 'P',        'P',        'P',        'P',        'P'   ],
+          ['T:r2', 'W:c1r2s8', 'W:c1r2s7', 'W:c1r2s6', 'W:c1r2s5', 'W:c1r2s4', 'W:c1r2s3', 'W:c1r2s2', 'W:c1r2s1', 'T:r2', 'P',  'W:c1r8s6', 'W:c1r9s6', 'P',        null,       null,       null,       'P'   ],
+          ['T:r3', 'W:c1r3s8', 'W:c1r3s7', 'W:c1r3s6', 'W:c1r3s5', 'W:c1r3s4', 'W:c1r3s3', 'W:c1r3s2', 'W:c1r3s1', 'T:r3', 'P',  'W:c1r8s7', 'P',        'P',        null,       null,       null,       'P'   ],
+          ['T:r4', 'W:c1r4s8', 'W:c1r4s7', 'W:c1r4s6', 'W:c1r4s5', 'W:c1r4s4', 'W:c1r4s3', 'W:c1r4s2', 'W:c1r4s1', 'T:r4', 'P',  'W:c1r8s8', 'W:c1r9s7', 'P',        null,       null,       null,       'P'   ],
+          ['T:r5', 'W:c1r5s8', 'W:c1r5s7', 'W:c1r5s6', 'W:c1r5s5', 'W:c1r5s4', 'W:c1r5s3', 'W:c1r5s2', 'W:c1r5s1', 'T:r5', 'P',  'W:c1r8s9', 'W:c1r9s8', 'P',        'P',        'P',        'P',        'P'   ],
+          ['T:r6', 'W:c1r6s8', 'W:c1r6s7', 'W:c1r6s6', 'W:c1r6s5', 'W:c1r6s4', 'W:c1r6s3', 'W:c1r6s2', 'W:c1r6s1', 'T:r6', null, 'T:r8',     'T:r9',     null,       null,       null,       null,       null  ],
+          ['T:r7', 'W:c1r7s8', 'W:c1r7s7', 'W:c1r7s6', 'W:c1r7s5', 'W:c1r7s4', 'W:c1r7s3', 'W:c1r7s2', 'W:c1r7s1', 'T:r7', 'P',  'PW',       'P',        null,       null,       null,       null,       null  ],
+        ],
+      }),
+
+      new Cluster({
+        identifier: 'c2',
+        name: 'UME',
+        // prettier-ignore
+        map: [
+          ['T:r4',     null,   null,   null,        null,       null,       null,       null,       null,       null,       null,       null,       null,       null  ],
+          ['W:c2r4s1', null,   null,   null,        null,       null,       null,       null,       null,       null,       null,       null,       null,       null  ],
+          ['W:c2r4s2', null,   'T:r1', 'W:c2r1s6',  'W:c2r1s5', 'W:c2r1s4', 'W:c2r1s3', 'W:c2r1s2', 'W:c2r1s1', null,       null,       null,       null,       'T:r1'],
+          ['W:c2r4s3', null,   'T:r2', 'W:c2r2s10', 'W:c2r2s9', 'W:c2r2s8', 'W:c2r2s7', 'W:c2r2s6', 'W:c2r2s5', 'W:c2r2s4', 'W:c2r2s3', 'W:c2r2s2', 'W:c2r2s1', 'T:r2'],
+          ['W:c2r4s4', null,   'T:r3', 'W:c2r3s10', 'W:c2r3s9', 'W:c2r3s8', 'W:c2r3s7', 'W:c2r3s6', 'W:c2r3s5', 'W:c2r3s4', 'W:c2r3s3', 'W:c2r3s2', 'W:c2r3s1', 'T:r3'],
+          ['T:r4',     null,   null,   null,        null,       null,       null,       null,       null,       null,       null,       null,       null,       null  ],
+          ['P',        null,   'P',    'P',         'P',        'P',        'P',        'P',        'P',        'P',        'P',        'P',        'P',        null  ],
+          ['T:r9',     null,   null,   null,        null,       null,       null,       null,       null,       null,       null,       null,       null,       null  ],
+          ['W:c2r9s1', null,   'T:r5', 'W:c2r5s10', 'W:c2r5s9', 'W:c2r5s8', 'W:c2r5s7', 'W:c2r5s6', 'W:c2r5s5', 'W:c2r5s4', 'W:c2r5s3', 'W:c2r5s2', 'W:c2r5s1', 'T:r5'],
+          ['W:c2r9s2', null,   'T:r6', 'W:c2r6s10', 'W:c2r6s9', 'W:c2r6s8', 'W:c2r6s7', 'W:c2r6s6', 'W:c2r6s5', 'W:c2r6s4', 'W:c2r6s3', 'W:c2r6s2', 'W:c2r6s1', 'T:r6'],
+          ['W:c2r9s3', null,   'T:r7', 'W:c2r7s10', 'W:c2r7s9', 'W:c2r7s8', 'W:c2r7s7', 'W:c2r7s6', 'W:c2r7s5', 'W:c2r7s4', 'W:c2r7s3', 'W:c2r7s2', 'W:c2r7s1', 'T:r7'],
+          ['W:c2r9s4', null,   'T:r8', 'W:c2r8s10', 'W:c2r8s9', 'W:c2r8s8', 'W:c2r8s7', 'W:c2r8s6', 'W:c2r8s5', 'W:c2r8s4', 'W:c2r8s3', 'W:c2r8s2', 'W:c2r8s1', 'T:r8'],
+          ['T:r9',     null,   null,   null,        null,       null,       null,       null,       null,       null,       null,       null,       null,       null  ],
+        ],
+      }),
+
+      new Cluster({
+        identifier: 'c3',
+        name: 'WASHI',
+        // prettier-ignore
+        map: [
+          ['T:r1', 'W:c3r1s6', 'W:c3r1s5', 'W:c3r1s4', 'W:c3r1s3', 'W:c3r1s2', 'W:c3r1s1', null,       null,       'T:r1'],
+          ['T:r2', 'W:c3r2s8', 'W:c3r2s7', 'W:c3r2s6', 'W:c3r2s5', 'W:c3r2s4', 'W:c3r2s3', 'W:c3r2s2', 'W:c3r2s1', 'T:r2'],
+          ['T:r3', 'W:c3r3s8', 'W:c3r3s7', 'W:c3r3s6', 'W:c3r3s5', 'W:c3r3s4', 'W:c3r3s3', 'W:c3r3s2', 'W:c3r3s1', 'T:r3'],
+          ['T:r4', 'W:c3r4s8', 'W:c3r4s7', 'W:c3r4s6', 'W:c3r4s5', 'W:c3r4s4', 'W:c3r4s3', 'W:c3r4s2', 'W:c3r4s1', 'T:r4'],
+          ['T:r5', 'W:c3r5s8', 'W:c3r5s7', 'W:c3r5s6', 'W:c3r5s5', 'W:c3r5s4', 'W:c3r5s3', 'W:c3r5s2', 'W:c3r5s1', 'T:r5'],
+          ['T:r6', 'W:c3r6s8', 'W:c3r6s7', 'W:c3r6s6', 'W:c3r6s5', 'W:c3r6s4', 'W:c3r6s3', 'W:c3r6s2', 'W:c3r6s1', 'T:r6'],
+        ],
+      }),
+
+      new Cluster({
+        identifier: 'c4',
+        name: 'FUJI',
+        // prettier-ignore
+        map: [
+          ['T:r3',      'T:r2',      'T:r1',      'P',     'PW', 'PW', 'PW'],
+          ['W:c4r3s1',  'W:c4r2s1',  'W:c4r1s1',  'P',     'PW', null, null],
+          ['W:c4r3s2',  'W:c4r2s2',  'W:c4r1s2',  'P',     'PW', null, null],
+          ['W:c4r3s3',  'W:c4r2s3',  'W:c4r1s3',  'P',     'PW', null, null],
+          ['W:c4r3s4',  'W:c4r2s4',  'W:c4r1s4',  'P',     'PW', 'PW', 'PW'],
+          ['W:c4r3s5',  'W:c4r2s5',  'W:c4r1s5',  'P',     null, null, null],
+          ['W:c4r3s6',  'W:c4r2s6',  'W:c4r1s6',  'P',     null, null, null],
+          ['W:c4r3s7',  'W:c4r2s7',  'W:c4r1s7',  'P',     'PW', 'PW', 'PW'],
+          ['W:c4r3s8',  'W:c4r2s8',  'W:c4r1s8',  'P',     'PW', null, 'PW'],
+          ['W:c4r3s9',  'W:c4r2s9',  null,        'P',     'PW', null, 'PW'],
+          ['W:c4r3s10', 'W:c4r2s10', null,        'P',     'PW', 'PW', 'PW'],
+          ['W:c4r3s11', 'W:c4r2s11', null,        'P',     'PW', null, 'PW'],
+          ['W:c4r3s12', 'W:c4r2s12', null,        'P',     'PW', null, 'PW'],
+          [null,         null,       null,        'T:NEKO',null, null, null],
+          ['W:c4r3s13', 'W:c4r2s13', null,        'P',     null, null, null],
+          ['W:c4r3s14', 'W:c4r2s14', null,        'P',     'PW', 'PW', 'PW'],
+          ['W:c4r3s15', 'W:c4r2s15', 'W:c4r1s9',  'P',     null, 'PW', null],
+          ['W:c4r3s16', 'W:c4r2s16', 'W:c4r1s10', 'P',     null, 'PW', null],
+          ['W:c4r3s17', 'W:c4r2s17', 'W:c4r1s11', 'P',     null, 'PW', null],
+          ['W:c4r3s18', 'W:c4r2s18', 'W:c4r1s12', 'P',     null, 'PW', null],
+        ],
+      }),
+
+      new Cluster({
+        identifier: 'c5',
+        name: 'SAKURA',
+        // prettier-ignore
+        map: [
+          ['T:r4',      'T:r3',      'T:r2',      'T:r1'     ],
+          [null,        'W:c5r3s1',  'W:c5r2s1',  null       ],
+          [null,        'W:c5r3s2',  'W:c5r2s2',  null       ],
+          [null,        'W:c5r3s3',  'W:c5r2s3',  null       ],
+          ['W:c5r4s1',  'W:c5r3s4',  'W:c5r2s4',  'W:c5r1s1' ],
+          ['W:c5r4s2',  'W:c5r3s5',  'W:c5r2s5',  'W:c5r1s2' ],
+          ['W:c5r4s3',  'W:c5r3s6',  'W:c5r2s6',  'W:c5r1s3' ],
+          ['W:c5r4s4',  'W:c5r3s7',  'W:c5r2s7',  'W:c5r1s4' ],
+          ['W:c5r4s5',  'W:c5r3s8',  'W:c5r2s8',  null       ],
+          ['W:c5r4s6',  null,        null,        null       ],
+          ['W:c5r4s7',  'W:c5r3s9',  'W:c5r2s9',  null       ],
+          ['W:c5r4s8',  'W:c5r3s10', 'W:c5r2s10', 'W:c5r1s5' ],
+          ['W:c5r4s9',  'W:c5r3s11', 'W:c5r2s11', 'W:c5r1s6' ],
+          [null,        'W:c5r3s12', 'W:c5r2s12', 'W:c5r1s7' ],
+          [null,        'W:c5r3s13', 'W:c5r2s13', 'W:c5r1s8' ],
+          [null,        'W:c5r3s14', 'W:c5r2s14', null       ],
+        ],
+      }),
+
+      new Cluster({
+        identifier: 'c6',
+        name: 'TSURU',
+        // prettier-ignore
+        map: [
+          ['T:r4',      'T:r3',      'T:r2',      'T:r1'     ],
+          [null,        'W:c6r3s1',  'W:c6r2s1',  'W:c6r1s1' ],
+          [null,        'W:c6r3s2',  'W:c6r2s2',  'W:c6r1s2' ],
+          [null,        'W:c6r3s3',  'W:c6r2s3',  'W:c6r1s3' ],
+          ['W:c6r4s1',  'W:c6r3s4',  'W:c6r2s4',  'W:c6r1s4' ],
+          ['W:c6r4s2',  'W:c6r3s5',  'W:c6r2s5',  'W:c6r1s5' ],
+          ['W:c6r4s3',  'W:c6r3s6',  'W:c6r2s6',  'W:c6r1s6' ],
+          ['W:c6r4s4',  'W:c6r3s7',  'W:c6r2s7',  'W:c6r1s7' ],
+          [null,        'W:c6r3s8',  'W:c6r2s8',  'W:c6r1s8' ],
+          [null,        null,        null,        null       ],
+          [null,        'W:c6r3s9',  'W:c6r2s9',  'W:c6r1s9' ],
+          ['W:c6r4s5',  'W:c6r3s10', 'W:c6r2s10', 'W:c6r1s10'],
+          ['W:c6r4s6',  'W:c6r3s11', 'W:c6r2s11', 'W:c6r1s11'],
+          [null,        'W:c6r3s12', 'W:c6r2s12', 'W:c6r1s12'],
+          [null,        'W:c6r3s13', 'W:c6r2s13', 'W:c6r1s13'],
+          [null,        'W:c6r3s14', 'W:c6r2s14', 'W:c6r1s14'],
         ],
       }),
     ];
