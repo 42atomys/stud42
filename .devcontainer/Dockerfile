@@ -1,13 +1,13 @@
 # [Choice] Go version (use -bullseye variants on local arm64/Apple Silicon): 1, 1.18, 1.17, 1-bullseye, 1.18-bullseye, 1.17-bullseye, 1-buster, 1.18-buster, 1.17-buster
 ARG VARIANT=1-bullseye
-FROM mcr.microsoft.com/vscode/devcontainers/go:0-${VARIANT}
+FROM mcr.microsoft.com/vscode/devcontainers/go:${VARIANT}
 
 ENV TERM xterm
 ENV SHELL /usr/bin/zsh
 
 # [Choice] Node.js version: none, lts/*, 16, 14, 12, 10
 ARG NODE_VERSION="18"
-RUN if [ "${NODE_VERSION}" != "none" ]; then su vscode -c "umask 0002 && . /usr/local/share/nvm/nvm.sh && nvm install ${NODE_VERSION} 2>&1"; fi
+RUN if [ "${NODE_VERSION}" != "none" ]; then umask 0002 && . /usr/local/share/nvm/nvm.sh && nvm install ${NODE_VERSION} 2>&1; fi
 
 RUN ARCH=$([ "`uname -m`" = "aarch64" ] && echo "arm64" || echo "amd64") && \ 
   apt-get update && export DEBIAN_FRONTEND=noninteractive \
@@ -46,13 +46,14 @@ RUN npm install --location=global tslint-to-eslint-config typescript \
   ln -s "$NVM_DIR/versions/node/$(nvm version)/bin/npm" "/usr/local/bin/npm" && \
   # Install oh my zsh
   wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh || true && \
-  git clone https://github.com/zsh-users/zsh-history-substring-search ${ZSH_CUSTOM:-/home/vscode/.oh-my-zsh}/plugins/zsh-history-substring-search && \
-  git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-/home/vscode/.oh-my-zsh}/plugins/zsh-autosuggestions && \
-  git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-/home/vscode/.oh-my-zsh}/plugins/zsh-syntax-highlighting
+  git clone https://github.com/zsh-users/zsh-history-substring-search ${ZSH_CUSTOM:-/root/.oh-my-zsh}/plugins/zsh-history-substring-search && \
+  git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-/root/.oh-my-zsh}/plugins/zsh-autosuggestions && \
+  git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-/root/.oh-my-zsh}/plugins/zsh-syntax-highlighting
 
 # Pre-download the golang part
 WORKDIR /workspace
 COPY go.mod go.sum ./
-RUN go mod download && chown vscode:vscode /go
 
-COPY .devcontainer/.zshrc /home/vscode/.zshrc
+RUN go mod download
+
+COPY .devcontainer/.zshrc /root/.zshrc

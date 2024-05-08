@@ -4,7 +4,6 @@
   "dockerComposeFile": "docker-compose.yaml",
   "service": "workspace",
   "workspaceFolder": "/workspace",
-  "containerUser": "vscode",
   "shutdownAction": "stopCompose",
   "waitFor": "postStartCommand",
   "userEnvProbe": "loginInteractiveShell",
