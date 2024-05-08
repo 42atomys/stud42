@@ -1,0 +1,24 @@
+name: Test Devcontainer
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    matrix:
+      os: [ubuntu-latest, windows-latest, macos-latest]
+    name: Test Devcontainer on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+
+      - name: Test devcontainer build and start
+        uses: microsoft/vscode-dev-containers@v1
+        with:
+          runArgs: --rm
