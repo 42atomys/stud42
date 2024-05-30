@@ -3,6 +3,7 @@ package webhooks
 import (
 	"database/sql"
 	"errors"
+	"strings"
 
 	"github.com/rs/zerolog/log"
 
@@ -38,6 +39,11 @@ func (p *locationProcessor) Create(loc *duoapi.Location[duoapi.LocationUser], me
 		return err
 	}
 
+	// Skip location for anonymized users
+	if strings.HasPrefix(loc.User.Login, "3b3") {
+		return nil
+	}
+
 	// retrieve or create user in database from the location object received
 	user, err := modelsutils.UserFirstOrCreateFromLocation(p.ctx, loc)
 	if err != nil {
@@ -71,6 +77,7 @@ func (p *locationProcessor) Create(loc *duoapi.Location[duoapi.LocationUser], me
 
 	return err
 }
+
 func (p *locationProcessor) Close(loc *duoapi.Location[duoapi.LocationUser], metadata *duoapi.WebhookMetadata) error {
 	return modelsutils.WithTx(p.ctx, p.db, func(tx *generated.Tx) error {
 		// Close the location in database
@@ -90,6 +97,7 @@ func (p *locationProcessor) Close(loc *duoapi.Location[duoapi.LocationUser], met
 		return p.unlinkLocation(loc)
 	})
 }
+
 func (p *locationProcessor) Destroy(loc *duoapi.Location[duoapi.LocationUser], metadata *duoapi.WebhookMetadata) error {
 	// Delete the location in database
 	_, err := p.db.Location.Delete().Where(location.DuoID(loc.ID)).Exec(p.ctx)
