@@ -2,6 +2,7 @@ package duoapi
 
 import (
 	"context"
+	"strings"
 )
 
 // LocationsActive returns the list of active locations of a campus
@@ -39,6 +40,11 @@ func (l *Location[LocationUser]) ProcessWebhook(ctx context.Context, metadata *W
 	p, ok := processor.(LocationWebhookProcessor[LocationUser])
 	if !ok {
 		return ErrInvalidWebhookProcessor
+	}
+
+	// Skip location for anonymized users
+	if strings.HasPrefix(l.User.Login, "3b3") {
+		return nil
 	}
 
 	switch metadata.Event {

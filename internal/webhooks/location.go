@@ -71,6 +71,7 @@ func (p *locationProcessor) Create(loc *duoapi.Location[duoapi.LocationUser], me
 
 	return err
 }
+
 func (p *locationProcessor) Close(loc *duoapi.Location[duoapi.LocationUser], metadata *duoapi.WebhookMetadata) error {
 	return modelsutils.WithTx(p.ctx, p.db, func(tx *generated.Tx) error {
 		// Close the location in database
@@ -90,6 +91,7 @@ func (p *locationProcessor) Close(loc *duoapi.Location[duoapi.LocationUser], met
 		return p.unlinkLocation(loc)
 	})
 }
+
 func (p *locationProcessor) Destroy(loc *duoapi.Location[duoapi.LocationUser], metadata *duoapi.WebhookMetadata) error {
 	// Delete the location in database
 	_, err := p.db.Location.Delete().Where(location.DuoID(loc.ID)).Exec(p.ctx)
