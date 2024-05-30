@@ -82,42 +82,68 @@ func UserFirstOrCreateFromComplexLocation(ctx context.Context, l *duoapi.Locatio
 func UserFirstOrCreateFromLocation(ctx context.Context, l *duoapi.Location[duoapi.LocationUser]) (*modelgen.User, error) {
 	u, err := client.User.Query().Where(user.DuoID(l.User.ID)).Only(ctx)
 	if err != nil {
-		if modelgen.IsNotFound(err) {
-			log.Debug().Str("login", l.User.Login).Int("duoID", l.User.ID).Msg("user don't exist import it with duopai")
-			duoUser, err := duoapi.UserGet(ctx, fmt.Sprint(l.User.ID))
-			if err != nil {
-				return nil, err
-			}
+		exist, err := userExist(ctx, l.User)
+		if err != nil {
+			return nil, err
+		}
 
-			id, err := client.User.Create().
-				SetEmail(duoUser.Email).
-				SetDuoID(l.User.ID).
-				SetDuoLogin(l.User.Login).
-				SetFirstName(duoUser.FirstName).
-				SetLastName(duoUser.LastName).
-				SetUsualFirstName(duoUser.UsualFirstName).
-				SetPoolMonth(duoUser.PoolMonth).
-				SetPoolYear(duoUser.PoolYear).
-				SetDuoAvatarURL(duoUser.Image.Link).
-				SetDuoAvatarSmallURL(duoUser.Image.Versions.Small).
-				SetIsStaff(duoUser.Staff).
-				SetIsAUser(false).
-				OnConflictColumns(user.FieldDuoID).
-				DoNothing().
-				ID(ctx)
+		if exist {
+			// User exist but dont match login / id
+			// Ensure to clean the old data before the re-creation
+			_, err := client.User.Delete().Where(user.And(user.DuoLogin(l.User.Login), user.IsAUser(false))).Exec(ctx)
 			if err != nil {
-				log.Debug().Err(err).Msg("error creating user")
-				return nil, err
+				return nil, fmt.Errorf("cannot clean old login data: %w", err)
 			}
-			u, err = client.User.Get(ctx, id)
-			if err != nil {
-				log.Debug().Err(err).Msg("failed to get user")
-				return nil, err
-			}
-		} else {
+		}
+
+		log.Debug().Str("login", l.User.Login).Int("duoID", l.User.ID).Msg("user don't exist import it with duopai")
+		duoUser, err := duoapi.UserGet(ctx, fmt.Sprint(l.User.ID))
+		if err != nil {
+			return nil, err
+		}
+
+		id, err := client.User.Create().
+			SetEmail(duoUser.Email).
+			SetDuoID(l.User.ID).
+			SetDuoLogin(l.User.Login).
+			SetFirstName(duoUser.FirstName).
+			SetLastName(duoUser.LastName).
+			SetUsualFirstName(duoUser.UsualFirstName).
+			SetPoolMonth(duoUser.PoolMonth).
+			SetPoolYear(duoUser.PoolYear).
+			SetDuoAvatarURL(duoUser.Image.Link).
+			SetDuoAvatarSmallURL(duoUser.Image.Versions.Small).
+			SetIsStaff(duoUser.Staff).
+			SetIsAUser(false).
+			OnConflictColumns(user.FieldDuoID).
+			DoNothing().
+			ID(ctx)
+		if err != nil {
+			log.Debug().Err(err).Msg("error creating user")
+			return nil, err
+		}
+		u, err = client.User.Get(ctx, id)
+		if err != nil {
+			log.Debug().Err(err).Msg("failed to get user")
 			return nil, err
 		}
 	}
 
 	return u, nil
+}
+
+// This function is only here to fix inconsistant data coming from intranet
+func userExist(ctx context.Context, u duoapi.LocationUser) (bool, error) {
+	// Check by ID
+	n, err := client.User.Query().Where(
+		user.Or(
+			user.DuoID(u.ID),
+			user.DuoLogin(u.Login),
+		),
+	).Count(ctx)
+	if err != nil && !modelgen.IsNotFound(err) {
+		return false, err
+	}
+
+	return n > 0, nil
 }

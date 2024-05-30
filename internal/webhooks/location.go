@@ -3,6 +3,7 @@ package webhooks
 import (
 	"database/sql"
 	"errors"
+	"strings"
 
 	"github.com/rs/zerolog/log"
 
@@ -36,6 +37,11 @@ func (p *locationProcessor) Create(loc *duoapi.Location[duoapi.LocationUser], me
 		}
 		log.Error().Err(err).Msg("Failed to get campus")
 		return err
+	}
+
+	// Skip location for anonymized users
+	if strings.HasPrefix(loc.User.Login, "3b3") {
+		return nil
 	}
 
 	// retrieve or create user in database from the location object received
