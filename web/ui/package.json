@@ -34,7 +34,7 @@
     "@sentry/node": "^7.84.0",
     "@types/uuid": "^9.0.1",
     "apollo3-cache-persist": "^0.14.1",
-    "axios": "^1.6.0",
+    "axios": "^1.6.2",
     "classnames": "^2.3.2",
     "dayjs": "^1.11.7",
     "deepmerge": "^4.2.2",
@@ -44,7 +44,7 @@
     "graphql-tag": "^2.12.6",
     "graphql-ws": "^5.14.0",
     "isomorphic-unfetch": "^4.0.2",
-    "jose": "^5.2.0",
+    "jose": "^5.2.2",
     "js-cookie": "^3.0.1",
     "next": "^13.4.4",
     "next-auth": "^4.24.5",
@@ -76,14 +76,14 @@
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.59.9",
     "autoprefixer": "^10.4.17",
-    "babel-jest": "^29.3.1",
+    "babel-jest": "^29.7.0",
     "babel-loader": "^9.1.0",
     "babel-plugin-inline-react-svg": "^2.0.1",
     "concurrently": "^8.2.2",
     "cypress": "^13.3.2",
-    "eslint": "^8.39.0",
+    "eslint": "^8.57.0",
     "eslint-config-airbnb-typescript": "^17.0.0",
-    "eslint-config-next": "^13.0.7",
+    "eslint-config-next": "^14.2.3",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-import": "^2.27.5",
     "husky": "^8.0.3",
@@ -97,6 +97,6 @@
     "tailwindcss": "^3.3.5",
     "ts-node": "^10.9.2",
     "typescript": "~5.0.0",
-    "yaml-loader": "^0.8.0"
+    "yaml-loader": "^0.8.1"
   }
 }
