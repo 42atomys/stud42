@@ -5,7 +5,7 @@ PROFILE_PATH="/etc/profile.d/01-devcontainer-env-sync.sh"
 # Load /etc/profile in /etc/zshenv
 echo "Sourcing /etc/profile in zsh"
 sudo sh -c "echo \"source /etc/profile\" > /etc/zshenv"
-sudo sh -c "echo \"source /etc/profile\" > /home/vscode/.zshenv"
+sudo sh -c "echo \"source /etc/profile\" > /root/.zshenv"
 
 # Load the .env file
 echo "Loading .env file into ${PROFILE_PATH}"

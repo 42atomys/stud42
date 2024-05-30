@@ -4,7 +4,6 @@
   "dockerComposeFile": "docker-compose.yaml",
   "service": "workspace",
   "workspaceFolder": "/workspace",
-  "containerUser": "vscode",
   "shutdownAction": "stopCompose",
   "waitFor": "postStartCommand",
   "userEnvProbe": "loginInteractiveShell",
@@ -128,11 +127,10 @@
     "rabbitmq:15672" // the rabbitmq management ui port
   ],
   // Use 'postCreateCommand' to run commands after the container is created.
-  "postCreateCommand": ".devcontainer/postCreateCommand.sh",
-  "postStartCommand": ".devcontainer/postStartCommand.sh",
-
-  // Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
-  // "remoteUser": "vscode",
+  "postCreateCommand": "/workspace/.devcontainer/postCreateCommand.sh",
+  "postStartCommand": "/workspace/.devcontainer/postStartCommand.sh",
+  "containerUser": "root",
+  "remoteUser": "root",
   "portsAttributes": {
     "3000": {
       "label": "Interface"
