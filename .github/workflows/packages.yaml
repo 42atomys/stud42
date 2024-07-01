@@ -47,7 +47,7 @@ jobs:
           org.opencontainers.image.description=${{ matrix.package }} image for s42 project
           org.opencontainers.image.source=https://github.com/42Atomys/stud42/tree/main/build/packages/${{ matrix.package }}
     - name: Build and push Docker image
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6
       with:
         context: build/packages/${{ matrix.package }}
         push: true
