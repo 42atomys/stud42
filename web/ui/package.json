@@ -82,7 +82,7 @@
     "concurrently": "^8.2.2",
     "cypress": "^13.3.2",
     "eslint": "^8.57.0",
-    "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint-config-airbnb-typescript": "^17.1.0",
     "eslint-config-next": "^14.2.3",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-import": "^2.27.5",
