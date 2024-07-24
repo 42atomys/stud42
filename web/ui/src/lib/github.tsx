@@ -193,7 +193,7 @@ export const Star = ({
 export const Contribute = (): JSX.Element => {
   return (
     <a
-      href={`https://github.com/${PROJECT_PATH}`}
+      href={`https://github.com/${PROJECT_PATH}/blob/main/CONTRIBUTING.md`}
       target="_blank"
       className="px-2 py-1 bg-slate-300 dark:bg-slate-950 rounded-md border dark:border-slate-700 text-slate-600 dark:text-slate-300"
       rel="noreferrer"
