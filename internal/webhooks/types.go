@@ -59,7 +59,9 @@ type githubSponsorshipWebhookPayload struct {
 		} `json:"tier"`
 		// The edited event types include the details about the change when
 		// someone edits a sponsorship to change the privacy.
-		PrivacyLevel string `json:"privacy_level"`
+		PrivacyLevel struct {
+			From string `json:"from"`
+		} `json:"privacy_level"`
 	} `json:"changes"`
 }
 
