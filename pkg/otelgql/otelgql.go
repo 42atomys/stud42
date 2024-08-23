@@ -8,6 +8,7 @@ package otelgql
 
 import (
 	"context"
+	"errors"
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/handler/extension"
