@@ -16,6 +16,18 @@ schema_config:
       index:
         prefix: loki_
         period: 24h
+
+storage_config:
+  boltdb_shipper:
+    shared_store: filesystem
+    active_index_directory: /data/loki/boltdb-shipper-active
+    cache_location: /data/loki/boltdb-shipper-cache
+    cache_ttl: 24h
+  filesystem:
+    directory: /data/loki/chunks
+  retention:
+    period: 336h  # Cela correspond à 14 jours
+
 limits_config:
   retention_period: 336h
   retention_stream:
@@ -25,12 +37,12 @@ limits_config:
     - selector: '{namespace="previews"}'
       priority: 1
       period: 24h
+
 memberlist:
   join_members:
     - "loki"
+
 server:
   grpc_listen_port: 9095
   http_listen_port: 3100
-storage_config:
-  filesystem:
-    directory: /data/loki/chunks
+
