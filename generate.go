@@ -10,10 +10,10 @@ import (
 	"log"
 	"os"
 
-	"atomys.codes/stud42/pkg/cache"
 	"entgo.io/contrib/entgql"
 	"entgo.io/ent/entc"
 	"entgo.io/ent/entc/gen"
+	"github.com/42atomys/stud42/pkg/cache"
 	gqlgenapi "github.com/99designs/gqlgen/api"
 	"github.com/99designs/gqlgen/codegen/config"
 	"github.com/99designs/gqlgen/plugin/modelgen"
@@ -54,7 +54,7 @@ func generateEntc() {
 			gen.FeatureVersionedMigration,
 		},
 		Target:  "./internal/models/generated",
-		Package: "atomys.codes/stud42/internal/models/generated",
+		Package: "github.com/42atomys/stud42/internal/models/generated",
 	}, opts...)
 	if err != nil {
 		log.Fatalf("running ent codegen: %v", err)

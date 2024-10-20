@@ -7,12 +7,12 @@ import (
 
 	"github.com/rs/zerolog/log"
 
-	modelsutils "atomys.codes/stud42/internal/models"
-	"atomys.codes/stud42/internal/models/generated"
-	"atomys.codes/stud42/internal/models/generated/campus"
-	"atomys.codes/stud42/internal/models/generated/location"
-	"atomys.codes/stud42/internal/models/generated/user"
-	"atomys.codes/stud42/pkg/duoapi"
+	modelsutils "github.com/42atomys/stud42/internal/models"
+	"github.com/42atomys/stud42/internal/models/generated"
+	"github.com/42atomys/stud42/internal/models/generated/campus"
+	"github.com/42atomys/stud42/internal/models/generated/location"
+	"github.com/42atomys/stud42/internal/models/generated/user"
+	"github.com/42atomys/stud42/pkg/duoapi"
 )
 
 type locationProcessor struct {

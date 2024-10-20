@@ -7,8 +7,8 @@ import (
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 
-	"atomys.codes/stud42/internal/pkg/searchengine"
-	"atomys.codes/stud42/internal/webhooks"
+	"github.com/42atomys/stud42/internal/pkg/searchengine"
+	"github.com/42atomys/stud42/internal/webhooks"
 )
 
 // webhooksCmd represents the webhooks command

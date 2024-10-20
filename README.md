@@ -7,7 +7,7 @@
 <img src="https://img.shields.io/github/contributors/42Atomys/stud42?color=blueviolet" alt="GitHub contributors">
 <img src="https://img.shields.io/github/stars/42atomys/stud42?color=blueviolet" alt="GitHub Repo stars">
 <img src="https://img.shields.io/github/sponsors/42Atomys?color=blueviolet" alt="GitHub Repo sponsors">
-<a href="https://pkg.go.dev/atomys.codes/stud42"><img src="https://pkg.go.dev/badge/atomys.codes/stud42.svg" alt="Go Reference"></a></p>
+<a href="https://pkg.go.dev/github.com/42atomys/stud42"><img src="https://pkg.go.dev/badge/github.com/42atomys/stud42.svg" alt="Go Reference"></a></p>
 
 <p align="center">This project is the direct continuation of the <a href="https://stud42.fr">stud42.fr</a> project. When <a href="https://github.com/42Atomys">@42Atomys</a> (aka. Atom) created stud42, he announced that the project would be open source when he left 42 staff.</p>
 

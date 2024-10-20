@@ -1,12 +1,12 @@
 package schema
 
 import (
-	"atomys.codes/stud42/internal/models/gotype"
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
+	"github.com/42atomys/stud42/internal/models/gotype"
 	"github.com/google/uuid"
 )
 

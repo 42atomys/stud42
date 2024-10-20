@@ -3,11 +3,11 @@ package api
 import (
 	"context"
 
-	"atomys.codes/stud42/internal/discord"
-	modelgen "atomys.codes/stud42/internal/models/generated"
-	"atomys.codes/stud42/internal/models/generated/user"
-	"atomys.codes/stud42/internal/models/gotype"
-	"atomys.codes/stud42/pkg/utils"
+	"github.com/42atomys/stud42/internal/discord"
+	modelgen "github.com/42atomys/stud42/internal/models/generated"
+	"github.com/42atomys/stud42/internal/models/generated/user"
+	"github.com/42atomys/stud42/internal/models/gotype"
+	"github.com/42atomys/stud42/pkg/utils"
 	"github.com/getsentry/sentry-go"
 	"github.com/google/go-github/v47/github"
 	"github.com/rs/zerolog/log"

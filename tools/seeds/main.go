@@ -8,7 +8,7 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 
-	modelgen "atomys.codes/stud42/internal/models/generated"
+	modelgen "github.com/42atomys/stud42/internal/models/generated"
 )
 
 var client *modelgen.Client
