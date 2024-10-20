@@ -44,7 +44,7 @@ jobs:
                     {
                       "style": 5,
                       "label": "Show Full Release",
-                      "url": "https://github.com/42Atomys/stud42/releases/tag/${{ github.event.release.tag_name }}",
+                      "url": "https://github.com/42atomys/stud42/releases/tag/${{ github.event.release.tag_name }}",
                       "disabled": false,
                       "type": 2
                     }
@@ -84,7 +84,7 @@ jobs:
                     {
                       "style": 5,
                       "label": "Show Full Release",
-                      "url": "https://github.com/42Atomys/stud42/releases/tag/${{ github.event.release.tag_name }}",
+                      "url": "https://github.com/42atomys/stud42/releases/tag/${{ github.event.release.tag_name }}",
                       "disabled": false,
                       "type": 2
                     }

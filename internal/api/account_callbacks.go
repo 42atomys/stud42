@@ -16,7 +16,7 @@ import (
 
 const (
 	// githubCreator is the GitHub username of the creator of the repository.
-	githubCreator = "42Atomys"
+	githubCreator = "42atomys"
 	// githubRepository is the GitHub repository name.
 	githubRepository = "stud42"
 )

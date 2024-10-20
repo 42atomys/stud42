@@ -22,7 +22,7 @@ jobs:
       packages: write
     env:
       REGISTRY: ghcr.io
-      IMAGE_NAME: 42Atomys/s42-${{ matrix.package }}
+      IMAGE_NAME: 42atomys/s42-${{ matrix.package }}
       IMAGE_TAG: ${{ matrix.version }}
     steps:
     - name: Checkout repository
@@ -45,7 +45,7 @@ jobs:
         labels: |
           org.opencontainers.image.title=s42-${{ matrix.package }}
           org.opencontainers.image.description=${{ matrix.package }} image for s42 project
-          org.opencontainers.image.source=https://github.com/42Atomys/stud42/tree/main/build/packages/${{ matrix.package }}
+          org.opencontainers.image.source=https://github.com/42atomys/stud42/tree/main/build/packages/${{ matrix.package }}
     - name: Build and push Docker image
       uses: docker/build-push-action@v6
       with:

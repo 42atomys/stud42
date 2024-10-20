@@ -1,15 +1,15 @@
 <h1 align="center"><img src=".github/profile/logo-emoji.png" /> Hi there 👋 welcome on S42 repository</h1>
 
-<p align="center"><a href="https://github.com/42Atomys/stud42/actions/workflows/ci.yaml"><img src="https://github.com/42Atomys/stud42/actions/workflows/ci.yaml/badge.svg" alt="Release 🎉"></a>
+<p align="center"><a href="https://github.com/42atomys/stud42/actions/workflows/ci.yaml"><img src="https://github.com/42atomys/stud42/actions/workflows/ci.yaml/badge.svg" alt="Release 🎉"></a>
 <img src="https://img.shields.io/github/v/release/42atomys/stud42?label=last%20release" alt="GitHub release (latest by date)">
-<img src="https://img.shields.io/github/deployments/42Atomys/stud42/production?label=live" alt="Production deployment status">
-<img src="https://img.shields.io/github/deployments/42Atomys/stud42/staging?label=next" alt="Staging deployment status">
-<img src="https://img.shields.io/github/contributors/42Atomys/stud42?color=blueviolet" alt="GitHub contributors">
+<img src="https://img.shields.io/github/deployments/42atomys/stud42/production?label=live" alt="Production deployment status">
+<img src="https://img.shields.io/github/deployments/42atomys/stud42/staging?label=next" alt="Staging deployment status">
+<img src="https://img.shields.io/github/contributors/42atomys/stud42?color=blueviolet" alt="GitHub contributors">
 <img src="https://img.shields.io/github/stars/42atomys/stud42?color=blueviolet" alt="GitHub Repo stars">
-<img src="https://img.shields.io/github/sponsors/42Atomys?color=blueviolet" alt="GitHub Repo sponsors">
+<img src="https://img.shields.io/github/sponsors/42atomys?color=blueviolet" alt="GitHub Repo sponsors">
 <a href="https://pkg.go.dev/github.com/42atomys/stud42"><img src="https://pkg.go.dev/badge/github.com/42atomys/stud42.svg" alt="Go Reference"></a></p>
 
-<p align="center">This project is the direct continuation of the <a href="https://stud42.fr">stud42.fr</a> project. When <a href="https://github.com/42Atomys">@42Atomys</a> (aka. Atom) created stud42, he announced that the project would be open source when he left 42 staff.</p>
+<p align="center">This project is the direct continuation of the <a href="https://stud42.fr">stud42.fr</a> project. When <a href="https://github.com/42atomys">@42atomys</a> (aka. Atom) created stud42, he announced that the project would be open source when he left 42 staff.</p>
 
 <p align="center">4 years later, it's finally time, time to put the project that doesn't need to prove itself anymore in open source, so that this project becomes the project of every student of every campus in the world.</p>
 
@@ -18,7 +18,7 @@
 <hr/>
 
 <p align="center"><img src=".github/profile/PROGRESS.png" /></p>
-<p align="center">Currently in <b>phase 4</b>, the main core of Stud42 is rewritted by <a href="https://github.com/42Atomys">@42Atomys</a>, the S42 version 3 now has a new architecture, a new design, and a new codebase.</p>
+<p align="center">Currently in <b>phase 4</b>, the main core of Stud42 is rewritted by <a href="https://github.com/42atomys">@42atomys</a>, the S42 version 3 now has a new architecture, a new design, and a new codebase.</p>
 
 <hr />
 
@@ -61,9 +61,9 @@ This project is under the [MIT License](LICENSE). You can use it for your own pr
 
 ## ❤️ Sponsors
 
-If you want to sponsor the project, you can do it by clicking on the button **Sponsor** on the right of the page or going to [https://github.com/sponsors/42Atomys](https://github.com/sponsors/42Atomys). All donations will be used to pay the costs of the project, such as the domain name, the hosting, the SSL certificates, etc.
+If you want to sponsor the project, you can do it by clicking on the button **Sponsor** on the right of the page or going to [https://github.com/sponsors/42atomys](https://github.com/sponsors/42atomys). All donations will be used to pay the costs of the project, such as the domain name, the hosting, the SSL certificates, etc.
 
-To thank you for your support, you will have access to the awesomeness part of the app and unique badges on the Discord. You can see the list of all the sponsors and see the list of benefits on the [Sponsors page](https://github.com/sponsors/42Atomys).
+To thank you for your support, you will have access to the awesomeness part of the app and unique badges on the Discord. You can see the list of all the sponsors and see the list of benefits on the [Sponsors page](https://github.com/sponsors/42atomys).
 
 ## 📫 Contact
 
@@ -86,4 +86,4 @@ The Discord is the place to be to share your ideas, to ask for help, to discuss 
 
 List of all the contributors to the project, thanks to you the project is what it is today.
 
-![Contributors](https://contrib.rocks/image?repo=42Atomys/stud42)
+![Contributors](https://contrib.rocks/image?repo=42atomys/stud42)

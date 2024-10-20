@@ -38,8 +38,8 @@ RUN apt-get update -y && \
 # RUNNER 
 FROM node:18-alpine AS runner
 
-LABEL maintener "42Atomys <contact@atomys.fr>"
-LABEL repository "https://github.com/42Atomys/stud42"
+LABEL maintener "42atomys <contact@atomys.fr>"
+LABEL repository "https://github.com/42atomys/stud42"
 
 WORKDIR /app
 

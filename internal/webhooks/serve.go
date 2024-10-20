@@ -41,7 +41,7 @@ func New() *processor {
 // Serve starts the webhooks processor and listens for incoming message from
 // the RabbitMQ queue "webhooks-processor" filled by the webhooked project.
 //
-// See https://github.com/42Atomys/webhooked
+// See https://github.com/42atomys/webhooked
 func (p *processor) Serve(amqpUrl, channel string) error {
 	conn, err := amqp.Dial(amqpUrl)
 	if err != nil {

@@ -33,13 +33,13 @@ new section, all is possible, this is our project (Parce que c'est notre projet)
 
 If you spot a problem with the app, submit an idea of enchantment or new fonctionnality,
 search if an issue don't exist yet. If a related issue doesn't exist,
-you can open a new issue using a relevant [issue form](https://github.com/42Atomys/stud42/issues/new/choose).
+you can open a new issue using a relevant [issue form](https://github.com/42atomys/stud42/issues/new/choose).
 
 #### Solve an issue
 
-Scan through our [existing issues](https://github.com/42Atomys/issues/issues)
+Scan through our [existing issues](https://github.com/42atomys/issues/issues)
 to find one that interests you. You can narrow down the search using `labels` as
-filters. If it's your first contribution, the label https://github.com/42Atomys/stud42/labels/good%20first%20issue
+filters. If it's your first contribution, the label https://github.com/42atomys/stud42/labels/good%20first%20issue
 is a good one to start !
 
 As a general rule, we don’t assign issues to anyone. If you find an issue to work on,
@@ -98,6 +98,6 @@ When you're finished with the changes, create a pull request, also known as a PR
 
 Congratulations 🎉 🎉 Thanks you ✨.
 
-Once your PR is merged, your contributions will be publicly visible on the [GitHub repo](https://github.com/42Atomys/stud42).
+Once your PR is merged, your contributions will be publicly visible on the [GitHub repo](https://github.com/42atomys/stud42).
 
 Now that you are part of the S42 community, awesome !
