@@ -9,7 +9,7 @@ ENV APP_VERSION=$APP_VERSION
 
 RUN apt-get update && \
   apt-get install -y unzip jq curl && \
-  sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d && \
+  sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin && \
   task generate build
 
 # INTERFACE BUILD - DEPS
