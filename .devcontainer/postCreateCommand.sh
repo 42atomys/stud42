@@ -29,7 +29,7 @@ git update-index --assume-unchanged .devcontainer/.env
 # https://github.com/microsoft/vscode/issues/133215
 git config oh-my-zsh.hide-info 1
 
-make -f build/Makefile generate certs
+task generate certs
 
 cp config/stud42.example.yaml config/stud42.yaml
 
