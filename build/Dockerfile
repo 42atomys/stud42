@@ -1,5 +1,5 @@
 # GOLANG BUILD - BUILD
-FROM golang:1.20 AS go-build
+FROM golang:1.23 AS go-build
 
 WORKDIR /build
 COPY . /build
