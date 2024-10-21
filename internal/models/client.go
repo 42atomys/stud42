@@ -6,9 +6,9 @@ import (
 
 	"github.com/rs/zerolog/log"
 
-	modelgen "atomys.codes/stud42/internal/models/generated"
-	_ "atomys.codes/stud42/internal/models/generated/runtime"
-	"atomys.codes/stud42/pkg/cache"
+	modelgen "github.com/42atomys/stud42/internal/models/generated"
+	_ "github.com/42atomys/stud42/internal/models/generated/runtime"
+	"github.com/42atomys/stud42/pkg/cache"
 )
 
 var client *modelgen.Client

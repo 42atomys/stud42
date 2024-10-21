@@ -1,10 +1,10 @@
 package webhooks
 
 import (
-	modelgen "atomys.codes/stud42/internal/models/generated"
-	"atomys.codes/stud42/internal/models/generated/campus"
-	"atomys.codes/stud42/internal/models/generated/user"
-	"atomys.codes/stud42/pkg/duoapi"
+	modelgen "github.com/42atomys/stud42/internal/models/generated"
+	"github.com/42atomys/stud42/internal/models/generated/campus"
+	"github.com/42atomys/stud42/internal/models/generated/user"
+	"github.com/42atomys/stud42/pkg/duoapi"
 )
 
 type campusUserProcessor struct {

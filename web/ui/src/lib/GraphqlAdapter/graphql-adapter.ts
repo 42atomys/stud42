@@ -44,7 +44,7 @@ const providerMap = (name: string): AccountProvider => {
 
 /**
  * for Adapter workflows please see the README file of the current folder
- * @see https://github.com/42Atomys/stud42/blob/main/web/ui/src/lib/GraphqlAdapter/README.md
+ * @see https://github.com/42atomys/stud42/blob/main/web/ui/src/lib/GraphqlAdapter/README.md
  * @returns {Promise<S42Adapter>}
  */
 export const GraphQLAdapter = (): S42Adapter => {

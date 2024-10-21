@@ -39,8 +39,9 @@ directives:
 # gqlgen will search for any type names in the schema in these go packages
 # if they match it will use them, otherwise it will generate them.
 autobind:
-  - "atomys.codes/stud42/internal/models/generated"
-  - "atomys.codes/stud42/internal/models/gotype"
+  - "github.com/99designs/gqlgen/graphql/introspection"
+  - "github.com/42atomys/stud42/internal/models/generated"
+  - "github.com/42atomys/stud42/internal/models/gotype"
 
 # This section declares type mapping between the GraphQL and go type systems
 #
@@ -50,27 +51,27 @@ autobind:
 models:
   UUID:
     model:
-      - atomys.codes/stud42/internal/models.UUID
+      - github.com/42atomys/stud42/internal/models.UUID
   # Cast Me to User type to avoid circular dependency
   Me:
     model:
-      - atomys.codes/stud42/internal/models/generated.User
+      - github.com/42atomys/stud42/internal/models/generated.User
   # Cast all intra types to their type to avoid duplicate types
   IntraUserProxy:
     model:
-      - atomys.codes/stud42/pkg/duoapi.User
+      - github.com/42atomys/stud42/pkg/duoapi.User
   IntraCursusUserProxy:
     model:
-      - atomys.codes/stud42/pkg/duoapi.CursusUser
+      - github.com/42atomys/stud42/pkg/duoapi.CursusUser
   IntraCursusProxy:
     model:
-      - atomys.codes/stud42/pkg/duoapi.Cursus
+      - github.com/42atomys/stud42/pkg/duoapi.Cursus
   IntraProjectsUserProxy:
     model:
-      - atomys.codes/stud42/pkg/duoapi.ProjectsUser
+      - github.com/42atomys/stud42/pkg/duoapi.ProjectsUser
   IntraProjectProxy:
     model:
-      - atomys.codes/stud42/pkg/duoapi.Project
+      - github.com/42atomys/stud42/pkg/duoapi.Project
   IntraGroupProxy:
     model:
-      - atomys.codes/stud42/pkg/duoapi.Group
+      - github.com/42atomys/stud42/pkg/duoapi.Group

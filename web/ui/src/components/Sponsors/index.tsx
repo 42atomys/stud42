@@ -22,7 +22,7 @@ export const SponsorHint: React.FC<PropsWithClassName> = ({ className }) => (
     showArrow
   >
     <Link
-      href="https://github.com/sponsors/42Atomys"
+      href="https://github.com/sponsors/42atomys"
       target="_blank"
       rel="noreferrer"
       className="text-white font-bold hover:underline"
