@@ -37,7 +37,7 @@ const AwesomenessSettingPage: NextPage<PageProps> = () => {
           </div>
         )) || (
           <Link
-            href="https://github.com/sponsors/42Atomys"
+            href="https://github.com/sponsors/42atomys"
             target="_blank"
             className="col-span-2"
           >
@@ -56,7 +56,7 @@ const AwesomenessSettingPage: NextPage<PageProps> = () => {
           </Link>
         )}
         <Link
-          href="https://github.com/sponsors/42Atomys"
+          href="https://github.com/sponsors/42atomys"
           target="_blank"
           className="col-span-2 text-center hover:underline"
         >

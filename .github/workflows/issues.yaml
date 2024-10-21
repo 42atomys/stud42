@@ -78,7 +78,7 @@ jobs:
       - uses: actions/stale@v9
         with:
           exempt-all-milestones: true
-          exempt-assignees: "42Atomys"
+          exempt-assignees: "42atomys"
 
           enable-statistics: true
           operations-per-run: 100

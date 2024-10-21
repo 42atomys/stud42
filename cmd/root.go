@@ -4,8 +4,8 @@ import (
 	"context"
 	"strings"
 
-	modelsutils "atomys.codes/stud42/internal/models"
-	"atomys.codes/stud42/pkg/cache"
+	modelsutils "github.com/42atomys/stud42/internal/models"
+	"github.com/42atomys/stud42/pkg/cache"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"

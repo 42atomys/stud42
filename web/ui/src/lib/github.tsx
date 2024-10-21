@@ -116,7 +116,7 @@ export interface Owner {
   site_admin?: boolean;
 }
 
-const PROJECT_PATH = '42Atomys/stud42';
+const PROJECT_PATH = '42atomys/stud42';
 
 const starButton = tv({
   slots: {

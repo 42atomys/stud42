@@ -24,11 +24,11 @@ import (
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"go.opentelemetry.io/otel"
 
-	"atomys.codes/stud42/internal/api"
-	modelsutils "atomys.codes/stud42/internal/models"
-	"atomys.codes/stud42/internal/pkg/searchengine"
-	"atomys.codes/stud42/pkg/cache"
-	"atomys.codes/stud42/pkg/otelgql"
+	"github.com/42atomys/stud42/internal/api"
+	modelsutils "github.com/42atomys/stud42/internal/models"
+	"github.com/42atomys/stud42/internal/pkg/searchengine"
+	"github.com/42atomys/stud42/pkg/cache"
+	"github.com/42atomys/stud42/pkg/otelgql"
 )
 
 var (

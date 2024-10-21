@@ -1,7 +1,7 @@
 # Deployment
 
-The entire S42 project is deployed on a kubernetes cluster hosted on the OVH cloud and paid for by @42Atomys.
-You can contribute to the costs by sponsoring the project on [GitHub](https://github.com/sponsors/42Atomys).
+The entire S42 project is deployed on a kubernetes cluster hosted on the OVH cloud and paid for by @42atomys.
+You can contribute to the costs by sponsoring the project on [GitHub](https://github.com/sponsors/42atomys).
 
 The kubernetes cluster is composed of 3 node pools:
 

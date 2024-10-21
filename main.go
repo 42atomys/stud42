@@ -16,7 +16,7 @@ import (
 	tracesdk "go.opentelemetry.io/otel/sdk/trace"
 	semconv "go.opentelemetry.io/otel/semconv/v1.12.0"
 
-	"atomys.codes/stud42/cmd"
+	"github.com/42atomys/stud42/cmd"
 )
 
 func init() {

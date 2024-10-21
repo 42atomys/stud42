@@ -10,7 +10,7 @@ import (
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/rs/zerolog/log"
 
-	typesgen "atomys.codes/stud42/internal/api/generated/types"
+	typesgen "github.com/42atomys/stud42/internal/api/generated/types"
 )
 
 // policyRequestHeaderAuthorizationContextKey is the context key for the request IP.

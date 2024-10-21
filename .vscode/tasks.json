@@ -3,7 +3,7 @@
   "tasks": [
     {
       "type": "shell",
-      "command": "make -f build/Makefile generate",
+      "command": "task generate",
       "problemMatcher": ["$go"],
       "label": "Generate API code",
       "detail": "Generate code on API",
