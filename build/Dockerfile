@@ -1,5 +1,5 @@
 # GOLANG BUILD - BUILD
-FROM golang:1.20 AS go-build
+FROM golang:1.23 AS go-build
 
 WORKDIR /build
 COPY . /build
@@ -8,8 +8,9 @@ ARG APP_VERSION
 ENV APP_VERSION=$APP_VERSION
 
 RUN apt-get update && \
-  apt-get install -y unzip jq && \
-  make -f build/Makefile generate build
+  apt-get install -y unzip jq curl && \
+  sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin && \
+  task generate build
 
 # INTERFACE BUILD - DEPS
 FROM node:18 AS node-deps
@@ -37,8 +38,8 @@ RUN apt-get update -y && \
 # RUNNER 
 FROM node:18-alpine AS runner
 
-LABEL maintener "42Atomys <contact@atomys.fr>"
-LABEL repository "https://github.com/42Atomys/stud42"
+LABEL maintener "42atomys <contact@atomys.fr>"
+LABEL repository "https://github.com/42atomys/stud42"
 
 WORKDIR /app
 

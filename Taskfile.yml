@@ -1,0 +1,38 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  GREETING: Hello, World!
+
+tasks:
+  generate:
+    desc: Generate backend code based on api/*.graphql files and schemas
+    aliases: [g, gen]
+    cmds:
+      - go generate generate.go
+  build:
+    desc: Build the application cli for production use
+    env:
+      CGO_ENABLED: '0'
+      GOARCH: amd64
+      GOOS: linux
+    cmds:
+      - go build -o stud42cli
+  clean:
+    desc: Clean up generated code
+    cmds:
+      - rm -rf internal/api/generated 
+      - rm -rf internal/models/generated
+  tests:
+    desc: Run backend tests
+    aliases: [t, test]
+    cmds:
+      - go test ./...
+  certs:
+    desc: Generate certificates for the auth service to use
+    cmds:
+      - mkdir -p certs
+      - openssl genrsa -out certs/private.key 8192
+      - openssl rsa -in certs/private.key -out certs/public.pem -pubout -outform PEM
+

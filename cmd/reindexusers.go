@@ -5,9 +5,9 @@ import (
 	"strconv"
 	"sync"
 
-	modelsutils "atomys.codes/stud42/internal/models"
-	modelgen "atomys.codes/stud42/internal/models/generated"
-	"atomys.codes/stud42/internal/pkg/searchengine"
+	modelsutils "github.com/42atomys/stud42/internal/models"
+	modelgen "github.com/42atomys/stud42/internal/models/generated"
+	"github.com/42atomys/stud42/internal/pkg/searchengine"
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"

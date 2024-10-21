@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"time"
 
-	modelsutils "atomys.codes/stud42/internal/models"
-	generatedUser "atomys.codes/stud42/internal/models/generated/user"
-	"atomys.codes/stud42/internal/pkg/s3"
+	modelsutils "github.com/42atomys/stud42/internal/models"
+	generatedUser "github.com/42atomys/stud42/internal/models/generated/user"
+	"github.com/42atomys/stud42/internal/pkg/s3"
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"

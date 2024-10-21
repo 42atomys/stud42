@@ -4,9 +4,9 @@ import (
 	"github.com/99designs/gqlgen/graphql"
 	"go.opentelemetry.io/otel/trace"
 
-	apigen "atomys.codes/stud42/internal/api/generated"
-	modelgen "atomys.codes/stud42/internal/models/generated"
-	"atomys.codes/stud42/pkg/cache"
+	apigen "github.com/42atomys/stud42/internal/api/generated"
+	modelgen "github.com/42atomys/stud42/internal/models/generated"
+	"github.com/42atomys/stud42/pkg/cache"
 )
 
 // This file will not be regenerated automatically.

@@ -129,10 +129,12 @@ jobs:
       - name: Setup go
         uses: actions/setup-go@v5
         with:
-          go-version: "1.20"
+          go-version: "1.23"
           check-latest: true
+      - name: Install Task
+        uses: arduino/setup-task@v2
       - name: Generate code
-        run: make -f build/Makefile generate
+        run: task generate
       - name: Run Unit tests
         run: |
           go test ./... -coverprofile coverage.out -covermode count

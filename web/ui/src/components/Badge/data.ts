@@ -57,13 +57,13 @@ export const flagData: FlagDataMap = {
     name: 'Collaborator',
     description: 'Collaborator on Github',
     className: 'fa-duotone fa-code-compare text-cyan-500',
-    link: () => new URL('https://github.com/42Atomys/stud42/collaborators'),
+    link: () => new URL('https://github.com/42atomys/stud42/collaborators'),
   },
   CONTRIBUTOR: {
     name: 'Contributor',
     description: 'Contributed on Github',
     className: 'fa-duotone fa-code-pull-request text-green-500',
-    link: () => new URL('https://github.com/42Atomys/stud42'),
+    link: () => new URL('https://github.com/42atomys/stud42'),
   },
   DISCORD: {
     name: 'Discord',
@@ -75,13 +75,13 @@ export const flagData: FlagDataMap = {
     name: 'Sponsor',
     description: 'Sponsor of the project',
     className: 'fa-duotone fa-user-astronaut text-pink-500',
-    link: () => new URL('https://github.com/sponsors/42Atomys'),
+    link: () => new URL('https://github.com/sponsors/42atomys'),
   },
   STARGAZER: {
     name: 'Stargazer',
     description: 'Starred the project on Github',
     className: 'fa-duotone fa-star text-yellow-500',
-    link: () => new URL('https://github.com/sponsors/42Atomys'),
+    link: () => new URL('https://github.com/sponsors/42atomys'),
   },
 };
 

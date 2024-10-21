@@ -6,8 +6,8 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"atomys.codes/stud42/internal/auth"
-	_ "atomys.codes/stud42/internal/models/generated/runtime"
+	"github.com/42atomys/stud42/internal/auth"
+	_ "github.com/42atomys/stud42/internal/models/generated/runtime"
 )
 
 var (

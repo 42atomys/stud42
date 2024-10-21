@@ -166,13 +166,13 @@ export const Sidebar = ({
         >
           {!subSidebar && (
             <MenuItem
-              href="https://github.com/42Atomys/stud42"
+              href="https://github.com/42atomys/stud42"
               icon="fa-brands fa-github"
               name="Github"
             />
           )}
           <MenuItem
-            href="https://github.com/sponsors/42Atomys"
+            href="https://github.com/sponsors/42atomys"
             icon={
               me.flags?.includes(UserFlag.SPONSOR)
                 ? 'fa-solid fa-heart !text-fuchsia-500'

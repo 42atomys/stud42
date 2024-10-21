@@ -12,8 +12,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
 
-	"atomys.codes/stud42/internal/models/gotype"
-	"atomys.codes/stud42/internal/pkg/searchengine"
+	"github.com/42atomys/stud42/internal/models/gotype"
+	"github.com/42atomys/stud42/internal/pkg/searchengine"
 )
 
 type User struct {
