@@ -10,12 +10,12 @@ import (
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 
-	modelsutils "atomys.codes/stud42/internal/models"
-	modelgen "atomys.codes/stud42/internal/models/generated"
-	"atomys.codes/stud42/internal/models/generated/campus"
-	"atomys.codes/stud42/internal/models/generated/location"
-	"atomys.codes/stud42/internal/models/generated/user"
-	"atomys.codes/stud42/pkg/duoapi"
+	modelsutils "github.com/42atomys/stud42/internal/models"
+	modelgen "github.com/42atomys/stud42/internal/models/generated"
+	"github.com/42atomys/stud42/internal/models/generated/campus"
+	"github.com/42atomys/stud42/internal/models/generated/location"
+	"github.com/42atomys/stud42/internal/models/generated/user"
+	"github.com/42atomys/stud42/pkg/duoapi"
 )
 
 // locationsCmd represents the locations command

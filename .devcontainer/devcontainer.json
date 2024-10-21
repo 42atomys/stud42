@@ -1,122 +1,50 @@
 {
   "$schema": "https://raw.githubusercontent.com/devcontainers/spec/main/schemas/devContainer.schema.json",
-  "name": "s42.app",
+  "name": "S42 App",
   "dockerComposeFile": "docker-compose.yaml",
   "service": "workspace",
   "workspaceFolder": "/workspace",
   "shutdownAction": "stopCompose",
   "waitFor": "postStartCommand",
   "userEnvProbe": "loginInteractiveShell",
-  // Configure tool-specific properties.
-  "customizations": {
-    // Configure properties specific to VS Code.
-    "vscode": {
-      // Set *default* container specific settings.json values on container create.
-      "settings": {
-        "go.toolsManagement.checkForUpdates": "local",
-        "go.useLanguageServer": true,
-        "go.gopath": "/go",
-        "go.autocompleteUnimportedPackages": true,
-        "go.coverMode": "atomic",
-        "go.coverOnSave": true,
-        "go.disableConcurrentTests": true,
-        "editor.formatOnSave": true,
-        "go.lintTool": "golangci-lint",
-        "terminal.integrated.fontFamily": "'DejaVu Sans Mono for Powerline', monospace",
-        "terminal.integrated.defaultProfile.linux": "zsh",
-        "terminal.integrated.defaultProfile.osx": "zsh",
-        "editor.tabSize": 2,
-        "editor.renderWhitespace": "all",
-        "gopls": {
-          "ui.completion.usePlaceholders": true,
-          // Experimental settings
-          "completeUnimported": true, // autocomplete unimported packages
-          "deepCompletion": true, // enable deep completion
-          "staticcheck": true
-        },
-        "editor.codeActionsOnSave": {
-          "source.organizeImports": "explicit",
-          "source.fixAll": "explicit"
-        },
-        "editor.bracketPairColorization.enabled": true,
-        "editor.guides.bracketPairs": "active",
-        "editor.suggestSelection": "first",
-        "git.autofetch": true,
-        "typescript.updateImportsOnFileMove.enabled": "always",
-        "files.autoGuessEncoding": true,
-        "files.encoding": "utf8",
-        "workbench.editor.decorations.badges": true,
-        "workbench.editor.decorations.colors": true,
-        "go.delveConfig": {
-          "apiVersion": 2,
-          "showGlobalVariables": false
-        },
-        "editor.inlineSuggest.enabled": true,
-        "editor.rulers": [80, 120],
-        "jest.jestCommandLine": "yarn test",
-        "jest.runMode": {
-          "runAllTestsOnStartup": false,
-          "type": "on-demand",
-          "showInlineError": true,
-          "coverage": true
-        },
-        "jest.outputConfig": {
-          "revealOn": "error",
-          "clearOnRun": "none",
-          "revealWithFocus": "none"
-        },
-        "eslint.workingDirectories": [
-          {
-            "directory": "web/ui"
-          }
-        ],
-        "search.useGlobalIgnoreFiles": true,
-        "search.useParentIgnoreFiles": true,
-        "workbench.productIconTheme": "fluent-icons",
-        "[yaml]": {
-          "editor.defaultFormatter": "redhat.vscode-yaml"
-        },
-        "[markdown]": {
-          "editor.defaultFormatter": "esbenp.prettier-vscode"
-        },
-        "[json]": {
-          "editor.defaultFormatter": "esbenp.prettier-vscode"
-        },
-        "[jsonc]": {
-          "editor.defaultFormatter": "esbenp.prettier-vscode"
-        },
-        "[typescript]": {
-          "editor.defaultFormatter": "esbenp.prettier-vscode"
-        }
-      },
-
-      // Add the IDs of extensions you want installed when the container is created.
-      "extensions": [
-        "golang.Go",
-        "aaron-bond.better-comments",
-        "IBM.output-colorizer",
-        "miguelsolorio.fluent-icons",
-        "jasonnutter.vscode-codeowners",
-        "ms-azuretools.vscode-docker",
-        "ms-kubernetes-tools.vscode-kubernetes-tools",
-        "cschleiden.vscode-github-actions",
-        "eamodio.gitlens",
-        "jinliming2.vscode-go-template",
-        "graphql.vscode-graphql",
-        "yzhang.markdown-all-in-one",
-        "bierner.markdown-mermaid",
-        "quicktype.quicktype",
-        "esbenp.prettier-vscode",
-        "bradlc.vscode-tailwindcss",
-        "redhat.vscode-yaml",
-        "hashicorp.terraform",
-        "orta.vscode-jest",
-        "ms-vscode.makefile-tools"
-      ]
-    }
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": true,
+      "configureZshAsDefaultShell": true,
+      "installOhMyZsh": true,
+      "username": "vscode"
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/python:1": {},
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "18"
+    },
+    "ghcr.io/devcontainers/features/go:1": {
+      "version": "1.23.2",
+      "golangciLintVersion": "1.61.0"
+    },
+    "ghcr.io/devcontainers-community/npm-features/typescript:1": {},
+    "ghcr.io/devcontainers-community/npm-features/prettier:1": {},
+    "ghcr.io/itsmechlark/features/postgresql:1": {
+      "version": "14"
+    },
+    "ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {
+      "version": "1.26.0",
+      "helm": "latest"
+    },
+    "ghcr.io/devcontainers/features/terraform:1": {
+      "version": "latest"
+    },
+    "ghcr.io/ChristopherMacGown/devcontainer-features/minio-client:1": {},
+    "ghcr.io/gickis/devcontainer-features/kubeseal:1": {
+      "version": "0.27.1"
+    },
+    "ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
+      "packages": ["gnupg2,iputils-ping,dnsutils,vim,htop,sudo,curl,build-essential,wget,jq,fonts-powerline,tig,ca-certificates,software-properties-common,redis-tools"]
+    },
+    "ghcr.io/devcontainers-contrib/features/go-task:1": {}
   },
-
-  // Use 'forwardPorts' to make a list of ports inside the container available locally.
   "forwardPorts": [
     3000, // web-ui port
     4000, // api port
@@ -126,11 +54,6 @@
     "minio:9000", // the minio port
     "rabbitmq:15672" // the rabbitmq management ui port
   ],
-  // Use 'postCreateCommand' to run commands after the container is created.
-  "postCreateCommand": "/workspace/.devcontainer/postCreateCommand.sh",
-  "postStartCommand": "/workspace/.devcontainer/postStartCommand.sh",
-  "containerUser": "root",
-  "remoteUser": "root",
   "portsAttributes": {
     "3000": {
       "label": "Interface"
@@ -152,6 +75,30 @@
     },
     "15672": {
       "label": "RabbitMQ Management UI"
+    }
+  },
+  "postCreateCommand": "bash .devcontainer/postCreateCommand.sh",
+  "postStartCommand": "bash .devcontainer/postStartCommand.sh",
+  "containerUser": "root",
+  "remoteUser": "root",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "golang.Go",
+        "aaron-bond.better-comments",
+        "miguelsolorio.fluent-icons",
+        "jasonnutter.vscode-codeowners",
+        "jinliming2.vscode-go-template",
+        "graphql.vscode-graphql",
+        "yzhang.markdown-all-in-one",
+        "bierner.markdown-mermaid",
+        "quicktype.quicktype",
+        "esbenp.prettier-vscode",
+        "bradlc.vscode-tailwindcss",
+        "redhat.vscode-yaml",
+        "hashicorp.terraform",
+        "orta.vscode-jest"
+      ]
     }
   }
 }

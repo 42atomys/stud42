@@ -194,10 +194,10 @@ export const IndexPage: NextPage<PageProps, {}> = ({ me }) => {
                   </a>{' '}
                   project. When{' '}
                   <a
-                    href="https://github.com/42Atomys"
+                    href="https://github.com/42atomys"
                     className="text-indigo-500 hover:underline"
                   >
-                    @42Atomys
+                    @42atomys
                   </a>{' '}
                   (aka. Atom) created stud42, he announced that the project
                   would be open source when he left 42 staff.
@@ -246,7 +246,7 @@ export const IndexPage: NextPage<PageProps, {}> = ({ me }) => {
                   See FAQ issue for more information{' '}
                   <Link
                     className="text-blue-500"
-                    href="https://github.com/42Atomys/stud42/issues/364"
+                    href="https://github.com/42atomys/stud42/issues/364"
                     target="_blank"
                   >
                     #364

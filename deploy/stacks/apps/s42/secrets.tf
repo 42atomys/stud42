@@ -71,7 +71,7 @@ module "service-token" {
       isClusterWide = false
       namespace     = "production"
 
-      # TODO(@42Atomys): Scope the providers to the namespace.
+      # TODO(@42atomys): Scope the providers to the namespace.
       reflected           = true
       reflectedNamespaces = ["staging", "previews"]
 
@@ -103,7 +103,7 @@ module "service-token" {
       isClusterWide = false
       namespace     = "production"
 
-      # TODO(@42Atomys): Scope the providers to the namespace.
+      # TODO(@42atomys): Scope the providers to the namespace.
       reflected           = true
       reflectedNamespaces = ["staging"]
 

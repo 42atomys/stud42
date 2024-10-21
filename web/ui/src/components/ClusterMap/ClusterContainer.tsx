@@ -60,7 +60,7 @@ export const ClusterContainer: ClusterContainerComponent = ({
     fetchPolicy: 'network-only',
     // This is a workaround due to missing websocket implementation.
     // TODO: Remove this when websocket is implemented.
-    // See https://github.com/42Atomys/stud42/issues/259
+    // See https://github.com/42atomys/stud42/issues/259
     pollInterval: 1000 * 60, // 1 minute
   });
 

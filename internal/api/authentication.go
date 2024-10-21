@@ -14,8 +14,8 @@ import (
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
 
-	modelgen "atomys.codes/stud42/internal/models/generated"
-	"atomys.codes/stud42/internal/models/generated/user"
+	modelgen "github.com/42atomys/stud42/internal/models/generated"
+	"github.com/42atomys/stud42/internal/models/generated/user"
 )
 
 // authTokenContextKey is the context key to store the JWT Token from the
