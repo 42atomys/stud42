@@ -4,13 +4,13 @@ import (
 	"context"
 	"fmt"
 
-	"atomys.codes/stud42/internal/models/gotype"
-	"atomys.codes/stud42/pkg/utils"
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
+	"github.com/42atomys/stud42/internal/models/gotype"
+	"github.com/42atomys/stud42/pkg/utils"
 	"github.com/google/uuid"
 )
 

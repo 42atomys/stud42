@@ -106,7 +106,7 @@ export const SettingsLayout: NextPage<
             <span className="p-2 text-xs text-slate-400 dark:text-slate-600 italic box-decoration-clone">
               You can create features request and report bugs on the{' '}
               <a
-                href="https://github.com/42Atomys/stud42/issues"
+                href="https://github.com/42atomys/stud42/issues"
                 className="text-slate-500"
                 target="_blank"
                 rel="noopener noreferrer"

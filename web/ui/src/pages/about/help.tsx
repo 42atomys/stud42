@@ -52,7 +52,7 @@ const HelpPage: NextPage<PageProps> = () => {
                 <strong>Found a bug?</strong> Report it on our{' '}
                 <a
                   className="underline hover:cursor-pointer text-indigo-500"
-                  href="https://github.com/42Atomys/stud42"
+                  href="https://github.com/42atomys/stud42"
                   target="_blank"
                   rel="noreferrer"
                 >

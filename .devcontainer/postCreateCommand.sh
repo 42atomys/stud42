@@ -29,9 +29,16 @@ git update-index --assume-unchanged .devcontainer/.env
 # https://github.com/microsoft/vscode/issues/133215
 git config oh-my-zsh.hide-info 1
 
-make -f build/Makefile devcontainer-init
+task generate certs
+
+cp config/stud42.example.yaml config/stud42.yaml
 
 # Configure RabbitMQ
+if [ ! -f /usr/local/bin/rabbitmqadmin ]; then
+  wget -O /usr/local/bin/rabbitmqadmin https://raw.githubusercontent.com/rabbitmq/rabbitmq-management/v3.11.13/bin/rabbitmqadmin
+  chmod +x /usr/local/bin/rabbitmqadmin
+fi
+
 ./bin/rabbitmqadmin --host rabbitmq --user rabbitmq --password rabbitmq declare exchange name="webhooks" type="direct"
 ./bin/rabbitmqadmin --host rabbitmq --user rabbitmq --password rabbitmq declare queue name="webhooks.processing" auto_delete="false" durable="true"
 ./bin/rabbitmqadmin --host rabbitmq --user rabbitmq --password rabbitmq declare queue name="webhooks.dlq" auto_delete="false" durable="true"
@@ -44,3 +51,6 @@ make -f build/Makefile devcontainer-init
 mc alias set s3 http://minio:9000 $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
 mc mb s3/s42-users --ignore-existing --region europe-west1
 mc mb s3/s42-exports --ignore-existing --region europe-west1
+
+yarn --cwd web/ui install
+yarn --cwd web/ui generate

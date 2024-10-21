@@ -22,7 +22,7 @@ Like say before, you needs to add some credentials listed on the file `.devconta
 
 To develop on S42, you need to have your OAuth2 applications with her credentials. Each OAuth2 provide to you an ID and a SECRET. In the next sub section, we give you the endpoint for each provider.
 
-#### 42
+#### 42 (required anytime)
 
 **Endpoint**: https://profile.intra.42.fr/oauth/applications/new
 
@@ -30,7 +30,7 @@ To develop on S42, you need to have your OAuth2 applications with her credential
 
 **Callback Url to provide**: `http://localhost:3000/api/auth/callback/42-school`
 
-#### Github
+#### Github (optional but required for webhooks and oauth)
 
 **Endpoint**: https://github.com/settings/applications/new
 
@@ -38,7 +38,7 @@ To develop on S42, you need to have your OAuth2 applications with her credential
 
 **Callback Url to provide**: `http://localhost:3000/api/auth/callback/github`
 
-#### Discord
+#### Discord (optional but required for bot)
 
 **Endpoint**: https://discord.com/developers/applications
 

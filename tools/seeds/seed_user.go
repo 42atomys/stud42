@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 
-	"atomys.codes/stud42/internal/models/generated"
+	"github.com/42atomys/stud42/internal/models/generated"
 )
 
 func seedUsers() error {

@@ -11,7 +11,7 @@ import (
 	"entgo.io/ent/schema/index"
 	"github.com/google/uuid"
 
-	"atomys.codes/stud42/internal/models/gotype"
+	"github.com/42atomys/stud42/internal/models/gotype"
 )
 
 type Notice struct {
