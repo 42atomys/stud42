@@ -36,7 +36,7 @@ jobs:
       - name: Generate code
         run: task generate
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@v6.1.0
+        uses: golangci/golangci-lint-action@v6.1.1
         with:
           version: latest
           skip-pkg-cache: true
