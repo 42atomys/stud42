@@ -26,7 +26,7 @@ module "interface" {
   appVersion      = var.appVersion
   namespace       = var.namespace
   image           = "ghcr.io/42atomys/stud42:${var.appVersion}"
-  imagePullPolicy = var.namespace == "previews" ? "Always" : "IfNotPresent"
+  imagePullPolicy = var.namespace == "s42-previews" ? "Always" : "IfNotPresent"
 
   args = ["server.js"]
 
@@ -50,11 +50,11 @@ module "interface" {
 
   resources = {
     limits = {
-      memory = "512Mi"
+      memory = "2Gi"
     }
     requests = {
-      cpu    = var.namespace == "production" ? "100m" : "10m"
-      memory = var.namespace == "production" ? "256Mi" : "128Mi"
+      cpu    = "500m"
+      memory = "1Gi"
     }
   }
 

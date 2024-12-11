@@ -1,48 +1,38 @@
 auth_enabled: false
-common:
-  ring:
-    instance_addr: 127.0.0.1
-    kvstore:
-      store: inmemory
-  replication_factor: 1
-  path_prefix: /data/loki
+
+ingester:
+  wal:
+    dir: /loki/wal
+  lifecycler:
+    ring:
+      kvstore:
+        store: inmemory
+      replication_factor: 1
+  chunk_idle_period: 3m
+  chunk_retain_period: 1m
 
 schema_config:
   configs:
-    - from: 2020-05-15
+    - from: 2023-01-01
       store: boltdb-shipper
       object_store: filesystem
       schema: v11
       index:
-        prefix: loki_
+        prefix: index_
         period: 24h
 
 storage_config:
   boltdb_shipper:
-    shared_store: filesystem
-    active_index_directory: /data/loki/boltdb-shipper-active
-    cache_location: /data/loki/boltdb-shipper-cache
-    cache_ttl: 24h
+    active_index_directory: /loki/index
+    cache_location: /loki/cache
   filesystem:
-    directory: /data/loki/chunks
-  retention:
-    period: 336h  # Cela correspond à 14 jours
+    directory: /loki/chunks
+
+compactor:
+  working_directory: /loki/compactor
+  retention_enabled: true
+  delete_request_store: filesystem
 
 limits_config:
-  retention_period: 336h
-  retention_stream:
-    - selector: '{namespace="sandbox"}'
-      priority: 1
-      period: 24h
-    - selector: '{namespace="previews"}'
-      priority: 1
-      period: 24h
-
-memberlist:
-  join_members:
-    - "loki"
-
-server:
-  grpc_listen_port: 9095
-  http_listen_port: 3100
-
+  retention_period: 336h # 14 day
+  allow_structured_metadata: false

@@ -1,13 +1,11 @@
 terraform {
-  backend "s3" {
-    bucket                      = "s42-terraform-state"
-    key                         = "cluster.tfstate"
-    endpoint                    = "https://s3.gra.io.cloud.ovh.net/"
-    region                      = "gra"
-    skip_region_validation      = true
-    skip_credentials_validation = true
-  }
+  required_version = ">= 1.0.0"
+
   required_providers {
+    google = {
+      source  = "hashicorp/google"
+      version = "~> 4.0"
+    }
     kubernetes = {
       source  = "hashicorp/kubernetes"
       version = ">= 2.20"
@@ -25,7 +23,11 @@ terraform {
       version = "3.4.3"
     }
   }
-  required_version = ">= v1.3.3"
+
+  backend "gcs" {
+    bucket = "s42-terraform-state"
+    prefix = "cluster"
+  }
 }
 
 provider "kubernetes" {

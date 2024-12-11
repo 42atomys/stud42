@@ -34,13 +34,18 @@ resource "helm_release" "cert_manager" {
   name             = "cert-manager"
   repository       = "https://charts.jetstack.io"
   chart            = "cert-manager"
-  version          = "v1.10.0"
+  version          = "v1.16.2"
   create_namespace = false
   namespace        = "cert-manager"
   max_history      = 3
 
   set {
-    name  = "installCRDs"
+    name  = "crds.enabled"
+    value = true
+  }
+
+  set {
+    name  = "crds.keep"
     value = true
   }
 
@@ -50,24 +55,18 @@ resource "helm_release" "cert_manager" {
   }
 
   set {
-    name  = "nodeSelector.nodepool"
-    value = "small"
-  }
-
-
-  set {
-    name  = "webhook.nodeSelector.nodepool"
-    value = "small"
+    name  = "webhook.nodeSelector.cloud\\.google\\.com/gke-nodepool"
+    value = "pool-high-workers"
   }
 
   set {
-    name  = "cainjector.nodeSelector.nodepool"
-    value = "small"
+    name  = "cainjector.nodeSelector.cloud\\.google\\.com/gke-nodepool"
+    value = "pool-high-workers"
   }
 
   set {
-    name  = "startupapicheck.nodeSelector.nodepool"
-    value = "small"
+    name  = "startupapicheck.nodeSelector.cloud\\.google\\.com/gke-nodepool"
+    value = "pool-high-workers"
   }
 
   set {
@@ -148,8 +147,8 @@ resource "helm_release" "cert_manager_ovh" {
   chart            = "/tmp/cert-manager-webhook-ovh/deploy/cert-manager-webhook-ovh"
 
   set {
-    name  = "nodeSelector.nodepool"
-    value = "small"
+    name  = "nodeSelector.cloud\\.google\\.com/gke-nodepool"
+    value = "pool-high-workers"
   }
 
   set {

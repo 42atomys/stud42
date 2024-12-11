@@ -36,6 +36,8 @@ resource "kubernetes_manifest" "sealed_secret" {
         }
         type = each.value.secretType
       }
+
+      # Acknowledging the warning for x-kubernetes-preserve-unknown-field
       encryptedData = each.value.encryptedData
     }
   }

@@ -7,7 +7,7 @@ module "auth_service" {
   appVersion      = var.appVersion
   namespace       = var.namespace
   image           = "ghcr.io/42atomys/stud42:${var.appVersion}"
-  imagePullPolicy = var.namespace == "previews" ? "Always" : "IfNotPresent"
+  imagePullPolicy = var.namespace == "s42-previews" ? "Always" : "IfNotPresent"
 
   command = ["stud42cli"]
   args    = ["--config", "/config/stud42.yaml", "serve", "auth"]
@@ -45,7 +45,7 @@ module "auth_service" {
       memory = "40Mi"
     }
     requests = {
-      cpu    = var.namespace == "production" ? "60m" : "10m"
+      cpu    = "60m"
       memory = "20Mi"
     }
   }

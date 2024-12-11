@@ -6,7 +6,7 @@ module "api" {
   appVersion      = var.appVersion
   namespace       = var.namespace
   image           = "ghcr.io/42atomys/stud42:${var.appVersion}"
-  imagePullPolicy = var.namespace == "previews" ? "Always" : "IfNotPresent"
+  imagePullPolicy = var.namespace == "s42-previews" ? "Always" : "IfNotPresent"
 
   command = ["stud42cli"]
   args    = ["--config", "/config/stud42.yaml", "serve", "api", "-g"]
@@ -34,8 +34,8 @@ module "api" {
       memory = "96Mi"
     }
     requests = {
-      cpu    = var.namespace == "production" ? "100m" : "10m"
-      memory = var.namespace == "production" ? "48Mi" : "24Mi"
+      cpu    = "100m"
+      memory = "48Mi"
     }
   }
 
@@ -78,11 +78,6 @@ module "api" {
       name = "oauth2-providers"
     }
 
-    GITHUB_TOKEN = {
-      key  = "GITHUB_TOKEN"
-      name = "github-token"
-    }
-
     DISCORD_TOKEN = {
       key  = "DISCORD_TOKEN"
       name = "discord-token"
@@ -103,12 +98,12 @@ module "api" {
 
     AWS_ACCESS_KEY_ID = {
       key  = "AWS_ACCESS_KEY_ID"
-      name = "ovh-s3-credentials"
+      name = "s3-credentials"
     }
 
     AWS_SECRET_ACCESS_KEY = {
       key  = "AWS_SECRET_ACCESS_KEY"
-      name = "ovh-s3-credentials"
+      name = "s3-credentials"
     }
   }
 

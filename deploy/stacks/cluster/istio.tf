@@ -4,27 +4,19 @@ module "istio" {
   gateways = {
     "app-s42" = {
       ingressSelectorName = "ingressgateway"
-      namespace           = "production"
+      namespace           = "s42-production"
       serverHttpsRedirect = true
       hosts               = ["s42.app"]
       tlsMode             = "SIMPLE"
       tlsCredentialName   = "app-s42-tls"
     },
-    "app-s42-next" = {
+    "app-s42-staging" = {
       ingressSelectorName = "ingressgateway"
-      namespace           = "staging"
+      namespace           = "s42-staging"
       serverHttpsRedirect = true
       hosts               = ["next.s42.app"]
       tlsMode             = "SIMPLE"
-      tlsCredentialName   = "app-s42-next-tls"
-    },
-    "dev-s42-previews" = {
-      ingressSelectorName = "ingressgateway"
-      namespace           = "previews"
-      serverHttpsRedirect = true
-      hosts               = ["*.previews.s42.dev"]
-      tlsMode             = "SIMPLE"
-      tlsCredentialName   = "dev-s42-previews-tls"
+      tlsCredentialName   = "app-s42-staging-tls"
     },
     "app-s42-dashboards" = {
       ingressSelectorName = "ingressgateway"

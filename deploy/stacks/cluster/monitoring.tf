@@ -1,14 +1,14 @@
 locals {
-  monitoringNamespace = "monitoring"
+  monitoringNamespace = "s42-monitoring"
   grafanaRootUrl      = "dashboards.s42.app"
-  grafanaVersion      = "10.0.1"
-  prometheusVersion   = "v2.45.0"
-  lokiVersion         = "2.8.2"
-  promtailVersion     = "2.8.2"
-  tempoVersion        = "2.1.1"
+  grafanaVersion      = "11.4.0"
+  prometheusVersion   = "v3.0.1"
+  lokiVersion         = "3.3.1"
+  promtailVersion     = "3.3.1"
+  tempoVersion        = "2.6.1"
 
   nodeSelector = {
-    "nodepool" = "small"
+    "cloud.google.com/gke-nodepool" = "pool-high-workers"
   }
 }
 
@@ -131,6 +131,7 @@ module "prometheus" {
   automountServiceAccountToken = true
 
   replicas = 1
+  maxSurge = 0
 
   podSecurityContext = {
     fsGroup             = 2000
@@ -160,7 +161,7 @@ module "prometheus" {
       memory = "3Gi"
     }
     requests = {
-      cpu    = "300m"
+      cpu    = "500m"
       memory = "2Gi"
     }
   }
@@ -192,9 +193,9 @@ module "prometheus" {
 
   persistentVolumeClaims = {
     data = {
-      accessModes      = ["ReadWriteMany"]
+      accessModes      = ["ReadWriteOnce"]
       storage          = "50Gi"
-      storageClassName = "csi-cinder-classic"
+      storageClassName = "premium-rwo"
     }
   }
 
@@ -288,6 +289,7 @@ module "loki" {
   nodeSelector        = local.nodeSelector
   serviceAccountName  = "loki"
   replicas            = 1
+  maxSurge            = 0
   podManagementPolicy = "OrderedReady"
 
   fixPermissions = true
@@ -324,11 +326,11 @@ module "loki" {
 
   resources = {
     limits = {
-      memory = "512Mi"
+      memory = "2048Mi"
     }
     requests = {
-      cpu    = "42m"
-      memory = "300Mi"
+      cpu    = "100m"
+      memory = "1024Mi"
     }
   }
 
@@ -382,9 +384,9 @@ module "loki" {
 
   persistentVolumeClaims = {
     data = {
-      accessModes      = ["ReadWriteMany"]
+      accessModes      = ["ReadWriteOnce"]
       storage          = "25Gi"
-      storageClassName = "csi-cinder-classic"
+      storageClassName = "premium-rwo"
     }
   }
 
@@ -429,6 +431,7 @@ module "tempo" {
   serviceAccountName           = "tempo"
   automountServiceAccountToken = true
   replicas                     = 1
+  maxSurge                     = 0
   podManagementPolicy          = "OrderedReady"
 
   prometheus = {
@@ -518,9 +521,9 @@ module "tempo" {
 
   persistentVolumeClaims = {
     data = {
-      accessModes      = ["ReadWriteMany"]
+      accessModes      = ["ReadWriteOnce"]
       storage          = "10Gi"
-      storageClassName = "csi-cinder-classic"
+      storageClassName = "premium-rwo"
     }
   }
 
@@ -746,6 +749,7 @@ module "promtail" {
 
 module "grafana" {
   source = "../../modules/service"
+  kind   = "StatefulSet"
 
   name       = "grafana"
   appName    = "grafana"
@@ -787,11 +791,11 @@ module "grafana" {
 
   resources = {
     limits = {
-      memory = "768Mi"
+      memory = "1024Mi"
     }
     requests = {
       cpu    = "50m"
-      memory = "256Mi"
+      memory = "512Mi"
     }
   }
 
@@ -822,9 +826,9 @@ module "grafana" {
 
   persistentVolumeClaims = {
     data = {
-      accessModes      = ["ReadWriteMany"]
+      accessModes      = ["ReadWriteOnce"]
       storage          = "1Gi"
-      storageClassName = "csi-cinder-classic"
+      storageClassName = "premium-rwo"
     }
   }
 }

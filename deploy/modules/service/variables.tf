@@ -73,8 +73,8 @@ variable "maxSurge" {
   default     = 1
 
   validation {
-    condition     = var.maxSurge > 0
-    error_message = "The maximum surge must be greater than 0."
+    condition     = var.maxSurge >= 0
+    error_message = "The maximum surge must be greater or equal than 0."
   }
 }
 
@@ -599,7 +599,7 @@ variable "secrets" {
 
 variable "persistentVolumeClaims" {
   type = map(object({
-    storageClassName = optional(string, "csi-cinder-classic")
+    storageClassName = optional(string, "premium-rwo")
     accessModes      = list(string)
     volumeName       = optional(string)
     storage          = string

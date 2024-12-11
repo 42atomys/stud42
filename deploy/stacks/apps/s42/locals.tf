@@ -17,10 +17,10 @@ locals {
   // that the application is deployed to
   nodepoolSelector = {
     storages = {
-      nodepool = var.namespace == "production" ? "medium" : var.namespace == "staging" ? "small" : "small-shared"
+      "cloud.google.com/gke-nodepool" = "pool-high-workers"
     }
     services = {
-      nodepool = var.namespace == "production" ? "small" : var.namespace == "staging" ? "small" : "small-shared"
+      "cloud.google.com/gke-nodepool" = "pool-high-workers"
     }
   }
 

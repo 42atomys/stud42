@@ -7,7 +7,7 @@ module "secrets" {
       isClusterWide       = false
       namespace           = "kube-system"
       reflected           = true
-      reflectedNamespaces = ["production", "staging", "previews", "sandbox"]
+      reflectedNamespaces = ["s42-production", "s42-staging", "s42-previews", "s42-sandbox"]
 
       encryptedData = {
         ".dockerconfigjson" : "AgA6cjvRXnpCTnZDf3gt3Co+K/i+TUShOBhbT+0N0JqJai/EQYDJBWriKFB7AzujY13iBTiP0HykKAmA+CfrB8nd2Q775cIDvpyQlHhc2dU/zUs3wpboIZroq2bGrEOUqw9bcWh/oCaTX3krEjyVROdI71FJ4QIfER5EceeI33KT+gDfQLnW6b6DAL26Vh+obMvTyso7iaeHywfC2GI0QDRxjg2rHajZOE4ciHZj3wOkMaT5p5pgpt0CsQlubkkE4Rv0qdt0fZA/MPgYdL+XfiVYQfz3aR4IMHV0l0AwdVEQkUrTLWR4DIRM3xhaHLnWiIiS5Ks53gK3yJEy/3r1yoNi5Cs2TMGab/utf7O8ZwDrbrRpzI3atk+E/WCDdg7STXHR/N0cxSCeUUdoFbHnx+u5AcdW3mLQsEXjpQG8xW6y3ThS1jpi/j6Nmn6JoAvgZlWBKNiNR33tQrRtgDSi8+6GBijl4IYky/V/OZ1TccKUZZwT0lYneDtwjWYuKtdzXFrrOczhconvNrnwYnKuy/nyq91fVBdOkY1r7otIYCPFPXCIASpT8VhaIlnNHBes0QdPQILyI+xxlOMiW/pJ2/QG6c2dPzgIYxVeIo5E4wdOfnXEp6AESnBrOkKvwm9tVh7RuK6tPgp5wzbNkOoJC8jA5AKtlWmFhPABN5TzfrKoIR5q0Bc/YOSkSJuMJVC7lgzBE1OOqm8jHhpM3OEon7lAAyJOMTj8zTlU1Y/DecL7dpM6WG8DvaFj/1L7RCoKFNPn0R5clXQ2/8urm86mp1QaVBcLxsi0CcTO4Xznii8GAoyr9HLJnVipCvA58XCk85q+8a7Nf7g+a46CsP1qLj6yahYIY9R7HPLKAN+kkNPGfvKUlsiB6hE9mXkKl9WBFemudfKujPdNq7DbWKS891Cz3pgV8i/GKr2iYkUazyeVMWU="

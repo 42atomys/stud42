@@ -30,11 +30,11 @@ module "meilisearch" {
 
   resources = {
     limits = {
-      memory = var.namespace == "production" ? "512Mi" : "128Mi"
+      memory = "512Mi"
     }
     requests = {
-      cpu    = var.namespace == "production" ? "300m" : "10m"
-      memory = var.namespace == "production" ? "352Mi" : "50Mi"
+      cpu    = "300m"
+      memory = "352Mi"
     }
   }
 
@@ -77,7 +77,7 @@ module "meilisearch" {
     "data" = {
       accessModes      = ["ReadWriteOnce"]
       storage          = "1Gi"
-      storageClassName = "csi-cinder-high-speed"
+      storageClassName = "premium-rwo"
     }
   } : {}
 

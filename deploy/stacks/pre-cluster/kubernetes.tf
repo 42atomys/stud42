@@ -8,27 +8,23 @@ locals {
       alias : []
       istioInjection : true
     },
-    "monitoring" = {
+    "s42-monitoring" = {
       alias : []
       istioInjection : true
     },
-    "permission-manager" = {
-      alias : []
-      istioInjection : false
-    },
-    "production" = {
+    "s42-production" = {
       alias : ["live"]
       istioInjection : true
     },
-    "previews" = {
+    "s42-previews" = {
       alias : ["reviews", "review-apps", "pull-requests"]
       istioInjection : true
     },
-    "sandbox" = {
+    "s42-sandbox" = {
       alias : ["dev"]
       istioInjection : true
     },
-    "staging" = {
+    "s42-staging" = {
       alias : ["next"]
       istioInjection : true
     }

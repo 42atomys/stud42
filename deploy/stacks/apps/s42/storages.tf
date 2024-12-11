@@ -37,9 +37,9 @@ resource "kubernetes_manifest" "rabbitmq" {
               {
                 matchExpressions = [
                   {
-                    key      = "nodepool"
+                    key      = "cloud.google.com/gke-nodepool"
                     operator = "In"
-                    values   = [local.nodepoolSelector["storages"]["nodepool"]]
+                    values   = [local.nodepoolSelector["storages"]["cloud.google.com/gke-nodepool"]]
                   }
                 ]
               }
@@ -60,8 +60,8 @@ resource "kubernetes_manifest" "rabbitmq" {
       }
 
       persistence = var.hasPersistentStorage ? {
-        storageClassName = "csi-cinder-high-speed"
-        storage          = var.namespace == "production" ? "5Gi" : "1Gi"
+        storageClassName = "premium-rwo"
+        storage          = "5Gi"
       } : null
 
       rabbitmq = {
@@ -136,8 +136,8 @@ module "postgres" {
 
   resources = {
     requests = {
-      cpu    = var.namespace == "production" ? "100m" : "10m"
-      memory = var.namespace == "production" ? "1200Mi" : "50Mi"
+      cpu    = "100m"
+      memory = "1200Mi"
     }
     limits = {
       memory = "2Gi"
@@ -214,8 +214,8 @@ module "postgres" {
   persistentVolumeClaims = var.hasPersistentStorage ? {
     data = {
       accessModes      = ["ReadWriteOnce"]
-      storage          = var.namespace == "production" ? "10Gi" : "1Gi"
-      storageClassName = "csi-cinder-high-speed"
+      storage          = "10Gi"
+      storageClassName = "premium-rwo"
     }
   } : {}
 }
@@ -252,11 +252,11 @@ module "dragonfly" {
   resources = {
     requests = {
       cpu    = "100m"
-      memory = "128Mi"
+      memory = "1Gi"
     }
 
     limits = {
-      memory = "256Mi"
+      memory = "2Gi"
     }
   }
 
@@ -305,9 +305,9 @@ module "dragonfly" {
 
   persistentVolumeClaims = var.hasPersistentStorage ? {
     data = {
-      accessModes      = ["ReadWriteMany"]
+      accessModes      = ["ReadWriteOnce"]
       storage          = "2Gi"
-      storageClassName = "csi-cinder-high-speed"
+      storageClassName = "premium-rwo"
     }
   } : {}
 }

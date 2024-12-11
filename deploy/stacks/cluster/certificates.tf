@@ -61,7 +61,7 @@ module "cert_manager" {
       dns_names   = ["s42.app"]
       issuer_name = "ovh-issuer"
     }
-    "app-s42-next" = {
+    "app-s42-staging" = {
       dns_names   = ["next.s42.app", "*.next.s42.app"]
       issuer_name = "ovh-issuer"
     }

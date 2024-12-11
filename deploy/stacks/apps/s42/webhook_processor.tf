@@ -7,7 +7,7 @@ module "webhooks_processor" {
   appVersion      = var.appVersion
   namespace       = var.namespace
   image           = "ghcr.io/42atomys/stud42:${var.appVersion}"
-  imagePullPolicy = var.namespace == "previews" ? "Always" : "IfNotPresent"
+  imagePullPolicy = var.namespace == "s42-previews" ? "Always" : "IfNotPresent"
 
   command = ["stud42cli"]
   args    = ["--config", "/config/stud42.yaml", "jobs", "webhooks"]

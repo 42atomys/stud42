@@ -8,7 +8,7 @@ module "crawler_campus" {
   appVersion      = var.appVersion
   namespace       = var.namespace
   image           = "ghcr.io/42atomys/stud42:${var.appVersion}"
-  imagePullPolicy = var.namespace == "previews" ? "Always" : "IfNotPresent"
+  imagePullPolicy = var.namespace == "s42-previews" ? "Always" : "IfNotPresent"
 
   command = ["stud42cli"]
   args    = ["--config", "/config/stud42.yaml", "jobs", "crawler", "campus"]
@@ -94,7 +94,7 @@ module "crawler_locations" {
   appVersion      = var.appVersion
   namespace       = var.namespace
   image           = "ghcr.io/42atomys/stud42:${var.appVersion}"
-  imagePullPolicy = var.namespace == "previews" ? "Always" : "IfNotPresent"
+  imagePullPolicy = var.namespace == "s42-previews" ? "Always" : "IfNotPresent"
 
   command = ["stud42cli"]
   args    = ["--config", "/config/stud42.yaml", "jobs", "crawler", "locations", "-c", "${each.value}"]

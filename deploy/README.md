@@ -53,7 +53,6 @@ etc (in our case). Namespaces are defined in the [pre-cluster] stack(./stacks/pr
 | `cert-manager`       | Namespace for the certificate manager ([https://cert-manager.io](https://cert-manager.io))                          |
 | `istio-system`       | Namespace for the routing ([https://istio.io](https://istio.io))                                                    |
 | `monitoring`         | Namespace for monitoring components                                                                                 |
-| `permission-manager` | Namespace for the user permissions manager                                                                          |
 | `rabbitmq-operator`  | Namespace for the RabbitMQ controller                                                                               |
 | `production`         | Namespace for production (live) applications ([https://s42.app](https://s42.app))                                   |
 | `staging`            | Namespace for staging (next) applications ([https://next.s42.app](https://next.s42.app))                            |

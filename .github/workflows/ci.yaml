@@ -49,5 +49,5 @@ jobs:
     with:
       ghEnvironmentName: "${{ github.event_name == 'pull_request' && 'previews' || (github.event_name == 'release' && github.event.action == 'released' && 'production' || (github.event_name == 'release' && github.event.action == 'prereleased' && 'staging' || 'sandbox')) }}"
       friendlyEnvironmentName: "${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.number) || (github.event_name == 'release' && github.event.action == 'released' && 'production' || (github.event_name == 'release' && github.event.action == 'prereleased' && 'staging' || 'sandbox')) }}"
-      kubeNamespace: "${{ github.event_name == 'pull_request' && 'previews' || (github.event_name == 'release' && github.event.action == 'released' && 'production' || (github.event_name == 'release' && github.event.action == 'prereleased' && 'staging' || 'sandbox')) }}"
+      kubeNamespace: "${{ github.event_name == 'pull_request' && 's42-previews' || (github.event_name == 'release' && github.event.action == 'released' && 's42-production' || (github.event_name == 'release' && github.event.action == 'prereleased' && 's42-staging' || 's42-sandbox')) }}"
       imageTag: ${{ needs.build.outputs.imageTag }}

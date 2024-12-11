@@ -2,7 +2,7 @@ resource "helm_release" "istio_base" {
   name             = "istio-base"
   repository       = "https://istio-release.storage.googleapis.com/charts"
   chart            = "base"
-  version          = "v1.15.2"
+  version          = "v1.24.1"
   create_namespace = false
   max_history      = 3
   namespace        = "istio-system"
@@ -21,8 +21,8 @@ resource "helm_release" "gateway" {
   namespace        = helm_release.istio_base.namespace
 
   set {
-    name  = "nodeSelector.nodepool"
-    value = "medium"
+    name  = "pilot.nodeSelector.cloud\\.google\\.com/gke-nodepool"
+    value = "pool-high-workers"
   }
 
   set {
@@ -81,8 +81,8 @@ resource "helm_release" "istiod" {
   namespace        = helm_release.istio_base.namespace
 
   set {
-    name  = "pilot.nodeSelector.nodepool"
-    value = "medium"
+    name  = "pilot.nodeSelector.cloud\\.google\\.com/gke-nodepool"
+    value = "pool-high-workers"
   }
   set {
     name  = "components.pilot.k8s.strategy.rollingUpdate.maxUnavailable"
@@ -130,8 +130,8 @@ resource "helm_release" "rabbitmq_operator" {
   namespace        = "rabbitmq-operator"
 
   set {
-    name  = "nodeSelector.nodepool"
-    value = "small"
+    name  = "nodeSelector.cloud\\.google\\.com/gke-nodepool"
+    value = "pool-high-workers"
   }
 }
 
@@ -145,8 +145,8 @@ resource "helm_release" "sealed_secret" {
   namespace        = "kube-system"
 
   set {
-    name  = "nodeSelector.nodepool"
-    value = "small"
+    name  = "nodeSelector.cloud\\.google\\.com/gke-nodepool"
+    value = "pool-high-workers"
   }
 
   set {
@@ -205,8 +205,8 @@ resource "helm_release" "reflector" {
   namespace        = "kube-system"
 
   set {
-    name  = "nodeSelector.nodepool"
-    value = "small"
+    name  = "nodeSelector.cloud\\.google\\.com/gke-nodepool"
+    value = "pool-high-workers"
   }
 
   set {
@@ -223,5 +223,4 @@ resource "helm_release" "reflector" {
     name  = "resources.limits.memory"
     value = "256Mi"
   }
-
 }
