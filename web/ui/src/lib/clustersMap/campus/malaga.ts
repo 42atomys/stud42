@@ -32,7 +32,6 @@ export class Malaga extends Campus implements ICampus {
             ['T:r2',  'W:c1r2s1',  'W:c1r2s2',  'W:c1r2s3',  'W:c1r2s4',  'W:c1r2s5',  'W:c1r2s6',  'T:r2' ],
             ['T:r1',  'W:c1r1s1',  'W:c1r1s2',  'W:c1r1s3',  'W:c1r1s4',  'W:c1r1s5',  'W:c1r1s6',  'T:r1' ],
           ],
-        ),
       }),
       new Cluster({
         identifier: 'c2',
@@ -49,7 +48,6 @@ export class Malaga extends Campus implements ICampus {
             ['T:r2',  'W:c1r2s1',  'W:c1r2s2',  'W:c1r2s3',  'W:c1r2s4',  'W:c1r2s5',  'W:c1r2s6',  'T:r2' ],
             ['T:r1',  'W:c1r1s1',  'W:c1r1s2',  'W:c1r1s3',  'W:c1r1s4',  'W:c1r1s5',  'W:c1r1s6',  'T:r1' ],
           ],
-        ),
       }),
       new Cluster({
         identifier: 'c3',
@@ -66,7 +64,6 @@ export class Malaga extends Campus implements ICampus {
             ['T:r2',  'W:c3r2s6',  'W:c3r2s5',  'W:c3r2s4',  'W:c3r2s3',  'W:c3r2s2',  'W:c3r2s1',  'T:r2' ],
             ['T:r1',  'W:c3r1s6',  'W:c3r1s5',  'W:c3r1s4',  'W:c3r1s3',  'W:c3r1s2',  'W:c3r1s1',  'T:r1' ],
           ],
-        ),
       }),
     ];
   }
