@@ -7,6 +7,7 @@ import { CampusIdentifier } from './types.generated';
 import { Angouleme } from './campus/angouleme';
 import { Helsinki } from './campus/helsinki';
 import { Lausanne } from './campus/lausanne';
+import { LeHavre } from './campus/leHavre';
 import { Lyon } from './campus/lyon';
 import { Madrid } from './campus/madrid';
 import { Malaga } from './campus/malaga';
@@ -31,6 +32,7 @@ export const Campuses: Record<CampusIdentifier, ICampus> = {
   angouleme: new Angouleme(),
   helsinki: new Helsinki(),
   lausanne: new Lausanne(),
+  leHavre: new LeHavre(),
   lyon: new Lyon(),
   madrid: new Madrid(),
   malaga: new Malaga(),
