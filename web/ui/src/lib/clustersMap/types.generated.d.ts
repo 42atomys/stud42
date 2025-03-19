@@ -11,6 +11,7 @@ export type CampusIdentifier =
   | 'helsinki'
   | 'lausanne'
   | 'leHavre'
+  | 'lyon'
   | 'madrid'
   | 'malaga'
   | 'mulhouse'
