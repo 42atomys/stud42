@@ -40,7 +40,7 @@ jobs:
         working-directory: "deploy/stacks/${{ matrix.stack }}"
     steps:
       - name: Checkout project
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Setup kube config
         env:
           KUBECONFIG_ADMIN: ${{ secrets.KUBECONFIG_ADMIN }}
@@ -125,7 +125,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout project
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Setup go
         uses: actions/setup-go@v5
         with:
@@ -168,7 +168,7 @@ jobs:
         working-directory: "web/ui"
     steps:
       - name: Checkout project
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup node
         uses: actions/setup-node@v4
