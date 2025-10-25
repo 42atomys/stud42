@@ -9,6 +9,23 @@
 <img src="https://img.shields.io/github/sponsors/42atomys?color=blueviolet" alt="GitHub Repo sponsors">
 <a href="https://pkg.go.dev/github.com/42atomys/stud42"><img src="https://pkg.go.dev/badge/github.com/42atomys/stud42.svg" alt="Go Reference"></a></p>
 
+
+> [!IMPORTANT]
+> ## This project is unmaintained and closed
+> After 10 incredible years, **S42** comes to its sunset — not as an ending, but as a celebration of everything we’ve built together.  
+> Thank you for being part of this journey 💙
+>
+> - **Why This Comes to the End: Understanding this transition**  
+> [Read in English](https://atomys.me/en/s42-sunset-story?ref=github)  
+> [Lire en français](https://atomys.me/fr/s42-sunset-story?ref=github)
+>
+> - **The Story of Stud42: Our 10-year adventure**  
+> [Read in English](https://atomys.me/en/story-of-stud42?ref=github)  
+> [Lire en français](https://atomys.me/fr/story-of-stud42?ref=github)
+> 
+
+--- 
+
 <p align="center">This project is the direct continuation of the <a href="https://stud42.fr">stud42.fr</a> project. When <a href="https://github.com/42atomys">@42atomys</a> (aka. Atom) created stud42, he announced that the project would be open source when he left 42 staff.</p>
 
 <p align="center">4 years later, it's finally time, time to put the project that doesn't need to prove itself anymore in open source, so that this project becomes the project of every student of every campus in the world.</p>
