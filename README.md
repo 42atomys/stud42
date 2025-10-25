@@ -84,7 +84,7 @@ To thank you for your support, you will have access to the awesomeness part of t
 
 ## 📫 Contact
 
-If you want to contact me directly, you can do it on [Discord](https://discord.gg/5f864c6hyj) or on my [Twitter](https://twitter.com/42_Atomys).
+If you want to contact me directly, you can do it on [Discord](https://discord.gg/5f864c6hyj) or on my [Twitter](https://twitter.com/42atomys).
 
 ## 💬 Discord
 
