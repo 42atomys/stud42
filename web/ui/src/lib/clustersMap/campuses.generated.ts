@@ -8,6 +8,7 @@ import { Angouleme } from './campus/angouleme';
 import { Helsinki } from './campus/helsinki';
 import { Lausanne } from './campus/lausanne';
 import { LeHavre } from './campus/leHavre';
+import { Lyon } from './campus/lyon';
 import { Madrid } from './campus/madrid';
 import { Malaga } from './campus/malaga';
 import { Mulhouse } from './campus/mulhouse';
@@ -32,6 +33,7 @@ export const Campuses: Record<CampusIdentifier, ICampus> = {
   helsinki: new Helsinki(),
   lausanne: new Lausanne(),
   leHavre: new LeHavre(),
+  lyon: new Lyon(),
   madrid: new Madrid(),
   malaga: new Malaga(),
   mulhouse: new Mulhouse(),
